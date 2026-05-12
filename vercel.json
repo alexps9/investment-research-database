@@ -5,6 +5,12 @@
       "buildCommand": "cd frontend && npm run build",
       "outputDirectory": "frontend/.next",
       "framework": "nextjs"
+    },
+    "backend": {
+      "entrypoint": "backend",
+      "buildCommand": "pip install -r backend/requirements.txt",
+      "outputDirectory": "backend",
+      "framework": "fastapi"
     }
   }
 }
