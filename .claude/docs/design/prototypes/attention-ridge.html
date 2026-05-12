@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Attention Ridge — F+C Prototype</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: #FFFFFF; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+    h1 { font-size: 16px; font-weight: 600; color: #18181B; margin-bottom: 4px; }
+    .subtitle { font-size: 11px; color: #71717A; margin-bottom: 24px; }
+    .view-wrapper { position: relative; }
+    .timeline-header { display: flex; height: 24px; margin-left: 140px; margin-bottom: 4px; }
+    .timeline-header span { font-size: 9px; color: #A1A1AA; flex: 1; text-align: center; }
+    .ridge-area { position: relative; margin-left: 140px; }
+    .lane-labels { position: absolute; left: 0; top: 0; width: 140px; height: 100%; }
+    .lane-label { position: absolute; left: 0; width: 130px; text-align: right; padding-right: 12px; }
+    .lane-label .name { font-size: 11px; font-weight: 500; color: #18181B; }
+    .lane-label .desc { font-size: 9px; color: #A1A1AA; }
+    canvas { display: block; }
+    .spotlight-slider { margin-left: 140px; margin-top: 12px; width: calc(100% - 140px); }
+    .slider-row { display: flex; align-items: center; gap: 8px; }
+    .slider-row input[type="range"] { flex: 1; height: 2px; }
+    .slider-row .label { font-size: 9px; color: #71717A; min-width: 36px; }
+    .legend { margin-top: 20px; margin-left: 140px; display: flex; gap: 16px; }
+    .legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #71717A; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .era-labels { display: flex; margin-left: 140px; margin-top: 8px; border-top: 1px solid #F4F4F5; padding-top: 4px; }
+    .era-label { font-size: 9px; color: #A1A1AA; text-align: center; }
+    .era-label strong { color: #71717A; font-weight: 500; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Frontier Attention Migration</h1>
+  <p class="subtitle">Ridge = attention intensity per lane. Spotlight highlights the current frontier focus.</p>
+
+  <div class="view-wrapper">
+    <!-- Lane labels on the left -->
+    <div class="lane-labels" id="lane-labels"></div>
+
+    <!-- Timeline header -->
+    <div class="timeline-header" id="timeline-header"></div>
+
+    <!-- Main canvas -->
+    <div class="ridge-area">
+      <canvas id="ridge-canvas"></canvas>
+    </div>
+
+    <!-- Era labels -->
+    <div class="era-labels" id="era-labels"></div>
+
+    <!-- Spotlight slider -->
+    <div class="spotlight-slider">
+      <div class="slider-row">
+        <span class="label" id="slider-label">23Q1</span>
+        <input type="range" id="spotlight" min="0" max="15" value="8" step="1">
+        <span class="label" style="text-align:right" id="slider-label-end">26Q4</span>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend" id="legend"></div>
+  </div>
+</div>
+
+<script>
+// === DATA ===
+const QUARTERS = [
+  '23Q1','23Q2','23Q3','23Q4',
+  '24Q1','24Q2','24Q3','24Q4',
+  '25Q1','25Q2','25Q3','25Q4',
+  '26Q1','26Q2','26Q3','26Q4'
+];
+
+const LANES = [
+  {
+    id: 'sequence_scaling',
+    name: 'Sequence Scaling',
+    desc: 'O(N²) → sub-quadratic',
+    color: '#2563EB',
+  },
+  {
+    id: 'memory_wall',
+    name: 'Memory Wall',
+    desc: 'KV cache + IO bandwidth',
+    color: '#059669',
+  },
+  {
+    id: 'compute_scaling',
+    name: 'Compute Scaling',
+    desc: 'MoE + RL + test-time',
+    color: '#EA580C',
+  },
+];
+
+// Attention scores per lane per quarter (0-1)
+// Based on citation velocity + cross-reference convergence signals
+const ATTENTION = {
+  sequence_scaling: [
+    0.5, 0.6, 0.8, 0.9,   // 23: Mamba hype, long-context race
+    0.7, 0.5, 0.4, 0.3,   // 24: cooling, absorbed into hybrid
+    0.2, 0.2, 0.15, 0.1,  // 25: marginal
+    0.1, 0.1, 0.1, 0.1    // 26: baseline
+  ],
+  memory_wall: [
+    0.2, 0.2, 0.3, 0.3,   // 23: FlashAttn v2, early signals
+    0.5, 0.8, 0.9, 0.85,  // 24: MLA, PagedAttn, inference cost crisis
+    0.7, 0.6, 0.5, 0.4,   // 25: solutions deployed, pressure easing
+    0.3, 0.3, 0.25, 0.2   // 26: mature tooling
+  ],
+  compute_scaling: [
+    0.3, 0.3, 0.3, 0.4,   // 23: early MoE (Mixtral)
+    0.3, 0.4, 0.7, 0.9,   // 24: o1, reasoning scaling explosion
+    0.95, 1.0, 0.9, 0.85, // 25: R1, test-time budget, RL scaling peak
+    0.8, 0.75, 0.7, 0.65  // 26: still dominant but plateauing
+  ],
+};
+
+// Key landmark papers (placed on ridge)
+const LANDMARKS = [
+  { q: 2, lane: 'sequence_scaling', label: 'Mamba', size: 'lg' },
+  { q: 3, lane: 'sequence_scaling', label: 'Mamba-2', size: 'md' },
+  { q: 0, lane: 'memory_wall', label: 'FA v2', size: 'md' },
+  { q: 5, lane: 'memory_wall', label: 'MLA', size: 'lg' },
+  { q: 6, lane: 'memory_wall', label: 'PagedAttn', size: 'md' },
+  { q: 3, lane: 'compute_scaling', label: 'Mixtral', size: 'md' },
+  { q: 6, lane: 'compute_scaling', label: 'o1', size: 'lg' },
+  { q: 8, lane: 'compute_scaling', label: 'R1', size: 'lg' },
+  { q: 10, lane: 'compute_scaling', label: 'TTC scaling', size: 'md' },
+  { q: 4, lane: 'sequence_scaling', label: 'Jamba', size: 'sm' },
+  { q: 7, lane: 'memory_wall', label: 'SGLang', size: 'sm' },
+];
+
+// Era definitions
+const ERAS = [
+  { start: 0, end: 3, name: 'Knowledge Era', desc: '更多参数' },
+  { start: 4, end: 11, name: 'Reasoning Era', desc: '更长推理' },
+  { start: 12, end: 15, name: 'Agency Frontier', desc: '长期闭环' },
+];
+
+// === RENDERING ===
+const canvas = document.getElementById('ridge-canvas');
+const ctx = canvas.getContext('2d');
+const nQ = QUARTERS.length;
+const LANE_H = 100;  // height per lane
+const CANVAS_W = 900;
+const CANVAS_H = LANES.length * LANE_H + 20;
+canvas.width = CANVAS_W;
+canvas.height = CANVAS_H;
+canvas.style.width = '100%';
+canvas.style.height = CANVAS_H + 'px';
+
+const PAD = { l: 0, r: 20, t: 10, b: 10 };
+const plotW = CANVAS_W - PAD.l - PAD.r;
+const plotH = CANVAS_H - PAD.t - PAD.b;
+
+function qx(qi) { return PAD.l + (qi / (nQ - 1)) * plotW; }
+
+let spotlightQ = 8; // initial spotlight position
+
+function draw() {
+  ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+
+  // Draw Era backgrounds
+  ERAS.forEach(era => {
+    const x1 = qx(era.start);
+    const x2 = qx(era.end);
+    if (era.name === 'Agency Frontier') {
+      ctx.fillStyle = '#FAFAFA';
+    } else {
+      ctx.fillStyle = '#FFFFFF';
+    }
+    ctx.fillRect(x1, 0, x2 - x1, CANVAS_H);
+  });
+
+  // Era dividers
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = '#E4E4E7';
+  ctx.lineWidth = 1;
+  [3.5, 11.5].forEach(boundary => {
+    const x = qx(boundary);
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, CANVAS_H);
+    ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  // Draw each lane ridge
+  LANES.forEach((lane, li) => {
+    const baseY = PAD.t + li * LANE_H + LANE_H * 0.85;
+    const maxRidgeH = LANE_H * 0.7;
+    const data = ATTENTION[lane.id];
+
+    // Spotlight: compute opacity for each point
+    const spotlightRadius = 2.5; // quarters radius
+
+    // Fill area (ridge body)
+    ctx.beginPath();
+    ctx.moveTo(qx(0), baseY);
+    for (let qi = 0; qi < nQ; qi++) {
+      const y = baseY - data[qi] * maxRidgeH;
+      if (qi === 0) ctx.lineTo(qx(qi), y);
+      else {
+        // smooth curve
+        const prevX = qx(qi - 1);
+        const prevY = baseY - data[qi - 1] * maxRidgeH;
+        const cpx = (prevX + qx(qi)) / 2;
+        ctx.bezierCurveTo(cpx, prevY, cpx, y, qx(qi), y);
+      }
+    }
+    ctx.lineTo(qx(nQ - 1), baseY);
+    ctx.closePath();
+
+    // Gradient fill with spotlight
+    const grad = ctx.createLinearGradient(0, baseY - maxRidgeH, 0, baseY);
+    grad.addColorStop(0, lane.color + '30');
+    grad.addColorStop(1, lane.color + '08');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Ridge line
+    ctx.beginPath();
+    for (let qi = 0; qi < nQ; qi++) {
+      const y = baseY - data[qi] * maxRidgeH;
+      if (qi === 0) ctx.moveTo(qx(qi), y);
+      else {
+        const prevX = qx(qi - 1);
+        const prevY = baseY - data[qi - 1] * maxRidgeH;
+        const cpx = (prevX + qx(qi)) / 2;
+        ctx.bezierCurveTo(cpx, prevY, cpx, y, qx(qi), y);
+      }
+    }
+    ctx.strokeStyle = lane.color + '80';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Spotlight highlight on the ridge
+    const spotX = qx(spotlightQ);
+    const spotIdx = Math.round(spotlightQ);
+    const spotVal = data[Math.min(spotIdx, nQ - 1)];
+    const spotY = baseY - spotVal * maxRidgeH;
+
+    // Bright segment near spotlight
+    ctx.beginPath();
+    for (let qi = 0; qi < nQ; qi++) {
+      const dist = Math.abs(qi - spotlightQ);
+      if (dist > spotlightRadius + 0.5) continue;
+      const y = baseY - data[qi] * maxRidgeH;
+      if (qi === 0 || Math.abs(qi - 1 - spotlightQ) > spotlightRadius + 0.5) {
+        ctx.moveTo(qx(qi), y);
+      } else {
+        const prevX = qx(qi - 1);
+        const prevY = baseY - data[qi - 1] * maxRidgeH;
+        const cpx = (prevX + qx(qi)) / 2;
+        ctx.bezierCurveTo(cpx, prevY, cpx, y, qx(qi), y);
+      }
+    }
+    ctx.strokeStyle = lane.color;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Spotlight dot
+    ctx.beginPath();
+    ctx.arc(spotX, spotY, 4, 0, Math.PI * 2);
+    ctx.fillStyle = lane.color;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Baseline
+    ctx.beginPath();
+    ctx.moveTo(qx(0), baseY);
+    ctx.lineTo(qx(nQ - 1), baseY);
+    ctx.strokeStyle = '#E4E4E7';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  });
+
+  // Draw landmarks
+  LANDMARKS.forEach(lm => {
+    const li = LANES.findIndex(l => l.id === lm.lane);
+    if (li < 0) return;
+    const lane = LANES[li];
+    const baseY = PAD.t + li * LANE_H + LANE_H * 0.85;
+    const maxRidgeH = LANE_H * 0.7;
+    const data = ATTENTION[lm.lane];
+    const y = baseY - data[lm.q] * maxRidgeH;
+    const x = qx(lm.q);
+
+    const dist = Math.abs(lm.q - spotlightQ);
+    const inSpot = dist <= 2.5;
+    const alpha = inSpot ? 1.0 : 0.3;
+
+    const r = lm.size === 'lg' ? 5 : lm.size === 'md' ? 3.5 : 2.5;
+    ctx.beginPath();
+    ctx.arc(x, y - r - 2, r, 0, Math.PI * 2);
+    ctx.fillStyle = lane.color;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+
+    // Label
+    if (inSpot) {
+      ctx.fillStyle = '#18181B';
+      ctx.font = '500 9px IBM Plex Sans';
+      ctx.fillText(lm.label, x + r + 3, y - r);
+    }
+    ctx.globalAlpha = 1;
+  });
+
+  // NOW line (current quarter = 25Q2 = index 9)
+  const nowIdx = 9;
+  const nowX = qx(nowIdx);
+  ctx.beginPath();
+  ctx.moveTo(nowX, 0);
+  ctx.lineTo(nowX, CANVAS_H);
+  ctx.strokeStyle = '#FF4400';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([]);
+  ctx.stroke();
+  ctx.fillStyle = '#FF4400';
+  ctx.font = '600 8px IBM Plex Sans';
+  ctx.fillText('NOW', nowX + 3, 10);
+
+  // Spotlight vertical indicator
+  const slX = qx(spotlightQ);
+  ctx.beginPath();
+  ctx.moveTo(slX, 0);
+  ctx.lineTo(slX, CANVAS_H);
+  ctx.strokeStyle = '#18181B';
+  ctx.lineWidth = 0.5;
+  ctx.globalAlpha = 0.2;
+  ctx.setLineDash([2, 2]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
+}
+
+// === UI SETUP ===
+// Timeline header
+const header = document.getElementById('timeline-header');
+QUARTERS.forEach(q => {
+  const s = document.createElement('span');
+  s.textContent = q;
+  header.appendChild(s);
+});
+
+// Lane labels
+const labelsDiv = document.getElementById('lane-labels');
+LANES.forEach((lane, i) => {
+  const div = document.createElement('div');
+  div.className = 'lane-label';
+  div.style.top = (10 + i * LANE_H + LANE_H * 0.3) + 'px';
+  div.innerHTML = `
+    <div class="name" style="color:${lane.color}">${lane.name}</div>
+    <div class="desc">${lane.desc}</div>
+  `;
+  labelsDiv.appendChild(div);
+});
+
+// Era labels
+const eraDiv = document.getElementById('era-labels');
+ERAS.forEach(era => {
+  const span = document.createElement('div');
+  span.className = 'era-label';
+  const width = ((era.end - era.start + 1) / nQ) * 100;
+  span.style.width = width + '%';
+  span.innerHTML = `<strong>${era.name}</strong> ${era.desc}`;
+  eraDiv.appendChild(span);
+});
+
+// Legend
+const legendDiv = document.getElementById('legend');
+LANES.forEach(lane => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  item.innerHTML = `<div class="legend-dot" style="background:${lane.color}"></div>${lane.name}`;
+  legendDiv.appendChild(item);
+});
+
+// Slider interaction
+const slider = document.getElementById('spotlight');
+const sliderLabel = document.getElementById('slider-label');
+slider.max = nQ - 1;
+slider.value = spotlightQ;
+sliderLabel.textContent = QUARTERS[spotlightQ];
+
+slider.addEventListener('input', (e) => {
+  spotlightQ = parseFloat(e.target.value);
+  sliderLabel.textContent = QUARTERS[Math.round(spotlightQ)];
+  draw();
+});
+
+// Initial draw
+draw();
+</script>
+</body>
+</html>

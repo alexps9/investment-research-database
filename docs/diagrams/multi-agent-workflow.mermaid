@@ -1,0 +1,64 @@
+# Multi-Agent Workflow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Main as Main Agent
+    participant Planner
+    participant Researcher
+    participant BackendDev as Backend Dev
+    participant FrontendDev as Frontend Dev
+    participant Reviewer
+
+    User->>Main: "实现引用网络可视化功能"
+    Main->>Main: 读取 CLAUDE.md
+    Main->>Main: 确认需要 planner agent
+
+    Main->>Planner: Task(subagent_type="planner")
+    Planner->>Planner: 设计架构方案
+    Planner->>Planner: 生成设计文档
+    Note over Planner: .claude/docs/specs/citation-network-spec.md
+    Planner-->>Main: ✅ 设计完成
+
+    Main->>Researcher: Task(subagent_type="researcher")
+    Researcher->>Researcher: 研究 NetworkX 和 OpenAlex
+    Researcher->>Researcher: 分析技术实现要点
+    Note over Researcher: .claude/docs/research/graph-analysis.md
+    Researcher-->>Main: ✅ 研究完成
+
+    Main->>BackendDev: Task(subagent_type="backend-dev")
+    BackendDev->>BackendDev: 🔴 编写失败测试
+    BackendDev->>BackendDev: 🟢 实现代码
+    BackendDev->>BackendDev: 🔵 重构优化
+    Note over BackendDev: backend/app/services/citation_network.py
+    BackendDev-->>Main: ✅ Backend 完成
+
+    Main->>FrontendDev: Task(subagent_type="frontend-dev")
+    FrontendDev->>FrontendDev: 🔴 编写组件测试
+    FrontendDev->>FrontendDev: 🟢 实现 Rams 风格组件
+    FrontendDev->>FrontendDev: 🔵 优化交互
+    Note over FrontendDev: frontend/src/components/ForceGraph.tsx
+    FrontendDev-->>Main: ✅ Frontend 完成
+
+    Main->>Reviewer: Task(subagent_type="reviewer")
+    Reviewer->>Reviewer: 审查代码质量
+    Reviewer->>Reviewer: 检查测试覆盖率
+    Reviewer->>Reviewer: 验证 Rams 设计
+    Note over Reviewer: .claude/docs/reviews/2025-01-15-review.md
+
+    alt 审查通过
+        Reviewer-->>Main: ✅ 通过
+        Main-->>User: 🎉 功能完成
+    else 审查失败
+        Reviewer-->>Main: 🚫 阻断 + 修复建议
+        Main->>BackendDev: 修复问题
+        BackendDev-->>Main: ✅ 修复完成
+        Main->>Reviewer: 重新审查
+    end
+```
+
+**文件系统通信**:
+- Planner 写入 `.claude/docs/specs/`
+- Researcher 写入 `.claude/docs/research/`
+- Backend/Frontend 读取 specs 实现代码
+- Reviewer 读取 specs + 代码 → 写入 `.claude/docs/reviews/`

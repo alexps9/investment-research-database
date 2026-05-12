@@ -1,0 +1,134 @@
+/* /citation-graph page — instrument-grade layout, two columns (graph + side panel) */
+
+.layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #fafafa;
+  color: #333;
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #fff;
+}
+
+.topBar {
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+  flex: 0 0 auto;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.brandTitle {
+  font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.brandOrange {
+  color: #ff4400;
+}
+
+.brandSub {
+  font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filterBtn {
+  padding: 6px 14px;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  color: #666;
+  font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 120ms ease;
+}
+
+.filterBtn:hover {
+  border-color: #999;
+  color: #333;
+}
+
+.filterBtnActive {
+  border-color: #ff4400;
+  background: #ff4400;
+  color: #fff;
+}
+
+.graphHost {
+  flex: 1;
+  min-height: 0;
+  padding: 16px 22px;
+  background: #fff;
+}
+
+.statusBar {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 22px;
+  border-top: 1px solid #e0e0e0;
+  background: #fafafa;
+  font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+  flex: 0 0 auto;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff4400;
+  display: inline-block;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.statusDivider {
+  color: #ccc;
+}
+
+.legendBadge {
+  padding: 2px 6px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  margin-right: 6px;
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topic View — All Nodes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'IBM Plex Sans', sans-serif; }
+  </style>
+</head>
+<body class="bg-white">
+  <div class="p-6">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-zinc-900">AI Tech Evolution — All Nodes</h1>
+      <p class="text-sm text-zinc-500 mt-1">3 Lanes · 14 Rows · 完整论文节点展示</p>
+    </div>
+
+    <!-- Timeline Header -->
+    <div class="flex mb-4 border-b border-zinc-200 pb-2">
+      <div class="w-[200px] shrink-0 font-bold text-zinc-700">Lane / Row</div>
+      <div class="flex-1 flex">
+        <div class="flex-1 text-center font-bold text-zinc-700">2023</div>
+        <div class="flex-1 text-center font-bold text-zinc-700">2024</div>
+        <div class="flex-1 text-center font-bold text-zinc-700">2025</div>
+        <div class="flex-1 text-center font-bold text-zinc-700">2026</div>
+      </div>
+    </div>
+
+    <!-- NOW Line Indicator -->
+    <div class="relative">
+      <div class="absolute top-0 bottom-0 border-l-2 border-dashed border-red-400 z-10" style="left: calc(200px + 62.5%);">
+        <span class="absolute -top-1 -left-6 text-xs font-bold text-red-500">NOW</span>
+      </div>
+
+      <!-- Lane 1: Context Scaling -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3 py-2 px-3 bg-blue-50 border-l-4 border-blue-500">
+          <span class="text-lg font-bold text-blue-900">Lane 1: Context Scaling</span>
+          <span class="text-sm text-blue-600">序列复杂度 & 长上下文</span>
+        </div>
+
+        <!-- Row 1: SSM Path -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">1-A Row 1: SSM Path</div>
+            <div class="text-xs text-zinc-500">O(n) Revolution</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 6.25%;"><div class="w-3 h-3 rounded-full bg-blue-600"></div><span class="text-[10px] text-zinc-600 mt-1">RoPE</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 18.75%;"><div class="w-3 h-3 rounded-full bg-blue-500"></div><span class="text-[10px] text-zinc-600 mt-1">S4</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 31.25%;"><div class="w-4 h-4 rounded-full bg-blue-600"></div><span class="text-[10px] text-zinc-600 mt-1">Mamba</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 43.75%;"><div class="w-3 h-3 rounded-full bg-blue-500"></div><span class="text-[10px] text-zinc-600 mt-1">Mamba-2</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 56.25%;"><div class="w-3 h-3 rounded-full bg-blue-500"></div><span class="text-[10px] text-zinc-600 mt-1">Mamba-3</span></div>
+          </div>
+        </div>
+
+        <!-- Row 2: Linear RNN -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">1-A Row 2: Linear RNN</div>
+            <div class="text-xs text-zinc-500">RNN Revival</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 6.25%;"><div class="w-3 h-3 rounded-full bg-blue-600"></div><span class="text-[10px] text-zinc-600 mt-1">RoPE</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 12.5%;"><div class="w-3 h-3 rounded-full bg-blue-500"></div><span class="text-[10px] text-zinc-600 mt-1">RWKV-4</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 56.25%;"><div class="w-3 h-3 rounded-full bg-blue-500"></div><span class="text-[10px] text-zinc-600 mt-1">RWKV-7</span></div>
+          </div>
+        </div>
+
+        <!-- Row 3: Linear Attention -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">1-A Row 3: Linear Attn</div>
+            <div class="text-xs text-zinc-500">Attention Linearization</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 6.25%;"><div class="w-3 h-3 rounded-full bg-blue-600"></div><span class="text-[10px] text-zinc-600 mt-1">RoPE</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 18.75%;"><div class="w-3 h-3 rounded-full bg-blue-500"></div><span class="text-[10px] text-zinc-600 mt-1">RetNet</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 31.25%;"><div class="w-2 h-2 rounded-full bg-blue-400"></div><span class="text-[10px] text-zinc-600 mt-1">GLA</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 43.75%;"><div class="w-2 h-2 rounded-full bg-blue-400"></div><span class="text-[10px] text-zinc-600 mt-1">DeltaNet</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 43.75%;"><div class="w-2 h-2 rounded-full bg-blue-400"></div><span class="text-[10px] text-zinc-600 mt-1">xLSTM</span></div>
+          </div>
+        </div>
+
+        <!-- Row 4: Sparse/Chunked -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">1-B Row 4: Sparse</div>
+            <div class="text-xs text-zinc-500">Attention Optimizers</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 18.75%;"><div class="w-3 h-3 rounded-full bg-teal-500"></div><span class="text-[10px] text-zinc-600 mt-1">StreamingLLM</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 31.25%;"><div class="w-3 h-3 rounded-full bg-teal-500"></div><span class="text-[10px] text-zinc-600 mt-1">Ring Attn</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 43.75%;"><div class="w-3 h-3 rounded-full bg-teal-500"></div><span class="text-[10px] text-zinc-600 mt-1">Infini-Attn</span></div>
+          </div>
+        </div>
+
+        <!-- Row 5: Extrapolation -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">1-B Row 5: Extrapolation</div>
+            <div class="text-xs text-zinc-500">Long Context</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 18.75%;"><div class="w-3 h-3 rounded-full bg-teal-500"></div><span class="text-[10px] text-zinc-600 mt-1">LongNet</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 43.75%;"><div class="w-3 h-3 rounded-full bg-teal-500"></div><span class="text-[10px] text-zinc-600 mt-1">SSD</span></div>
+          </div>
+        </div>
+
+        <!-- Row 6: Position Encoding -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">1-C Row 6: Pos Encoding</div>
+            <div class="text-xs text-zinc-500">Trunk: RoPE → ALiBi → YaRN</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 6.25%;"><div class="w-4 h-4 rounded-full bg-slate-600"></div><span class="text-[10px] text-zinc-600 mt-1">RoPE</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 12.5%;"><div class="w-3 h-3 rounded-full bg-slate-500"></div><span class="text-[10px] text-zinc-600 mt-1">ALiBi</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 18.75%;"><div class="w-3 h-3 rounded-full bg-teal-500"></div><span class="text-[10px] text-zinc-600 mt-1">YaRN</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 37.5%;"><div class="w-3 h-3 rounded-full bg-teal-500"></div><span class="text-[10px] text-zinc-600 mt-1">LongRoPE</span></div>
+          </div>
+        </div>
+
+        <!-- Row 7: Persistent Memory -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">1-C Row 7: Memory</div>
+            <div class="text-xs text-zinc-500">Persistent Memory</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 12.5%;"><div class="w-2 h-2 rounded-full bg-teal-400"></div><span class="text-[10px] text-zinc-600 mt-1">RETRO</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 37.5%;"><div class="w-2 h-2 rounded-full bg-teal-400"></div><span class="text-[10px] text-zinc-600 mt-1">HMT</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 50%;"><div class="w-2 h-2 rounded-full bg-teal-400"></div><span class="text-[10px] text-zinc-600 mt-1">MemGPT</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 62.5%;"><div class="w-4 h-4 rounded-full bg-teal-600"></div><span class="text-[10px] text-zinc-600 mt-1">Persistent Mem</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lane 2: Memory Wall -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3 py-2 px-3 bg-emerald-50 border-l-4 border-emerald-500">
+          <span class="text-lg font-bold text-emerald-900">Lane 2: Memory Wall</span>
+          <span class="text-sm text-emerald-600">推理效率</span>
+        </div>
+
+        <!-- Row 8: KV Compression -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">2-A Row 8: KV Compression</div>
+            <div class="text-xs text-zinc-500">GQA → MLA</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 18.75%;"><div class="w-4 h-4 rounded-full bg-slate-600"></div><span class="text-[10px] text-zinc-600 mt-1">FlashAttn-2</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 12.5%;"><div class="w-3 h-3 rounded-full bg-slate-500"></div><span class="text-[10px] text-zinc-600 mt-1">GQA</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 43.75%;"><div class="w-4 h-4 rounded-full bg-slate-600"></div><span class="text-[10px] text-zinc-600 mt-1">MLA (V2)</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 56.25%;"><div class="w-4 h-4 rounded-full bg-slate-600"></div><span class="text-[10px] text-zinc-600 mt-1">MLA (V3)</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 68.75%;"><div class="w-3 h-3 rounded-full bg-slate-500"></div><span class="text-[10px] text-zinc-600 mt-1">TransMLA</span></div>
+          </div>
+        </div>
+
+        <!-- Row 9: FlashAttn Series -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">2-B Row 9: FlashAttn</div>
+            <div class="text-xs text-zinc-500">Hardware Optimization</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 6.25%;"><div class="w-3 h-3 rounded-full bg-slate-500"></div><span class="text-[10px] text-zinc-600 mt-1">FlashAttn</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 18.75%;"><div class="w-4 h-4 rounded-full bg-slate-600"></div><span class="text-[10px] text-zinc-600 mt-1">FA-2</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 50%;"><div class="w-3 h-3 rounded-full bg-slate-500"></div><span class="text-[10px] text-zinc-600 mt-1">FA-3</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 68.75%;"><div class="w-3 h-3 rounded-full bg-slate-500"></div><span class="text-[10px] text-zinc-600 mt-1">FA-4</span></div>
+          </div>
+        </div>
+
+        <!-- Row 10: Paging -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">2-B Row 10: Paging</div>
+            <div class="text-xs text-zinc-500">vLLM / SGLang</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 18.75%;"><div class="w-4 h-4 rounded-full bg-slate-600"></div><span class="text-[10px] text-zinc-600 mt-1">PagedAttn</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 25%;"><div class="w-3 h-3 rounded-full bg-slate-500"></div><span class="text-[10px] text-zinc-600 mt-1">SGLang</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 50%;"><div class="w-3 h-3 rounded-full bg-slate-500"></div><span class="text-[10px] text-zinc-600 mt-1">vLLM v2</span></div>
+          </div>
+        </div>
+
+        <!-- Row 11: Speculative -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">2-C Row 11: Speculative</div>
+            <div class="text-xs text-zinc-500">Draft & Verify</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 6.25%;"><div class="w-3 h-3 rounded-full bg-red-500"></div><span class="text-[10px] text-zinc-600 mt-1">Switch</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 6.25%;"><div class="w-4 h-4 rounded-full bg-red-600"></div><span class="text-[10px] text-zinc-600 mt-1">SpecDec</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 37.5%;"><div class="w-3 h-3 rounded-full bg-red-500"></div><span class="text-[10px] text-zinc-600 mt-1">Medusa</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 43.75%;"><div class="w-3 h-3 rounded-full bg-red-500"></div><span class="text-[10px] text-zinc-600 mt-1">EAGLE</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 56.25%;"><div class="w-3 h-3 rounded-full bg-red-500"></div><span class="text-[10px] text-zinc-600 mt-1">EAGLE-2</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lane 3: Compute Scaling -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3 py-2 px-3 bg-orange-50 border-l-4 border-orange-500">
+          <span class="text-lg font-bold text-orange-900">Lane 3: Compute Scaling</span>
+          <span class="text-sm text-orange-600">测试时计算</span>
+        </div>
+
+        <!-- Row 12: MoE -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">3-A Row 12: MoE</div>
+            <div class="text-xs text-zinc-500">Parameter Scaling</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 6.25%;"><div class="w-3 h-3 rounded-full bg-red-500"></div><span class="text-[10px] text-zinc-600 mt-1">GShard</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 6.25%;"><div class="w-3 h-3 rounded-full bg-red-500"></div><span class="text-[10px] text-zinc-600 mt-1">Switch</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 37.5%;"><div class="w-4 h-4 rounded-full bg-red-600"></div><span class="text-[10px] text-zinc-600 mt-1">Mixtral</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 37.5%;"><div class="w-3 h-3 rounded-full bg-red-500"></div><span class="text-[10px] text-zinc-600 mt-1">DS-MoE</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 56.25%;"><div class="w-4 h-4 rounded-full bg-red-600"></div><span class="text-[10px] text-zinc-600 mt-1">DS-V3 MoE</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 68.75%;"><div class="w-4 h-4 rounded-full bg-red-600"></div><span class="text-[10px] text-zinc-600 mt-1">Qwen3 MoE</span></div>
+          </div>
+        </div>
+
+        <!-- Row 13: Reasoning -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">3-B Row 13: Reasoning</div>
+            <div class="text-xs text-zinc-500">Test-time Compute</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 6.25%;"><div class="w-4 h-4 rounded-full bg-orange-600"></div><span class="text-[10px] text-zinc-600 mt-1">CoT</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 18.75%;"><div class="w-3 h-3 rounded-full bg-orange-500"></div><span class="text-[10px] text-zinc-600 mt-1">ToT</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 50%;"><div class="w-4 h-4 rounded-full bg-orange-600"></div><span class="text-[10px] text-zinc-600 mt-1">o1-preview</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 62.5%;"><div class="w-4 h-4 rounded-full bg-orange-600"></div><span class="text-[10px] text-zinc-600 mt-1">DeepSeek-R1</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 68.75%;"><div class="w-3 h-3 rounded-full bg-orange-500"></div><span class="text-[10px] text-zinc-600 mt-1">s1</span></div>
+          </div>
+        </div>
+
+        <!-- Row 14: Agent RL -->
+        <div class="flex items-center py-3 border-b border-zinc-100 hover:bg-zinc-50">
+          <div class="w-[200px] shrink-0 pl-4">
+            <div class="text-sm font-bold text-zinc-800">3-C Row 14: Agent RL</div>
+            <div class="text-xs text-zinc-500">Action Era</div>
+          </div>
+          <div class="flex-1 relative h-10">
+            <div class="absolute flex flex-col items-center" style="left: 62.5%;"><div class="w-3 h-3 rounded-full bg-orange-500"></div><span class="text-[10px] text-zinc-600 mt-1">Verifier</span></div>
+            <div class="absolute flex flex-col items-center" style="left: 75%;"><div class="w-4 h-4 rounded-full bg-orange-600"></div><span class="text-[10px] text-zinc-600 mt-1">Agent RL</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="mt-8 p-4 bg-zinc-50 rounded-lg">
+      <h3 class="text-sm font-bold text-zinc-700 mb-3">图例</h3>
+      <div class="flex flex-wrap gap-4 text-xs">
+        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-slate-600"></div><span>Attention-native</span></div>
+        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-blue-600"></div><span>Post-Attention</span></div>
+        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-teal-500"></div><span>Sparse/Long-context</span></div>
+        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-red-600"></div><span>Conditional Compute</span></div>
+        <div class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-orange-600"></div><span>Reasoning Scaling</span></div>
+        <div class="flex items-center gap-1"><div class="w-4 h-4 rounded-full bg-zinc-400"></div><span>大节点 = 重要论文</span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+# Frontend Component Structure
+
+```mermaid
+graph TD
+    A[app/page.tsx] --> B[SearchBar Component]
+    A --> C[ForceGraph Component]
+    A --> D[NodeDetails Component]
+    A --> E[LoadingState Component]
+
+    B --> F[usePaperSearch Hook]
+    F --> G[Fetch API: /api/search]
+
+    G --> H{API Response}
+    H -->|Success| I[Update Graph State]
+    H -->|Error| J[Display Error Message]
+
+    I --> C
+    C --> K[react-force-graph-2d]
+    K --> L[Custom Node Rendering]
+    K --> M[Interaction Handlers]
+
+    M --> N[handleNodeClick]
+    N --> D
+
+    D --> O[Display Paper Details]
+    O --> P[Title, Authors, Citations]
+
+    style A fill:#F5F5F5,stroke:#333,stroke-width:2px
+    style B fill:#FF4400,stroke:#333,stroke-width:2px,color:#FFF
+    style C fill:#FF4400,stroke:#333,stroke-width:2px,color:#FFF
+    style D fill:#FF4400,stroke:#333,stroke-width:2px,color:#FFF
+    style E fill:#FF4400,stroke:#333,stroke-width:2px,color:#FFF
+    style K fill:#F5F5F5,stroke:#333,stroke-width:2px
+```
+
+**组件说明**:
+- **SearchBar**: Rams 风格搜索框（白/灰/橙配色）
+- **ForceGraph**: 力导向图可视化（简单圆形节点）
+- **NodeDetails**: 论文详情面板（极简布局）
+- **LoadingState**: 加载状态指示器（无动画或微妙动画）

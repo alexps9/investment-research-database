@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topic View — Progressive Disclosure</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'IBM Plex Sans', sans-serif; }
+    
+    @keyframes growIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 8px currentColor; }
+      50% { box-shadow: 0 0 16px currentColor; }
+    }
+    
+    .fork-node {
+      animation: growIn 300ms ease-out forwards;
+    }
+    
+    .edge-portal {
+      animation: pulse-glow 2s infinite;
+    }
+    
+    .row-expand {
+      transition: height 300ms ease-out, background-color 200ms;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useMemo, useCallback } = React;
+
+    // ========== 常量定义 ==========
+    const COLORS = {
+      attention_native: '#475569',
+      post_attention: '#2563EB',
+      sparse_long: '#0D9488',
+      conditional: '#DC2626',
+      reasoning: '#EA580C',
+    };
+
+    const LANES = [
+      { id: 'context_scaling', title: 'Context Scaling', subtitle: '处理更长文本（4K → 1M+）', color: '#2563EB', bgLight: '#DBEAFE' },
+      { id: 'memory_wall', title: 'Memory Wall', subtitle: '降低推理成本', color: '#059669', bgLight: '#D1FAE5' },
+      { id: 'compute_scaling', title: 'Compute Scaling', subtitle: '测试时计算缩放', color: '#EA580C', bgLight: '#FFEDD5' },
+    ];
+
+    // ========== 完整数据集（来自 data.md）==========
+    const PAPERS = [
+      // === Lane 1: Context Scaling ===
+      // 1-A. Linearization - SSM Path (Row 1)
+      { id: 'rope', title: 'RoPE', year: 2023, quarter: 1, paradigm: 'attention_native', path: 'trunk', lane: 'context_scaling', size: 'lg', isTrunk: true, row: 'linearization' },
+      { id: 'mamba', title: 'Mamba', year: 2023, quarter: 4, paradigm: 'post_attention', path: 'ssm', lane: 'context_scaling', size: 'lg', isTrunk: true, row: 'linearization', forks_from: 'rope' },
+      { id: 'mamba2', title: 'Mamba-2', year: 2024, quarter: 2, paradigm: 'post_attention', path: 'ssm', lane: 'context_scaling', size: 'lg', builds_on: ['mamba'], row: 'linearization' },
+      { id: 'mamba3', title: 'Mamba-3', year: 2025, quarter: 1, paradigm: 'post_attention', path: 'ssm', lane: 'context_scaling', size: 'md', builds_on: ['mamba2'], row: 'linearization' },
+      
+      // 1-A. Linearization - Linear RNN Path (Row 2)
+      { id: 'rwkv4', title: 'RWKV-4', year: 2023, quarter: 2, paradigm: 'post_attention', path: 'linear_rnn', lane: 'context_scaling', size: 'md', row: 'linearization', forks_from: 'rope' },
+      { id: 'rwkv7', title: 'RWKV-7', year: 2024, quarter: 4, paradigm: 'post_attention', path: 'linear_rnn', lane: 'context_scaling', size: 'md', builds_on: ['rwkv4'], row: 'linearization' },
+      
+      // 1-A. Linearization - Linear Attention Path (Row 3)
+      { id: 'retnet', title: 'RetNet', year: 2023, quarter: 3, paradigm: 'post_attention', path: 'linear_attn', lane: 'context_scaling', size: 'md', row: 'linearization', forks_from: 'rope' },
+      { id: 'gla', title: 'GLA', year: 2023, quarter: 4, paradigm: 'post_attention', path: 'linear_attn', lane: 'context_scaling', size: 'sm', builds_on: ['retnet'], row: 'linearization' },
+      { id: 'deltanet', title: 'DeltaNet', year: 2024, quarter: 2, paradigm: 'post_attention', path: 'linear_attn', lane: 'context_scaling', size: 'sm', builds_on: ['gla'], row: 'linearization' },
+      { id: 'xlstm', title: 'xLSTM', year: 2024, quarter: 2, paradigm: 'post_attention', path: 'linear_attn', lane: 'context_scaling', size: 'sm', builds_on: ['gla'], row: 'linearization' },
+      
+      // 1-A. Linearization - Hybrid (Merge point)
+      { id: 'jamba', title: 'Jamba', year: 2024, quarter: 1, paradigm: 'post_attention', path: 'hybrid', lane: 'context_scaling', size: 'md', builds_on: ['mamba'], row: 'linearization' },
+      { id: 'griffin', title: 'Griffin', year: 2024, quarter: 1, paradigm: 'post_attention', path: 'hybrid', lane: 'context_scaling', size: 'sm', builds_on: ['mamba'], row: 'linearization' },
+      
+      // 1-B. Sparse (Row 4)
+      { id: 'streaming', title: 'StreamingLLM', year: 2023, quarter: 3, paradigm: 'sparse_long', path: 'sparse', lane: 'context_scaling', size: 'md', isTrunk: true, row: 'sparse' },
+      { id: 'ringattn', title: 'Ring Attention', year: 2023, quarter: 4, paradigm: 'sparse_long', path: 'sparse', lane: 'context_scaling', size: 'md', builds_on: ['streaming'], row: 'sparse' },
+      { id: 'infiniattn', title: 'Infini-Attention', year: 2024, quarter: 2, paradigm: 'sparse_long', path: 'sparse', lane: 'context_scaling', size: 'md', builds_on: ['ringattn'], row: 'sparse' },
+      { id: 'longnet', title: 'LongNet', year: 2023, quarter: 3, paradigm: 'sparse_long', path: 'sparse_ext', lane: 'context_scaling', size: 'sm', row: 'sparse' },
+      
+      // 1-C. Memory-Augmented (Row 6-7)
+      { id: 'alibi', title: 'ALiBi', year: 2023, quarter: 2, paradigm: 'attention_native', path: 'pos_encoding', lane: 'context_scaling', size: 'md', isTrunk: true, row: 'memory_aug' },
+      { id: 'yarn', title: 'YaRN', year: 2023, quarter: 3, paradigm: 'sparse_long', path: 'pos_encoding', lane: 'context_scaling', size: 'md', builds_on: ['alibi'], row: 'memory_aug' },
+      { id: 'longrope', title: 'LongRoPE', year: 2024, quarter: 1, paradigm: 'sparse_long', path: 'pos_encoding', lane: 'context_scaling', size: 'md', builds_on: ['yarn'], row: 'memory_aug' },
+      { id: 'hmt', title: 'HMT', year: 2024, quarter: 1, paradigm: 'sparse_long', path: 'persistent_mem', lane: 'context_scaling', size: 'sm', builds_on: ['longrope'], row: 'memory_aug' },
+      { id: 'persistent_mem', title: 'Persistent Memory', year: 2025, quarter: 2, paradigm: 'sparse_long', path: 'persistent_mem', lane: 'context_scaling', size: 'lg', builds_on: ['hmt'], row: 'memory_aug' },
+      
+      // === Lane 2: Memory Wall ===
+      // 2-A. KV Compression (Row 8)
+      { id: 'flash2', title: 'FlashAttn-2', year: 2023, quarter: 3, paradigm: 'attention_native', path: 'kv_comp', lane: 'memory_wall', size: 'lg', isTrunk: true, row: 'kv_compression' },
+      { id: 'gqa', title: 'GQA', year: 2023, quarter: 2, paradigm: 'attention_native', path: 'kv_comp', lane: 'memory_wall', size: 'md', forks_from: 'flash2', row: 'kv_compression' },
+      { id: 'mla', title: 'MLA (DS-V2)', year: 2024, quarter: 2, paradigm: 'attention_native', path: 'kv_comp', lane: 'memory_wall', size: 'lg', builds_on: ['gqa'], row: 'kv_compression' },
+      { id: 'mla_v3', title: 'MLA (DS-V3)', year: 2024, quarter: 4, paradigm: 'attention_native', path: 'kv_comp', lane: 'memory_wall', size: 'lg', builds_on: ['mla'], row: 'kv_compression' },
+      { id: 'transmla', title: 'TransMLA', year: 2025, quarter: 2, paradigm: 'attention_native', path: 'kv_comp', lane: 'memory_wall', size: 'md', builds_on: ['mla_v3'], row: 'kv_compression' },
+      
+      // 2-B. Kernel Optimization (Row 9)
+      { id: 'flash3', title: 'FlashAttn-3', year: 2024, quarter: 3, paradigm: 'attention_native', path: 'kernel', lane: 'memory_wall', size: 'md', isTrunk: true, row: 'kernel_opt' },
+      { id: 'flash4', title: 'FlashAttn-4', year: 2025, quarter: 3, paradigm: 'attention_native', path: 'kernel', lane: 'memory_wall', size: 'md', builds_on: ['flash3'], row: 'kernel_opt' },
+      
+      // 2-B. Paging (Row 10)
+      { id: 'pagedattn', title: 'PagedAttention', year: 2023, quarter: 3, paradigm: 'attention_native', path: 'paging', lane: 'memory_wall', size: 'lg', forks_from: 'flash2', row: 'paging' },
+      { id: 'sglang', title: 'SGLang', year: 2023, quarter: 4, paradigm: 'attention_native', path: 'paging', lane: 'memory_wall', size: 'md', builds_on: ['pagedattn'], row: 'paging' },
+      { id: 'vllm2', title: 'vLLM v2', year: 2024, quarter: 3, paradigm: 'attention_native', path: 'paging', lane: 'memory_wall', size: 'md', builds_on: ['pagedattn'], row: 'paging' },
+      
+      // 2-C. Speculative Decoding (Row 11)
+      { id: 'switch', title: 'Switch', year: 2023, quarter: 1, paradigm: 'conditional', path: 'speculative', lane: 'memory_wall', size: 'md', isTrunk: true, row: 'speculative' },
+      { id: 'specdec', title: 'Speculative Dec.', year: 2023, quarter: 1, paradigm: 'conditional', path: 'speculative', lane: 'memory_wall', size: 'lg', forks_from: 'switch', row: 'speculative' },
+      { id: 'medusa', title: 'Medusa', year: 2024, quarter: 1, paradigm: 'conditional', path: 'speculative', lane: 'memory_wall', size: 'md', builds_on: ['specdec'], row: 'speculative' },
+      { id: 'eagle', title: 'EAGLE', year: 2024, quarter: 2, paradigm: 'conditional', path: 'speculative', lane: 'memory_wall', size: 'md', builds_on: ['specdec'], row: 'speculative' },
+      { id: 'eagle2', title: 'EAGLE-2', year: 2024, quarter: 4, paradigm: 'conditional', path: 'speculative', lane: 'memory_wall', size: 'md', builds_on: ['eagle'], row: 'speculative' },
+      
+      // === Lane 3: Compute Scaling ===
+      // 3-A. MoE (Row 12)
+      { id: 'gshard', title: 'GShard', year: 2023, quarter: 1, paradigm: 'conditional', path: 'moe', lane: 'compute_scaling', size: 'md', isTrunk: true, row: 'moe' },
+      { id: 'mixtral', title: 'Mixtral', year: 2024, quarter: 1, paradigm: 'conditional', path: 'moe', lane: 'compute_scaling', size: 'lg', builds_on: ['gshard'], row: 'moe' },
+      { id: 'dsmoe', title: 'DS-MoE', year: 2024, quarter: 1, paradigm: 'conditional', path: 'moe', lane: 'compute_scaling', size: 'md', builds_on: ['gshard'], row: 'moe' },
+      { id: 'dsv3_moe', title: 'DS-V3 MoE', year: 2024, quarter: 4, paradigm: 'conditional', path: 'moe', lane: 'compute_scaling', size: 'lg', builds_on: ['dsmoe'], row: 'moe' },
+      { id: 'qwen3', title: 'Qwen3 MoE', year: 2025, quarter: 2, paradigm: 'conditional', path: 'moe', lane: 'compute_scaling', size: 'lg', builds_on: ['dsv3_moe'], row: 'moe' },
+      
+      // 3-B. Reasoning (Row 13)
+      { id: 'cot', title: 'CoT', year: 2023, quarter: 1, paradigm: 'reasoning', path: 'reasoning', lane: 'compute_scaling', size: 'lg', isTrunk: true, row: 'reasoning' },
+      { id: 'tot', title: 'ToT', year: 2023, quarter: 3, paradigm: 'reasoning', path: 'reasoning', lane: 'compute_scaling', size: 'md', builds_on: ['cot'], row: 'reasoning' },
+      { id: 'o1_preview', title: 'o1-preview', year: 2024, quarter: 3, paradigm: 'reasoning', path: 'reasoning', lane: 'compute_scaling', size: 'lg', builds_on: ['tot'], row: 'reasoning' },
+      { id: 'r1', title: 'DeepSeek-R1', year: 2025, quarter: 1, paradigm: 'reasoning', path: 'reasoning', lane: 'compute_scaling', size: 'lg', builds_on: ['o1_preview'], row: 'reasoning' },
+      { id: 's1', title: 's1', year: 2025, quarter: 2, paradigm: 'reasoning', path: 'reasoning', lane: 'compute_scaling', size: 'md', builds_on: ['r1'], row: 'reasoning' },
+      
+      // 3-C. Verifier & Agent RL (Row 14)
+      { id: 'verifier', title: 'Verifier Scaling', year: 2025, quarter: 2, paradigm: 'reasoning', path: 'verifier', lane: 'compute_scaling', size: 'md', builds_on: ['r1'], row: 'agent_rl' },
+      { id: 'agent_rl', title: 'Agent RL', year: 2025, quarter: 3, paradigm: 'reasoning', path: 'agent', lane: 'compute_scaling', size: 'lg', builds_on: ['verifier'], row: 'agent_rl' },
+    ];
+
+    // 跨泳道因果连线
+    const CROSS_ARCS = [
+      { from: 'flash2', to: 'yarn', label: 'IO解决→长上下文', color: '#059669' },
+      { from: 'mla_v3', to: 'r1', label: '低成本推理', color: '#EA580C' },
+      { from: 'longrope', to: 'persistent_mem', label: '长上下文→记忆', color: '#2563EB' },
+      { from: 'verifier', to: 'agent_rl', label: '评价→行动', color: '#EA580C' },
+    ];
+
+    // Row 定义
+    const ROWS = [
+      // Lane 1
+      { id: 'linearization', lane: 'context_scaling', title: '1-A Linearization', subtitle: 'O(n) Revolution', paradigms: ['post_attention'] },
+      { id: 'sparse', lane: 'context_scaling', title: '1-B Sparse & Long', subtitle: 'Attention Optimizers', paradigms: ['sparse_long'] },
+      { id: 'memory_aug', lane: 'context_scaling', title: '1-C Memory-Augmented', subtitle: 'Position & Memory', paradigms: ['sparse_long', 'attention_native'] },
+      // Lane 2
+      { id: 'kv_compression', lane: 'memory_wall', title: '2-A KV Compression', subtitle: 'GQA → MLA', paradigms: ['attention_native'] },
+      { id: 'kernel_opt', lane: 'memory_wall', title: '2-B Kernel Opt.', subtitle: 'FlashAttn Series', paradigms: ['attention_native'] },
+      { id: 'paging', lane: 'memory_wall', title: '2-B Paging', subtitle: 'vLLM / SGLang', paradigms: ['attention_native'] },
+      { id: 'speculative', lane: 'memory_wall', title: '2-C Speculative', subtitle: 'Draft & Verify', paradigms: ['conditional'] },
+      // Lane 3
+      { id: 'moe', lane: 'compute_scaling', title: '3-A MoE', subtitle: 'Parameter Scaling', paradigms: ['conditional'] },
+      { id: 'reasoning', lane: 'compute_scaling', title: '3-B Reasoning', subtitle: 'Test-time Compute', paradigms: ['reasoning'] },
+      { id: 'agent_rl', lane: 'compute_scaling', title: '3-C Agent RL', subtitle: 'Action & Evaluation', paradigms: ['reasoning'] },
+    ];
+
+    // ========== 工具函数 ==========
+    function qToX(year, quarter) {
+      return ((year - 2023) * 4 + (quarter - 1)) / 16 * 100;
+    }
+
+    function getNodeSize(size) {
+      return size === 'lg' ? 10 : size === 'md' ? 7 : 5;
+    }
+
+    function getColor(paradigm) {
+      return COLORS[paradigm] || '#475569';
+    }
+
+    // ========== 组件 ==========
+    function NodeShape({ cx, cy, r, fill, stroke, strokeWidth }) {
+      return <circle cx={cx} cy={cy} r={r} fill={fill} stroke={stroke} strokeWidth={strokeWidth} />;
+    }
+
+    function App() {
+      const [expandedRows, setExpandedRows] = useState(new Set());
+      const [selectedNode, setSelectedNode] = useState(null);
+      const [hoveredRow, setHoveredRow] = useState(null);
+
+      const timelineW = 1200;
+      const ROW_H_COLLAPSED = 60;
+      const ROW_H_EXPANDED = 180;
+
+      // 计算每行的 Y 位置
+      const getRowY = (rowId) => {
+        let y = 0;
+        for (const row of ROWS) {
+          if (row.id === rowId) return y;
+          y += expandedRows.has(row.id) ? ROW_H_EXPANDED : ROW_H_COLLAPSED;
+        }
+        return y;
+      };
+
+      // 切换行展开
+      const toggleRow = (rowId) => {
+        const newSet = new Set(expandedRows);
+        if (newSet.has(rowId)) {
+          newSet.delete(rowId);
+        } else {
+          newSet.add(rowId);
+        }
+        setExpandedRows(newSet);
+      };
+
+      // 获取论文位置
+      const getNodePosition = (paper) => {
+        const baseY = getRowY(paper.row);
+        const rowHeight = expandedRows.has(paper.row) ? ROW_H_EXPANDED : ROW_H_COLLAPSED;
+        
+        if (!expandedRows.has(paper.row)) {
+          // 折叠态：所有节点在同一行居中
+          return {
+            x: qToX(paper.year, paper.quarter),
+            y: baseY + rowHeight / 2,
+          };
+        }
+        
+        // 展开态：分叉布局
+        const rowPapers = PAPERS.filter(p => p.row === paper.row);
+        const trunkNodes = rowPapers.filter(p => p.isTrunk);
+        const forkNodes = rowPapers.filter(p => !p.isTrunk);
+        
+        if (paper.isTrunk) {
+          // 主干节点在中心线
+          return {
+            x: qToX(paper.year, paper.quarter),
+            y: baseY + rowHeight / 2,
+          };
+        }
+        
+        // 分叉节点扇形展开
+        const trunkX = qToX(trunkNodes[0]?.year || 2023, trunkNodes[0]?.quarter || 1);
+        const pathIndex = [...new Set(forkNodes.map(p => p.path))].indexOf(paper.path);
+        const totalPaths = [...new Set(forkNodes.map(p => p.path))].length;
+        
+        const angleSpread = Math.PI / 4; // 45度扇形
+        const angle = -angleSpread / 2 + (angleSpread / (totalPaths + 1)) * (pathIndex + 1);
+        const radius = 50;
+        
+        return {
+          x: qToX(paper.year, paper.quarter),
+          y: baseY + rowHeight / 2 + Math.sin(angle) * radius,
+        };
+      };
+
+      // 渲染分叉弧线
+      const renderForkArcs = (rowId) => {
+        const rowPapers = PAPERS.filter(p => p.row === rowId);
+        const forkPapers = rowPapers.filter(p => p.forks_from);
+        
+        return forkPapers.map(paper => {
+          const source = PAPERS.find(p => p.id === paper.forks_from);
+          if (!source) return null;
+          
+          const srcPos = getNodePosition(source);
+          const tgtPos = getNodePosition(paper);
+          
+          const x1 = srcPos.x * timelineW / 100;
+          const y1 = srcPos.y;
+          const x2 = tgtPos.x * timelineW / 100;
+          const y2 = tgtPos.y;
+          
+          // Bezier 曲线
+          const dx = x2 - x1;
+          const cp1x = x1 + dx * 0.3;
+          const cp1y = y1;
+          const cp2x = x2 - dx * 0.3;
+          const cp2y = y2;
+          
+          return (
+            <path
+              key={`fork-${paper.id}`}
+              d={`M ${x1} ${y1} C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${x2} ${y2}`}
+              stroke={getColor(paper.paradigm)}
+              strokeWidth="2"
+              fill="none"
+              opacity="0.7"
+            />
+          );
+        });
+      };
+
+      // 渲染跨泳道弧线
+      const renderCrossArcs = () => {
+        return CROSS_ARCS.map((arc, i) => {
+          const source = PAPERS.find(p => p.id === arc.from);
+          const target = PAPERS.find(p => p.id === arc.to);
+          if (!source || !target) return null;
+          
+          const srcPos = getNodePosition(source);
+          const isTargetExpanded = expandedRows.has(target.row);
+          
+          let tgtPos;
+          if (isTargetExpanded) {
+            tgtPos = getNodePosition(target);
+          } else {
+            // 目标折叠，绘制到边缘锚点
+            tgtPos = {
+              x: 100, // 右侧边缘
+              y: getRowY(target.row) + (expandedRows.has(target.row) ? ROW_H_EXPANDED : ROW_H_COLLAPSED) / 2,
+            };
+          }
+          
+          const x1 = srcPos.x * timelineW / 100;
+          const y1 = srcPos.y;
+          const x2 = tgtPos.x * timelineW / 100;
+          const y2 = tgtPos.y;
+          
+          // S-curve with better control points
+          const cp1x = x1 + (x2 - x1) * 0.5;
+          const cp1y = y1;
+          const cp2x = x1 + (x2 - x1) * 0.5;
+          const cp2y = y2;
+          
+          return (
+            <g key={`cross-${i}`}>
+              <path
+                d={`M ${x1} ${y1} C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${x2} ${y2}`}
+                stroke={arc.color}
+                strokeWidth="3"
+                fill="none"
+                strokeDasharray="8,4"
+                opacity="0.9"
+              />
+              {!isTargetExpanded && (
+                <g style={{ pointerEvents: 'auto' }}>
+                  <circle
+                    cx={x2}
+                    cy={y2}
+                    r="10"
+                    fill={arc.color}
+                    stroke="white"
+                    strokeWidth="2"
+                    className="edge-portal cursor-pointer"
+                    onClick={() => toggleRow(target.row)}
+                  />
+                  <text
+                    x={x2 - 15}
+                    y={y2 - 15}
+                    fontSize="10"
+                    fontWeight="bold"
+                    fill={arc.color}
+                    textAnchor="end"
+                    style={{ textShadow: '0 0 3px white' }}
+                  >
+                    {arc.label}
+                  </text>
+                </g>
+              )}
+            </g>
+          );
+        });
+      };
+
+      return (
+        <div className="h-screen flex flex-col bg-white">
+          {/* Header */}
+          <div className="h-14 border-b border-zinc-200 px-6 flex items-center justify-between shrink-0 bg-white z-30">
+            <div>
+              <h1 className="text-lg font-bold text-zinc-900">AI Tech Evolution Map</h1>
+              <p className="text-xs text-zinc-500">点击行展开技术路径 · 点击边缘锚点穿透探索</p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setExpandedRows(new Set())}
+                className="px-3 py-1 text-xs border border-zinc-300 rounded hover:bg-zinc-50"
+              >
+                全部折叠
+              </button>
+              <button
+                onClick={() => setExpandedRows(new Set(ROWS.map(r => r.id)))}
+                className="px-3 py-1 text-xs bg-zinc-900 text-white rounded hover:bg-zinc-800"
+              >
+                全部展开
+              </button>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 flex overflow-auto">
+            {/* Left Rail - Lanes */}
+            <div className="w-[220px] bg-zinc-50 border-r border-zinc-200 shrink-0 sticky left-0 z-20">
+              {LANES.map((lane, i) => {
+                const laneRows = ROWS.filter(r => r.lane === lane.id);
+                const laneHeight = laneRows.reduce((sum, r) => 
+                  sum + (expandedRows.has(r.id) ? ROW_H_EXPANDED : ROW_H_COLLAPSED), 0
+                );
+                
+                return (
+                  <div
+                    key={lane.id}
+                    className="px-4 flex flex-col justify-center border-b border-zinc-200"
+                    style={{ height: laneHeight, borderLeft: `4px solid ${lane.color}` }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
+                        style={{ background: lane.bgLight, color: lane.color }}>
+                        {i + 1}
+                      </div>
+                      <span className="text-sm font-bold text-zinc-900">{lane.title}</span>
+                    </div>
+                    <p className="mt-1 text-[10px] text-zinc-500">{lane.subtitle}</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Canvas */}
+            <div className="flex-1 relative" style={{ minWidth: timelineW }}>
+              {/* Timeline Header */}
+              <div className="h-10 border-b border-zinc-200 bg-white sticky top-0 z-20 flex">
+                {['2023', '2024', '2025', '2026'].map(y => (
+                  <div key={y} className="flex-1 border-r border-zinc-100">
+                    <div className="text-center text-xs font-bold text-zinc-700 pt-1">{y}</div>
+                    <div className="grid grid-cols-4 h-5">
+                      {['Q1', 'Q2', 'Q3', 'Q4'].map(q => (
+                        <div key={q} className="text-[9px] text-zinc-400 text-center">{q}</div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* NOW Line */}
+              <div className="absolute top-0 bottom-0 z-10 pointer-events-none" style={{ left: `${qToX(2025, 2)}%` }}>
+                <div className="w-0 h-full border-l-2 border-dashed border-red-500"></div>
+                <div className="absolute top-8 -left-3 text-[9px] font-bold text-red-500">NOW</div>
+              </div>
+
+              {/* SVG Layer for Connections */}
+              <svg className="absolute top-0 left-0 pointer-events-none" style={{ zIndex: 5, width: timelineW, height: '100%' }}>
+                {ROWS.map(row => expandedRows.has(row.id) && renderForkArcs(row.id))}
+                {renderCrossArcs()}
+              </svg>
+
+              {/* Rows */}
+              {ROWS.map(row => {
+                const isExpanded = expandedRows.has(row.id);
+                const rowHeight = isExpanded ? ROW_H_EXPANDED : ROW_H_COLLAPSED;
+                const rowY = getRowY(row.id);
+                const rowPapers = PAPERS.filter(p => p.row === row.id);
+                const isHovered = hoveredRow === row.id;
+                
+                return (
+                  <div
+                    key={row.id}
+                    className={`absolute w-full border-b border-zinc-100 row-expand cursor-pointer ${isHovered ? 'bg-zinc-50' : ''}`}
+                    style={{ top: rowY, height: rowHeight }}
+                    onClick={() => toggleRow(row.id)}
+                    onMouseEnter={() => setHoveredRow(row.id)}
+                    onMouseLeave={() => setHoveredRow(null)}
+                  >
+                    {/* Row Label */}
+                    <div className="absolute left-3 top-2 flex items-center gap-2">
+                      <span className="text-[10px] font-bold text-zinc-700">{row.title}</span>
+                      <span className="text-[9px] text-zinc-400">{row.subtitle}</span>
+                      <span className="text-[10px] text-zinc-400">{isExpanded ? '▼' : '▶'}</span>
+                    </div>
+
+                    {/* Papers */}
+                    {rowPapers.map(paper => {
+                      const pos = getNodePosition(paper);
+                      const sz = getNodeSize(paper.size);
+                      const color = getColor(paper.paradigm);
+                      const isSelected = selectedNode === paper.id;
+                      
+                      return (
+                        <div
+                          key={paper.id}
+                          className={`absolute flex flex-col items-center ${paper.isTrunk ? '' : isExpanded ? 'fork-node' : 'hidden'}`}
+                          style={{
+                            left: `${pos.x}%`,
+                            top: pos.y - sz,
+                            transform: 'translateX(-50%)',
+                            zIndex: isSelected ? 20 : 10,
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedNode(paper.id);
+                          }}
+                        >
+                          <svg width={sz * 2 + 4} height={sz * 2 + 4} style={{ overflow: 'visible' }}>
+                            <NodeShape
+                              cx={sz + 2}
+                              cy={sz + 2}
+                              r={sz}
+                              fill={color}
+                              stroke={isSelected ? '#FF4400' : '#fff'}
+                              strokeWidth={isSelected ? 3 : 2}
+                            />
+                          </svg>
+                          <div className="mt-0.5 text-center">
+                            <div className="text-[8px] font-medium text-zinc-700 whitespace-nowrap">{paper.title}</div>
+                            {!isExpanded && paper.isTrunk && (
+                              <div className="text-[7px] text-zinc-400">{paper.year} Q{paper.quarter}</div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* Fork hints (when collapsed) */}
+                    {!isExpanded && rowPapers.filter(p => !p.isTrunk).length > 0 && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                        <span className="text-[8px] text-zinc-400">
+                          +{rowPapers.filter(p => !p.isTrunk).length} paths
+                        </span>
+                        <div className="flex gap-0.5">
+                          {[...new Set(rowPapers.filter(p => !p.isTrunk).map(p => p.path))].map((path, i) => (
+                            <div
+                              key={path}
+                              className="w-1.5 h-1.5 rounded-full"
+                              style={{ background: getColor(rowPapers.find(p => p.path === path)?.paradigm), opacity: 0.5 }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

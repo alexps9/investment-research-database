@@ -1,0 +1,116 @@
+# Rams Design Decision Matrix - Search History & Settings
+
+```mermaid
+flowchart TD
+    Start([Proposed Feature: Search History + Settings Panel]) -> Q1{Solves REAL user pain?}
+
+    Q1 -->|No - Browser history already exists| Reject1[❌ REJECT: Search History]
+    Q1 -->|Yes - Filters help exploration| Q2{Is SEMANTIC or COSMETIC?}
+
+    Reject1 --> R1[Rationale: Redundant feature]
+    R1 --> R1a[Browser Cmd+H / Ctrl+H shows history]
+    R1a --> R1b[Bookmarking works for persistent access]
+    R1b --> Final1[🏁 Conclusion: Do not implement]
+
+    Q2 -->|Cosmetic - Visual tuning| Reject2[❌ REJECT: Settings Panel]
+    Q2 -->|Semantic - Data filtering| Q3{Violates UNOBTRUSIVE?}
+
+    Reject2 --> R2[Rationale: Implementation details]
+    R2 --> R2a[Layout algorithms are internal]
+    R2a --> R2b[Node size / Edge opacity are cosmetic]
+    R2b --> R2c[Users don't understand graph theory]
+    R2c --> Final2[🏁 Conclusion: Use smart defaults]
+
+    Q3 -->|Yes - Persistent sidebar| Reject3[❌ REJECT: Fixed Sidebar]
+    Q3 -->|No - Collapsible panel| Q4{Exposes COMPLEXITY?}
+
+    Reject3 --> R3[Rationale: Intrudes on visualization]
+    R3 --> R3a[Takes 20-30% screen width]
+    R3a --> R3b[Reduces graph viewing area]
+    R3b --> R3c[Violates Rams Principle 5]
+    R3c --> Final3[🏁 Conclusion: Make collapsible]
+
+    Q4 -->|Yes - Settings panel| Reject4[❌ REJECT: Configuration]
+    Q4 -->|No - Contextual controls| Q5{Less but BETTER?}
+
+    Reject4 --> R4[Rationale: Not self-explanatory]
+    R4 --> R4a[Why choose spring vs hierarchical?]
+    R4a --> R4b[What is optimal edge opacity?]
+    R4b --> R4c[Violates Rams Principle 4]
+    R4c --> Final4[🏁 Conclusion: Hide complexity]
+
+    Q5 -->|No - More features without value| Reject5[❌ REJECT: Feature Creep]
+    Q5 -->|Yes - Semantic value| Accept[✅ ACCEPT: Semantic Filters]
+
+    Reject5 --> R5[Rationale: Violates Rams Principle 10]
+    R5 --> R5a[Adding features ≠ adding value]
+    R5a --> R5b[Less but better is the goal]
+    R5b --> Final5[🏁 Conclusion: Resist feature creep]
+
+    Accept --> A1[Semantic Filters]
+    A1 --> A2[Year range: 2000-2024]
+    A2 --> A3[Citation threshold: ≥ 10]
+    A3 --> A4[Community selection: Cluster A, B, C]
+    A4 --> A5[Fuzzy search: Paper titles]
+    A5 --> Success[🏁 Conclusion: Implement in Phase 4.2]
+
+    Success -> Alternative[Alternative: Contextual Controls]
+    Alternative -> Alt1[Hover: Show node details]
+    Alt1 -> Alt2[Click: Highlight connected nodes]
+    Alt2 -> Alt3[Double-click: Zoom to community]
+    Alt3 -> AltSuccess[🏁 Conclusion: Implement in Phase 4.2]
+
+    style Reject1 fill:#FF4400,color:#FFF
+    style Reject2 fill:#FF4400,color:#FFF
+    style Reject3 fill:#FF4400,color:#FFF
+    style Reject4 fill:#FF4400,color:#FFF
+    style Reject5 fill:#FF4400,color:#FFF
+    style Accept fill:#00AA00,color:#FFF
+    style Success fill:#00AA00,color:#FFF
+    style AltSuccess fill:#00AA00,color:#FFF
+
+    classDef reject fill:#FF4400,stroke:#333,stroke-width:2px,color:#FFF
+    classDef accept fill:#00AA00,stroke:#333,stroke-width:2px,color:#FFF
+    classDef neutral fill:#FFA500,stroke:#333,stroke-width:2px,color:#FFF
+
+    class Reject1,Reject2,Reject3,Reject4,Reject5 reject
+    class Accept,Success,AltSuccess accept
+```
+
+## Legend
+
+**Red nodes**: Features that violate Rams principles (REJECT)
+**Green nodes**: Features that follow Rams principles (ACCEPT)
+**Orange nodes**: Decision points (evaluation questions)
+
+## Key Insights
+
+1. **Search History**: Fails immediately at Q1 (browser history solves this)
+2. **Settings Panel**: Fails at Q2 (cosmetic tuning, not semantic value)
+3. **Semantic Filters**: Passes all questions (semantic, unobtrusive, simple)
+4. **Contextual Controls**: Passes all questions (reveal on demand, not persistent)
+
+## Rams Principle Violations
+
+- **Principle 4 (Understandable)**: Settings panel exposes graph algorithms
+- **Principle 5 (Unobtrusive)**: Fixed sidebar takes 20-30% screen width
+- **Principle 10 (Minimal)**: Adding features without proportional value
+
+## Recommended Implementation
+
+✅ **Semantic Filters** (Phase 4.2):
+- Year range slider
+- Citation threshold
+- Community checkboxes
+- Fuzzy search
+
+✅ **Contextual Controls** (Phase 4.2):
+- Hover for details
+- Click to highlight
+- Double-click to zoom
+
+❌ **Do NOT Implement**:
+- Search history sidebar (use browser history)
+- Settings panel (use smart defaults)
+- Layout algorithm selection (force-directed is optimal)
+- Visual tuning (node size, edge opacity)

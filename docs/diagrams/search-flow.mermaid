@@ -1,0 +1,49 @@
+# Search and Visualization Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend as Next.js Frontend
+    participant Backend as FastAPI Backend
+    participant OpenAlex as OpenAlex API
+    participant NetworkX
+
+    User->>Frontend: 输入搜索关键词
+    Frontend->>Frontend: 显示加载状态
+    Frontend->>Backend: GET /api/search?query=topic&limit=50
+
+    Backend->>OpenAlex: 获取 top 50 论文
+    OpenAlex-->>Backend: 返回论文数据
+
+    loop For each paper
+        Backend->>OpenAlex: 获取引用关系
+        OpenAlex-->>Backend: 返回 references
+    end
+
+    Backend->>NetworkX: 构建有向图 DiGraph
+    NetworkX->>NetworkX: 添加节点和边
+
+    Backend->>NetworkX: 社区检测 (Louvain)
+    NetworkX-->>Backend: 社区分组结果
+
+    Backend->>NetworkX: 计算中心性
+    NetworkX-->>Backend: 节点重要性分数
+
+    Backend->>Backend: 转换为 JSON {nodes, links}
+    Backend-->>Frontend: 返回图数据
+
+    Frontend->>Frontend: 使用 react-force-graph-2d 渲染
+    Frontend-->>User: 显示交互式力导向图
+
+    User->>Frontend: 点击节点
+    Frontend-->>User: 显示论文详情
+
+    Note over Frontend,NetworkX: 整个流程 < 2 秒
+```
+
+**关键步骤**:
+1. 用户输入 → 前端调用 API
+2. 后端并行获取论文和引用
+3. NetworkX 构建图并分析
+4. 前端渲染力导向图
+5. 用户交互查看详情

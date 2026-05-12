@@ -1,0 +1,17 @@
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 40px;
+}
+
+.message {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #888899;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}

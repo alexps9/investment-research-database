@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>Claude Code 使用洞察报告</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #f8fafc; color: #334155; line-height: 1.7; padding: 48px 24px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    h2 { font-size: 18px; font-weight: 600; color: #0f172a; margin-top: 40px; margin-bottom: 14px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
+    .subtitle { color: #64748b; font-size: 14px; margin-bottom: 32px; }
+    .stats { display: flex; gap: 20px; margin-bottom: 32px; padding: 16px 0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-val { font-size: 22px; font-weight: 700; color: #0f172a; }
+    .stat-lbl { font-size: 10px; color: #64748b; text-transform: uppercase; }
+    .glance { background: linear-gradient(135deg, #fef3c7, #fde68a); border: 1px solid #f59e0b; border-radius: 12px; padding: 20px; margin-bottom: 32px; }
+    .glance h3 { font-size: 15px; font-weight: 700; color: #92400e; margin-bottom: 12px; }
+    .glance p { font-size: 13px; color: #78350f; margin-bottom: 10px; line-height: 1.6; }
+    .glance strong { color: #92400e; }
+    .card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .card-title { font-weight: 600; font-size: 14px; color: #0f172a; margin-bottom: 6px; }
+    .card-badge { font-size: 11px; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; float: right; }
+    .card-desc { font-size: 13px; color: #475569; line-height: 1.6; }
+    .win { background: #f0fdf4; border-color: #bbf7d0; }
+    .win .card-title { color: #166534; }
+    .win .card-desc { color: #15803d; }
+    .friction { background: #fef2f2; border-color: #fca5a5; }
+    .friction .card-title { color: #991b1b; }
+    .friction .card-desc { color: #7f1d1d; }
+    .friction ul { margin: 8px 0 0 16px; font-size: 12px; color: #334155; }
+    .suggestion { background: #eff6ff; border-color: #bfdbfe; }
+    .suggestion .card-title { color: #1e40af; }
+    .suggestion code { background: #f1f5f9; padding: 2px 6px; border-radius: 3px; font-size: 11px; }
+    .horizon { background: linear-gradient(135deg, #faf5ff, #f5f3ff); border-color: #c4b5fd; }
+    .horizon .card-title { color: #5b21b6; }
+    .horizon .card-desc { color: #334155; }
+    .fun { background: linear-gradient(135deg, #fef3c7, #fde68a); border: 1px solid #fbbf24; border-radius: 12px; padding: 20px; margin-top: 32px; text-align: center; }
+    .fun h3 { font-size: 16px; color: #78350f; margin-bottom: 6px; }
+    .fun p { font-size: 13px; color: #92400e; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Claude Code 使用洞察报告</h1>
+  <p class="subtitle">32 个会话 · 24 个已分析 · 246 条消息 · 456 小时 · 2026-04-07 至 2026-05-09</p>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val">246</div><div class="stat-lbl">消息数</div></div>
+    <div class="stat"><div class="stat-val">+12,643/-807</div><div class="stat-lbl">代码行</div></div>
+    <div class="stat"><div class="stat-val">60</div><div class="stat-lbl">文件</div></div>
+    <div class="stat"><div class="stat-val">10</div><div class="stat-lbl">活跃天数</div></div>
+    <div class="stat"><div class="stat-val">24.6</div><div class="stat-lbl">消息/天</div></div>
+  </div>
+
+  <!-- At a Glance -->
+  <div class="glance">
+    <h3>一眼总览</h3>
+    <p><strong>做得好的：</strong>你和 Claude 形成了强大的迭代式设计合作关系——把它当成可视化方案的讨论伙伴，对不满意的方案果断拒绝（比如从双 tab 方案转向密度编码方案）。你的爬虫工作展示了出色的问题解决能力，而从代码库中直接提取面试叙述的做法也非常聪明。</p>
+    <p><strong>阻碍因素：</strong>Claude 这边：经常走错方向（编辑错误文件、误解概念、提出未落地的架构），需要多轮纠正。你这边：可视化会话缺少具体前置锚点——没有明确验收标准或像素级参考时，Claude 会"解读"而非"实现"，导致每次 3+ 次布局失败。API 不稳定（连接中断、余额不足）加剧了两个问题。</p>
+    <p><strong>快速改进：</strong>创建自定义 Skill（/command）用于可视化迭代循环——每次渲染后自动截图、等待确认再继续。爬虫管道可用 Headless Mode 无人值守运行。</p>
+    <p><strong>高级玩法：</strong>未来可以并行启动多个 Agent，每个用不同方案实现同一可视化，截图对比选择。更强的是：让 Claude 从 spec 中提取验收标准，生成自动化测试，然后自主迭代直到全部通过。</p>
+  </div>
+
+  <!-- PLACEHOLDER FOR REMAINING SECTIONS -->
+</div>
+</body>
+</html>

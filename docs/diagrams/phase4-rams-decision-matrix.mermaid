@@ -1,0 +1,67 @@
+graph TD
+    START[New Feature Proposal] --> Q1{Does it solve<br/>a real user problem?}
+
+    Q1 -->|No| REJECT1[REJECT:<br/>Violates Rams #2<br/>Good design makes<br/>product useful]
+    Q1 -->|Yes| Q2{Can it be done<br/>with LESS design?}
+
+    Q2 -->|No, needs decoration| REJECT2[REJECT:<br/>Violates Rams #10<br/>As little design<br/>as possible]
+    Q2 -->|Yes| Q3{Does it add<br/>UI complexity?}
+
+    Q3 -->|Yes, clutters interface| Q4{Is the value<br/>worth the clutter?}
+    Q3 -->|No, stays minimal| Q5{Does it use only<br/>white/gray/orange?}
+
+    Q4 -->|No| REJECT3[REJECT:<br/>Violates Rams #5<br/>Good design is<br/>unobtrusive]
+    Q4 -->|Yes| Q5
+
+    Q5 -->|No| REJECT4[REJECT:<br/>Violates color palette<br/>Use only #FFF, #333,<br/>#FF4400]
+    Q5 -->|Yes| Q6{Does it use<br/>gradients/shadows?}
+
+    Q6 -->|Yes| REJECT5[REJECT:<br/>Violates Rams #3<br/>Good design is<br/>aesthetic through<br/>simplicity]
+    Q6 -->|No| Q7{Is it immediately<br/>understandable?}
+
+    Q7 -->|No| REJECT6[REJECT:<br/>Violates Rams #4<br/>Good design makes<br/>product understandable]
+    Q7 -->|Yes| Q8{Will it still<br/>look good in 5 years?}
+
+    Q8 -->|No, too trendy| REJECT7[REJECT:<br/>Violates Rams #7<br/>Good design is<br/>long-lasting]
+    Q8 -->|Yes, timeless| Q9{Is every detail<br/>carefully considered?}
+
+    Q9 -->|No| REJECT8[REJECT:<br/>Violates Rams #8<br/>Good design is thorough<br/>down to last detail]
+    Q9 -->|Yes| Q10{Is it resource<br/>efficient?}
+
+    Q10 -->|No| REJECT9[REJECT:<br/>Violates Rams #9<br/>Good design is<br/>environmentally-friendly]
+    Q10 -->|Yes| APPROVE[APPROVE:<br/>Feature meets<br/>Rams principles<br/>Proceed to implementation]
+
+    %% Styling
+    classDef reject fill:#e74c3c,stroke:#c0392b,color:#fff
+    classDef approve fill:#2ecc71,stroke:#27ae60,color:#fff
+    classDef question fill:#3498db,stroke:#2c3e50,color:#fff
+    classDef start fill:#f39c12,stroke:#d68910,color:#fff
+
+    class REJECT1,REJECT2,REJECT3,REJECT4,REJECT5,REJECT6,REJECT7,REJECT8,REJECT9 reject
+    class APPROVE approve
+    class Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10 question
+    class START start
+
+    %% Examples
+    subgraph "Example: FilterPanel"
+        EX1[Real problem? ✓ Users need to explore subsets]
+        EX2[Less design? ✓ Simple checkboxes and sliders]
+        EX3[UI complexity? Moderate, but justified]
+        EX4[Color palette? ✓ White/gray/orange only]
+        EX5[No gradients/shadows? ✓]
+        EX6[Understandable? ✓ Clear labels]
+        EX7[Timeless? ✓ Basic form elements]
+        EX8[Thorough? ✓ Proper spacing, alignment]
+        EX9[Efficient? ✓ Client-side filtering]
+        EX_RESULT[APPROVED]
+    end
+
+    subgraph "Example: Animated 3D Graph (REJECTED)"
+        BAD1[Real problem? ✗ Novelty, not utility]
+        BAD2[Less design? ✗ Requires WebGL engine]
+        BAD3[UI complexity? High, distracting]
+        BAD_RESULT[REJECTED at Q1 and Q2]
+    end
+
+    style EX_RESULT fill:#2ecc71,stroke:#27ae60,color:#fff
+    style BAD_RESULT fill:#e74c3c,stroke:#c0392b,color:#fff

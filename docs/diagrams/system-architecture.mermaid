@@ -1,0 +1,25 @@
+# System Architecture - Force-Directed Graph
+
+```mermaid
+graph TD
+    A[User Browser] -->|HTTP Request| B[Next.js Frontend]
+    B -->|REST API| C[FastAPI Backend]
+    C -->|HTTPS| D[OpenAlex API]
+    C -->|Graph Analysis| E[NetworkX]
+    E -->|Communities & Metrics| C
+    D -->|Papers + References| C
+    C -->|JSON Response| B
+    B -->|Render| F[react-force-graph-2d]
+    F -->|Interactive Visualization| A
+
+    style A fill:#F5F5F5,stroke:#333,stroke-width:2px
+    style B fill:#FF4400,stroke:#333,stroke-width:2px,color:#FFF
+    style C fill:#FF4400,stroke:#333,stroke-width:2px,color:#FFF
+    style D fill:#F5F5F5,stroke:#333,stroke-width:2px
+    style E fill:#F5F5F5,stroke:#333,stroke-width:2px
+    style F fill:#F5F5F5,stroke:#333,stroke-width:2px
+```
+
+**说明**:
+- 橙色 (#FF4400): 核心服务（Next.js, FastAPI）
+- 灰白色 (#F5F5F5): 外部依赖和库

@@ -1,0 +1,87 @@
+graph TB
+    subgraph "Development Environment"
+        DEV[Developer Machine]
+        CODE[Source Code]
+        GIT[Git Repository]
+    end
+
+    subgraph "Docker Build Process"
+        BDF[Backend Dockerfile]
+        FDF[Frontend Dockerfile]
+        BBI[Backend Builder Stage]
+        FBI[Frontend Builder Stage]
+        BRI[Backend Runtime Image]
+        FRI[Frontend Runtime Image]
+
+        BDF -->|Stage 1: Install deps| BBI
+        BBI -->|Stage 2: Copy code| BRI
+        FDF -->|Stage 1: npm ci| FBI
+        FBI -->|Stage 2: npm build| FRI
+        FBI -->|Stage 3: Standalone| FRI
+    end
+
+    subgraph "Docker Compose Orchestration"
+        DC[docker-compose.yml]
+        NET[Bridge Network: app-network]
+
+        subgraph "Backend Container"
+            BC[paper-analysis-backend]
+            BP[Port 8000]
+            BH[Health Check]
+            BENV[Environment Variables]
+        end
+
+        subgraph "Frontend Container"
+            FC[paper-analysis-frontend]
+            FP[Port 3000]
+            FENV[NEXT_PUBLIC_API_URL]
+            FDEP[depends_on: backend]
+        end
+
+        DC -->|Creates| NET
+        DC -->|Starts| BC
+        DC -->|Starts| FC
+        BC -->|Connects to| NET
+        FC -->|Connects to| NET
+        BH -->|HTTP GET /api/health| BP
+        FDEP -->|Waits for| BH
+    end
+
+    subgraph "E2E Testing Layer"
+        PW[Playwright Test Suite]
+        T1[E2E-1: Search Flow]
+        T2[E2E-2: Error Handling]
+        T3[E2E-3: Performance]
+
+        PW --> T1
+        PW --> T2
+        PW --> T3
+    end
+
+    subgraph "External Services"
+        OA[OpenAlex API]
+    end
+
+    subgraph "User Interaction"
+        USER[User Browser]
+    end
+
+    DEV -->|Commits| GIT
+    GIT -->|Triggers CI/CD| BDF
+    GIT -->|Triggers CI/CD| FDF
+    BRI -->|docker-compose build| BC
+    FRI -->|docker-compose build| FC
+
+    USER -->|HTTP localhost:3000| FP
+    FC -->|HTTP backend:8000| BP
+    BC -->|HTTP api.openalex.org| OA
+
+    PW -->|Tests| FP
+    T1 -->|Validates| USER
+
+    style BC fill:#F5F5F5,stroke:#333,stroke-width:2px
+    style FC fill:#F5F5F5,stroke:#333,stroke-width:2px
+    style BRI fill:#F5F5F5,stroke:#FF4400,stroke-width:3px
+    style FRI fill:#F5F5F5,stroke:#FF4400,stroke-width:3px
+    style NET fill:#F5F5F5,stroke:#333,stroke-width:2px
+    style PW fill:#F5F5F5,stroke:#FF4400,stroke-width:3px

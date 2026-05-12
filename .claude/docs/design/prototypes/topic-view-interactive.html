@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topic View — Interactive Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'IBM Plex Sans', sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useMemo, useEffect, useRef } = React;
+
+    // ========== 常量定义 ==========
+    const PARADIGM_COLORS = {
+      'attention_native': '#475569',  // 灰蓝
+      'post_attention': '#2563EB',    // 蓝
+      'sparse_long': '#0D9488',       // 青绿
+      'conditional': '#DC2626',       // 红
+      'reasoning': '#EA580C',         // 橙
+    };
+
+    const LAYER_SHAPES = {
+      'arch': 'circle',
+      'sys': 'square',
+      'infer': 'diamond',
+      'train': 'triangle',
+      'memory': 'hexagon',
+    };
+
+    const LANES = [
+      { id: 'context_scaling', title: 'Context Scaling', subtitle: '处理更长文本', color: '#2563EB' },
+      { id: 'memory_wall', title: 'Memory Wall', subtitle: '降低推理成本', color: '#059669' },
+      { id: 'compute_scaling', title: 'Compute Scaling', subtitle: '测试时计算缩放', color: '#EA580C' },
+    ];
+
+    // ========== 数据集 ==========
+    const PAPERS = [
+      // Context Scaling
+      { id: 'rope', title: 'RoPE', year: 2023, quarter: 1, paradigm: 'attention_native', layer: 'arch', lane: 'context_scaling', size: 'md', isTrunk: true },
+      { id: 'hyena', title: 'Hyena', year: 2023, quarter: 2, paradigm: 'post_attention', layer: 'arch', lane: 'context_scaling', size: 'md', forks_from: 'rope' },
+      { id: 'retnet', title: 'RetNet', year: 2023, quarter: 3, paradigm: 'post_attention', layer: 'arch', lane: 'context_scaling', size: 'lg', forks_from: 'rope' },
+      { id: 'mamba', title: 'Mamba', year: 2023, quarter: 4, paradigm: 'post_attention', layer: 'arch', lane: 'context_scaling', size: 'lg', builds_on: ['retnet'], forks_from: 'rope' },
+      { id: 'mamba2', title: 'Mamba-2', year: 2024, quarter: 2, paradigm: 'post_attention', layer: 'arch', lane: 'context_scaling', size: 'lg', builds_on: ['mamba'] },
+      { id: 'yarn', title: 'YaRN', year: 2023, quarter: 3, paradigm: 'sparse_long', layer: 'memory', lane: 'context_scaling', size: 'md', forks_from: 'rope' },
+      { id: 'streaming', title: 'StreamingLLM', year: 2023, quarter: 3, paradigm: 'sparse_long', layer: 'sys', lane: 'context_scaling', size: 'md', forks_from: 'rope' },
+      
+      // Memory Wall
+      { id: 'flash2', title: 'FlashAttn-2', year: 2023, quarter: 3, paradigm: 'attention_native', layer: 'sys', lane: 'memory_wall', size: 'lg', isTrunk: true },
+      { id: 'gqa', title: 'GQA', year: 2023, quarter: 2, paradigm: 'attention_native', layer: 'memory', lane: 'memory_wall', size: 'md', forks_from: 'flash2' },
+      { id: 'mla', title: 'MLA', year: 2024, quarter: 1, paradigm: 'attention_native', layer: 'memory', lane: 'memory_wall', size: 'lg', builds_on: ['gqa'] },
+      { id: 'pagedattn', title: 'PagedAttention', year: 2023, quarter: 3, paradigm: 'attention_native', layer: 'sys', lane: 'memory_wall', size: 'lg', forks_from: 'flash2' },
+      
+      // Compute Scaling
+      { id: 'switch', title: 'Switch', year: 2023, quarter: 1, paradigm: 'conditional', layer: 'arch', lane: 'compute_scaling', size: 'md', isTrunk: true },
+      { id: 'mixtral', title: 'Mixtral', year: 2024, quarter: 1, paradigm: 'conditional', layer: 'arch', lane: 'compute_scaling', size: 'lg', builds_on: ['switch'] },
+      { id: 'cot', title: 'CoT', year: 2023, quarter: 1, paradigm: 'reasoning', layer: 'train', lane: 'compute_scaling', size: 'lg', forks_from: 'mixtral' },
+      { id: 'o1', title: 'o1', year: 2024, quarter: 3, paradigm: 'reasoning', layer: 'infer', lane: 'compute_scaling', size: 'lg', builds_on: ['cot'] },
+    ];
+
+    const CROSS_ARCS = [
+      { from: 'flash2', to: 'yarn', type: 'cross_lane' },
+      { from: 'mla', to: 'o1', type: 'cross_lane' },
+    ];
+
+    // ========== 工具函数 ==========
+    function qToX(year, quarter) {
+      return ((year - 2023) * 4 + (quarter - 1)) / 16 * 100;
+    }
+
+    function NodeShape({ cx, cy, r, shape, fill, stroke, strokeWidth, opacity }) {
+      const s = r * 2;
+      if (shape === 'circle') return <circle cx={cx} cy={cy} r={r} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity} />;
+      if (shape === 'square') return <rect x={cx - r} y={cy - r} width={s} height={s} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity} />;
+      if (shape === 'diamond') return <rect x={cx - r * 0.7} y={cy - r * 0.7} width={r * 1.4} height={r * 1.4} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity} transform={`rotate(45,${cx},${cy})`} />;
+      if (shape === 'triangle') {
+        const pts = `${cx},${cy - r} ${cx + r},${cy + r * 0.7} ${cx - r},${cy + r * 0.7}`;
+        return <polygon points={pts} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity} />;
+      }
+      if (shape === 'hexagon') {
+        const pts = [0, 1, 2, 3, 4, 5].map(i => {
+          const angle = Math.PI / 6 + i * Math.PI / 3;
+          return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
+        }).join(' ');
+        return <polygon points={pts} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity} />;
+      }
+      return <circle cx={cx} cy={cy} r={r} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity} />;
+    }
+
+    // ========== 主组件 ==========
+    function App() {
+      const [selected, setSelected] = useState(null);
+      const [hovered, setHovered] = useState(null);
+      const [expandedRows, setExpandedRows] = useState(new Set());
+      const [clickMode, setClickMode] = useState(null); // null | {nodeId, chain}
+
+      const ROW_H = 72;
+      const timelineW = 1200;
+
+      // 构建 laneData
+      const laneData = useMemo(() => {
+        const data = {};
+        LANES.forEach(lane => {
+          data[lane.id] = {};
+          const lanePapers = PAPERS.filter(p => p.lane === lane.id);
+          const paradigms = [...new Set(lanePapers.map(p => p.paradigm))];
+          paradigms.forEach(para => {
+            data[lane.id][para] = lanePapers.filter(p => p.paradigm === para);
+          });
+        });
+        return data;
+      }, []);
+
+      // 构建 rowIndexMap
+      const rowIndexMap = useMemo(() => {
+        const map = {};
+        let idx = 0;
+        LANES.forEach(lane => {
+          Object.keys(laneData[lane.id] || {}).forEach(para => {
+            map[`${lane.id}-${para}`] = idx++;
+          });
+        });
+        return map;
+      }, [laneData]);
+
+      // 计算总高度
+      const totalHeight = Object.keys(rowIndexMap).length * ROW_H;
+
+      // 获取论文位置
+      const getPaperPos = (paperId) => {
+        const paper = PAPERS.find(p => p.id === paperId);
+        if (!paper) return null;
+        const rowKey = `${paper.lane}-${paper.paradigm}`;
+        const rowIdx = rowIndexMap[rowKey];
+        if (rowIdx === undefined) return null;
+        return {
+          x: qToX(paper.year, paper.quarter),
+          y: rowIdx * ROW_H + ROW_H / 2,
+          paper
+        };
+      };
+
+      // 获取节点大小
+      const getNodeSize = (size) => {
+        if (size === 'lg') return 10;
+        if (size === 'md') return 7;
+        return 5;
+      };
+
+      // 切换行展开
+      const toggleRow = (laneId, paradigm) => {
+        const key = `${laneId}-${paradigm}`;
+        const newSet = new Set(expandedRows);
+        if (newSet.has(key)) {
+          newSet.delete(key);
+        } else {
+          newSet.add(key);
+        }
+        setExpandedRows(newSet);
+      };
+
+      // 获取上下游链
+      const getChain = (paperId) => {
+        const chain = new Set([paperId]);
+        const paper = PAPERS.find(p => p.id === paperId);
+        if (!paper) return chain;
+
+        // 上游
+        if (paper.builds_on) {
+          paper.builds_on.forEach(id => chain.add(id));
+        }
+        if (paper.forks_from) {
+          chain.add(paper.forks_from);
+        }
+
+        // 下游
+        PAPERS.filter(p => p.builds_on?.includes(paperId)).forEach(p => chain.add(p.id));
+        PAPERS.filter(p => p.forks_from === paperId).forEach(p => chain.add(p.id));
+
+        return chain;
+      };
+
+      return (
+        <div className="h-screen flex flex-col bg-white">
+          {/* Header */}
+          <div className="h-14 border-b border-zinc-200 px-6 flex items-center justify-between shrink-0">
+            <div>
+              <h1 className="text-lg font-bold text-zinc-900">Topic View — Interactive</h1>
+              <p className="text-xs text-zinc-500">点击行标签展开/折叠 · 点击节点高亮链</p>
+            </div>
+            <button 
+              onClick={() => { setClickMode(null); setSelected(null); }}
+              className="px-3 py-1 text-xs border border-zinc-300 rounded hover:bg-zinc-50"
+            >
+              重置视图
+            </button>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 flex overflow-auto">
+            {/* Left Rail */}
+            <div className="w-[200px] min-w-[200px] bg-zinc-50 border-r border-zinc-200 shrink-0" style={{ height: totalHeight }}>
+              {LANES.map((lane, i) => {
+                const paradigms = Object.keys(laneData[lane.id] || {});
+                const laneHeight = paradigms.length * ROW_H;
+                return (
+                  <div 
+                    key={lane.id} 
+                    className="px-4 flex flex-col justify-center border-b border-zinc-200 relative"
+                    style={{ height: laneHeight, borderLeft: `4px solid ${lane.color}` }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                        style={{ background: `${lane.color}20`, color: lane.color }}>
+                        {i + 1}
+                      </div>
+                      <span className="text-sm font-bold text-zinc-900">{lane.title}</span>
+                    </div>
+                    <p className="mt-1 text-[10px] text-zinc-500">{lane.subtitle}</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Canvas */}
+            <div className="flex-1 relative" style={{ minWidth: timelineW, height: totalHeight }}>
+              {/* Timeline Header */}
+              <div className="h-10 border-b border-zinc-200 bg-white sticky top-0 z-20 flex">
+                {['2023', '2024', '2025', '2026'].map(y => (
+                  <div key={y} className="flex-1 border-r border-zinc-100">
+                    <div className="text-center text-xs font-bold text-zinc-700 pt-1">{y}</div>
+                    <div className="grid grid-cols-4 h-5">
+                      {['Q1', 'Q2', 'Q3', 'Q4'].map(q => (
+                        <div key={q} className="text-[9px] text-zinc-400 text-center">{q}</div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* NOW Line */}
+              <div className="absolute top-0 bottom-0 z-10 pointer-events-none" style={{ left: `${qToX(2025, 2)}%` }}>
+                <div className="w-0 h-full border-l-2 border-dashed border-red-500"></div>
+                <div className="absolute top-8 -left-3 text-[9px] font-bold text-red-500">NOW</div>
+              </div>
+
+              {/* Connections SVG */}
+              <svg className="absolute pointer-events-none" style={{ top: 40, left: 0, width: '100%', height: totalHeight, zIndex: 5 }}>
+                <defs>
+                  <marker id="arrow-builds" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+                    <polygon points="0,0 6,2 0,4" fill="#9CA3AF" />
+                  </marker>
+                </defs>
+
+                {/* builds_on 连线 */}
+                {PAPERS.filter(p => p.builds_on).map(paper => {
+                  return paper.builds_on.map(srcId => {
+                    const src = getPaperPos(srcId);
+                    const tgt = getPaperPos(paper.id);
+                    if (!src || !tgt) return null;
+                    
+                    const isHighlighted = clickMode?.chain.has(srcId) && clickMode?.chain.has(paper.id);
+                    const isDimmed = clickMode && !isHighlighted;
+                    
+                    const x1 = src.x * timelineW / 100;
+                    const y1 = src.y;
+                    const x2 = tgt.x * timelineW / 100;
+                    const y2 = tgt.y;
+                    
+                    return (
+                      <line 
+                        key={`${srcId}-${paper.id}`}
+                        x1={x1} y1={y1} x2={x2} y2={y2}
+                        stroke={PARADIGM_COLORS[src.paper.paradigm]}
+                        strokeWidth={isHighlighted ? 3 : 1.5}
+                        opacity={isDimmed ? 0.1 : isHighlighted ? 1 : 0.4}
+                        markerEnd="url(#arrow-builds)"
+                      />
+                    );
+                  });
+                })}
+
+                {/* forks_from 分叉弧（展开态显示） */}
+                {PAPERS.filter(p => p.forks_from).map(paper => {
+                  const src = getPaperPos(paper.forks_from);
+                  const tgt = getPaperPos(paper.id);
+                  if (!src || !tgt) return null;
+                  
+                  const rowKey = `${paper.lane}-${paper.paradigm}`;
+                  const isExpanded = expandedRows.has(rowKey);
+                  
+                  const isHighlighted = clickMode?.chain.has(paper.forks_from) && clickMode?.chain.has(paper.id);
+                  const isDimmed = clickMode && !isHighlighted;
+                  
+                  const x1 = src.x * timelineW / 100;
+                  const y1 = src.y;
+                  const x2 = tgt.x * timelineW / 100;
+                  const y2 = tgt.y;
+                  
+                  // Bezier 曲线
+                  const dx = x2 - x1;
+                  const cp1x = x1 + dx * 0.3;
+                  const cp1y = y1;
+                  const cp2x = x2 - dx * 0.3;
+                  const cp2y = y2;
+                  const path = `M ${x1} ${y1} C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${x2} ${y2}`;
+                  
+                  return (
+                    <path 
+                      key={`fork-${paper.id}`}
+                      d={path}
+                      stroke={PARADIGM_COLORS[paper.paradigm]}
+                      strokeWidth={isHighlighted ? 3 : 2}
+                      fill="none"
+                      opacity={isDimmed ? 0.05 : isExpanded ? 0.8 : 0.2}
+                      strokeDasharray={isExpanded ? "" : "4,3"}
+                    />
+                  );
+                })}
+
+                {/* cross_lane_arc 跨 Lane 弧线 */}
+                {CROSS_ARCS.map((arc, i) => {
+                  const src = getPaperPos(arc.from);
+                  const tgt = getPaperPos(arc.to);
+                  if (!src || !tgt) return null;
+                  
+                  const x1 = src.x * timelineW / 100;
+                  const y1 = src.y;
+                  const x2 = tgt.x * timelineW / 100;
+                  const y2 = tgt.y;
+                  
+                  // S-curve
+                  const midY = (y1 + y2) / 2;
+                  const path = `M ${x1} ${y1} C ${x1} ${midY} ${x2} ${midY} ${x2} ${y2}`;
+                  
+                  return (
+                    <path 
+                      key={`cross-${i}`}
+                      d={path}
+                      stroke="#059669"
+                      strokeWidth="2"
+                      fill="none"
+                      strokeDasharray="8,4"
+                      opacity={0.6}
+                    />
+                  );
+                })}
+              </svg>
+
+              {/* Lane Rows */}
+              {LANES.map(lane => {
+                const paradigms = Object.keys(laneData[lane.id] || {});
+                return paradigms.map((para, paraIdx) => {
+                  const papers = laneData[lane.id][para];
+                  const rowKey = `${lane.id}-${para}`;
+                  const isExpanded = expandedRows.has(rowKey);
+                  const globalIdx = rowIndexMap[rowKey];
+                  
+                  return (
+                    <div 
+                      key={rowKey}
+                      className="absolute w-full border-b border-dashed border-zinc-100"
+                      style={{ 
+                        top: globalIdx * ROW_H + 40, 
+                        height: ROW_H,
+                      }}
+                    >
+                      {/* Row Label */}
+                      <div 
+                        className="absolute left-2 top-1 flex items-center gap-1.5 cursor-pointer hover:bg-zinc-100 rounded px-1 z-20"
+                        onClick={() => toggleRow(lane.id, para)}
+                      >
+                        <span className="w-2 h-2 rounded-full" style={{ background: PARADIGM_COLORS[para] }}></span>
+                        <span className="text-[10px] font-semibold text-zinc-600">{para}</span>
+                        {isExpanded ? 
+                          <span className="text-[8px] text-zinc-400">▼</span> : 
+                          <span className="text-[8px] text-zinc-400">▶</span>
+                        }
+                      </div>
+
+                      {/* Paper Nodes */}
+                      {papers.map(paper => {
+                        const x = qToX(paper.year, paper.quarter);
+                        const sz = getNodeSize(paper.size);
+                        const shape = LAYER_SHAPES[paper.layer];
+                        const color = PARADIGM_COLORS[paper.paradigm];
+                        
+                        const isSelected = selected?.id === paper.id;
+                        const isChainHighlighted = clickMode?.chain.has(paper.id);
+                        const isDimmed = clickMode && !isChainHighlighted;
+                        
+                        return (
+                          <div 
+                            key={paper.id}
+                            className="absolute cursor-pointer flex flex-col items-center"
+                            style={{ 
+                              left: `${x}%`, 
+                              top: ROW_H / 2 - sz - 2,
+                              transform: 'translateX(-50%)',
+                              zIndex: isSelected ? 20 : 10,
+                              width: 'auto',
+                              minWidth: sz * 2 + 8
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelected({ ...paper, color });
+                              setClickMode({ nodeId: paper.id, chain: getChain(paper.id) });
+                            }}
+                            onMouseEnter={() => setHovered(paper.id)}
+                            onMouseLeave={() => setHovered(null)}
+                          >
+                            <svg width={sz * 2 + 6} height={sz * 2 + 6} style={{ overflow: 'visible' }}>
+                              <NodeShape 
+                                cx={sz + 3} cy={sz + 3} r={sz}
+                                shape={shape}
+                                fill={color}
+                                stroke={isSelected ? '#FF4400' : '#fff'}
+                                strokeWidth={isSelected ? 3 : 2}
+                                opacity={isDimmed ? 0.2 : 0.8}
+                              />
+                            </svg>
+                            
+                            {/* Label */}
+                            <div className="mt-0.5 text-center" style={{ minWidth: 60 }}>
+                              <div className="text-[9px] font-medium text-zinc-700 whitespace-nowrap">{paper.title}</div>
+                              <div className="text-[7px] text-zinc-400">{paper.year} Q{paper.quarter}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                });
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Global View v2</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: #fff; }
+    .tooltip { position:absolute; background:#18181B; color:#fff; padding:8px 12px; border-radius:6px; pointer-events:none; z-index:50; white-space:nowrap; font-size:11px; }
+    .momentum-glow { transition: box-shadow 0.4s ease; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useMemo, useRef } = React;
+
+    // Lane-level pressure signals (weight 0~1, maps to opacity 0.05~0.35)
+    const PRESSURE = {
+      sequence_scaling: [
+        {q:'2023Q1',w:0.5},{q:'2023Q2',w:0.6},{q:'2023Q3',w:0.7},{q:'2023Q4',w:0.8},
+        {q:'2024Q1',w:0.7},{q:'2024Q2',w:0.6},{q:'2024Q3',w:0.5},{q:'2024Q4',w:0.4},
+        {q:'2025Q1',w:0.3},{q:'2025Q2',w:0.3}
+      ],
+      memory_wall: [
+        {q:'2023Q1',w:0.2},{q:'2023Q2',w:0.2},{q:'2023Q3',w:0.3},{q:'2023Q4',w:0.3},
+        {q:'2024Q1',w:0.5},{q:'2024Q2',w:0.8},{q:'2024Q3',w:0.85},{q:'2024Q4',w:0.9},
+        {q:'2025Q1',w:0.9},{q:'2025Q2',w:0.85}
+      ],
+      compute_scaling: [
+        {q:'2023Q1',w:0.6},{q:'2023Q2',w:0.7},{q:'2023Q3',w:0.6},{q:'2023Q4',w:0.7},
+        {q:'2024Q1',w:0.4},{q:'2024Q2',w:0.4},{q:'2024Q3',w:0.8},{q:'2024Q4',w:0.9},
+        {q:'2025Q1',w:1.0},{q:'2025Q2',w:0.9}
+      ],
+    };
+
+    // Momentum: delta > 0.3/quarter triggers glow
+    function hasMomentum(pressureArr) {
+      for (let i = 1; i < pressureArr.length; i++) {
+        if (pressureArr[i].w - pressureArr[i-1].w >= 0.3) return true;
+      }
+      return false;
+    }
+
+    const LANES = [
+      {id:'sequence_scaling', title:'Context Scaling', subtitle:'处理更长文本（4K → 1M+）', color:'#2563EB', bgLight:'#DBEAFE'},
+      {id:'memory_wall', title:'Memory Wall', subtitle:'降低推理显存 / 带宽占用', color:'#059669', bgLight:'#D1FAE5'},
+      {id:'compute_scaling', title:'Compute Allocation', subtitle:'有限算力下的最优分配', color:'#EA580C', bgLight:'#FFEDD5'},
+    ];
+
+    // Strict 5-color paradigm system:
+    // #475569 = Attention-native (灰蓝), #2563EB = Post-Attention (蓝),
+    // #0D9488 = Sparse/Long-context (青绿), #DC2626 = Conditional Compute (红), #EA580C = Reasoning (橙)
+    const PARADIGMS = [
+      // sequence_scaling
+      {id:'linear_ssm', name:'Linear / SSM', subtitle:'线性/状态空间', lane:'sequence_scaling', color:'#2563EB', shape:'circle'},
+      {id:'sparse', name:'Sparse / Chunked', subtitle:'稀疏/分块', lane:'sequence_scaling', color:'#0D9488', shape:'square'},
+      {id:'memory_aug', name:'Memory-Augmented', subtitle:'记忆增强', lane:'sequence_scaling', color:'#0D9488', shape:'hex'},
+      {id:'kernel', name:'Kernel Optimization', subtitle:'内核优化', lane:'sequence_scaling', color:'#475569', shape:'square'},
+      // memory_wall
+      {id:'kv_compress', name:'KV Compression', subtitle:'KV 压缩', lane:'memory_wall', color:'#475569', shape:'hex'},
+      {id:'paging', name:'Paging / Offloading', subtitle:'分页/卸载', lane:'memory_wall', color:'#475569', shape:'square'},
+      {id:'quant', name:'Quantization', subtitle:'量化', lane:'memory_wall', color:'#475569', shape:'circle'},
+      // compute_scaling
+      {id:'moe', name:'MoE / Routing', subtitle:'条件计算', lane:'compute_scaling', color:'#DC2626', shape:'circle'},
+      {id:'speculative', name:'Speculative / Draft', subtitle:'推测解码', lane:'compute_scaling', color:'#DC2626', shape:'diamond'},
+      {id:'reasoning', name:'Reasoning Scaling', subtitle:'推理缩放', lane:'compute_scaling', color:'#EA580C', shape:'triangle'},
+    ];
+
+    const PAPERS = [
+      // Linear/SSM (aligned with seed_papers.py)
+      {id:'hyena',title:'Hyena',year:2023,quarter:1,paradigm:'linear_ssm',size:'sm',builds_on:[]},
+      {id:'rwkv4',title:'RWKV v4',year:2023,quarter:2,paradigm:'linear_ssm',size:'md',builds_on:[]},
+      {id:'retnet',title:'RetNet',year:2023,quarter:3,paradigm:'linear_ssm',size:'md',builds_on:[]},
+      {id:'mamba',title:'Mamba',year:2023,quarter:4,paradigm:'linear_ssm',size:'lg',builds_on:['retnet']},
+      {id:'gla',title:'GLA',year:2023,quarter:4,paradigm:'linear_ssm',size:'sm',builds_on:[]},
+      {id:'griffin',title:'Griffin',year:2024,quarter:1,paradigm:'linear_ssm',size:'sm',builds_on:['mamba']},
+      {id:'jamba',title:'Jamba',year:2024,quarter:1,paradigm:'linear_ssm',size:'md',builds_on:['mamba']},
+      {id:'mamba2',title:'Mamba-2',year:2024,quarter:2,paradigm:'linear_ssm',size:'lg',builds_on:['mamba']},
+      {id:'xlstm',title:'xLSTM',year:2024,quarter:2,paradigm:'linear_ssm',size:'sm',builds_on:['mamba']},
+      {id:'deltanet',title:'DeltaNet',year:2024,quarter:2,paradigm:'linear_ssm',size:'sm',builds_on:['gla']},
+      {id:'rwkv7',title:'RWKV-7',year:2024,quarter:4,paradigm:'linear_ssm',size:'md',builds_on:['rwkv4']},
+      // Sparse / Chunked
+      {id:'longnet',title:'LongNet',year:2023,quarter:3,paradigm:'sparse',size:'sm',builds_on:[]},
+      {id:'streaming',title:'StreamingLLM',year:2023,quarter:3,paradigm:'sparse',size:'md',builds_on:[]},
+      {id:'ringattn',title:'Ring Attention',year:2023,quarter:4,paradigm:'sparse',size:'md',builds_on:[]},
+      {id:'infiniattn',title:'Infini-Attention',year:2024,quarter:2,paradigm:'sparse',size:'md',builds_on:['streaming']},
+      // Memory-Augmented (position encoding + retrieval)
+      {id:'yarn',title:'YaRN',year:2023,quarter:3,paradigm:'memory_aug',size:'md',builds_on:[]},
+      {id:'longrope',title:'LongRoPE',year:2024,quarter:1,paradigm:'memory_aug',size:'md',builds_on:['yarn']},
+      {id:'hmt',title:'HMT',year:2024,quarter:1,paradigm:'memory_aug',size:'sm',builds_on:[]},
+      // Kernel Optimization
+      {id:'flash2',title:'FlashAttn-2',year:2023,quarter:3,paradigm:'kernel',size:'lg',builds_on:[]},
+      {id:'flash3',title:'FlashAttn-3',year:2024,quarter:3,paradigm:'kernel',size:'md',builds_on:['flash2']},
+      {id:'flash4',title:'FlashAttn-4',year:2025,quarter:3,paradigm:'kernel',size:'md',builds_on:['flash3']},
+      // KV Compression
+      {id:'gqa',title:'GQA',year:2023,quarter:2,paradigm:'kv_compress',size:'md',builds_on:[]},
+      {id:'mla_v2',title:'MLA (DS-V2)',year:2024,quarter:2,paradigm:'kv_compress',size:'lg',builds_on:['gqa']},
+      {id:'mla_v3',title:'MLA (DS-V3)',year:2024,quarter:4,paradigm:'kv_compress',size:'lg',builds_on:['mla_v2']},
+      {id:'transmla',title:'TransMLA',year:2025,quarter:2,paradigm:'kv_compress',size:'md',builds_on:['mla_v3']},
+      // Paging / Offloading
+      {id:'pagedattn',title:'PagedAttention',year:2023,quarter:3,paradigm:'paging',size:'lg',builds_on:[]},
+      {id:'sglang',title:'SGLang',year:2023,quarter:4,paradigm:'paging',size:'md',builds_on:['pagedattn']},
+      {id:'vllm2',title:'vLLM v2',year:2024,quarter:3,paradigm:'paging',size:'md',builds_on:['pagedattn']},
+      // Quantization
+      {id:'awq',title:'AWQ',year:2023,quarter:2,paradigm:'quant',size:'md',builds_on:[]},
+      {id:'gptq',title:'GPTQ',year:2023,quarter:3,paradigm:'quant',size:'md',builds_on:['awq']},
+      {id:'smoothquant',title:'SmoothQuant',year:2023,quarter:4,paradigm:'quant',size:'md',builds_on:['gptq']},
+      {id:'fp8',title:'FP8',year:2024,quarter:2,paradigm:'quant',size:'md',builds_on:['smoothquant']},
+      // MoE / Routing
+      {id:'switch',title:'Switch Transformer',year:2023,quarter:1,paradigm:'moe',size:'md',builds_on:[]},
+      {id:'mixtral',title:'Mixtral 8x7B',year:2024,quarter:1,paradigm:'moe',size:'lg',builds_on:['switch']},
+      {id:'dsmoe',title:'DeepSeek-MoE',year:2024,quarter:1,paradigm:'moe',size:'md',builds_on:['switch']},
+      {id:'dbrx',title:'DBRX',year:2024,quarter:1,paradigm:'moe',size:'sm',builds_on:['mixtral']},
+      {id:'dsv3_moe',title:'DS-V3 MoE',year:2024,quarter:4,paradigm:'moe',size:'lg',builds_on:['dsmoe']},
+      {id:'qwen3',title:'Qwen3 MoE',year:2025,quarter:2,paradigm:'moe',size:'md',builds_on:['dsv3_moe']},
+      // Speculative / Draft
+      {id:'specdec',title:'Speculative Dec.',year:2023,quarter:1,paradigm:'speculative',size:'lg',builds_on:[]},
+      {id:'medusa',title:'Medusa',year:2024,quarter:1,paradigm:'speculative',size:'md',builds_on:['specdec']},
+      {id:'eagle',title:'EAGLE',year:2024,quarter:1,paradigm:'speculative',size:'md',builds_on:['specdec']},
+      {id:'lookahead',title:'Lookahead',year:2024,quarter:2,paradigm:'speculative',size:'sm',builds_on:['specdec']},
+      {id:'eagle2',title:'EAGLE-2',year:2024,quarter:2,paradigm:'speculative',size:'md',builds_on:['eagle']},
+      // Reasoning Scaling
+      {id:'cot',title:'Chain-of-Thought',year:2023,quarter:1,paradigm:'reasoning',size:'lg',builds_on:[]},
+      {id:'tot',title:'Tree-of-Thought',year:2023,quarter:3,paradigm:'reasoning',size:'md',builds_on:['cot']},
+      {id:'o1',title:'o1-preview',year:2024,quarter:3,paradigm:'reasoning',size:'lg',builds_on:['tot']},
+      {id:'r1',title:'DeepSeek-R1',year:2025,quarter:1,paradigm:'reasoning',size:'lg',builds_on:['o1']},
+      {id:'qwq',title:'QwQ',year:2025,quarter:1,paradigm:'reasoning',size:'md',builds_on:['o1']},
+      {id:'s1',title:'s1',year:2025,quarter:2,paradigm:'reasoning',size:'sm',builds_on:['r1']},
+    ];
+
+    // Utility: quarter to X percent (2023Q1=0%, 2026Q4=100%, 16 quarters)
+    function qToX(year, quarter) {
+      return ((year - 2023) * 4 + (quarter - 1)) / 16 * 100;
+    }
+
+    function App() {
+      const [selected, setSelected] = useState(null);
+      const [hovered, setHovered] = useState(null);
+      const [tooltipPos, setTooltipPos] = useState(null);
+
+      return (
+        <div style={{fontFamily:'IBM Plex Sans, sans-serif'}} className="h-screen flex flex-col bg-white text-zinc-900">
+          <Header />
+          <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1 overflow-auto">
+              <LeftRail />
+              <MainCanvas papers={PAPERS} paradigms={PARADIGMS} lanes={LANES}
+                selected={selected} setSelected={setSelected}
+                hovered={hovered} setHovered={setHovered}
+                setTooltipPos={setTooltipPos} />
+            </div>
+            {selected && <SidePanel paper={selected} onClose={() => setSelected(null)} />}
+          </div>
+          <BottomLegend />
+          {hovered && tooltipPos && (
+            <div className="tooltip" style={{left:tooltipPos.x, top:tooltipPos.y - 40}}>
+              <div style={{fontWeight:600}}>{PAPERS.find(p=>p.id===hovered)?.title}</div>
+              <div style={{fontSize:10,opacity:0.7}}>
+                {PAPERS.find(p=>p.id===hovered)?.year} Q{PAPERS.find(p=>p.id===hovered)?.quarter}
+                {' · '}{PARADIGMS.find(p=>p.id===PAPERS.find(pp=>pp.id===hovered)?.paradigm)?.name}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function MainCanvas({papers, paradigms, lanes, selected, setSelected, hovered, setHovered, setTooltipPos}) {
+      const ROW_H = 88;
+      const timelineW = 1100;
+      const nowX = qToX(2025, 2);
+
+      const laneGroups = lanes.map(l => ({
+        ...l,
+        rows: paradigms.filter(p => p.lane === l.id),
+      }));
+
+      const hoveredPaper = hovered ? papers.find(p => p.id === hovered) : null;
+      const hoveredParadigm = hoveredPaper ? hoveredPaper.paradigm : null;
+
+      return (
+        <div className="relative" style={{minWidth:timelineW}}>
+          {/* Timeline Header */}
+          <div className="h-14 border-b border-zinc-200 sticky top-0 z-20 bg-white flex">
+            {['2023','2024','2025','2026'].map(y => (
+              <div key={y} className="flex-1 border-r border-zinc-100">
+                <div className="text-center text-sm font-bold text-zinc-700 pt-1.5">{y}</div>
+                <div className="grid grid-cols-4 h-6">
+                  {['Q1','Q2','Q3','Q4'].map(q => (
+                    <div key={q} className="text-[10px] text-zinc-400 text-center border-r border-zinc-50">{q}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* NOW line */}
+          <div className="absolute top-0 bottom-0 z-10" style={{left:`${nowX}%`}}>
+            <div className="w-0 h-full border-l-2 border-dashed" style={{borderColor:'#FF4400'}}></div>
+            <div className="absolute top-[68px] -left-3 text-[10px] font-bold" style={{color:'#FF4400'}}>NOW</div>
+          </div>
+
+          {/* Era backgrounds */}
+          <div className="absolute top-14 bottom-0 left-0 right-0 pointer-events-none">
+            <div className="absolute top-0 bottom-0 left-0" style={{width:'25%', background:'#FAFAFA'}}></div>
+            <div className="absolute top-0 bottom-0" style={{left:'25%', width:'0', borderLeft:'1px dashed #E4E4E7'}}></div>
+            <div className="absolute top-0 bottom-0" style={{left:'62.5%', width:'0', borderLeft:'1px dashed #E4E4E7', opacity:0.5}}>
+              <span className="text-[9px] text-zinc-300 absolute top-2 left-2">Frontier</span>
+            </div>
+          </div>
+
+          {/* Pressure Wave bands */}
+          <div className="absolute pointer-events-none" style={{top:'80px', left:`${qToX(2023,3)}%`, width:`${qToX(2024,2)-qToX(2023,3)}%`, height:'300px', background:'#F1F5F9', borderRadius:'8px', zIndex:1}}>
+            <span className="absolute top-2 left-3 text-[9px] text-slate-400 font-medium">1M context race (2023 Q3 – 2024 Q2)</span>
+          </div>
+          <div className="absolute pointer-events-none" style={{top:'500px', left:`${qToX(2024,3)}%`, width:`${qToX(2025,1)-qToX(2024,3)}%`, height:'260px', background:'#F1F5F9', borderRadius:'8px', zIndex:1}}>
+            <span className="absolute top-2 left-3 text-[9px] text-slate-400 font-medium">Inference cost crisis (2024 Q3 – 2025 Q1)</span>
+          </div>
+
+          {/* Lane sections with pressure field */}
+          <div className="relative">
+            {laneGroups.map((lane, li) => {
+              const rowCount = lane.rows.length;
+              const sectionH = rowCount * ROW_H;
+              const pressureData = PRESSURE[lane.id] || [];
+              const glowing = hasMomentum(pressureData);
+
+              return (
+                <div key={lane.id} className="relative border-b border-zinc-200 momentum-glow"
+                  style={{height:sectionH, boxShadow: glowing ? `inset 0 0 24px ${lane.color}10` : 'none'}}>
+                  {/* Pressure field: continuous gradient band */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{zIndex:0}}>
+                    <defs>
+                      <linearGradient id={`pgrad-${lane.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                        {pressureData.map((p, pi) => {
+                          const pct = qToX(parseInt(p.q.slice(0,4)), parseInt(p.q.slice(5)));
+                          const opacity = 0.01 + p.w * 0.09;
+                          return <stop key={pi} offset={`${pct}%`} stopColor={lane.color} stopOpacity={opacity}/>;
+                        })}
+                      </linearGradient>
+                      <filter id={`blur-${lane.id}`}><feGaussianBlur stdDeviation="8"/></filter>
+                    </defs>
+                    <rect x="0" y="0" width="100%" height="100%"
+                      fill={`url(#pgrad-${lane.id})`}
+                      filter={`url(#blur-${lane.id})`} />
+                  </svg>
+
+                  {/* Paradigm rows */}
+                  {lane.rows.map((para, ri) => {
+                    const rowPapers = papers.filter(p => p.paradigm === para.id);
+                    const isDimmed = hoveredParadigm && hoveredParadigm !== para.id;
+                    return (
+                      <div key={para.id} className="relative border-b border-dashed border-zinc-100"
+                        style={{height:ROW_H, opacity: isDimmed ? 0.3 : 1, transition:'opacity 150ms ease'}}>
+                        {/* Row label */}
+                        <div className="absolute left-4 top-2 flex items-center gap-1.5 z-10">
+                          <span className="w-2 h-2 rounded-full inline-block" style={{background:para.color}}></span>
+                          <span className="text-[13px] font-semibold text-zinc-700">{para.name}</span>
+                          <span className="text-[10px] text-zinc-400">{para.subtitle}</span>
+                        </div>
+
+                        {/* Connection lines */}
+                        <svg className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{zIndex:2}}>
+                          {rowPapers.map(paper =>
+                            paper.builds_on.map(srcId => {
+                              const src = papers.find(p => p.id === srcId);
+                              if (!src) return null;
+                              const x1 = qToX(src.year, src.quarter);
+                              const x2 = qToX(paper.year, paper.quarter);
+                              const samePara = src.paradigm === para.id;
+                              return (
+                                <line key={`${srcId}-${paper.id}`}
+                                  x1={`${x1}%`} y1={ROW_H/2}
+                                  x2={`${x2}%`} y2={ROW_H/2}
+                                  stroke={para.color} strokeWidth={samePara ? 1.5 : 1}
+                                  strokeOpacity={samePara ? 0.5 : 0.25}
+                                  strokeDasharray={samePara ? '' : '6,4'}
+                                  markerEnd="url(#arrowhead)" />
+                              );
+                            })
+                          )}
+                          <defs>
+                            <marker id="arrowhead" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+                              <polygon points="0 0,6 2,0 4" fill="#a1a1aa"/>
+                            </marker>
+                          </defs>
+                        </svg>
+
+                        {/* Paper nodes */}
+                        {rowPapers.map(paper => {
+                          const x = qToX(paper.year, paper.quarter);
+                          const sz = paper.size === 'lg' ? 14 : paper.size === 'md' ? 10 : 7;
+                          const isHov = hovered === paper.id;
+                          const isSel = selected && selected.id === paper.id;
+                          return (
+                            <div key={paper.id}
+                              className="absolute cursor-pointer transition-transform duration-150"
+                              style={{left:`${x}%`, top:ROW_H/2 - sz, transform:`translateX(-50%) ${isHov?'scale(1.2)':''}`, zIndex:4}}
+                              onMouseEnter={(e) => { setHovered(paper.id); setTooltipPos({x:e.clientX, y:e.clientY}); }}
+                              onMouseLeave={() => { setHovered(null); setTooltipPos(null); }}
+                              onClick={() => setSelected(paper)}>
+                              <PaperNode shape={para.shape} color={para.color} size={sz} active={isSel || isHov} />
+                              {(paper.size !== 'sm' || isHov) && (
+                                <div className="mt-1 text-center whitespace-nowrap">
+                                  <div className="text-[11px] text-zinc-600">{paper.title}</div>
+                                  <div className="text-[9px] text-zinc-400">{paper.year} Q{paper.quarter}</div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    function PaperNode({shape, color, size, active}) {
+      const d = size * 2;
+      const fillOpacity = active ? 0.8 : 0.5;
+      const strokeW = active ? 2 : 1.5;
+      const style = {width:d, height:d, background:`${color}${active?'cc':'80'}`, border:`${strokeW}px solid ${color}`};
+      if (shape === 'circle') return <div style={{...style, borderRadius:'50%'}}></div>;
+      if (shape === 'square') return <div style={style}></div>;
+      if (shape === 'diamond') return <div style={{...style, transform:'rotate(45deg)', width:d*0.85, height:d*0.85}}></div>;
+      if (shape === 'triangle') return <div style={{width:0,height:0,borderLeft:`${size}px solid transparent`,borderRight:`${size}px solid transparent`,borderBottom:`${d}px solid ${color}`,opacity:active?1:0.8}}></div>;
+      if (shape === 'hex') return <div style={{...style, clipPath:'polygon(25% 6%,75% 6%,100% 50%,75% 94%,25% 94%,0% 50%)'}}></div>;
+      return <div style={{...style, borderRadius:'50%'}}></div>;
+    }
+
+    function Header() {
+      return (
+        <div className="sticky top-0 z-30 bg-white border-b border-zinc-200 h-14 px-8 flex items-center justify-between shrink-0">
+          <div>
+            <h1 className="text-xl font-black text-zinc-900 tracking-tight">LLM SYSTEMS EVOLUTION MAP</h1>
+            <p className="text-[11px] text-zinc-500">后 Transformer 时代的技术演化地图（2023 → 2026）</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="px-4 py-1.5 rounded-xl bg-orange-600 text-white text-sm font-semibold">全局视图</button>
+            <button className="px-4 py-1.5 rounded-xl border border-zinc-300 text-zinc-600 text-sm">单一主题</button>
+            <button className="px-4 py-1.5 rounded-xl border border-zinc-300 text-zinc-600 text-sm">对比视图</button>
+          </div>
+          <div className="text-[10px] text-zinc-400">形状 = Layer（干预层）| 颜色 = Paradigm（世界观）</div>
+        </div>
+      );
+    }
+
+    function LeftRail() {
+      const ROW_H = 88;
+      return (
+        <div className="w-[200px] min-w-[200px] bg-zinc-50 border-r border-zinc-200 shrink-0">
+          {/* Spacer matching timeline header height */}
+          <div className="h-14 border-b border-zinc-200"></div>
+          {LANES.map((lane, i) => {
+            const rowCount = PARADIGMS.filter(p => p.lane === lane.id).length;
+            const sectionH = rowCount * ROW_H;
+            return (
+              <div key={lane.id} className="px-4 py-4 border-b border-zinc-200 flex flex-col justify-center"
+                style={{borderLeft:`4px solid ${lane.color}`, height:sectionH}}>
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                    style={{background:lane.bgLight}}>{i+1}</div>
+                  <span className="text-sm font-bold">{lane.title}</span>
+                </div>
+                <p className="mt-1.5 text-[10px] text-zinc-500 leading-relaxed">{lane.subtitle}</p>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    function SidePanel({paper, onClose}) {
+      const para = PARADIGMS.find(p => p.id === paper.paradigm);
+      const lane = LANES.find(l => l.id === (para && para.lane));
+      const buildsOn = paper.builds_on.map(id => PAPERS.find(p => p.id === id)).filter(Boolean);
+      return (
+        <div className="w-[400px] min-w-[400px] bg-zinc-50 border-l border-zinc-200 p-6 overflow-auto"
+          style={{animation:'slideIn 250ms ease'}}>
+          <style>{`@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}`}</style>
+          <div className="flex items-center justify-between">
+            <span className="px-3 py-1 rounded-full text-[10px] font-semibold"
+              style={{background:lane?lane.bgLight:'#eee', color:lane?lane.color:'#333'}}>
+              {lane?lane.title:''} {'>'} {para?para.name:''}
+            </span>
+            <button onClick={onClose} className="text-zinc-400 text-xl leading-none">×</button>
+          </div>
+          <h2 className="mt-4 text-[28px] font-black">{paper.title}</h2>
+          <div className="mt-2 text-sm text-zinc-500">{paper.year} Q{paper.quarter}</div>
+          <hr className="my-4 border-zinc-200"/>
+          <div className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Paradigm</div>
+          <div className="mt-2 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full" style={{background:para?para.color:'#999'}}></span>
+            <span className="text-sm text-zinc-700">{para?para.name:''}</span>
+          </div>
+          <div className="mt-4 text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Bottleneck</div>
+          <div className="mt-2 text-sm text-zinc-700">{lane?lane.title:''}</div>
+          {buildsOn.length > 0 && (
+            <>
+              <div className="mt-4 text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Builds On</div>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {buildsOn.map(p => (
+                  <span key={p.id} className="px-3 py-1 rounded-full border border-zinc-300 bg-white text-sm text-zinc-700">
+                    {p.title}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      );
+    }
+
+    function BottomLegend() {
+      return (
+        <div className="h-12 bg-white border-t border-zinc-200 px-8 flex items-center justify-between text-[10px] text-zinc-500">
+          <div className="flex items-center gap-5">
+            <span className="font-bold text-zinc-700">连线</span>
+            <span className="flex items-center gap-1">
+              <svg width="24" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#a1a1aa" strokeWidth="1.5"/></svg>
+              builds_on
+            </span>
+            <span className="flex items-center gap-1">
+              <svg width="24" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#9ca3af" strokeWidth="1" strokeDasharray="4,3"/></svg>
+              competes_with
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="font-bold text-zinc-700">Layer</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-zinc-500 inline-block"></span> arch</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-zinc-500 inline-block"></span> sys</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-zinc-500 inline-block rotate-45"></span> infer</span>
+            <span className="flex items-center gap-1"><span className="w-0 h-0 inline-block" style={{borderLeft:'4px solid transparent',borderRight:'4px solid transparent',borderBottom:'7px solid #71717a'}}></span> train</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-zinc-500 inline-block" style={{clipPath:'polygon(25% 6%,75% 6%,100% 50%,75% 94%,25% 94%,0% 50%)'}}></span> memory</span>
+          </div>
+          <div className="flex items-center gap-2 text-zinc-400">
+            节点大小 = log(citations)
+            <span className="w-1.5 h-1.5 rounded-full bg-zinc-300 inline-block"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 inline-block"></span>
+            <span className="w-3.5 h-3.5 rounded-full bg-zinc-300 inline-block"></span>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

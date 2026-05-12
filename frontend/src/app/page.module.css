@@ -1,0 +1,253 @@
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 20px;
+  border-right: 1px solid #2A2A3E;
+  background-color: #12121F;
+}
+
+.brand {
+  margin-bottom: 24px;
+}
+
+.brandTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.brandAccent {
+  color: #FF4400;
+}
+
+.brandSub {
+  font-size: 11px;
+  color: #666680;
+  margin: 2px 0 0 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modeToggle {
+  display: flex;
+  gap: 1px;
+  margin-bottom: 16px;
+}
+
+.modeBtn {
+  flex: 1;
+  padding: 7px 0;
+  font-size: 11px;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid #2A2A3E;
+  color: #666680;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.modeBtnActive {
+  color: #FF4400;
+  border-color: #FF4400;
+}
+
+.seedHint {
+  padding: 12px 0;
+  font-size: 12px;
+  color: #666680;
+}
+
+.seedHint p {
+  margin: 0;
+}
+
+.reportLoading {
+  padding: 12px 0;
+}
+
+.legend {
+  padding: 16px 0;
+}
+
+.legendTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666680;
+  letter-spacing: 1.5px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.legendItems {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legendItemClickable {
+  cursor: pointer;
+  padding: 4px 6px;
+  margin: -4px -6px;
+}
+
+.legendItemClickable:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.legendItemActive {
+  background: rgba(255, 68, 0, 0.08);
+}
+
+.legendItemActive .legendLabel {
+  color: #FF4400;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.legendLabel {
+  font-size: 11px;
+  color: #B0B0C0;
+  flex: 1;
+}
+
+.legendCount {
+  font-size: 10px;
+  color: #666680;
+}
+
+.canvas {
+  flex: 1;
+  position: relative;
+  background-color: #1A1A2E;
+  overflow: hidden;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.emptyTitle {
+  font-size: 16px;
+  font-weight: 400;
+  color: #888899;
+  margin: 0 0 8px 0;
+}
+
+.emptyHint {
+  font-size: 13px;
+  color: #555566;
+  margin: 0;
+}
+
+.resetBtn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #FF4400;
+  background: none;
+  border: 1px solid #FF4400;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.resetBtn:hover {
+  background-color: #FF4400;
+  color: #FFFFFF;
+}
+
+.graphLegend {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: rgba(26, 26, 46, 0.80);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  color: #999AAB;
+  letter-spacing: 0.3px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.graphLegendTitle {
+  color: #CCCCDD;
+  font-weight: 500;
+}
+
+.graphLegendDivider {
+  color: #444455;
+}
+
+.graphLegendHighlight {
+  color: #FF7744;
+}
+
+.statsBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: rgba(26, 26, 46, 0.85);
+  font-size: 11px;
+  color: #666680;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.layoutToggle {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: flex;
+  gap: 1px;
+  z-index: 10;
+}
+
+.layoutToggleBtn {
+  padding: 5px 12px;
+  font-size: 11px;
+  background: transparent;
+  border: 1px solid #2A2A3E;
+  color: #666680;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+}
+
+.layoutToggleBtnActive {
+  color: #FF4400;
+  border-color: #FF4400;
+}

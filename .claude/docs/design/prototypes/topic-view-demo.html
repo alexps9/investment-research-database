@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Topic View Demo - Complete Connections</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: #fff; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    const LANES = [
+      {id:'sequence_scaling', title:'Context Scaling', subtitle:'处理更长文本（4K → 1M+）', color:'#2563EB', bgLight:'#DBEAFE'},
+      {id:'memory_wall', title:'Memory Wall', subtitle:'降低推理显存 / 带宽占用', color:'#059669', bgLight:'#D1FAE5'},
+      {id:'compute_scaling', title:'Compute Scaling', subtitle:'测试时计算缩放 / ACI', color:'#EA580C', bgLight:'#FFEDD5'},
+    ];
+
+    // Era definitions
+    const ERAS = [
+      {id:1, name:'Era 1: Knowledge', start:'2023Q1', end:'2023Q4', bg:'#FAFAFA', label:'Knowledge Acquisition'},
+      {id:2, name:'Era 2: Reasoning', start:'2024Q1', end:'2025Q2', bg:'#FFFFFF', label:'Logical Reasoning'},
+      {id:3, name:'Era 3: Action', start:'2025Q3', end:'2026Q4', bg:'linear-gradient(to right, #FFFFFF, transparent)', label:'Unified Action'},
+    ];
+
+    function App() {
+      const [selected, setSelected] = useState(null);
+      const [hovered, setHovered] = useState(null);
+      const ROW_H = 72;
+      
+      // Build lane data once and share between LeftRail and MainCanvas
+      const laneData = useMemo(() => {
+        const data = {};
+        LANES.forEach(lane => {
+          data[lane.id] = {};
+          const lanePapers = PAPERS.filter(p => p.lane === lane.id);
+          const paradigms = [...new Set(lanePapers.map(p => p.paradigm))];
+          paradigms.forEach(para => {
+            data[lane.id][para] = lanePapers.filter(p => p.paradigm === para);
+          });
+        });
+        return data;
+      }, []);
+      
+      // Calculate total height for the scrollable area
+      const totalRows = Object.values(laneData).reduce((sum, lane) => sum + Object.keys(lane).length, 0);
+      const totalHeight = totalRows * ROW_H;
+      
+      return (
+        <div style={{fontFamily:'IBM Plex Sans, sans-serif'}} className="h-screen flex flex-col bg-white text-zinc-900">
+          <Header />
+          <div className="flex flex-1 overflow-auto items-start">
+            <LeftRail laneData={laneData} />
+            <MainCanvas 
+              laneData={laneData}
+              totalHeight={totalHeight}
+              selected={selected} 
+              setSelected={setSelected} 
+              hovered={hovered} 
+              setHovered={setHovered} />
+            {selected && <SidePanel paper={selected} onClose={() => setSelected(null)} />}
+          </div>
+          <BottomLegend />
+        </div>
+      );
+    }
+
+    function LeftRail({laneData}) {
+      const ROW_H = 72;
+      // Calculate total height
+      const totalH = LANES.reduce((sum, lane) => {
+        const paradigms = Object.keys(laneData[lane.id] || {});
+        return sum + paradigms.length * ROW_H;
+      }, 0);
+      
+      return (
+        <div className="w-[200px] min-w-[200px] bg-zinc-50 border-r border-zinc-200 shrink-0"
+          style={{height: totalH, alignSelf: 'flex-start'}}>
+          {LANES.map((lane, i) => {
+            const paradigms = Object.keys(laneData[lane.id] || {});
+            const sectionH = paradigms.length * ROW_H;
+            return (
+              <div key={lane.id} className="px-4 flex flex-col justify-center border-b border-zinc-200 relative"
+                style={{borderLeft:`4px solid ${lane.color}`, height: sectionH}}>
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                    style={{background:lane.bgLight, color:lane.color}}>{i+1}</div>
+                  <span className="text-sm font-bold text-zinc-900">{lane.title}</span>
+                </div>
+                <p className="mt-1.5 text-[10px] text-zinc-500 leading-relaxed">{lane.subtitle}</p>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    function Header() {
+      return (
+        <div className="sticky top-0 z-30 bg-white border-b border-zinc-200 h-14 px-8 flex items-center justify-between shrink-0">
+          <div>
+            <h1 className="text-xl font-black text-zinc-900 tracking-tight">TOPIC VIEW — Complete Connections</h1>
+            <p className="text-[11px] text-zinc-500">技术路线分叉 + 跨Lane因果弧 + Era划分</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="px-4 py-1.5 rounded-xl border border-zinc-300 text-zinc-600 text-sm">全局视图</button>
+            <button className="px-4 py-1.5 rounded-xl bg-orange-600 text-white text-sm font-semibold">单一主题</button>
+          </div>
+        </div>
+      );
+    }
+
+    function BottomLegend() {
+      return (
+        <div className="h-12 bg-white border-t border-zinc-200 px-8 flex items-center justify-between text-[10px] text-zinc-500">
+          <div className="flex items-center gap-5">
+            <span className="font-bold text-zinc-700">连线</span>
+            <span className="flex items-center gap-1">
+              <svg width="24" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#475569" strokeWidth="2.5"/></svg>
+              主干演进
+            </span>
+            <span className="flex items-center gap-1">
+              <svg width="24" height="6"><path d="M0,3 Q11,3 22,3" stroke="#2563EB" strokeWidth="2" fill="none"/></svg>
+              分叉弧线
+            </span>
+            <span className="flex items-center gap-1">
+              <svg width="24" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#059669" strokeWidth="1.5" strokeDasharray="5,3"/></svg>
+              跨Lane因果
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="font-bold text-zinc-700">Layer</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-zinc-500"></span> arch</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-zinc-500"></span> sys</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 bg-zinc-500 rotate-45"></span> infer</span>
+            <span className="flex items-center gap-1"><span className="w-0 h-0" style={{borderLeft:'4px solid transparent',borderRight:'4px solid transparent',borderBottom:'7px solid #71717a'}}></span> train</span>
+          </div>
+        </div>
+      );
+    }
+
+    function SidePanel({paper, onClose}) {
+      const buildsOn = paper.builds_on?.map(id => PAPERS.find(p => p.id === id)).filter(Boolean) || [];
+      const enables = CROSS_ARCS.filter(a => a.from === paper.id && a.type === 'enables').map(a => ({
+        arc: a,
+        paper: PAPERS.find(p => p.id === a.to)
+      })).filter(x => x.paper);
+      return (
+        <div className="w-[360px] min-w-[360px] bg-zinc-50 border-l border-zinc-200 p-6 overflow-auto"
+          style={{animation:'slideIn 250ms ease'}}>
+          <style>{`@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}`}</style>
+          <div className="flex items-center justify-between">
+            <span className="px-3 py-1 rounded-full text-[10px] font-semibold"
+              style={{background:`${paper.color}20`, color:paper.color}}>
+              {paper.lane} {'>'} {paper.paradigm}
+            </span>
+            <button onClick={onClose} className="text-zinc-400 text-xl leading-none">×</button>
+          </div>
+          <h2 className="mt-4 text-[28px] font-black">{paper.title}</h2>
+          <div className="mt-2 text-sm text-zinc-500">{paper.year} Q{paper.quarter}</div>
+          <hr className="my-4 border-zinc-200"/>
+          
+          {buildsOn.length > 0 && <>
+            <div className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Builds On</div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {buildsOn.map(p => (
+                <span key={p.id} className="px-3 py-1 rounded-full border border-zinc-300 bg-white text-sm text-zinc-700">{p.title}</span>
+              ))}
+            </div>
+          </>}
+          
+          {enables.length > 0 && <>
+            <div className="mt-4 text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Enables</div>
+            <div className="mt-2 space-y-2">
+              {enables.map(({arc, paper:target}) => (
+                <div key={arc.to} className="flex items-center gap-2 text-sm">
+                  <span className="text-zinc-500">→</span>
+                  <span className="font-medium">{target?.title}</span>
+                  {arc.label && <span className="text-zinc-400 text-xs">({arc.label})</span>}
+                </div>
+              ))}
+            </div>
+          </>}
+        </div>
+      );
+    }
+
+    // Layer shapes
+    const LAYER_SHAPE = {arch:'circle', sys:'square', infer:'diamond', train:'triangle', memory:'hex'};
+
+    // Paradigm colors
+    const PARA_COLOR = {
+      linear_ssm:'#2563EB', sparse:'#0D9488', memory_aug:'#7C3AED', kernel:'#475569',
+      kv_comp:'#059669', paging:'#475569', quant:'#475569',
+      moe:'#DC2626', speculative:'#DC2626', reasoning:'#EA580C',
+      persistent_mem:'#7C3AED', agent_rl:'#EA580C', verifier:'#F59E0B'
+    };
+
+    // Complete paper dataset with Era 3 additions
+    const PAPERS = [
+      // === Lane 1: Context Scaling ===
+      // Trunk: Position Encoding (consensus)
+      {id:'rope',title:'RoPE',year:2023,quarter:1,paradigm:'kernel',lane:'sequence_scaling',layer:'arch',size:'md',isTrunk:true,builds_on:[]},
+      {id:'alib',title:'ALiBi',year:2023,quarter:2,paradigm:'kernel',lane:'sequence_scaling',layer:'arch',size:'sm',isTrunk:true,builds_on:[]},
+      
+      // Linear / SSM (forks up from RoPE)
+      {id:'hyena',title:'Hyena',year:2023,quarter:1,paradigm:'linear_ssm',lane:'sequence_scaling',layer:'arch',size:'sm',builds_on:[],forks_from:'rope'},
+      {id:'rwkv4',title:'RWKV v4',year:2023,quarter:2,paradigm:'linear_ssm',lane:'sequence_scaling',layer:'arch',size:'md',builds_on:[],forks_from:'rope'},
+      {id:'retnet',title:'RetNet',year:2023,quarter:3,paradigm:'linear_ssm',lane:'sequence_scaling',layer:'arch',size:'md',builds_on:[],forks_from:'rope'},
+      {id:'mamba',title:'Mamba',year:2023,quarter:4,paradigm:'linear_ssm',lane:'sequence_scaling',layer:'arch',size:'lg',builds_on:['retnet'],forks_from:'rope'},
+      {id:'griffin',title:'Griffin',year:2024,quarter:1,paradigm:'linear_ssm',lane:'sequence_scaling',layer:'arch',size:'sm',builds_on:['mamba']},
+      {id:'jamba',title:'Jamba',year:2024,quarter:1,paradigm:'linear_ssm',lane:'sequence_scaling',layer:'arch',size:'md',builds_on:['mamba']},
+      {id:'mamba2',title:'Mamba-2',year:2024,quarter:2,paradigm:'linear_ssm',lane:'sequence_scaling',layer:'arch',size:'lg',builds_on:['mamba']},
+      {id:'rwkv7',title:'RWKV-7',year:2024,quarter:4,paradigm:'linear_ssm',lane:'sequence_scaling',layer:'arch',size:'md',builds_on:['rwkv4']},
+      
+      // Memory-Augmented
+      {id:'yarn',title:'YaRN',year:2023,quarter:3,paradigm:'memory_aug',lane:'sequence_scaling',layer:'memory',size:'md',builds_on:[],forks_from:'rope'},
+      {id:'longrope',title:'LongRoPE',year:2024,quarter:1,paradigm:'memory_aug',lane:'sequence_scaling',layer:'memory',size:'md',builds_on:['yarn']},
+      {id:'infini',title:'Infini-Attention',year:2024,quarter:2,paradigm:'memory_aug',lane:'sequence_scaling',layer:'memory',size:'md',builds_on:[]},
+      
+      // Sparse / Chunked (forks down from RoPE)
+      {id:'streaming',title:'StreamingLLM',year:2023,quarter:3,paradigm:'sparse',lane:'sequence_scaling',layer:'sys',size:'md',builds_on:[],forks_from:'rope'},
+      {id:'ringattn',title:'Ring Attention',year:2023,quarter:4,paradigm:'sparse',lane:'sequence_scaling',layer:'sys',size:'md',builds_on:[]},
+      {id:'longnet',title:'LongNet',year:2024,quarter:1,paradigm:'sparse',lane:'sequence_scaling',layer:'sys',size:'sm',builds_on:[]},
+      
+      // Era 3: Persistent Memory (new)
+      {id:'persistent_mem',title:'Persistent Memory',year:2025,quarter:2,paradigm:'persistent_mem',lane:'sequence_scaling',layer:'memory',size:'lg',builds_on:[],forks_from:'longrope'},
+      
+      // === Lane 2: Memory Wall ===
+      // Trunk: Flash Attention
+      {id:'flash2',title:'FlashAttn-2',year:2023,quarter:3,paradigm:'kernel',lane:'memory_wall',layer:'sys',size:'lg',isTrunk:true,builds_on:[]},
+      {id:'flash3',title:'FlashAttn-3',year:2024,quarter:3,paradigm:'kernel',lane:'memory_wall',layer:'sys',size:'md',isTrunk:true,builds_on:['flash2']},
+      {id:'flash4',title:'FlashAttn-4',year:2025,quarter:3,paradigm:'kernel',lane:'memory_wall',layer:'sys',size:'md',isTrunk:true,builds_on:['flash3']},
+      
+      // KV Compression (forks up from FlashAttn)
+      {id:'gqa',title:'GQA',year:2023,quarter:2,paradigm:'kv_comp',lane:'memory_wall',layer:'memory',size:'md',builds_on:[],forks_from:'flash2'},
+      {id:'mla_v2',title:'MLA (DS-V2)',year:2024,quarter:2,paradigm:'kv_comp',lane:'memory_wall',layer:'memory',size:'lg',builds_on:['gqa']},
+      {id:'mla_v3',title:'MLA (DS-V3)',year:2024,quarter:4,paradigm:'kv_comp',lane:'memory_wall',layer:'memory',size:'lg',builds_on:['mla_v2']},
+      {id:'transmla',title:'TransMLA',year:2025,quarter:2,paradigm:'kv_comp',lane:'memory_wall',layer:'memory',size:'md',builds_on:['mla_v3']},
+      
+      // Paging (forks down from FlashAttn)
+      {id:'pagedattn',title:'PagedAttention',year:2023,quarter:3,paradigm:'paging',lane:'memory_wall',layer:'sys',size:'lg',builds_on:[],forks_from:'flash2'},
+      {id:'sglang',title:'SGLang',year:2023,quarter:4,paradigm:'paging',lane:'memory_wall',layer:'sys',size:'md',builds_on:['pagedattn']},
+      {id:'vllm2',title:'vLLM v2',year:2024,quarter:3,paradigm:'paging',lane:'memory_wall',layer:'sys',size:'md',builds_on:['pagedattn']},
+      
+      // Quantization
+      {id:'awq',title:'AWQ',year:2023,quarter:2,paradigm:'quant',lane:'memory_wall',layer:'sys',size:'md',builds_on:[]},
+      {id:'gptq',title:'GPTQ',year:2023,quarter:3,paradigm:'quant',lane:'memory_wall',layer:'sys',size:'md',builds_on:['awq']},
+      {id:'smoothquant',title:'SmoothQuant',year:2023,quarter:4,paradigm:'quant',lane:'memory_wall',layer:'sys',size:'md',builds_on:['gptq']},
+      
+      // === Lane 3: Compute Scaling ===
+      // Trunk: MoE
+      {id:'switch',title:'Switch Transformer',year:2023,quarter:1,paradigm:'moe',lane:'compute_scaling',layer:'arch',size:'md',isTrunk:true,builds_on:[]},
+      {id:'mixtral',title:'Mixtral 8x7B',year:2024,quarter:1,paradigm:'moe',lane:'compute_scaling',layer:'arch',size:'lg',isTrunk:true,builds_on:['switch']},
+      {id:'dsmoe',title:'DeepSeek-MoE',year:2024,quarter:1,paradigm:'moe',lane:'compute_scaling',layer:'arch',size:'md',builds_on:['switch']},
+      {id:'dsv3_moe',title:'DS-V3 MoE',year:2024,quarter:4,paradigm:'moe',lane:'compute_scaling',layer:'arch',size:'lg',builds_on:['dsmoe']},
+      
+      // Speculative (forks from MoE)
+      {id:'specdec',title:'Speculative Dec.',year:2023,quarter:1,paradigm:'speculative',lane:'compute_scaling',layer:'infer',size:'lg',builds_on:[],forks_from:'switch'},
+      {id:'medusa',title:'Medusa',year:2024,quarter:1,paradigm:'speculative',lane:'compute_scaling',layer:'infer',size:'md',builds_on:['specdec']},
+      {id:'eagle',title:'EAGLE-2',year:2024,quarter:2,paradigm:'speculative',lane:'compute_scaling',layer:'infer',size:'md',builds_on:['specdec']},
+      
+      // Reasoning Scaling (forks down from MoE)
+      {id:'cot',title:'Chain-of-Thought',year:2023,quarter:1,paradigm:'reasoning',lane:'compute_scaling',layer:'train',size:'lg',builds_on:[],forks_from:'mixtral'},
+      {id:'tot',title:'Tree-of-Thought',year:2023,quarter:3,paradigm:'reasoning',lane:'compute_scaling',layer:'train',size:'md',builds_on:['cot']},
+      {id:'o1',title:'o1-preview',year:2024,quarter:3,paradigm:'reasoning',lane:'compute_scaling',layer:'train',size:'lg',builds_on:['tot']},
+      {id:'r1',title:'DeepSeek-R1',year:2025,quarter:1,paradigm:'reasoning',lane:'compute_scaling',layer:'train',size:'lg',builds_on:['o1']},
+      
+      // Era 3: Verifier Scaling (new)
+      {id:'verifier',title:'Verifier Scaling',year:2025,quarter:2,paradigm:'verifier',lane:'compute_scaling',layer:'train',size:'md',builds_on:[],forks_from:'r1'},
+      
+      // Era 3: Agent RL (new)
+      {id:'agent_rl',title:'Agent RL',year:2025,quarter:3,paradigm:'agent_rl',lane:'compute_scaling',layer:'train',size:'lg',builds_on:[]},
+    ];
+
+    // Cross-arc connections
+    const CROSS_ARCS = [
+      // Enables / 跨Lane因果
+      {from:'flash2', to:'yarn', type:'enables', label:'enables 128K'},
+      {from:'flash2', to:'mla_v2', type:'enables', label:'IO解决→KV压缩'},
+      {from:'mla_v3', to:'r1', type:'enables', label:'低成本推理→R1'},
+      {from:'mla_v3', to:'dsv3_moe', type:'merge', label:'MLA+MoE融合'},
+      {from:'pagedattn', to:'vllm2', type:'enables', label:''},
+      
+      // Era 3 闭环
+      {from:'longrope', to:'persistent_mem', type:'enables', label:'长上下文→记忆'},
+      {from:'mamba2', to:'persistent_mem', type:'enables', label:'线性→记忆'},
+      {from:'persistent_mem', to:'agent_rl', type:'enables', label:'记忆→ACI'},
+      {from:'r1', to:'verifier', type:'fork', label:'推理→评价'},
+      {from:'verifier', to:'agent_rl', type:'enables', label:'评价→行动'},
+      {from:'transmla', to:'agent_rl', type:'enables', label:'实时→行动'},
+      {from:'flash4', to:'agent_rl', type:'enables', label:'效率→实时'},
+      
+      // Forks / 行内分叉
+      {from:'mamba', to:'griffin', type:'fork', label:'hybrid'},
+      {from:'mamba', to:'jamba', type:'merge', label:'SSM+Attn融合'},
+      {from:'mamba', to:'rwkv7', type:'fork', label:'RNN复兴'},
+      {from:'retnet', to:'streaming', type:'fork', label:'sink token'},
+      {from:'gqa', to:'pagedattn', type:'fork', label:'serving优化'},
+      {from:'switch', to:'specdec', type:'fork', label:'条件计算→投机'},
+      {from:'tot', to:'o1', type:'fork', label:'search scaling'},
+    ];
+
+    function qToX(year, quarter) {
+      return ((year - 2023) * 4 + (quarter - 1)) / 16 * 100;
+    }
+    const NOW_X = qToX(2025, 2);
+
+    function NodeShape({cx, cy, r, shape, fill, stroke, strokeWidth, opacity}) {
+      const s = r * 2;
+      if (shape === 'circle') return <circle cx={cx} cy={cy} r={r} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity}/>;
+      if (shape === 'square') return <rect x={cx-r} y={cy-r} width={s} height={s} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity}/>;
+      if (shape === 'diamond') return <rect x={cx-r*0.7} y={cy-r*0.7} width={r*1.4} height={r*1.4} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity} transform={`rotate(45,${cx},${cy})`}/>;
+      if (shape === 'triangle') {
+        const pts = `${cx},${cy-r} ${cx+r},${cy+r*0.7} ${cx-r},${cy+r*0.7}`;
+        return <polygon points={pts} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity}/>;
+      }
+      if (shape === 'hex') {
+        const pts = [0,1,2,3,4,5].map(i => {
+          const angle = Math.PI/6 + i * Math.PI/3;
+          return `${cx + r*Math.cos(angle)},${cy + r*Math.sin(angle)}`;
+        }).join(' ');
+        return <polygon points={pts} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity}/>;
+      }
+      return <circle cx={cx} cy={cy} r={r} fill={fill} stroke={stroke} strokeWidth={strokeWidth} opacity={opacity}/>;
+    }
+
+    // Create proper fork bezier: horizontal first, then vertical
+    function createForkBezier(x1, y1, x2, y2, bendFactor = 0.5) {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      // Control point 1: extend horizontally from start
+      const cp1x = x1 + dx * 0.3;
+      const cp1y = y1;
+      // Control point 2: approach target from horizontal
+      const cp2x = x2 - dx * 0.3;
+      const cp2y = y2;
+      return `M ${x1} ${y1} C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${x2} ${y2}`;
+    }
+
+    // Create cross-lane S-curve
+    function createCrossBezier(x1, y1, x2, y2) {
+      const midY = (y1 + y2) / 2;
+      return `M ${x1} ${y1} C ${x1} ${midY} ${x2} ${midY} ${x2} ${y2}`;
+    }
+
+    function MainCanvas({laneData, totalHeight, selected, setSelected, hovered, setHovered}) {
+      const ROW_H = 72;
+      const timelineW = 1200;
+
+      // Build row index map for consistent position calculation
+      const rowIndexMap = useMemo(() => {
+        const indexMap = {};
+        let rowIdx = 0;
+        
+        LANES.forEach(lane => {
+          const paradigms = Object.keys(laneData[lane.id] || {});
+          paradigms.forEach(para => {
+            indexMap[`${lane.id}-${para}`] = rowIdx;
+            rowIdx++;
+          });
+        });
+        return indexMap;
+      }, [laneData]);
+
+      // Get paper position using row index map
+      const getPaperPos = (paperId) => {
+        const paper = PAPERS.find(p => p.id === paperId);
+        if (!paper) return null;
+        
+        const rowKey = `${paper.lane}-${paper.paradigm}`;
+        const rowIdx = rowIndexMap[rowKey];
+        if (rowIdx === undefined) return null;
+        
+        return {
+          x: qToX(paper.year, paper.quarter),
+          y: rowIdx * ROW_H + ROW_H / 2,
+          paper
+        };
+      };
+
+      return (
+        <div className="flex-1 relative" style={{minWidth:timelineW, height: totalHeight + 56}}>
+          {/* Era backgrounds */}
+          <div className="absolute inset-0 flex" style={{top:56}}>
+            <div className="flex-1" style={{background:'#FAFAFA'}}></div>
+            <div className="flex-1" style={{background:'#FFFFFF'}}></div>
+            <div className="flex-1" style={{background:'linear-gradient(to right, #FFFFFF, #FEF3E2)'}}></div>
+          </div>
+
+          {/* Timeline header */}
+          <div className="h-14 border-b border-zinc-200 sticky top-0 z-20 bg-white flex">
+            {['2023','2024','2025','2026'].map(y => (
+              <div key={y} className="flex-1 border-r border-zinc-100">
+                <div className="text-center text-sm font-bold text-zinc-700 pt-1.5">{y}</div>
+                <div className="grid grid-cols-4 h-6">
+                  {['Q1','Q2','Q3','Q4'].map(q => (
+                    <div key={q} className="text-[10px] text-zinc-400 text-center border-r border-zinc-50">{q}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* NOW line */}
+          <div className="absolute top-0 bottom-0 z-10 pointer-events-none" style={{left:`${NOW_X}%`}}>
+            <div className="w-0 h-full border-l-2 border-dashed" style={{borderColor:'#FF4400'}}></div>
+            <div className="absolute top-[58px] -left-3 text-[10px] font-bold" style={{color:'#FF4400'}}>NOW</div>
+          </div>
+
+          {/* All connections overlay (forks + cross-lane) */}
+          <svg className="absolute pointer-events-none" style={{top:56, left:0, width:'100%', height:totalHeight, zIndex:15}}>
+            <defs>
+              <marker id="arrow-enables" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0,0 8,3 0,6" fill="#059669" opacity="0.8"/>
+              </marker>
+              <marker id="arrow-fork" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+                <polygon points="0,0 6,2 0,4" fill="#2563EB" opacity="0.8"/>
+              </marker>
+            </defs>
+            
+            {/* Render fork arcs (from forks_from relationships) */}
+            {PAPERS.filter(p => p.forks_from).map((paper, i) => {
+              const sourcePos = getPaperPos(paper.forks_from);
+              const targetPos = getPaperPos(paper.id);
+              if (!sourcePos || !targetPos) return null;
+              
+              const x1 = sourcePos.x * timelineW / 100;
+              const y1 = sourcePos.y;
+              const x2 = targetPos.x * timelineW / 100;
+              const y2 = targetPos.y;
+              
+              const color = PARA_COLOR[paper.paradigm] || '#71717A';
+              
+              return (
+                <g key={`fork-${paper.id}`}>
+                  <path
+                    d={createForkBezier(x1, y1, x2, y2)}
+                    stroke={color}
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    opacity="0.85"
+                  />
+                </g>
+              );
+            })}
+            
+            {/* Render cross-lane arcs */}
+            {CROSS_ARCS.filter(a => a.type === 'enables' || a.type === 'merge').map((arc, i) => {
+              const from = getPaperPos(arc.from);
+              const to = getPaperPos(arc.to);
+              if (!from || !to) return null;
+              const x1 = from.x * timelineW / 100;
+              const y1 = from.y;
+              const x2 = to.x * timelineW / 100;
+              const y2 = to.y;
+              
+              const isMerge = arc.type === 'merge';
+              const strokeColor = isMerge ? '#7C3AED' : '#059669';
+              
+              return (
+                <g key={`enables-${i}`}>
+                  <path d={createCrossBezier(x1, y1, x2, y2)}
+                    stroke={strokeColor}
+                    strokeWidth={isMerge ? "3" : "2.5"}
+                    fill="none"
+                    strokeDasharray={isMerge ? "" : "6,4"}
+                    opacity="0.75"
+                    markerEnd="url(#arrow-enables)"/>
+                  {arc.label && (
+                    <text x={(x1+x2)/2} y={(y1+y2)/2 - 8}
+                      fontSize="10" fill={strokeColor} opacity="0.9"
+                      textAnchor="middle" fontWeight="600"
+                      style={{textShadow:'0 1px 2px rgba(255,255,255,0.8)'}}>
+                      {arc.label}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+          </svg>
+
+          {/* Lane sections */}
+          {LANES.map((lane, laneIdx) => {
+            const paradigms = Object.keys(laneData[lane.id] || {});
+            const sectionH = paradigms.length * ROW_H;
+            
+            return (
+              <div key={lane.id} className="relative border-b border-zinc-200" style={{height:sectionH}}>
+                {/* Lane label */}
+                <div className="absolute left-2 top-2 text-[10px] font-bold z-10" style={{color:lane.color}}>
+                  {lane.id}
+                </div>
+                
+                {/* Paradigm rows */}
+                {paradigms.map((para, paraIdx) => {
+                  const papers = laneData[lane.id][para];
+                  const color = PARA_COLOR[para] || '#71717A';
+                  // Use global row index for consistent positioning
+                  const globalRowIdx = rowIndexMap[`${lane.id}-${para}`];
+                  const yPos = paraIdx * ROW_H; // Local position within section
+                  const rowCenter = ROW_H / 2; // Center within the row div
+                  
+                  return (
+                    <div key={para} className="relative border-b border-dashed border-zinc-100" style={{height:ROW_H}}>
+                      {/* Paradigm label */}
+                      <div className="absolute left-3 top-2 flex items-center gap-1.5 z-10">
+                        <span className="w-2 h-2 rounded-full" style={{background:color}}></span>
+                        <span className="text-[11px] font-semibold text-zinc-700">{para}</span>
+                      </div>
+
+                      {/* Trunk line for this paradigm */}
+                      {papers.some(p => p.isTrunk) && (
+                        <div className="absolute w-full" style={{top:rowCenter, height:3, background:'#475569', opacity:0.3}}></div>
+                      )}
+
+                      {/* Builds_on connections within row */}
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{zIndex:2}}>
+                        <defs>
+                          <marker id={`arrow-${para}`} markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+                            <polygon points="0,0 6,2 0,4" fill={color} opacity="0.6"/>
+                          </marker>
+                        </defs>
+                        {papers.map(paper => 
+                          (paper.builds_on || []).map(srcId => {
+                            const src = PAPERS.find(p => p.id === srcId);
+                            if (!src || src.paradigm !== para) return null;
+                            const x1 = qToX(src.year, src.quarter);
+                            const x2 = qToX(paper.year, paper.quarter);
+                            return (
+                              <line key={`${srcId}-${paper.id}`}
+                                x1={`${x1}%`} y1={rowCenter}
+                                x2={`${x2}%`} y2={rowCenter}
+                                stroke={color} strokeWidth="2" opacity="0.4"
+                                markerEnd={`url(#arrow-${para})`}/>
+                            );
+                          })
+                        )}
+                      </svg>
+
+                      {/* Paper nodes */}
+                      {papers.map(paper => {
+                        const x = qToX(paper.year, paper.quarter);
+                        const sz = paper.size === 'lg' ? 10 : paper.size === 'md' ? 7 : 5;
+                        const shape = LAYER_SHAPE[paper.layer] || 'circle';
+                        const isActive = selected?.id === paper.id;
+                        const isHovered = hovered === paper.id;
+                        const isTrunk = paper.isTrunk;
+                        
+                        // Position node so its center is at rowCenter
+                        const svgSize = sz * 2 + 4;
+                        
+                        return (
+                          <div key={paper.id} className="absolute cursor-pointer flex flex-col items-center"
+                            style={{left:`${x}%`, top:rowCenter - sz - 2, transform:'translateX(-50%)', zIndex:10}}
+                            onClick={() => setSelected({...paper, color})}
+                            onMouseEnter={() => setHovered(paper.id)}
+                            onMouseLeave={() => setHovered(null)}>
+                            <svg width={svgSize} height={svgSize} style={{overflow:'visible'}}>
+                              {/* Glow effect for trunk nodes */}
+                              {isTrunk && (
+                                <circle cx={sz+2} cy={sz+2} r={sz+2} fill={color} opacity="0.2"/>
+                              )}
+                              <NodeShape 
+                                cx={sz+2} cy={sz+2} r={sz} 
+                                shape={shape} 
+                                fill={color}
+                                stroke={isActive ? '#FF4400' : isTrunk ? '#18181B' : '#fff'} 
+                                strokeWidth={isActive ? 3 : isTrunk ? 2.5 : 2} 
+                                opacity={isHovered ? 1 : isTrunk ? 0.9 : 0.8}/>
+                            </svg>
+                            {/* Label below node */}
+                            {(paper.size !== 'sm' || isTrunk || isActive || isHovered) && (
+                              <div className="mt-0.5 text-center whitespace-nowrap">
+                                <div className={`font-medium ${isTrunk ? 'text-zinc-900 font-bold' : 'text-zinc-700'}`}
+                                  style={{fontSize: isTrunk ? '11px' : '10px'}}>
+                                  {paper.title}
+                                </div>
+                                <div className="text-[8px] text-zinc-400">{paper.year} Q{paper.quarter}</div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

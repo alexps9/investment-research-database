@@ -1,0 +1,48 @@
+# TDD Development Cycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Red: 编写失败测试
+
+    Red --> VerifyFail: 运行测试
+    VerifyFail --> Red: 测试通过? (不应该)
+    VerifyFail --> Green: ❌ FAILED (正确)
+
+    Green --> Implement: 实现最小可行代码
+    Implement --> VerifyPass: 运行测试
+    VerifyPass --> Green: 测试失败?
+    VerifyPass --> Refactor: ✅ PASSED
+
+    Refactor --> Optimize: 重构优化代码
+    Optimize --> VerifyStillPass: 再次运行测试
+    VerifyStillPass --> Refactor: 测试失败?
+    VerifyStillPass --> Done: ✅ PASSED
+
+    Done --> [*]
+
+    note right of Red
+        🔴 Red Phase
+        - 先写测试
+        - 明确目标
+        - 测试必须失败
+    end note
+
+    note right of Green
+        🟢 Green Phase
+        - 最简实现
+        - 不要过度工程
+        - 让测试通过即可
+    end note
+
+    note right of Refactor
+        🔵 Refactor Phase
+        - 优化代码质量
+        - 提取重复逻辑
+        - 保持测试通过
+    end note
+```
+
+**TDD 关键原则**:
+1. **Red**: 先写失败测试（否则测试可能无效）
+2. **Green**: 最简实现（YAGNI - You Aren't Gonna Need It）
+3. **Refactor**: 优化但保持测试通过

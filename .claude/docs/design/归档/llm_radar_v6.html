@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LLM Architecture Radar v6</title>
+<style>
+:root {
+  --color-text-primary: #333;
+  --color-text-secondary: #666;
+  --color-text-tertiary: #999;
+  --color-background-primary: #fff;
+  --color-background-secondary: #f5f5f5;
+  --color-border-primary: #333;
+  --color-border-secondary: #ddd;
+  --color-border-tertiary: #eee;
+  --color-text-info: #185FA5;
+  --font-sans: 'IBM Plex Sans', -apple-system, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-background-primary)}
+.app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{display:flex;align-items:center;border-bottom:1px solid var(--color-border-tertiary)}
+.view-btn{font-size:12px;padding:8px 14px;border:none;border-right:1px solid var(--color-border-tertiary);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.view-btn.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
+.view-btn:hover:not(.active){background:var(--color-background-secondary)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:6px;padding:0 10px}
+.filter-chip{font-size:11px;padding:3px 8px;border:1px solid var(--color-border-secondary);border-radius:20px;background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.filter-chip.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+.main{display:flex;flex:1;min-height:400px}
+.plot-col{flex:1;min-width:0;display:flex;flex-direction:column}
+.heat-wrap{border-bottom:1px solid var(--color-border-tertiary);padding:8px 12px 6px}
+.heat-label{font-size:10px;color:var(--color-text-tertiary);margin-bottom:4px;letter-spacing:.06em}
+.scatter-wrap{flex:1;position:relative;overflow:hidden;min-height:0}
+svg.scatter{display:block}
+.detail-col{width:240px;border-left:1px solid var(--color-border-tertiary);overflow-y:auto}
+.detail-col.collapsed{width:0;overflow:hidden}
+.d-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--color-text-tertiary);font-size:11px;text-align:center;padding:20px}
+.d-open{display:none;flex-direction:column;height:100%}
+.d-hdr{padding:12px;border-bottom:1px solid var(--color-border-tertiary)}
+.d-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.d-sub{font-size:11px;color:var(--color-text-secondary)}
+.d-body{padding:10px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.sl{font-size:10px;font-weight:500;letter-spacing:.07em;color:var(--color-text-tertiary);text-transform:uppercase;margin-bottom:4px}
+.summary-txt{font-size:11px;color:var(--color-text-secondary);line-height:1.6}
+.badge-row{display:flex;gap:4px;flex-wrap:wrap}
+.badge{font-size:10px;padding:1px 6px;border-radius:3px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:1px solid var(--color-border-secondary)}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.mc{background:var(--color-background-secondary);border-radius:4px;padding:6px 7px}
+.mc-val{font-size:14px;font-weight:500}
+.mc-key{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
+.tt{position:absolute;pointer-events:none;background:var(--color-background-primary);border:1px solid var(--color-border-secondary);border-radius:4px;padding:6px 9px;font-size:11px;z-index:20;display:none;max-width:200px}
+.tt-title{font-weight:500;margin-bottom:2px}
+.tt-meta{color:var(--color-text-secondary)}
+.legend-row{display:flex;gap:12px;flex-wrap:wrap;padding:6px 12px;border-top:1px solid var(--color-border-tertiary)}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--color-text-secondary)}
+.leg-dot{width:8px;height:8px;border-radius:50%}
+.cmp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;flex:1}
+.cmp-lane{border-right:1px solid var(--color-border-tertiary);padding:10px;display:flex;flex-direction:column;gap:6px}
+.cmp-lane:last-child{border-right:none}
+.cmp-lane-title{font-size:11px;font-weight:500;margin-bottom:4px}
+.cmp-card{background:var(--color-background-secondary);border-radius:4px;padding:7px 8px;font-size:11px;cursor:pointer;border:1px solid transparent}
+.cmp-card:hover{border-color:var(--color-border-secondary)}
+.cmp-card.sel{border-color:var(--color-border-primary)}
+.cmp-card-title{font-weight:500;margin-bottom:2px}
+.cmp-card-meta{font-size:10px;color:var(--color-text-tertiary)}
+.cmp-tag{display:inline-block;font-size:9px;padding:1px 4px;border-radius:2px;margin-top:3px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="topbar">
+  <button class="view-btn active" data-view="global">全局视图</button>
+  <button class="view-btn" data-view="topic">单一主题</button>
+  <button class="view-btn" data-view="compare">架构对比</button>
+  <div class="topbar-right" id="topbar-right"></div>
+</div>
+<div class="main" id="main-area">
+  <div class="plot-col" id="plot-col">
+    <div class="heat-wrap" id="heat-wrap">
+      <div class="heat-label">论文数量 · 时间热度</div>
+      <div style="position:relative;height:50px"><canvas id="heat-chart"></canvas></div>
+    </div>
+    <div class="scatter-wrap" id="scatter-wrap">
+      <svg class="scatter" id="scatter"></svg>
+      <div class="tt" id="tt"><div class="tt-title" id="tt-t"></div><div class="tt-meta" id="tt-m"></div></div>
+    </div>
+    <div class="legend-row" id="legend-row"></div>
+  </div>
+  <div class="detail-col" id="detail-col">
+    <div class="d-empty" id="d-empty">点击节点查看详情</div>
+    <div class="d-open" id="d-open">
+      <div class="d-hdr"><div class="d-title" id="d-title"></div><div class="d-sub" id="d-sub"></div></div>
+      <div class="d-body">
+        <div><div class="sl">摘要</div><div class="summary-txt" id="d-summary"></div></div>
+        <div><div class="sl">分类</div><div class="badge-row" id="d-badges"></div></div>
+        <div><div class="sl">关键指标</div><div class="m-grid" id="d-metrics"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script id="app-data">
+const SCHOOLS={
+  ssm:{label:'SSM系',color:'#185FA5',fill:'#B5D4F4'},
+  rnn:{label:'RNN复兴系',color:'#3B6D11',fill:'#C0DD97'},
+  linattn:{label:'线性Attention系',color:'#7A5FAA',fill:'#D8CFF0'},
+  hybrid:{label:'Hybrid融合',color:'#8B6E5A',fill:'#E8D8CC'},
+};
+
+const LANES_GLOBAL=[
+  {id:'seq',label:'序列复杂度',color:'#185FA5',fill:'#B5D4F4'},
+  {id:'infer',label:'推理效率',color:'#3B6D11',fill:'#C0DD97'},
+  {id:'scale',label:'MoE规模化',color:'#BA7517',fill:'#FAC775'},
+];
+
+const LANES_TOPIC={
+  seq:[
+    {id:'seq-lin-ssm',label:'SSM系',color:'#185FA5',fill:'#B5D4F4'},
+    {id:'seq-lin-rnn',label:'RNN复兴',color:'#3B6D11',fill:'#C0DD97'},
+    {id:'seq-lin-linattn',label:'线性Attn',color:'#7A5FAA',fill:'#D8CFF0'},
+    {id:'seq-lin-hybrid',label:'Hybrid',color:'#8B6E5A',fill:'#E8D8CC'},
+    {id:'seq-sparse',label:'稀疏/长文本',color:'#534AB7',fill:'#CECBF6'},
+    {id:'seq-pos',label:'位置编码',color:'#2A7A5A',fill:'#B5E8D4'},
+  ],
+  infer:[
+    {id:'inf-kv',label:'2-A KV Cache',color:'#3B6D11',fill:'#C0DD97'},
+    {id:'inf-kern',label:'2-B 推理算子',color:'#185FA5',fill:'#B5D4F4'},
+    {id:'inf-dec',label:'2-C 解码策略',color:'#993556',fill:'#F4C0D1'},
+  ],
+  scale:[
+    {id:'sc-base',label:'3-A MoE基础设施',color:'#BA7517',fill:'#FAC775'},
+    {id:'sc-route',label:'3-B 路由均衡',color:'#993556',fill:'#F4C0D1'},
+    {id:'sc-prod',label:'3-C 工业集成',color:'#3B6D11',fill:'#C0DD97'},
+  ],
+};
+
+const STAGE_CFG={
+  early:{name:'Early',color:'#993556'},
+  growth:{name:'Growth',color:'#BA7517'},
+  mature:{name:'Mature',color:'#3B6D11'},
+};
+
+const PAPERS=[
+  // === Lane 1-A SSM系 ===
+  {id:'s4',lane:'seq',sub:'seq-lin',school:'ssm',year:2023.25,name:'S4',authors:'Gu et al. · Stanford',citations:2200,alpha:'Mid',stage:'mature',summary:'结构化状态空间模型，HiPPO基础上实现长程依赖。',tags:['SSM','structured'],evol:[['s4','hyena'],['s4','mamba']]},
+  {id:'hyena',lane:'seq',sub:'seq-lin',school:'ssm',year:2023.25,name:'Hyena',authors:'Poli et al. · Stanford',citations:780,alpha:'Low',stage:'mature',summary:'长卷积替代attention，sub-quadratic。竞争失利于Mamba。',tags:['convolution','SSM'],evol:[]},
+  {id:'mamba',lane:'seq',sub:'seq-lin',school:'ssm',year:2023.97,name:'Mamba',authors:'Gu & Dao · CMU',citations:5800,alpha:'High',stage:'mature',summary:'Selective SSM：输入依赖状态选择，O(n)训练+O(1)推理。里程碑。',tags:['SSM','selective'],evol:[['mamba','mamba2'],['mamba','griffin'],['mamba','jamba']]},
+  {id:'mamba2',lane:'seq',sub:'seq-lin',school:'ssm',year:2024.43,name:'Mamba-2',authors:'Dao & Gu · 2024',citations:1100,alpha:'Mid',stage:'growth',summary:'SSD框架：证明Mamba=structured masked attention特例。',tags:['SSM','SSD'],evol:[['mamba2','mamba3']]},
+  {id:'mamba3',lane:'seq',sub:'seq-lin',school:'ssm',year:2026.08,name:'Mamba-3',authors:'Gu et al. · 2026',citations:90,alpha:'Mid',stage:'early',summary:'第三代Mamba，与hybrid路线融合。',tags:['SSM','2026'],evol:[]},
+  // === Lane 1-A RNN复兴系 ===
+  {id:'rwkv4',lane:'seq',sub:'seq-lin',school:'rnn',year:2023.42,name:'RWKV v4-5',authors:'Peng Bo · 2023',citations:1800,alpha:'Mid',stage:'mature',summary:'RNN现代复兴：并行训练+序列推理，线性复杂度。',tags:['RNN','open-source'],evol:[['rwkv4','rwkv6'],['rwkv4','rwkv7']]},
+  {id:'retnet',lane:'seq',sub:'seq-lin',school:'rnn',year:2023.59,name:'RetNet',authors:'Microsoft · 2023',citations:1500,alpha:'Mid',stage:'mature',summary:'Retention机制：训练并行+推理循环，比Transformer省内存。',tags:['retention','MSFT'],evol:[]},
+  {id:'rwkv6',lane:'seq',sub:'seq-lin',school:'rnn',year:2024.25,name:'Eagle/RWKV-6',authors:'Peng Bo · 2024',citations:420,alpha:'Mid',stage:'growth',summary:'Data-dependent linear attention，表达力提升。',tags:['RNN','RWKV'],evol:[['rwkv6','rwkv7']]},
+  {id:'xlstm',lane:'seq',sub:'seq-lin',school:'rnn',year:2024.43,name:'xLSTM',authors:'Hochreiter · 2024',citations:920,alpha:'Mid',stage:'growth',summary:'LSTM现代化：sLSTM+mLSTM。',tags:['LSTM'],evol:[]},
+  {id:'rwkv7',lane:'seq',sub:'seq-lin',school:'rnn',year:2024.92,name:'RWKV-7',authors:'Peng Bo · 2024',citations:40,alpha:'Mid',stage:'early',summary:'最新RNN迭代。',tags:['RNN','RWKV'],evol:[]},
+  {id:'deltanet',lane:'seq',sub:'seq-lin',school:'rnn',year:2024.25,name:'DeltaNet',authors:'Yang et al. · 2024',citations:85,alpha:'Low',stage:'early',summary:'Delta rule融入线性RNN。',tags:['delta','RNN'],evol:[]},
+  // === Lane 1-A 线性Attention系 ===
+  {id:'lineart',lane:'seq',sub:'seq-lin',school:'linattn',year:2023.25,name:'Linear Transformer',authors:'Katharopoulos · 2020',citations:1900,alpha:'Low',stage:'mature',summary:'最早的线性attention：kernel化softmax。',tags:['linear-attn','kernel'],evol:[['lineart','gla']]},
+  {id:'performer',lane:'seq',sub:'seq-lin',school:'linattn',year:2023.25,name:'Performer',authors:'Choromanski · Google',citations:2200,alpha:'Low',stage:'mature',summary:'FAVOR+ random feature近似attention。',tags:['random-feature'],evol:[]},
+  {id:'gla',lane:'seq',sub:'seq-lin',school:'linattn',year:2023.92,name:'GLA',authors:'Yang et al. · 2023',citations:210,alpha:'Mid',stage:'growth',summary:'Gated Linear Attention：门控线性注意力。',tags:['gated','linear-attn'],evol:[['gla','deltanet']]},
+  // === Lane 1-A Hybrid融合 ===
+  {id:'griffin',lane:'seq',sub:'seq-lin',school:'hybrid',year:2024.15,name:'Griffin',authors:'DeepMind · 2024',citations:780,alpha:'High',stage:'growth',summary:'线性RNN + local attention混合，证明hybrid比纯SSM更实用。',tags:['hybrid','DeepMind'],evol:[]},
+  {id:'jamba',lane:'seq',sub:'seq-lin',school:'hybrid',year:2024.23,name:'Jamba',authors:'AI21 Labs · 2024',citations:1400,alpha:'High',stage:'mature',summary:'52B hybrid产品（Mamba+Transformer+MoE）。里程碑。',tags:['hybrid','MoE','prod'],evol:[]},
+  {id:'nemotron',lane:'seq',sub:'seq-lin',school:'hybrid',year:2025.25,name:'Nemotron-H',authors:'NVIDIA · 2025',citations:180,alpha:'High',stage:'early',summary:'Mamba2+Attention hybrid，NVIDIA工业级。',tags:['hybrid','NVIDIA'],evol:[]},
+  // === Lane 1-B 稀疏&长文本 ===
+  {id:'streamllm',lane:'seq',sub:'seq-sparse',year:2023.76,name:'StreamingLLM',authors:'MIT · 2023',citations:950,alpha:'Low',stage:'mature',summary:'Attention sink机制，无限流式推理。',tags:['streaming'],evol:[]},
+  {id:'ringatt',lane:'seq',sub:'seq-sparse',year:2023.75,name:'Ring Attention',authors:'UC Berkeley · 2023',citations:680,alpha:'Low',stage:'mature',summary:'跨设备分布式attention，超长序列并行。',tags:['distributed'],evol:[]},
+  {id:'longnet',lane:'seq',sub:'seq-sparse',year:2023.59,name:'LongNet',authors:'Microsoft · 2023',citations:980,alpha:'Mid',stage:'mature',summary:'Dilated attention支持1B token序列。',tags:['dilated-attn','1B'],evol:[]},
+  {id:'infini',lane:'seq',sub:'seq-sparse',year:2024.38,name:'Infini-Attention',authors:'Google · 2024',citations:620,alpha:'Mid',stage:'growth',summary:'压缩记忆注入attention layer，long-term memory。',tags:['memory','attention'],evol:[]},
+  // === Lane 1-C 位置编码&记忆 ===
+  {id:'alibi',lane:'seq',sub:'seq-pos',year:2023.25,name:'ALiBi',authors:'Press et al.',citations:1800,alpha:'Low',stage:'mature',summary:'线性偏置位置编码，无需学习位置参数。',tags:['position','bias'],evol:[['alibi','rope']]},
+  {id:'rope',lane:'seq',sub:'seq-pos',year:2023.25,name:'RoPE',authors:'Su et al.',citations:3200,alpha:'Low',stage:'mature',summary:'旋转位置编码，已成LLM标准。',tags:['position','rotary'],evol:[['rope','yarn'],['rope','longropE']]},
+  {id:'yarn',lane:'seq',sub:'seq-pos',year:2023.72,name:'YaRN',authors:'Bloc97 · 2023',citations:820,alpha:'Low',stage:'mature',summary:'RoPE非均匀插值，零成本扩展128K+。',tags:['RoPE','interpolation'],evol:[['yarn','longropE']]},
+  {id:'longropE',lane:'seq',sub:'seq-pos',year:2024.12,name:'LongRoPE',authors:'Microsoft · 2024',citations:540,alpha:'Low',stage:'growth',summary:'非均匀位置插值，理论支持2M token。',tags:['RoPE','2M'],evol:[]},
+  // === Lane 2-A KV Cache ===
+  {id:'mqa',lane:'infer',sub:'inf-kv',year:2023.25,name:'MQA/GQA',authors:'Google · 2023',citations:1200,alpha:'Mid',stage:'mature',summary:'多查询/分组查询attention降KV显存。',tags:['KV-Cache','GQA'],evol:[['mqa','mla']]},
+  {id:'mla',lane:'infer',sub:'inf-kv',year:2024.12,name:'MLA',authors:'DeepSeek · 2024',citations:980,alpha:'High',stage:'growth',summary:'Multi-head Latent Attention，KV cache降10×。',tags:['KV-Cache','DeepSeek'],evol:[['mla','transmla']]},
+  {id:'transmla',lane:'infer',sub:'inf-kv',year:2025.08,name:'TransMLA',authors:'2025',citations:60,alpha:'Mid',stage:'early',summary:'MLA架构的进一步演进。',tags:['KV-Cache','MLA'],evol:[]},
+  // === Lane 2-B 推理算子 ===
+  {id:'fa2',lane:'infer',sub:'inf-kern',year:2023.58,name:'FlashAttn-2',authors:'Tri Dao · 2023',citations:4200,alpha:'Low',stage:'mature',summary:'IO感知精确attention，吞吐提升2-4×。',tags:['CUDA','kernel'],evol:[['fa2','fa3']]},
+  {id:'paged',lane:'infer',sub:'inf-kern',year:2023.59,name:'PagedAttention',authors:'vLLM · 2023',citations:2100,alpha:'High',stage:'mature',summary:'分页KV cache管理，业界标准推理引擎。',tags:['vLLM','paged'],evol:[]},
+  {id:'fa3',lane:'infer',sub:'inf-kern',year:2024.55,name:'FlashAttn-3',authors:'Shah et al. · 2024',citations:380,alpha:'Low',stage:'growth',summary:'H100异步执行优化。',tags:['H100','async'],evol:[]},
+  // === Lane 2-C 解码策略 ===
+  {id:'specdec',lane:'infer',sub:'inf-dec',year:2023.42,name:'Speculative Dec.',authors:'Google · 2023',citations:1400,alpha:'High',stage:'mature',summary:'draft+校验并行，吞吐2-3×。',tags:['speculative'],evol:[['specdec','medusa'],['specdec','eagle']]},
+  {id:'medusa',lane:'infer',sub:'inf-dec',year:2024.05,name:'Medusa',authors:'Cai et al. · 2024',citations:520,alpha:'Mid',stage:'growth',summary:'多头并行预测，无需独立draft model。',tags:['multi-head'],evol:[]},
+  {id:'eagle',lane:'infer',sub:'inf-dec',year:2024.35,name:'EAGLE',authors:'Li et al. · 2024',citations:390,alpha:'Mid',stage:'growth',summary:'特征级draft，接受率更高。',tags:['feature-level'],evol:[]},
+  {id:'lookahead',lane:'infer',sub:'inf-dec',year:2024.08,name:'Lookahead Dec.',authors:'Fu et al. · 2024',citations:280,alpha:'Low',stage:'growth',summary:'Jacobi迭代实现并行生成。',tags:['jacobi'],evol:[]},
+  // === Lane 3-A MoE基础设施 ===
+  {id:'gshard',lane:'scale',sub:'sc-base',year:2023.25,name:'GShard/Switch',authors:'Google',citations:3500,alpha:'Low',stage:'mature',summary:'万亿参数稀疏激活范式。',tags:['MoE','trillion'],evol:[]},
+  {id:'megablks',lane:'scale',sub:'sc-base',year:2023.42,name:'MegaBlocks',authors:'Gale et al.',citations:480,alpha:'Low',stage:'mature',summary:'稀疏MoE高效GPU kernel。',tags:['MoE','GPU'],evol:[]},
+  // === Lane 3-B 路由均衡 ===
+  {id:'expertchoice',lane:'scale',sub:'sc-route',year:2023.25,name:'Expert Choice',authors:'Google · 2022',citations:860,alpha:'Mid',stage:'mature',summary:'专家选token，解决负载不均。',tags:['MoE','routing'],evol:[['expertchoice','dsmoe']]},
+  {id:'dsmoe',lane:'scale',sub:'sc-route',year:2024.12,name:'DeepSeekMoE',authors:'DeepSeek · 2024',citations:740,alpha:'High',stage:'growth',summary:'细粒度+共享专家，利用率提升。',tags:['MoE','fine-grained'],evol:[['dsmoe','dsv3']]},
+  // === Lane 3-C 工业集成 ===
+  {id:'mixtral',lane:'scale',sub:'sc-prod',year:2023.97,name:'Mixtral 8x7B',authors:'Mistral · 2023',citations:3100,alpha:'High',stage:'mature',summary:'首个广泛使用开源MoE产品。',tags:['MoE','open-source'],evol:[]},
+  {id:'jambamoe',lane:'scale',sub:'sc-prod',year:2024.23,name:'Jamba(MoE)',authors:'AI21 · 2024',citations:1400,alpha:'High',stage:'mature',summary:'SSM+MoE工业融合。',tags:['MoE','SSM'],evol:[]},
+  {id:'dsv3',lane:'scale',sub:'sc-prod',year:2024.97,name:'DeepSeek-V3',authors:'DeepSeek · 2024',citations:1800,alpha:'High',stage:'growth',summary:'MLA+MoE+FP8，671B/37B激活，仅600万美元训练。',tags:['MoE','MLA','FP8'],evol:[]},
+];
+
+const COMPARE_SERIES={
+  mamba:{label:'Mamba系',color:'#185FA5',ids:['s4','hyena','mamba','mamba2','mamba3','griffin','jamba','nemotron']},
+  rwkv:{label:'RWKV系',color:'#3B6D11',ids:['rwkv4','retnet','rwkv6','xlstm','rwkv7','deltanet']},
+  transformer:{label:'Transformer优化',color:'#BA7517',ids:['mqa','mla','transmla','fa2','fa3','paged','specdec','medusa','eagle']},
+};
+
+const QUARTERS=[];
+for(let y=2023;y<=2026;y++){
+  const qs=y===2023?[3,4]:y===2026?[1,2]:[1,2,3,4];
+  qs.forEach(q=>QUARTERS.push({y,q}));
+}
+</script>
+<script id="app-logic">
+let currentView='global',currentTopic='seq',selectedId=null,filterLane='all',heatChart=null;
+const PAD={l:8,r:8,t:28,b:22};
+
+function getLanes(){
+  if(currentView==='global') return LANES_GLOBAL;
+  if(currentView==='topic') return LANES_TOPIC[currentTopic];
+  return [{id:'mamba',label:'Mamba系',color:'#185FA5',fill:'#B5D4F4'},{id:'rwkv',label:'RWKV系',color:'#3B6D11',fill:'#C0DD97'},{id:'transformer',label:'Transformer优化',color:'#BA7517',fill:'#FAC775'}];
+}
+
+function getPapers(){
+  if(currentView==='global') return PAPERS.filter(p=>filterLane==='all'||p.lane===filterLane);
+  if(currentView==='topic') return PAPERS.filter(p=>p.lane===currentTopic);
+  const allIds=Object.values(COMPARE_SERIES).flatMap(s=>s.ids);
+  return PAPERS.filter(p=>allIds.includes(p.id));
+}
+
+function paperLaneKey(p){
+  if(currentView==='global') return p.lane;
+  if(currentView==='topic'){
+    if(p.sub==='seq-lin'&&p.school) return 'seq-lin-'+p.school;
+    return p.sub;
+  }
+  for(const[k,s]of Object.entries(COMPARE_SERIES)){if(s.ids.includes(p.id))return k;}
+  return null;
+}
+
+function getW(){return document.getElementById('scatter-wrap').clientWidth||600}
+function getH(){
+  const lanes=getLanes();
+  return Math.max(320, lanes.length*60+PAD.t+PAD.b);
+}
+function xScale(year){const W=getW();return PAD.l+(year-2023)/(2026.5-2023)*(W-PAD.l-PAD.r)}
+function yScale(i,total){const H=getH(),usable=H-PAD.t-PAD.b;return total===1?H/2:PAD.t+i*(usable/(total-1))}
+function citeR(c){return c>4000?11:c>1500?9:c>600?7:c>200?6:5}
+
+function svgEl(tag,attrs){
+  const el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  if(attrs)Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+  return el;
+}
+
+function renderTopbar(){
+  const tr=document.getElementById('topbar-right');
+  tr.innerHTML='';
+  if(currentView==='global'){
+    [{id:'all',label:'全部'},{id:'seq',label:'序列'},{id:'infer',label:'推理效率'},{id:'scale',label:'MoE'}].forEach(c=>{
+      const b=document.createElement('button');
+      b.className='filter-chip'+(filterLane===c.id?' active':'');
+      b.textContent=c.label;
+      b.onclick=()=>{filterLane=c.id;renderAll();};
+      tr.appendChild(b);
+    });
+  }else if(currentView==='topic'){
+    [{id:'seq',label:'序列&长上下文'},{id:'infer',label:'推理效率'},{id:'scale',label:'MoE'}].forEach(c=>{
+      const b=document.createElement('button');
+      b.className='filter-chip'+(currentTopic===c.id?' active':'');
+      b.textContent=c.label;
+      b.onclick=()=>{currentTopic=c.id;selectedId=null;renderAll();};
+      tr.appendChild(b);
+    });
+  }
+}
+
+function renderLegend(){
+  const row=document.getElementById('legend-row');
+  row.innerHTML='';
+  getLanes().forEach(l=>{
+    const item=document.createElement('div');
+    item.className='leg-item';
+    item.innerHTML=`<span class="leg-dot" style="background:${l.fill};border:1px solid ${l.color}"></span><span>${l.label}</span>`;
+    row.appendChild(item);
+  });
+}
+
+function renderHeat(){
+  const papers=getPapers();
+  const lanes=getLanes();
+  const datasets=lanes.map(l=>({
+    label:l.label,
+    data:QUARTERS.map(({y,q})=>papers.filter(p=>{
+      if(paperLaneKey(p)!==l.id)return false;
+      const iy=Math.floor(p.year),iq=Math.round((p.year-Math.floor(p.year))*4)+1;
+      return iy===y&&iq===q;
+    }).length),
+    backgroundColor:l.fill,
+    borderColor:l.color,
+    borderWidth:0.5,
+  }));
+  if(heatChart)heatChart.destroy();
+  heatChart=new Chart(document.getElementById('heat-chart'),{
+    type:'bar',
+    data:{labels:QUARTERS.map(({y,q})=>`${y}Q${q}`),datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{stacked:true,ticks:{font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:8},grid:{display:false},border:{display:false}},
+        y:{stacked:true,display:false},
+      },
+      animation:{duration:200},
+    }
+  });
+}
+
+function renderScatter(){
+  const W=getW(),H=getH();
+  const svg=document.getElementById('scatter');
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.setAttribute('width',W);
+  svg.setAttribute('height',H);
+  svg.innerHTML='';
+
+  const lanes=getLanes();
+  const papers=getPapers();
+
+  // year grid + NOW line
+  const gBg=svgEl('g');
+  for(let y=2023;y<=2026;y++){
+    const x=xScale(y);
+    gBg.appendChild(svgEl('line',{x1:x,x2:x,y1:PAD.t-8,y2:H-PAD.b,stroke:'#eee','stroke-width':'1'}));
+    const t=svgEl('text',{x,y:PAD.t-12,'text-anchor':'middle','font-size':'10',fill:'#999'});t.textContent=y;gBg.appendChild(t);
+  }
+  const nowX=xScale(2026.38);
+  gBg.appendChild(svgEl('line',{x1:nowX,x2:nowX,y1:PAD.t-8,y2:H-PAD.b,stroke:'#FF4400','stroke-width':'1','stroke-dasharray':'3,3',opacity:'0.6'}));
+  const nt=svgEl('text',{x:nowX+3,y:PAD.t-12,'font-size':'9',fill:'#FF4400'});nt.textContent='NOW';gBg.appendChild(nt);
+  svg.appendChild(gBg);
+
+  // lane labels + guide lines + sub-lane grouping
+  const laneGroups={};
+  if(currentView==='topic'&&currentTopic==='seq'){
+    laneGroups['1-A 线性化']=[0,1,2,3];
+    laneGroups['1-B 稀疏']=[4];
+    laneGroups['1-C 位置']=[5];
+  }
+
+  lanes.forEach((l,i)=>{
+    const y=yScale(i,lanes.length);
+    const t=svgEl('text',{x:4,y:y+3,'font-size':'9.5',fill:l.color,'font-weight':'500'});
+    t.textContent=l.label;
+    svg.appendChild(t);
+    svg.appendChild(svgEl('line',{x1:PAD.l,x2:W-PAD.r,y1:y,y2:y,stroke:l.color,'stroke-width':'0.5',opacity:'0.15'}));
+  });
+
+  // group background for 1-A schools
+  if(currentView==='topic'&&currentTopic==='seq'){
+    const y0=yScale(0,lanes.length)-18;
+    const y3=yScale(3,lanes.length)+18;
+    svg.appendChild(svgEl('rect',{x:0,y:y0,width:W,height:y3-y0,fill:'#185FA5',opacity:'0.02',rx:'2'}));
+    // left bracket line
+    svg.appendChild(svgEl('line',{x1:1,x2:1,y1:y0,y2:y3,stroke:'#185FA5','stroke-width':'2',opacity:'0.3'}));
+  }
+
+  // position map with Y-jitter for overlapping nodes
+  const posMap={};
+  const laneSlots={};
+  papers.sort((a,b)=>a.year-b.year).forEach(p=>{
+    const lk=paperLaneKey(p);
+    const li=lanes.findIndex(l=>l.id===lk);
+    if(li<0)return;
+    const baseY=yScale(li,lanes.length);
+    const x=xScale(p.year);
+    const key=lk+'_'+Math.round(x/30);
+    if(!laneSlots[key])laneSlots[key]=0;
+    const idx=laneSlots[key];
+    laneSlots[key]++;
+    const offsets=[0,-12,12,-20,20];
+    const jitter=offsets[idx]||idx*10;
+    posMap[p.id]={x,y:baseY+jitter};
+  });
+
+  // connections
+  const gE=svgEl('g');
+  papers.forEach(pa=>{
+    (pa.evol||[]).forEach(([fromId,toId])=>{
+      const s=posMap[fromId],t=posMap[toId];
+      if(!s||!t)return;
+      const fromP=PAPERS.find(p=>p.id===fromId);
+      const toP=PAPERS.find(p=>p.id===toId);
+      const cross=fromP&&toP&&fromP.school!==toP.school;
+      const mx=(s.x+t.x)/2;
+      gE.appendChild(svgEl('path',{
+        d:`M${s.x} ${s.y} C${mx} ${s.y} ${mx} ${t.y} ${t.x} ${t.y}`,
+        fill:'none',
+        stroke:cross?'#999':(fromP?.school?SCHOOLS[fromP.school]?.color:'#999'),
+        'stroke-width':cross?'1':'1.2',
+        'stroke-opacity':cross?'0.25':'0.4',
+        'stroke-dasharray':cross?'4 3':'none',
+      }));
+    });
+  });
+  svg.appendChild(gE);
+
+  // nodes
+  const gN=svgEl('g');
+  papers.forEach(p=>{
+    const pos=posMap[p.id];
+    if(!pos)return;
+    const lk=paperLaneKey(p);
+    const lane=lanes.find(l=>l.id===lk);
+    if(!lane)return;
+    const r=citeR(p.citations);
+    const grp=svgEl('g');grp.style.cursor='pointer';
+
+    const circle=svgEl('circle',{cx:pos.x,cy:pos.y,r,fill:lane.fill,stroke:lane.color,'stroke-width':selectedId===p.id?'2.5':'1'});
+    if(selectedId===p.id){
+      grp.appendChild(svgEl('circle',{cx:pos.x,cy:pos.y,r:r+4,fill:'none',stroke:lane.color,'stroke-width':'0.8',opacity:'0.4'}));
+    }
+    grp.appendChild(circle);
+
+    grp.onmouseenter=e=>{
+      circle.setAttribute('stroke-width','2');
+      const tt=document.getElementById('tt');
+      tt.style.display='block';
+      document.getElementById('tt-t').textContent=p.name;
+      document.getElementById('tt-m').textContent=`${p.authors} · ${p.citations.toLocaleString()} cites`;
+    };
+    grp.onmousemove=e=>{
+      const rect=document.getElementById('scatter-wrap').getBoundingClientRect();
+      const tt=document.getElementById('tt');
+      tt.style.left=(e.clientX-rect.left+12)+'px';
+      tt.style.top=(e.clientY-rect.top-30)+'px';
+    };
+    grp.onmouseleave=()=>{
+      if(selectedId!==p.id)circle.setAttribute('stroke-width','1');
+      document.getElementById('tt').style.display='none';
+    };
+    grp.onclick=e=>{
+      e.stopPropagation();
+      selectedId=p.id;
+      renderScatter();
+      showDetail(p,lane);
+    };
+    gN.appendChild(grp);
+
+    // label only for top-tier papers (avoid clutter)
+    if(p.citations>=2500||p.alpha==='High'){
+      const lbl=svgEl('text',{x:pos.x+r+3,y:pos.y+3,'font-size':'8.5',fill:'#444','dominant-baseline':'middle'});
+      lbl.textContent=p.name.length>12?p.name.slice(0,12):p.name;
+      gN.appendChild(lbl);
+    }
+  });
+  svg.appendChild(gN);
+}
+
+function showDetail(p,lane){
+  document.getElementById('d-empty').style.display='none';
+  const d=document.getElementById('d-open');d.style.display='flex';
+  document.getElementById('d-title').textContent=p.name;
+  document.getElementById('d-sub').textContent=p.authors;
+  document.getElementById('d-summary').textContent=p.summary;
+  const br=document.getElementById('d-badges');br.innerHTML='';
+  const sb=document.createElement('span');sb.className='badge';sb.style.cssText=`background:${lane.fill};color:${lane.color}`;sb.textContent=lane.label;br.appendChild(sb);
+  p.tags.forEach(t=>{const tg=document.createElement('span');tg.className='badge';tg.textContent='#'+t;br.appendChild(tg);});
+  const mg=document.getElementById('d-metrics');mg.innerHTML='';
+  [{k:'引用',v:p.citations>=1000?(p.citations/1000).toFixed(1)+'K':p.citations},{k:'年份',v:Math.floor(p.year)},{k:'Alpha',v:p.alpha},{k:'阶段',v:STAGE_CFG[p.stage].name}].forEach(m=>{
+    const c=document.createElement('div');c.className='mc';
+    c.innerHTML=`<div class="mc-val">${m.v}</div><div class="mc-key">${m.k}</div>`;
+    mg.appendChild(c);
+  });
+}
+
+function renderCompare(){
+  document.getElementById('plot-col').style.display='none';
+  let cmp=document.getElementById('cmp-view');
+  if(cmp)cmp.remove();
+  cmp=document.createElement('div');cmp.id='cmp-view';cmp.style.cssText='flex:1;display:flex;flex-direction:column';
+  const grid=document.createElement('div');grid.className='cmp-grid';
+  Object.entries(COMPARE_SERIES).forEach(([key,series])=>{
+    const lane=document.createElement('div');lane.className='cmp-lane';
+    const hdr=document.createElement('div');hdr.className='cmp-lane-title';hdr.style.color=series.color;hdr.textContent=series.label;
+    lane.appendChild(hdr);
+    PAPERS.filter(p=>series.ids.includes(p.id)).sort((a,b)=>a.year-b.year).forEach(p=>{
+      const card=document.createElement('div');card.className='cmp-card'+(selectedId===p.id?' sel':'');
+      const stg=STAGE_CFG[p.stage];
+      card.innerHTML=`<div class="cmp-card-title">${p.name}</div><div class="cmp-card-meta">${Math.floor(p.year)} · ${p.citations>=1000?(p.citations/1000).toFixed(1)+'K':p.citations} cites</div><span class="cmp-tag" style="background:${stg.color}22;color:${stg.color}">${stg.name}</span>`;
+      card.onclick=()=>{selectedId=p.id;document.querySelectorAll('.cmp-card').forEach(c=>c.classList.remove('sel'));card.classList.add('sel');showDetail(p,{label:series.label,color:series.color,fill:series.color+'33'});};
+      lane.appendChild(card);
+    });
+    grid.appendChild(lane);
+  });
+  cmp.appendChild(grid);
+  document.getElementById('main-area').insertBefore(cmp,document.getElementById('detail-col'));
+}
+
+function renderAll(){
+  renderTopbar();
+  renderLegend();
+  if(currentView==='compare'){renderCompare();return;}
+  document.getElementById('plot-col').style.display='flex';
+  const cv=document.getElementById('cmp-view');if(cv)cv.remove();
+  updateScatterHeight();
+  renderHeat();
+  renderScatter();
+}
+
+document.querySelectorAll('.view-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentView=btn.dataset.view;
+    selectedId=null;
+    document.getElementById('d-empty').style.display='flex';
+    document.getElementById('d-open').style.display='none';
+    renderAll();
+  };
+});
+
+document.getElementById('scatter-wrap').onclick=()=>{
+  selectedId=null;
+  document.getElementById('d-empty').style.display='flex';
+  document.getElementById('d-open').style.display='none';
+  if(currentView!=='compare')renderScatter();
+};
+
+window.onresize=()=>{if(currentView!=='compare'){renderHeat();renderScatter();}};
+
+requestAnimationFrame(()=>{
+  const sw=document.getElementById('scatter-wrap');
+  sw.style.height=getH()+'px';
+  sw.style.maxHeight=getH()+'px';
+  renderAll();
+});
+
+function updateScatterHeight(){
+  const sw=document.getElementById('scatter-wrap');
+  const h=getH();
+  sw.style.height=h+'px';
+  sw.style.maxHeight=h+'px';
+}
+</script>
+</body>
+</html>

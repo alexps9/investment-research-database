@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Global View v3 — Dual Mode</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: #fff; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+  const { useState, useRef, useEffect } = React;
+
+  const QUARTERS = [
+    '23Q1','23Q2','23Q3','23Q4',
+    '24Q1','24Q2','24Q3','24Q4',
+    '25Q1','25Q2','25Q3','25Q4',
+    '26Q1','26Q2','26Q3','26Q4'
+  ];
+  const nQ = QUARTERS.length;
+
+  const LANES = [
+    {id:'sequence_scaling', title:'Sequence Scaling', subtitle:'O(N²) → sub-quadratic', color:'#2563EB'},
+    {id:'memory_wall', title:'Memory Wall', subtitle:'KV cache + IO bandwidth', color:'#059669'},
+    {id:'compute_scaling', title:'Compute Scaling', subtitle:'MoE + RL + test-time', color:'#EA580C'},
+  ];
+
+  const ATTENTION = {
+    sequence_scaling: [0.5,0.6,0.8,0.9, 0.7,0.5,0.4,0.3, 0.2,0.2,0.15,0.1, 0.1,0.1,0.1,0.1],
+    memory_wall:      [0.2,0.2,0.3,0.3, 0.5,0.8,0.9,0.85, 0.7,0.6,0.5,0.4, 0.3,0.3,0.25,0.2],
+    compute_scaling:  [0.3,0.3,0.3,0.4, 0.3,0.4,0.7,0.9, 0.95,1.0,0.9,0.85, 0.8,0.75,0.7,0.65],
+  };
+
+  const ERAS = [
+    {start:0, end:3, name:'Knowledge Era'},
+    {start:4, end:11, name:'Reasoning Era'},
+    {start:12, end:15, name:'Agency Frontier'},
+  ];
+
+  function qToX(qi, totalW) { return (qi / (nQ - 1)) * totalW; }
+
+  function App() {
+    const [mode, setMode] = useState('ridge');
+    return (
+      <div className="h-screen flex flex-col" style={{fontFamily:'IBM Plex Sans, sans-serif'}}>
+        <TabHeader mode={mode} setMode={setMode} />
+        <div className="flex flex-1 overflow-hidden">
+          <LeftRail />
+          <div className="flex-1 overflow-auto">
+            <TimelineHeader />
+            {mode === 'ridge' ? <RidgeView /> : <EvolutionView />}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function TabHeader({mode, setMode}) {
+    return (
+      <div className="h-10 flex items-center gap-0 border-b border-zinc-200 px-4">
+        <button onClick={()=>setMode('ridge')}
+          className={`px-4 py-1.5 text-xs font-medium border-b-2 ${mode==='ridge'?'border-zinc-900 text-zinc-900':'border-transparent text-zinc-400'}`}>
+          Attention Ridge
+        </button>
+        <button onClick={()=>setMode('evolution')}
+          className={`px-4 py-1.5 text-xs font-medium border-b-2 ${mode==='evolution'?'border-zinc-900 text-zinc-900':'border-transparent text-zinc-400'}`}>
+          Evolution Map
+        </button>
+      </div>
+    );
+  }
+
+  function LeftRail() {
+    return (
+      <div className="w-36 border-r border-zinc-100 pt-10">
+        {LANES.map(l => (
+          <div key={l.id} className="h-[120px] flex flex-col justify-center px-3">
+            <div className="text-[11px] font-semibold" style={{color:l.color}}>{l.title}</div>
+            <div className="text-[9px] text-zinc-400">{l.subtitle}</div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  function TimelineHeader() {
+    return (
+      <div className="h-6 flex border-b border-zinc-100 sticky top-0 bg-white z-20">
+        {QUARTERS.map(q => (
+          <div key={q} className="flex-1 text-center text-[9px] text-zinc-400">{q}</div>
+        ))}
+      </div>
+    );
+  }
+
+  function RidgeView() {
+    const canvasRef = useRef(null);
+    const [spotlight, setSpotlight] = useState(9);
+
+    useEffect(() => {
+      const cv = canvasRef.current;
+      if (!cv) return;
+      const ctx = cv.getContext('2d');
+      const W = cv.width, H = cv.height;
+      const LANE_H = H / 3;
+      ctx.clearRect(0, 0, W, H);
+
+      // Era dividers
+      ctx.setLineDash([4,4]);
+      ctx.strokeStyle = '#E4E4E7';
+      ctx.lineWidth = 1;
+      [3.5, 11.5].forEach(b => {
+        const x = qToX(b, W);
+        ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+      });
+      ctx.setLineDash([]);
+
+      // Draw ridges
+      LANES.forEach((lane, li) => {
+        const baseY = li * LANE_H + LANE_H * 0.85;
+        const maxH = LANE_H * 0.7;
+        const data = ATTENTION[lane.id];
+
+        // Fill
+        ctx.beginPath();
+        ctx.moveTo(qToX(0,W), baseY);
+        for (let i = 0; i < nQ; i++) {
+          const x = qToX(i,W), y = baseY - data[i] * maxH;
+          if (i === 0) ctx.lineTo(x, y);
+          else {
+            const px = qToX(i-1,W), py = baseY - data[i-1]*maxH;
+            const cp = (px+x)/2;
+            ctx.bezierCurveTo(cp,py,cp,y,x,y);
+          }
+        }
+        ctx.lineTo(qToX(nQ-1,W), baseY);
+        ctx.closePath();
+        ctx.fillStyle = lane.color + '18';
+        ctx.fill();
+
+        // Line (dim)
+        ctx.beginPath();
+        for (let i = 0; i < nQ; i++) {
+          const x = qToX(i,W), y = baseY - data[i]*maxH;
+          if (i===0) ctx.moveTo(x,y);
+          else {
+            const px = qToX(i-1,W), py = baseY - data[i-1]*maxH;
+            ctx.bezierCurveTo((px+x)/2,py,(px+x)/2,y,x,y);
+          }
+        }
+        ctx.strokeStyle = lane.color + '60';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Spotlight bright segment
+        const rad = 2.5;
+        ctx.beginPath();
+        let started = false;
+        for (let i = 0; i < nQ; i++) {
+          if (Math.abs(i - spotlight) > rad) continue;
+          const x = qToX(i,W), y = baseY - data[i]*maxH;
+          if (!started) { ctx.moveTo(x,y); started=true; }
+          else {
+            const px = qToX(i-1,W), py = baseY - data[i-1]*maxH;
+            ctx.bezierCurveTo((px+x)/2,py,(px+x)/2,y,x,y);
+          }
+        }
+        ctx.strokeStyle = lane.color;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Spotlight dot
+        const si = Math.round(spotlight);
+        const sx = qToX(spotlight,W), sy = baseY - data[si]*maxH;
+        ctx.beginPath(); ctx.arc(sx,sy,5,0,Math.PI*2);
+        ctx.fillStyle = lane.color; ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+
+        // Value label
+        ctx.fillStyle = '#18181B';
+        ctx.font = '600 10px IBM Plex Sans';
+        ctx.fillText((data[si]*100).toFixed(0), sx+8, sy+4);
+
+        // Baseline
+        ctx.beginPath();
+        ctx.moveTo(0,baseY); ctx.lineTo(W,baseY);
+        ctx.strokeStyle='#F4F4F5'; ctx.lineWidth=1; ctx.stroke();
+      });
+
+      // NOW line
+      const nowX = qToX(9,W);
+      ctx.beginPath(); ctx.moveTo(nowX,0); ctx.lineTo(nowX,H);
+      ctx.strokeStyle='#FF4400'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.fillStyle='#FF4400'; ctx.font='600 9px IBM Plex Sans';
+      ctx.fillText('NOW',nowX+4,12);
+    }, [spotlight]);
+
+    return (
+      <div>
+        <canvas ref={canvasRef} width={1200} height={360}
+          className="w-full" style={{height:'360px'}} />
+        <div className="px-4 pt-2 flex items-center gap-2">
+          <span className="text-[9px] text-zinc-400 w-8">{QUARTERS[Math.round(spotlight)]}</span>
+          <input type="range" min="0" max={nQ-1} step="0.1" value={spotlight}
+            onChange={e=>setSpotlight(parseFloat(e.target.value))}
+            className="flex-1 h-1" />
+        </div>
+      </div>
+    );
+  }
+
+  // Paradigm rows for evolution view
+  const PARADIGMS = [
+    {id:'linear_ssm', name:'Linear / SSM', lane:'sequence_scaling', color:'#2563EB'},
+    {id:'sparse', name:'Sparse / Chunked', lane:'sequence_scaling', color:'#0D9488'},
+    {id:'kernel', name:'Kernel Opt', lane:'memory_wall', color:'#475569'},
+    {id:'kv_compress', name:'KV Compression', lane:'memory_wall', color:'#059669'},
+    {id:'paging', name:'Paging / Offload', lane:'memory_wall', color:'#059669'},
+    {id:'moe', name:'MoE / Routing', lane:'compute_scaling', color:'#DC2626'},
+    {id:'reasoning', name:'Reasoning Scaling', lane:'compute_scaling', color:'#EA580C'},
+  ];
+
+  const PAPERS = [
+    {id:'mamba',title:'Mamba',q:2,paradigm:'linear_ssm',size:'lg',builds_on:[]},
+    {id:'mamba2',title:'Mamba-2',q:5,paradigm:'linear_ssm',size:'lg',builds_on:['mamba']},
+    {id:'rwkv7',title:'RWKV-7',q:7,paradigm:'linear_ssm',size:'md',builds_on:[]},
+    {id:'jamba',title:'Jamba',q:4,paradigm:'linear_ssm',size:'md',builds_on:['mamba']},
+    {id:'streaming',title:'StreamingLLM',q:2,paradigm:'sparse',size:'md',builds_on:[]},
+    {id:'ringattn',title:'Ring Attn',q:3,paradigm:'sparse',size:'md',builds_on:[]},
+    {id:'infiniattn',title:'Infini-Attn',q:5,paradigm:'sparse',size:'md',builds_on:['streaming']},
+    {id:'flash2',title:'FA v2',q:2,paradigm:'kernel',size:'lg',builds_on:[]},
+    {id:'flash3',title:'FA v3',q:6,paradigm:'kernel',size:'md',builds_on:['flash2']},
+    {id:'mla',title:'MLA',q:5,paradigm:'kv_compress',size:'lg',builds_on:[]},
+    {id:'mla3',title:'MLA-V3',q:7,paradigm:'kv_compress',size:'lg',builds_on:['mla']},
+    {id:'transmla',title:'TransMLA',q:9,paradigm:'kv_compress',size:'md',builds_on:['mla3']},
+    {id:'pagedattn',title:'PagedAttn',q:2,paradigm:'paging',size:'lg',builds_on:[]},
+    {id:'sglang',title:'SGLang',q:3,paradigm:'paging',size:'md',builds_on:['pagedattn']},
+    {id:'vllm2',title:'vLLM v2',q:6,paradigm:'paging',size:'md',builds_on:['pagedattn']},
+    {id:'mixtral',title:'Mixtral',q:4,paradigm:'moe',size:'lg',builds_on:[]},
+    {id:'dsv3',title:'DS-V3',q:7,paradigm:'moe',size:'lg',builds_on:['mixtral']},
+    {id:'qwen3',title:'Qwen3',q:9,paradigm:'moe',size:'md',builds_on:['dsv3']},
+    {id:'o1',title:'o1',q:6,paradigm:'reasoning',size:'lg',builds_on:[]},
+    {id:'r1',title:'R1',q:8,paradigm:'reasoning',size:'lg',builds_on:['o1']},
+    {id:'s1',title:'s1',q:9,paradigm:'reasoning',size:'sm',builds_on:['r1']},
+  ];
+
+  function EvolutionView() {
+    const ROW_H = 52;
+    const laneGroups = LANES.map(l => ({
+      ...l,
+      rows: PARADIGMS.filter(p => p.lane === l.id),
+    }));
+
+    return (
+      <div className="relative" style={{minHeight: PARADIGMS.length * ROW_H}}>
+        {/* NOW line */}
+        <div className="absolute top-0 bottom-0 z-10"
+          style={{left:`${(9/(nQ-1))*100}%`}}>
+          <div className="h-full border-l-2" style={{borderColor:'#FF4400'}}></div>
+          <div className="absolute top-1 left-1 text-[9px] font-bold" style={{color:'#FF4400'}}>NOW</div>
+        </div>
+
+        {laneGroups.map((lane) => (
+          <div key={lane.id} className="border-b border-zinc-200">
+            {lane.rows.map((para) => {
+              const rowPapers = PAPERS.filter(p => p.paradigm === para.id);
+              return (
+                <div key={para.id} className="relative border-b border-dashed border-zinc-50"
+                  style={{height: ROW_H}}>
+                  {/* Row label */}
+                  <div className="absolute left-2 top-1 text-[9px] text-zinc-400 font-medium z-10">
+                    {para.name}
+                  </div>
+                  {/* Edges */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{zIndex:1}}>
+                    {rowPapers.map(p => p.builds_on.map(srcId => {
+                      const src = PAPERS.find(pp => pp.id === srcId);
+                      if (!src || src.paradigm !== para.id) return null;
+                      const x1 = (src.q/(nQ-1))*100, x2 = (p.q/(nQ-1))*100;
+                      return <line key={`${srcId}-${p.id}`}
+                        x1={`${x1}%`} y1={ROW_H/2}
+                        x2={`${x2}%`} y2={ROW_H/2}
+                        stroke={para.color} strokeWidth="1.5" strokeOpacity="0.4" />;
+                    }))}
+                  </svg>
+                  {/* Nodes */}
+                  {rowPapers.map(p => {
+                    const x = (p.q/(nQ-1))*100;
+                    const sz = p.size==='lg'?12:p.size==='md'?8:5;
+                    return (
+                      <div key={p.id} className="absolute" style={{left:`${x}%`,top:ROW_H/2-sz/2,zIndex:3,transform:'translateX(-50%)'}}>
+                        <div style={{width:sz,height:sz,borderRadius:'50%',background:para.color,border:'1.5px solid #fff'}}></div>
+                        <div className="text-[8px] text-zinc-600 text-center mt-0.5 whitespace-nowrap">{p.title}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

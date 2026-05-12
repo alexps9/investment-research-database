@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topic View — Expandable</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'IBM Plex Sans', sans-serif; }
+    
+    .row-transition {
+      transition: height 0.3s ease-out, background-color 0.2s;
+    }
+    
+    .fork-node {
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    // 颜色定义
+    const COLORS = {
+      attention_native: '#475569',
+      post_attention: '#2563EB',
+      sparse_long: '#0D9488',
+      conditional: '#DC2626',
+      reasoning: '#EA580C',
+    };
+
+    // Lane 定义
+    const LANES = [
+      { id: 'context_scaling', title: 'Context Scaling', subtitle: '序列复杂度 & 长上下文', color: '#2563EB', bgLight: '#DBEAFE', rows: ['linearization', 'sparse', 'memory_aug'] },
+      { id: 'memory_wall', title: 'Memory Wall', subtitle: '推理效率', color: '#059669', bgLight: '#D1FAE5', rows: ['kv_compression', 'kernel_opt', 'paging', 'speculative'] },
+      { id: 'compute_scaling', title: 'Compute Scaling', subtitle: '测试时计算', color: '#EA580C', bgLight: '#FFEDD5', rows: ['moe', 'reasoning', 'agent_rl'] },
+    ];
+
+    // Row 定义
+    const ROWS = [
+      { id: 'linearization', lane: 'context_scaling', title: '1-A Linearization', subtitle: 'O(n) Revolution', trunkPaper: 'rope' },
+      { id: 'sparse', lane: 'context_scaling', title: '1-B Sparse', subtitle: 'Attention Optimizers', trunkPaper: 'streaming' },
+      { id: 'memory_aug', lane: 'context_scaling', title: '1-C Memory-Augmented', subtitle: 'Position & Memory', trunkPaper: 'alibi' },
+      { id: 'kv_compression', lane: 'memory_wall', title: '2-A KV Compression', subtitle: 'GQA → MLA', trunkPaper: 'flash2' },
+      { id: 'kernel_opt', lane: 'memory_wall', title: '2-B Kernel Opt.', subtitle: 'FlashAttn Series', trunkPaper: 'flash3' },
+      { id: 'paging', lane: 'memory_wall', title: '2-B Paging', subtitle: 'vLLM / SGLang', trunkPaper: 'pagedattn' },
+      { id: 'speculative', lane: 'memory_wall', title: '2-C Speculative', subtitle: 'Draft & Verify', trunkPaper: 'specdec' },
+      { id: 'moe', lane: 'compute_scaling', title: '3-A MoE', subtitle: 'Parameter Scaling', trunkPaper: 'mixtral' },
+      { id: 'reasoning', lane: 'compute_scaling', title: '3-B Reasoning', subtitle: 'Test-time Compute', trunkPaper: 'r1' },
+      { id: 'agent_rl', lane: 'compute_scaling', title: '3-C Agent RL', subtitle: 'Action Era', trunkPaper: 'agent_rl' },
+    ];
+
+    // 论文数据
+    const PAPERS = [
+      // Lane 1: Context Scaling
+      // Row 1: Linearization - Trunk: RoPE
+      { id: 'rope', title: 'RoPE', year: 2023, quarter: 1, paradigm: 'attention_native', row: 'linearization', size: 'lg', isTrunk: true, path: 'trunk' },
+      { id: 'mamba', title: 'Mamba', year: 2023, quarter: 4, paradigm: 'post_attention', row: 'linearization', size: 'lg', path: 'ssm' },
+      { id: 'mamba2', title: 'Mamba-2', year: 2024, quarter: 2, paradigm: 'post_attention', row: 'linearization', size: 'md', path: 'ssm' },
+      { id: 'rwkv4', title: 'RWKV-4', year: 2023, quarter: 2, paradigm: 'post_attention', row: 'linearization', size: 'md', path: 'linear_rnn' },
+      { id: 'rwkv7', title: 'RWKV-7', year: 2024, quarter: 4, paradigm: 'post_attention', row: 'linearization', size: 'md', path: 'linear_rnn' },
+      { id: 'retnet', title: 'RetNet', year: 2023, quarter: 3, paradigm: 'post_attention', row: 'linearization', size: 'md', path: 'linear_attn' },
+      { id: 'gla', title: 'GLA', year: 2023, quarter: 4, paradigm: 'post_attention', row: 'linearization', size: 'sm', path: 'linear_attn' },
+      
+      // Row 2: Sparse - Trunk: StreamingLLM
+      { id: 'streaming', title: 'StreamingLLM', year: 2023, quarter: 3, paradigm: 'sparse_long', row: 'sparse', size: 'lg', isTrunk: true, path: 'trunk' },
+      { id: 'ringattn', title: 'Ring Attn', year: 2023, quarter: 4, paradigm: 'sparse_long', row: 'sparse', size: 'md', path: 'sparse' },
+      { id: 'infiniattn', title: 'Infini-Attn', year: 2024, quarter: 2, paradigm: 'sparse_long', row: 'sparse', size: 'md', path: 'sparse' },
+      { id: 'longnet', title: 'LongNet', year: 2023, quarter: 3, paradigm: 'sparse_long', row: 'sparse', size: 'sm', path: 'extrapolation' },
+      
+      // Row 3: Memory-Augmented - Trunk: ALiBi (part of RoPE→ALiBi→YaRN chain)
+      { id: 'alibi', title: 'ALiBi', year: 2023, quarter: 2, paradigm: 'attention_native', row: 'memory_aug', size: 'lg', isTrunk: true, path: 'trunk' },
+      { id: 'yarn', title: 'YaRN', year: 2023, quarter: 3, paradigm: 'sparse_long', row: 'memory_aug', size: 'md', path: 'trunk' },
+      { id: 'longrope', title: 'LongRoPE', year: 2024, quarter: 1, paradigm: 'sparse_long', row: 'memory_aug', size: 'md', path: 'trunk' },
+      { id: 'hmt', title: 'HMT', year: 2024, quarter: 1, paradigm: 'sparse_long', row: 'memory_aug', size: 'sm', path: 'memory' },
+      { id: 'persistent_mem', title: 'Persistent Mem', year: 2025, quarter: 2, paradigm: 'sparse_long', row: 'memory_aug', size: 'lg', path: 'memory' },
+      
+      // Lane 2: Memory Wall
+      // Row 4: KV Compression - Trunk: FlashAttn-2
+      { id: 'flash2', title: 'FlashAttn-2', year: 2023, quarter: 3, paradigm: 'attention_native', row: 'kv_compression', size: 'lg', isTrunk: true, path: 'trunk' },
+      { id: 'gqa', title: 'GQA', year: 2023, quarter: 2, paradigm: 'attention_native', row: 'kv_compression', size: 'md', path: 'kv_comp' },
+      { id: 'mla', title: 'MLA (V2)', year: 2024, quarter: 2, paradigm: 'attention_native', row: 'kv_compression', size: 'lg', path: 'kv_comp' },
+      { id: 'mla_v3', title: 'MLA (V3)', year: 2024, quarter: 4, paradigm: 'attention_native', row: 'kv_compression', size: 'lg', path: 'kv_comp' },
+      
+      // Row 5: Kernel Opt - Trunk: FlashAttn-3
+      { id: 'flash3', title: 'FlashAttn-3', year: 2024, quarter: 3, paradigm: 'attention_native', row: 'kernel_opt', size: 'lg', isTrunk: true, path: 'trunk' },
+      { id: 'flash4', title: 'FlashAttn-4', year: 2025, quarter: 3, paradigm: 'attention_native', row: 'kernel_opt', size: 'md', path: 'trunk' },
+      
+      // Row 6: Paging - Trunk: PagedAttention
+      { id: 'pagedattn', title: 'PagedAttn', year: 2023, quarter: 3, paradigm: 'attention_native', row: 'paging', size: 'lg', isTrunk: true, path: 'trunk' },
+      { id: 'sglang', title: 'SGLang', year: 2023, quarter: 4, paradigm: 'attention_native', row: 'paging', size: 'md', path: 'paging' },
+      { id: 'vllm2', title: 'vLLM v2', year: 2024, quarter: 3, paradigm: 'attention_native', row: 'paging', size: 'md', path: 'paging' },
+      
+      // Row 7: Speculative - Trunk: Speculative Decoding
+      { id: 'specdec', title: 'SpecDec', year: 2023, quarter: 1, paradigm: 'conditional', row: 'speculative', size: 'lg', isTrunk: true, path: 'trunk' },
+      { id: 'medusa', title: 'Medusa', year: 2024, quarter: 1, paradigm: 'conditional', row: 'speculative', size: 'md', path: 'speculative' },
+      { id: 'eagle', title: 'EAGLE', year: 2024, quarter: 2, paradigm: 'conditional', row: 'speculative', size: 'md', path: 'speculative' },
+      { id: 'eagle2', title: 'EAGLE-2', year: 2024, quarter: 4, paradigm: 'conditional', row: 'speculative', size: 'md', path: 'speculative' },
+      
+      // Lane 3: Compute Scaling
+      // Row 8: MoE - Trunk: Mixtral
+      { id: 'mixtral', title: 'Mixtral', year: 2024, quarter: 1, paradigm: 'conditional', row: 'moe', size: 'lg', isTrunk: true, path: 'trunk' },
+      { id: 'gshard', title: 'GShard', year: 2023, quarter: 1, paradigm: 'conditional', row: 'moe', size: 'sm', path: 'moe' },
+      { id: 'dsmoe', title: 'DS-MoE', year: 2024, quarter: 1, paradigm: 'conditional', row: 'moe', size: 'md', path: 'moe' },
+      { id: 'dsv3_moe', title: 'DS-V3 MoE', year: 2024, quarter: 4, paradigm: 'conditional', row: 'moe', size: 'lg', path: 'moe' },
+      { id: 'qwen3', title: 'Qwen3 MoE', year: 2025, quarter: 2, paradigm: 'conditional', row: 'moe', size: 'lg', path: 'moe' },
+      
+      // Row 9: Reasoning - Trunk: DeepSeek-R1
+      { id: 'r1', title: 'DeepSeek-R1', year: 2025, quarter: 1, paradigm: 'reasoning', row: 'reasoning', size: 'lg', isTrunk: true, path: 'trunk' },
+      { id: 'cot', title: 'CoT', year: 2023, quarter: 1, paradigm: 'reasoning', row: 'reasoning', size: 'md', path: 'reasoning' },
+      { id: 'tot', title: 'ToT', year: 2023, quarter: 3, paradigm: 'reasoning', row: 'reasoning', size: 'sm', path: 'reasoning' },
+      { id: 'o1_preview', title: 'o1-preview', year: 2024, quarter: 3, paradigm: 'reasoning', row: 'reasoning', size: 'lg', path: 'reasoning' },
+      { id: 's1', title: 's1', year: 2025, quarter: 2, paradigm: 'reasoning', row: 'reasoning', size: 'sm', path: 'reasoning' },
+      
+      // Row 10: Agent RL - Trunk: Agent RL
+      { id: 'agent_rl', title: 'Agent RL', year: 2025, quarter: 3, paradigm: 'reasoning', row: 'agent_rl', size: 'lg', isTrunk: true, path: 'trunk' },
+      { id: 'verifier', title: 'Verifier', year: 2025, quarter: 2, paradigm: 'reasoning', row: 'agent_rl', size: 'md', path: 'verifier' },
+    ];
+
+    // 工具函数
+    function qToX(year, quarter) {
+      return ((year - 2023) * 4 + (quarter - 1)) / 16 * 100;
+    }
+
+    function getColor(paradigm) {
+      return COLORS[paradigm] || '#475569';
+    }
+
+    function getNodeSize(size) {
+      return size === 'lg' ? 12 : size === 'md' ? 8 : 5;
+    }
+
+    function App() {
+      const [expandedRows, setExpandedRows] = useState(new Set(ROWS.map(r => r.id)));
+      const timelineW = 1000;
+      const ROW_H_COLLAPSED = 60;
+      const ROW_H_EXPANDED = 200;
+
+      const toggleRow = (rowId) => {
+        const newSet = new Set(expandedRows);
+        if (newSet.has(rowId)) {
+          newSet.delete(rowId);
+        } else {
+          newSet.add(rowId);
+        }
+        setExpandedRows(newSet);
+      };
+
+      const expandAll = () => setExpandedRows(new Set(ROWS.map(r => r.id)));
+      const collapseAll = () => setExpandedRows(new Set());
+
+      // 计算每行的Y位置
+      const getRowY = (rowId) => {
+        let y = 0;
+        for (const row of ROWS) {
+          if (row.id === rowId) return y;
+          y += expandedRows.has(row.id) ? ROW_H_EXPANDED : ROW_H_COLLAPSED;
+        }
+        return y;
+      };
+
+      // 获取节点位置
+      const getNodePosition = (paper, rowHeight) => {
+        const baseY = getRowY(paper.row);
+        
+        if (!expandedRows.has(paper.row)) {
+          // 折叠态：所有节点在同一行居中
+          return {
+            x: qToX(paper.year, paper.quarter),
+            y: baseY + ROW_H_COLLAPSED / 2,
+          };
+        }
+        
+        // 展开态
+        if (paper.isTrunk) {
+          // 主干节点在中心线偏上
+          return {
+            x: qToX(paper.year, paper.quarter),
+            y: baseY + 60,
+          };
+        }
+        
+        // 分叉节点扇形展开
+        const rowPapers = PAPERS.filter(p => p.row === paper.row);
+        const forkPapers = rowPapers.filter(p => !p.isTrunk);
+        const paths = [...new Set(forkPapers.map(p => p.path))];
+        const pathIndex = paths.indexOf(paper.path);
+        const totalPaths = paths.length;
+        
+        // 同一路径内的节点索引
+        const pathPapers = forkPapers.filter(p => p.path === paper.path);
+        const paperIndexInPath = pathPapers.findIndex(p => p.id === paper.id);
+        
+        // 扇形展开计算
+        const angleSpread = Math.PI / 3; // 60度
+        const angle = -angleSpread / 2 + (angleSpread / (totalPaths + 1)) * (pathIndex + 1);
+        const radius = 70;
+        
+        // 基础Y位置 + 扇形偏移 + 同路径内垂直偏移
+        const baseForkY = baseY + 50 + Math.sin(angle) * radius;
+        const verticalOffset = paperIndexInPath * 35;
+        
+        return {
+          x: qToX(paper.year, paper.quarter),
+          y: baseForkY + verticalOffset,
+        };
+      };
+
+      return (
+        <div className="h-screen flex flex-col bg-white">
+          {/* Header */}
+          <div className="h-14 border-b border-zinc-200 px-6 flex items-center justify-between shrink-0 bg-white z-30">
+            <div>
+              <h1 className="text-lg font-bold text-zinc-900">AI Tech Evolution Map</h1>
+              <p className="text-xs text-zinc-500">点击行展开技术路径</p>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={collapseAll} className="px-3 py-1 text-xs border border-zinc-300 rounded hover:bg-zinc-50">
+                全部折叠
+              </button>
+              <button onClick={expandAll} className="px-3 py-1 text-xs bg-zinc-900 text-white rounded hover:bg-zinc-800">
+                全部展开
+              </button>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 flex overflow-auto">
+            {/* Left Rail - Lanes */}
+            <div className="w-[180px] bg-zinc-50 border-r border-zinc-200 shrink-0 sticky left-0 z-20">
+              {LANES.map((lane) => {
+                const laneRows = ROWS.filter(r => r.lane === lane.id);
+                const laneHeight = laneRows.reduce((sum, r) => 
+                  sum + (expandedRows.has(r.id) ? ROW_H_EXPANDED : ROW_H_COLLAPSED), 0
+                );
+                
+                return (
+                  <div
+                    key={lane.id}
+                    className="px-3 flex flex-col justify-center border-b border-zinc-200"
+                    style={{ height: laneHeight, borderLeft: `4px solid ${lane.color}` }}
+                  >
+                    <div className="text-sm font-bold text-zinc-900">{lane.title}</div>
+                    <p className="text-[10px] text-zinc-500 mt-1">{lane.subtitle}</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Canvas */}
+            <div className="flex-1 relative" style={{ minWidth: timelineW }}>
+              {/* Timeline Header */}
+              <div className="h-10 border-b border-zinc-200 bg-white sticky top-0 z-20 flex">
+                {['2023', '2024', '2025', '2026'].map(y => (
+                  <div key={y} className="flex-1 border-r border-zinc-100">
+                    <div className="text-center text-xs font-bold text-zinc-700 pt-1">{y}</div>
+                    <div className="grid grid-cols-4 h-5">
+                      {['Q1', 'Q2', 'Q3', 'Q4'].map(q => (
+                        <div key={q} className="text-[9px] text-zinc-400 text-center">{q}</div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* NOW Line */}
+              <div className="absolute top-0 bottom-0 z-10 pointer-events-none" style={{ left: `${qToX(2025, 2)}%` }}>
+                <div className="w-0 h-full border-l-2 border-dashed border-red-500"></div>
+                <div className="absolute top-8 -left-3 text-[9px] font-bold text-red-500">NOW</div>
+              </div>
+
+              {/* Rows */}
+              {ROWS.map(row => {
+                const isExpanded = expandedRows.has(row.id);
+                const rowHeight = isExpanded ? ROW_H_EXPANDED : ROW_H_COLLAPSED;
+                const rowY = getRowY(row.id);
+                const rowPapers = PAPERS.filter(p => p.row === row.id);
+                const trunkPaper = rowPapers.find(p => p.isTrunk);
+                const forkPapers = rowPapers.filter(p => !p.isTrunk);
+                
+                return (
+                  <div
+                    key={row.id}
+                    className="absolute w-full border-b border-zinc-100 row-transition cursor-pointer hover:bg-zinc-50"
+                    style={{ top: rowY, height: rowHeight }}
+                    onClick={() => toggleRow(row.id)}
+                  >
+                    {/* Row Label */}
+                    <div className="absolute left-3 top-2 flex items-center gap-2">
+                      <span className="text-[11px] font-bold text-zinc-700">{row.title}</span>
+                      <span className="text-[9px] text-zinc-400">{row.subtitle}</span>
+                      <span className="text-[10px] text-zinc-400">{isExpanded ? '▼' : '▶'}</span>
+                    </div>
+
+                    {/* Papers */}
+                    {rowPapers.map(paper => {
+                      const pos = getNodePosition(paper, rowHeight);
+                      const sz = getNodeSize(paper.size);
+                      const color = getColor(paper.paradigm);
+                      
+                      // 折叠态只显示主干，其他显示为微点
+                      if (!isExpanded && !paper.isTrunk) {
+                        return (
+                          <div
+                            key={paper.id}
+                            className="absolute"
+                            style={{
+                              left: `${pos.x}%`,
+                              top: pos.y - 2,
+                              transform: 'translateX(-50%)',
+                            }}
+                          >
+                            <div className="w-1 h-1 rounded-full" style={{ background: color, opacity: 0.4 }}></div>
+                          </div>
+                        );
+                      }
+                      
+                      // 展开态显示所有节点
+                      if (isExpanded || paper.isTrunk) {
+                        return (
+                          <div
+                            key={paper.id}
+                            className={`absolute flex flex-col items-center ${!paper.isTrunk ? 'fork-node' : ''}`}
+                            style={{
+                              left: `${pos.x}%`,
+                              top: pos.y - sz,
+                              transform: 'translateX(-50%)',
+                              zIndex: paper.isTrunk ? 10 : 5,
+                            }}
+                          >
+                            <div 
+                              className="rounded-full border-2 border-white shadow-sm"
+                              style={{ 
+                                width: sz * 2, 
+                                height: sz * 2, 
+                                background: color 
+                              }}
+                            ></div>
+                            <div className="mt-1 text-center">
+                              <div className="text-[9px] font-medium text-zinc-700 whitespace-nowrap">{paper.title}</div>
+                              {isExpanded && (
+                                <div className="text-[7px] text-zinc-400">{paper.year} Q{paper.quarter}</div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      }
+                      
+                      return null;
+                    })}
+
+                    {/* Fork hints (when collapsed) */}
+                    {!isExpanded && forkPapers.length > 0 && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                        <span className="text-[9px] text-zinc-400">+{forkPapers.length} paths</span>
+                        <div className="flex gap-0.5">
+                          {[...new Set(forkPapers.map(p => p.path))].map((path, i) => (
+                            <div
+                              key={path}
+                              className="w-1.5 h-1.5 rounded-full"
+                              style={{ background: getColor(forkPapers.find(p => p.path === path)?.paradigm), opacity: 0.5 }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topic View — Track-based Layout</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'IBM Plex Sans', sans-serif; }
+    
+    .track-transition {
+      transition: all 0.3s ease-out;
+    }
+    
+    .node-appear {
+      animation: nodeIn 0.25s ease-out;
+    }
+    
+    @keyframes nodeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    // 颜色定义
+    const COLORS = {
+      attention_native: '#475569',
+      post_attention: '#2563EB',
+      sparse_long: '#0D9488',
+      conditional: '#DC2626',
+      reasoning: '#EA580C',
+    };
+
+    // Lane 定义
+    const LANES = [
+      { id: 'context_scaling', title: 'Context Scaling', subtitle: '序列复杂度 & 长上下文', color: '#2563EB', bgLight: '#DBEAFE' },
+      { id: 'memory_wall', title: 'Memory Wall', subtitle: '推理效率', color: '#059669', bgLight: '#D1FAE5' },
+      { id: 'compute_scaling', title: 'Compute Scaling', subtitle: '测试时计算', color: '#EA580C', bgLight: '#FFEDD5' },
+    ];
+
+    // Row 定义 - 不再硬编码 paths，动态从论文数据计算
+    const ROWS = [
+      { id: 'linearization', lane: 'context_scaling', title: '1-A Linearization', subtitle: 'O(n) Revolution' },
+      { id: 'sparse', lane: 'context_scaling', title: '1-B Sparse', subtitle: 'Attention Optimizers' },
+      { id: 'memory_aug', lane: 'context_scaling', title: '1-C Memory-Augmented', subtitle: 'Position & Memory' },
+      { id: 'kv_compression', lane: 'memory_wall', title: '2-A KV Compression', subtitle: 'GQA → MLA' },
+      { id: 'kernel_opt', lane: 'memory_wall', title: '2-B Kernel Opt.', subtitle: 'FlashAttn Series' },
+      { id: 'paging', lane: 'memory_wall', title: '2-B Paging', subtitle: 'vLLM / SGLang' },
+      { id: 'speculative', lane: 'memory_wall', title: '2-C Speculative', subtitle: 'Draft & Verify' },
+      { id: 'moe', lane: 'compute_scaling', title: '3-A MoE', subtitle: 'Parameter Scaling' },
+      { id: 'reasoning', lane: 'compute_scaling', title: '3-B Reasoning', subtitle: 'Test-time Compute' },
+      { id: 'agent_rl', lane: 'compute_scaling', title: '3-C Agent RL', subtitle: 'Action Era' },
+    ];
+
+    // 论文数据 - 每个论文属于哪个 row 和 path
+    const PAPERS = [
+      // Row 1: Linearization
+      { id: 'rope', title: 'RoPE', year: 2023, quarter: 1, paradigm: 'attention_native', row: 'linearization', path: 'trunk', size: 'lg' },
+      { id: 'mamba', title: 'Mamba', year: 2023, quarter: 4, paradigm: 'post_attention', row: 'linearization', path: 'ssm', size: 'lg' },
+      { id: 'mamba2', title: 'Mamba-2', year: 2024, quarter: 2, paradigm: 'post_attention', row: 'linearization', path: 'ssm', size: 'md' },
+      { id: 'rwkv4', title: 'RWKV-4', year: 2023, quarter: 2, paradigm: 'post_attention', row: 'linearization', path: 'linear_rnn', size: 'md' },
+      { id: 'rwkv7', title: 'RWKV-7', year: 2024, quarter: 4, paradigm: 'post_attention', row: 'linearization', path: 'linear_rnn', size: 'md' },
+      { id: 'retnet', title: 'RetNet', year: 2023, quarter: 3, paradigm: 'post_attention', row: 'linearization', path: 'linear_attn', size: 'md' },
+      { id: 'gla', title: 'GLA', year: 2023, quarter: 4, paradigm: 'post_attention', row: 'linearization', path: 'linear_attn', size: 'sm' },
+      
+      // Row 2: Sparse
+      { id: 'streaming', title: 'StreamingLLM', year: 2023, quarter: 3, paradigm: 'sparse_long', row: 'sparse', path: 'trunk', size: 'lg' },
+      { id: 'ringattn', title: 'Ring Attn', year: 2023, quarter: 4, paradigm: 'sparse_long', row: 'sparse', path: 'sparse', size: 'md' },
+      { id: 'infiniattn', title: 'Infini-Attn', year: 2024, quarter: 2, paradigm: 'sparse_long', row: 'sparse', path: 'sparse', size: 'md' },
+      { id: 'longnet', title: 'LongNet', year: 2023, quarter: 3, paradigm: 'sparse_long', row: 'sparse', path: 'extrapolation', size: 'sm' },
+      
+      // Row 3: Memory-Augmented
+      { id: 'alibi', title: 'ALiBi', year: 2023, quarter: 2, paradigm: 'attention_native', row: 'memory_aug', path: 'trunk', size: 'lg' },
+      { id: 'yarn', title: 'YaRN', year: 2023, quarter: 3, paradigm: 'sparse_long', row: 'memory_aug', path: 'trunk', size: 'md' },
+      { id: 'longrope', title: 'LongRoPE', year: 2024, quarter: 1, paradigm: 'sparse_long', row: 'memory_aug', path: 'trunk', size: 'md' },
+      { id: 'hmt', title: 'HMT', year: 2024, quarter: 1, paradigm: 'sparse_long', row: 'memory_aug', path: 'memory', size: 'sm' },
+      { id: 'persistent_mem', title: 'Persistent Mem', year: 2025, quarter: 2, paradigm: 'sparse_long', row: 'memory_aug', path: 'memory', size: 'lg' },
+      
+      // Row 4: KV Compression
+      { id: 'flash2', title: 'FlashAttn-2', year: 2023, quarter: 3, paradigm: 'attention_native', row: 'kv_compression', path: 'trunk', size: 'lg' },
+      { id: 'gqa', title: 'GQA', year: 2023, quarter: 2, paradigm: 'attention_native', row: 'kv_compression', path: 'kv_comp', size: 'md' },
+      { id: 'mla', title: 'MLA (V2)', year: 2024, quarter: 2, paradigm: 'attention_native', row: 'kv_compression', path: 'kv_comp', size: 'lg' },
+      { id: 'mla_v3', title: 'MLA (V3)', year: 2024, quarter: 4, paradigm: 'attention_native', row: 'kv_compression', path: 'kv_comp', size: 'lg' },
+      
+      // Row 5: Kernel Opt
+      { id: 'flash3', title: 'FlashAttn-3', year: 2024, quarter: 3, paradigm: 'attention_native', row: 'kernel_opt', path: 'trunk', size: 'lg' },
+      { id: 'flash4', title: 'FlashAttn-4', year: 2025, quarter: 3, paradigm: 'attention_native', row: 'kernel_opt', path: 'trunk', size: 'md' },
+      
+      // Row 6: Paging
+      { id: 'pagedattn', title: 'PagedAttn', year: 2023, quarter: 3, paradigm: 'attention_native', row: 'paging', path: 'trunk', size: 'lg' },
+      { id: 'sglang', title: 'SGLang', year: 2023, quarter: 4, paradigm: 'attention_native', row: 'paging', path: 'paging', size: 'md' },
+      { id: 'vllm2', title: 'vLLM v2', year: 2024, quarter: 3, paradigm: 'attention_native', row: 'paging', path: 'paging', size: 'md' },
+      
+      // Row 7: Speculative
+      { id: 'specdec', title: 'SpecDec', year: 2023, quarter: 1, paradigm: 'conditional', row: 'speculative', path: 'trunk', size: 'lg' },
+      { id: 'medusa', title: 'Medusa', year: 2024, quarter: 1, paradigm: 'conditional', row: 'speculative', path: 'speculative', size: 'md' },
+      { id: 'eagle', title: 'EAGLE', year: 2024, quarter: 2, paradigm: 'conditional', row: 'speculative', path: 'speculative', size: 'md' },
+      { id: 'eagle2', title: 'EAGLE-2', year: 2024, quarter: 4, paradigm: 'conditional', row: 'speculative', path: 'speculative', size: 'md' },
+      
+      // Row 8: MoE
+      { id: 'mixtral', title: 'Mixtral', year: 2024, quarter: 1, paradigm: 'conditional', row: 'moe', path: 'trunk', size: 'lg' },
+      { id: 'gshard', title: 'GShard', year: 2023, quarter: 1, paradigm: 'conditional', row: 'moe', path: 'moe', size: 'sm' },
+      { id: 'dsmoe', title: 'DS-MoE', year: 2024, quarter: 1, paradigm: 'conditional', row: 'moe', path: 'moe', size: 'md' },
+      { id: 'dsv3_moe', title: 'DS-V3 MoE', year: 2024, quarter: 4, paradigm: 'conditional', row: 'moe', path: 'moe', size: 'lg' },
+      { id: 'qwen3', title: 'Qwen3 MoE', year: 2025, quarter: 2, paradigm: 'conditional', row: 'moe', path: 'moe', size: 'lg' },
+      
+      // Row 9: Reasoning
+      { id: 'r1', title: 'DeepSeek-R1', year: 2025, quarter: 1, paradigm: 'reasoning', row: 'reasoning', path: 'trunk', size: 'lg' },
+      { id: 'cot', title: 'CoT', year: 2023, quarter: 1, paradigm: 'reasoning', row: 'reasoning', path: 'reasoning', size: 'md' },
+      { id: 'tot', title: 'ToT', year: 2023, quarter: 3, paradigm: 'reasoning', row: 'reasoning', path: 'reasoning', size: 'sm' },
+      { id: 'o1_preview', title: 'o1-preview', year: 2024, quarter: 3, paradigm: 'reasoning', row: 'reasoning', path: 'reasoning', size: 'lg' },
+      { id: 's1', title: 's1', year: 2025, quarter: 2, paradigm: 'reasoning', row: 'reasoning', path: 'reasoning', size: 'sm' },
+      
+      // Row 10: Agent RL
+      { id: 'agent_rl', title: 'Agent RL', year: 2025, quarter: 3, paradigm: 'reasoning', row: 'agent_rl', path: 'trunk', size: 'lg' },
+      { id: 'verifier', title: 'Verifier', year: 2025, quarter: 2, paradigm: 'reasoning', row: 'agent_rl', path: 'verifier', size: 'md' },
+    ];
+
+    // 工具函数
+    function qToX(year, quarter) {
+      return ((year - 2023) * 4 + (quarter - 1)) / 16 * 100;
+    }
+
+    function getColor(paradigm) {
+      return COLORS[paradigm] || '#475569';
+    }
+
+    function getNodeSize(size) {
+      return size === 'lg' ? 10 : size === 'md' ? 7 : 5;
+    }
+
+    function App() {
+      const [expandedRows, setExpandedRows] = useState(new Set());
+      const timelineW = 1000;
+      const TRACK_HEIGHT = 48; // 每个轨道的高度（增加以容纳标签）
+      const ROW_PADDING = 12;  // Row 上下padding
+
+      const toggleRow = (rowId) => {
+        const newSet = new Set(expandedRows);
+        if (newSet.has(rowId)) {
+          newSet.delete(rowId);
+        } else {
+          newSet.add(rowId);
+        }
+        setExpandedRows(newSet);
+      };
+
+      const expandAll = () => setExpandedRows(new Set(ROWS.map(r => r.id)));
+      const collapseAll = () => setExpandedRows(new Set());
+
+      // 动态获取 row 的所有 paths（从论文数据中提取）
+      const getRowPaths = (rowId) => {
+        const rowPapers = PAPERS.filter(p => p.row === rowId);
+        // trunk 排第一，其他按字母顺序
+        const paths = [...new Set(rowPapers.map(p => p.path))];
+        const trunkIndex = paths.indexOf('trunk');
+        if (trunkIndex > -1) {
+          paths.splice(trunkIndex, 1);
+          paths.unshift('trunk');
+        }
+        return paths;
+      };
+
+      // 计算 Row 的高度
+      const getRowHeight = (row) => {
+        if (!expandedRows.has(row.id)) {
+          return TRACK_HEIGHT + ROW_PADDING * 2; // 折叠态：只有一行
+        }
+        // 展开态：每个 path 一个轨道
+        const paths = getRowPaths(row.id);
+        return paths.length * TRACK_HEIGHT + ROW_PADDING * 2;
+      };
+
+      // 计算每行的 Y 位置
+      const getRowY = (rowId) => {
+        let y = 0;
+        for (const row of ROWS) {
+          if (row.id === rowId) return y;
+          y += getRowHeight(row);
+        }
+        return y;
+      };
+
+      // 获取论文在展开态的 Y 位置（基于其 path 的轨道）
+      const getPaperY = (paper, row) => {
+        const rowY = getRowY(row.id);
+        const paths = getRowPaths(row.id);
+        const pathIndex = paths.indexOf(paper.path);
+        if (pathIndex === -1) return rowY + ROW_PADDING + TRACK_HEIGHT / 2; // fallback
+        return rowY + ROW_PADDING + pathIndex * TRACK_HEIGHT + TRACK_HEIGHT / 2;
+      };
+
+      return (
+        <div className="h-screen flex flex-col bg-white">
+          {/* Header */}
+          <div className="h-14 border-b border-zinc-200 px-6 flex items-center justify-between shrink-0 bg-white z-30">
+            <div>
+              <h1 className="text-lg font-bold text-zinc-900">AI Tech Evolution Map</h1>
+              <p className="text-xs text-zinc-500">点击行展开技术路径 · 每行展开显示多个轨道</p>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={collapseAll} className="px-3 py-1 text-xs border border-zinc-300 rounded hover:bg-zinc-50">
+                全部折叠
+              </button>
+              <button onClick={expandAll} className="px-3 py-1 text-xs bg-zinc-900 text-white rounded hover:bg-zinc-800">
+                全部展开
+              </button>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 flex overflow-auto">
+            {/* Left Rail - Lanes */}
+            <div className="w-[180px] bg-zinc-50 border-r border-zinc-200 shrink-0 sticky left-0 z-20">
+              {LANES.map((lane) => {
+                const laneRows = ROWS.filter(r => r.lane === lane.id);
+                const laneHeight = laneRows.reduce((sum, r) => sum + getRowHeight(r), 0);
+                
+                return (
+                  <div
+                    key={lane.id}
+                    className="px-3 flex flex-col justify-center border-b border-zinc-200"
+                    style={{ height: laneHeight, borderLeft: `4px solid ${lane.color}` }}
+                  >
+                    <div className="text-sm font-bold text-zinc-900">{lane.title}</div>
+                    <p className="text-[10px] text-zinc-500 mt-1">{lane.subtitle}</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Canvas */}
+            <div className="flex-1 relative" style={{ minWidth: timelineW }}>
+              {/* Timeline Header */}
+              <div className="h-10 border-b border-zinc-200 bg-white sticky top-0 z-20 flex">
+                {['2023', '2024', '2025', '2026'].map(y => (
+                  <div key={y} className="flex-1 border-r border-zinc-100">
+                    <div className="text-center text-xs font-bold text-zinc-700 pt-1">{y}</div>
+                    <div className="grid grid-cols-4 h-5">
+                      {['Q1', 'Q2', 'Q3', 'Q4'].map(q => (
+                        <div key={q} className="text-[9px] text-zinc-400 text-center">{q}</div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* NOW Line */}
+              <div className="absolute top-0 bottom-0 z-10 pointer-events-none" style={{ left: `${qToX(2025, 2)}%` }}>
+                <div className="w-0 h-full border-l-2 border-dashed border-red-500"></div>
+                <div className="absolute top-8 -left-3 text-[9px] font-bold text-red-500">NOW</div>
+              </div>
+
+              {/* Rows */}
+              {ROWS.map(row => {
+                const isExpanded = expandedRows.has(row.id);
+                const rowHeight = getRowHeight(row);
+                const rowY = getRowY(row.id);
+                const rowPapers = PAPERS.filter(p => p.row === row.id);
+                const trunkPapers = rowPapers.filter(p => p.path === 'trunk');
+                const forkPapers = rowPapers.filter(p => p.path !== 'trunk');
+                
+                return (
+                  <div
+                    key={row.id}
+                    className="absolute w-full border-b border-zinc-100 track-transition cursor-pointer hover:bg-zinc-50/50"
+                    style={{ top: rowY, height: rowHeight }}
+                    onClick={() => toggleRow(row.id)}
+                  >
+                    {/* Row Label - 固定在左上角 */}
+                    <div className="absolute left-3 top-2 flex items-center gap-2 z-10">
+                      <span className="text-[11px] font-bold text-zinc-700">{row.title}</span>
+                      <span className="text-[9px] text-zinc-400">{row.subtitle}</span>
+                      <span className="text-[10px] text-zinc-400">{isExpanded ? '▼' : '▶'}</span>
+                    </div>
+
+                    {/* 折叠态：显示所有节点在一行（但只显示trunk的标签） */}
+                    {!isExpanded && (
+                      <div className="absolute inset-0 pt-7">
+                        {rowPapers.map(paper => {
+                          const x = qToX(paper.year, paper.quarter);
+                          const y = rowHeight / 2;
+                          const sz = getNodeSize(paper.size);
+                          const color = getColor(paper.paradigm);
+                          const isTrunk = paper.path === 'trunk';
+                          
+                          return (
+                            <div
+                              key={paper.id}
+                              className="absolute flex flex-col items-center"
+                              style={{
+                                left: `${x}%`,
+                                top: y - sz,
+                                transform: 'translateX(-50%)',
+                                zIndex: isTrunk ? 10 : 5,
+                              }}
+                            >
+                              <div 
+                                className="rounded-full border-2 border-white shadow-sm"
+                                style={{ 
+                                  width: isTrunk ? sz * 2 : 6, 
+                                  height: isTrunk ? sz * 2 : 6, 
+                                  background: color,
+                                  opacity: isTrunk ? 1 : 0.5
+                                }}
+                              ></div>
+                              {isTrunk && (
+                                <div className="mt-1 text-center">
+                                  <div className="text-[9px] font-medium text-zinc-700 whitespace-nowrap">{paper.title}</div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                        
+                        {/* Fork hints */}
+                        {forkPapers.length > 0 && (
+                          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                            <span className="text-[9px] text-zinc-400">+{forkPapers.length} paths</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* 展开态：每个 path 一个轨道 */}
+                    {isExpanded && (
+                      <div className="absolute inset-0 pt-8">
+                        {/* 轨道线 - 使用 useMemo 计算的 paths */}
+                        {getRowPaths(row.id).map((path, idx) => (
+                          <div
+                            key={path}
+                            className="absolute w-full border-t border-zinc-100"
+                            style={{ top: ROW_PADDING + idx * TRACK_HEIGHT + TRACK_HEIGHT / 2 }}
+                          ></div>
+                        ))}
+                        
+                        {/* 节点 */}
+                        {rowPapers.map((paper, idx) => {
+                          const x = qToX(paper.year, paper.quarter);
+                          const y = getPaperY(paper, row);
+                          const sz = getNodeSize(paper.size);
+                          const color = getColor(paper.paradigm);
+                          const isTrunk = paper.path === 'trunk';
+                          
+                          return (
+                            <div
+                              key={paper.id}
+                              className="absolute flex flex-col items-center node-appear"
+                              style={{
+                                left: `${x}%`,
+                                top: y - sz,
+                                transform: 'translateX(-50%)',
+                                zIndex: isTrunk ? 10 : 5,
+                                animationDelay: `${idx * 30}ms`
+                              }}
+                            >
+                              <div 
+                                className="rounded-full border-2 border-white shadow-sm"
+                                style={{ 
+                                  width: sz * 2, 
+                                  height: sz * 2, 
+                                  background: color 
+                                }}
+                              ></div>
+                              <div className="mt-1 text-center">
+                                <div className="text-[9px] font-medium text-zinc-700 whitespace-nowrap">{paper.title}</div>
+                                <div className="text-[7px] text-zinc-400">{paper.year} Q{paper.quarter}</div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

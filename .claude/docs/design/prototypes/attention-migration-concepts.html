@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Attention Migration — 6 Concepts</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: #F8F8F8; padding: 32px; }
+    h1 { font-size: 20px; font-weight: 700; color: #18181B; margin-bottom: 8px; }
+    .subtitle { font-size: 13px; color: #71717A; margin-bottom: 32px; max-width: 720px; line-height: 1.6; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 1400px; }
+    .card { background: #fff; border: 1px solid #E4E4E7; padding: 24px; min-height: 420px; }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .card-title { font-size: 15px; font-weight: 600; color: #18181B; }
+    .card-badge { font-size: 10px; background: #F4F4F5; color: #71717A; padding: 2px 8px; border-radius: 2px; }
+    .card-desc { font-size: 12px; color: #3F3F46; margin-bottom: 12px; line-height: 1.5; }
+    .tradeoff { font-size: 11px; color: #71717A; border-top: 1px solid #F4F4F5; padding-top: 10px; margin-top: auto; }
+    .tradeoff strong { color: #3F3F46; }
+    .canvas { position: relative; width: 100%; height: 260px; background: #FFFFFF; border: 1px solid #F4F4F5; margin-bottom: 12px; overflow: hidden; }
+    .lane-label { position: absolute; left: 4px; font-size: 9px; color: #A1A1AA; font-weight: 500; }
+    .time-axis { position: absolute; bottom: 0; left: 0; right: 0; height: 16px; display: flex; justify-content: space-between; padding: 0 8px; }
+    .time-axis span { font-size: 8px; color: #A1A1AA; }
+  </style>
+</head>
+<body>
+  <h1>Attention Migration — 6 种视觉概念对比</h1>
+  <p class="subtitle">
+    核心问题：如何让用户在 3 秒内感知到 "frontier attention 在不同 Lane 之间迁移"？<br>
+    每个方案用同一份 demo 数据（5 Lanes × 14 quarters），以截然不同的视觉策略表达相同信息。
+  </p>
+  <div class="grid" id="concepts">
+    <!-- 6 concepts will be inserted here -->
+  </div>
+
+  <script>
+    // === Shared Data ===
+    const QUARTERS = ['22Q4','23Q1','23Q2','23Q3','23Q4','24Q1','24Q2','24Q3','24Q4','25Q1','25Q2','25Q3','25Q4','26Q1'];
+    const LANES = [
+      { id: 'arch', name: 'Model Architecture', color: '#2563EB' },
+      { id: 'pretrain', name: 'Pretraining', color: '#059669' },
+      { id: 'infer', name: 'Inference Efficiency', color: '#D97706' },
+      { id: 'rl', name: 'RL / RLHF', color: '#DC2626' },
+      { id: 'ttc', name: 'Test-time Compute', color: '#7C3AED' },
+    ];
+    // Attention scores: 0-1 per lane per quarter (empirical signal)
+    const ATTENTION = {
+      arch:     [0.3, 0.5, 0.7, 0.8, 0.9, 0.6, 0.7, 0.8, 0.7, 0.4, 0.3, 0.3, 0.2, 0.2],
+      pretrain: [0.4, 0.6, 0.5, 0.5, 0.6, 0.5, 0.4, 0.3, 0.3, 0.4, 0.3, 0.2, 0.2, 0.2],
+      infer:    [0.1, 0.2, 0.3, 0.4, 0.3, 0.5, 0.8, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3],
+      rl:       [0.1, 0.2, 0.2, 0.3, 0.4, 0.3, 0.4, 0.5, 0.6, 0.8, 0.7, 0.6, 0.5, 0.4],
+      ttc:      [0.0, 0.0, 0.1, 0.1, 0.1, 0.1, 0.2, 0.4, 0.7, 0.9, 1.0, 0.9, 0.8, 0.7],
+    };
+  </script>
+
+  <script>
+    // === Concept definitions ===
+    const concepts = [
+      {
+        title: 'A. Stacked Stream（河流图）',
+        badge: '面积 = attention share',
+        desc: '每个 Lane 是一条"河流"，宽度 = 该 Lane 的 attention 占总 attention 的比例。河流的膨胀和收缩直接表达 attention 的迁移方向。',
+        tradeoff: '✅ 迁移感极强（面积此消彼长）  ✅ 整体 = 100%，不丢信息 | ❌ 单个 Lane 的绝对值难读 ❌ 5+ Lane 时底层 Lane 被压扁',
+      },
+      {
+        title: 'B. Pulse Columns（脉冲柱）',
+        badge: '高度 = attention intensity',
+        desc: '每个季度一列，每列内 5 个色块堆叠，高度按 attention score。像心电图的离散脉冲——哪个 Lane "跳"起来一目了然。',
+        tradeoff: '✅ 离散感强（季度颗粒度清晰）  ✅ 爆发容易识别 | ❌ 迁移需要用户自己"连线" ❌ 季度间不连续，流动感弱',
+      },
+      {
+        title: 'C. Spotlight Sweep（聚光灯扫过）',
+        badge: 'opacity = attention',
+        desc: '所有 Lane 同时存在，但只有 attention 高的区域"亮"。像手电筒在时间轴上扫过——亮区就是当前 frontier 焦点。其余暗淡到几乎不可见。',
+        tradeoff: '✅ 直觉强（亮 = 重要） ✅ 保留 swimlane 结构 | ❌ 暗区信息丢失 ❌ 多 Lane 同时亮时区分度下降',
+      },
+      {
+        title: 'D. Dominant Lane Band（主导条带）',
+        badge: '顶部色带 = 当前最强 Lane',
+        desc: '极简：顶部只有一条色带，颜色 = 当前 attention 最高的 Lane。下方用细线显示各 Lane 趋势。像气象图的"当前风向"指示器。',
+        tradeoff: '✅ 3 秒内必然看到"谁在主导" ✅ 极低认知负荷 | ❌ 丢失多 Lane 并存信息 ❌ 切换点可能过于离散',
+      },
+      {
+        title: 'E. Bubble Migration（气泡漂移）',
+        badge: '大小 = attention, Y = Lane',
+        desc: '每个季度在每个 Lane 放一个圆，大小编码 attention score。圆的大小随时间变化形成"膨胀→收缩"节奏。类似 llm_radar_v5 但强化迁移感。',
+        tradeoff: '✅ 与现有原型一致 ✅ 每个数据点独立可读 | ❌ 迁移需要用户自行"看大小变化" ❌ 视觉不如连续图形有"流动感"',
+      },
+      {
+        title: 'F. Heat Ridge（热力山脊）',
+        badge: 'Y偏移 = attention intensity',
+        desc: '每个 Lane 一条水平基线，attention 高时线条向上"隆起"形成山脊。多条山脊错位排列，像地形等高线——峰值位置的时间偏移 = 迁移。',
+        tradeoff: '✅ 峰值极其明显 ✅ 时间偏移 = 因果感 | ❌ 需要学习"高 = attention" ❌ 重叠时可能混淆',
+      },
+    ];
+
+    // === Render all concepts ===
+    const grid = document.getElementById('concepts');
+
+    concepts.forEach((c, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.display = 'flex';
+      card.style.flexDirection = 'column';
+      card.innerHTML = `
+        <div class="card-header">
+          <span class="card-title">${c.title}</span>
+          <span class="card-badge">${c.badge}</span>
+        </div>
+        <p class="card-desc">${c.desc}</p>
+        <div class="canvas"><canvas id="cv${i}" width="640" height="260"></canvas></div>
+        <div class="tradeoff">${c.tradeoff}</div>
+      `;
+      grid.appendChild(card);
+    });
+
+    // === Drawing functions ===
+    const W = 640, H = 260;
+    const PAD = { l: 8, r: 8, t: 12, b: 20 };
+    const plotW = W - PAD.l - PAD.r;
+    const plotH = H - PAD.t - PAD.b;
+    const nQ = QUARTERS.length;
+
+    function qx(i) { return PAD.l + (i / (nQ - 1)) * plotW; }
+
+    // --- A: Stacked Stream ---
+    function drawStream(ctx) {
+      // normalize to shares
+      const shares = [];
+      for (let qi = 0; qi < nQ; qi++) {
+        let total = 0;
+        LANES.forEach(l => total += ATTENTION[l.id][qi]);
+        const row = [];
+        LANES.forEach(l => row.push(ATTENTION[l.id][qi] / total));
+        shares.push(row);
+      }
+      // stack from center
+      for (let li = 0; li < LANES.length; li++) {
+        ctx.beginPath();
+        for (let qi = 0; qi < nQ; qi++) {
+          let y0 = 0;
+          for (let k = 0; k < li; k++) y0 += shares[qi][k];
+          const yMid = PAD.t + plotH * (y0 + shares[qi][li] / 2);
+          const yTop = PAD.t + plotH * y0;
+          if (qi === 0) ctx.moveTo(qx(qi), yTop);
+          else ctx.lineTo(qx(qi), yTop);
+        }
+        for (let qi = nQ - 1; qi >= 0; qi--) {
+          let y0 = 0;
+          for (let k = 0; k <= li; k++) y0 += shares[qi][k];
+          const yBot = PAD.t + plotH * y0;
+          ctx.lineTo(qx(qi), yBot);
+        }
+        ctx.closePath();
+        ctx.fillStyle = LANES[li].color + '88';
+        ctx.fill();
+        ctx.strokeStyle = LANES[li].color;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+      drawTimeAxis(ctx);
+      drawLaneLabelsRight(ctx, shares);
+    }
+
+    // --- B: Pulse Columns ---
+    function drawPulse(ctx) {
+      const colW = plotW / nQ * 0.7;
+      for (let qi = 0; qi < nQ; qi++) {
+        let yOff = PAD.t + plotH;
+        const x = qx(qi) - colW / 2;
+        LANES.forEach((l, li) => {
+          const h = ATTENTION[l.id][qi] * (plotH / LANES.length) * 1.5;
+          yOff -= h;
+          ctx.fillStyle = l.color + 'cc';
+          ctx.fillRect(x, yOff, colW, h);
+        });
+      }
+      drawTimeAxis(ctx);
+    }
+
+    // --- C: Spotlight Sweep ---
+    function drawSpotlight(ctx) {
+      const rowH = plotH / LANES.length;
+      LANES.forEach((l, li) => {
+        const y = PAD.t + li * rowH;
+        for (let qi = 0; qi < nQ - 1; qi++) {
+          const x1 = qx(qi), x2 = qx(qi + 1);
+          const a = ATTENTION[l.id][qi];
+          ctx.fillStyle = l.color;
+          ctx.globalAlpha = 0.05 + a * 0.55;
+          ctx.fillRect(x1, y + 2, x2 - x1, rowH - 4);
+        }
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = '#71717A';
+        ctx.font = '9px IBM Plex Sans';
+        ctx.fillText(l.name, PAD.l + 2, y + rowH / 2 + 3);
+      });
+      drawTimeAxis(ctx);
+    }
+
+    // --- D: Dominant Lane Band ---
+    function drawDominant(ctx) {
+      // top band
+      const bandH = 28;
+      for (let qi = 0; qi < nQ - 1; qi++) {
+        let maxV = 0, maxL = 0;
+        LANES.forEach((l, li) => {
+          if (ATTENTION[l.id][qi] > maxV) { maxV = ATTENTION[l.id][qi]; maxL = li; }
+        });
+        const x1 = qx(qi), x2 = qx(qi + 1);
+        ctx.fillStyle = LANES[maxL].color;
+        ctx.globalAlpha = 0.7;
+        ctx.fillRect(x1, PAD.t, x2 - x1, bandH);
+      }
+      ctx.globalAlpha = 1;
+      // sparklines below
+      const sparkTop = PAD.t + bandH + 16;
+      const sparkH = (plotH - bandH - 20) / LANES.length;
+      LANES.forEach((l, li) => {
+        const baseY = sparkTop + li * sparkH + sparkH / 2;
+        ctx.beginPath();
+        ctx.strokeStyle = l.color;
+        ctx.lineWidth = 1.5;
+        for (let qi = 0; qi < nQ; qi++) {
+          const x = qx(qi);
+          const y = baseY - ATTENTION[l.id][qi] * sparkH * 0.4;
+          if (qi === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.fillStyle = '#A1A1AA';
+        ctx.font = '8px IBM Plex Sans';
+        ctx.fillText(l.name.slice(0, 12), PAD.l, baseY + 3);
+      });
+      drawTimeAxis(ctx);
+    }
+
+    // --- E: Bubble Migration ---
+    function drawBubble(ctx) {
+      const rowH = plotH / LANES.length;
+      LANES.forEach((l, li) => {
+        const cy = PAD.t + li * rowH + rowH / 2;
+        ctx.fillStyle = '#A1A1AA';
+        ctx.font = '8px IBM Plex Sans';
+        ctx.fillText(l.name.slice(0, 14), PAD.l, cy - rowH / 2 + 10);
+        for (let qi = 0; qi < nQ; qi++) {
+          const a = ATTENTION[l.id][qi];
+          if (a < 0.05) continue;
+          const r = 3 + a * 14;
+          const cx = qx(qi);
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.fillStyle = l.color;
+          ctx.globalAlpha = 0.3 + a * 0.5;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      });
+      drawTimeAxis(ctx);
+    }
+
+    // --- F: Heat Ridge ---
+    function drawRidge(ctx) {
+      const rowH = plotH / LANES.length;
+      LANES.forEach((l, li) => {
+        const baseY = PAD.t + li * rowH + rowH * 0.8;
+        // fill
+        ctx.beginPath();
+        ctx.moveTo(qx(0), baseY);
+        for (let qi = 0; qi < nQ; qi++) {
+          const y = baseY - ATTENTION[l.id][qi] * rowH * 0.7;
+          ctx.lineTo(qx(qi), y);
+        }
+        ctx.lineTo(qx(nQ - 1), baseY);
+        ctx.closePath();
+        ctx.fillStyle = l.color + '33';
+        ctx.fill();
+        // line
+        ctx.beginPath();
+        ctx.strokeStyle = l.color;
+        ctx.lineWidth = 1.5;
+        for (let qi = 0; qi < nQ; qi++) {
+          const y = baseY - ATTENTION[l.id][qi] * rowH * 0.7;
+          if (qi === 0) ctx.moveTo(qx(qi), y); else ctx.lineTo(qx(qi), y);
+        }
+        ctx.stroke();
+        ctx.fillStyle = '#71717A';
+        ctx.font = '8px IBM Plex Sans';
+        ctx.fillText(l.name, PAD.l, baseY - rowH * 0.6);
+      });
+      drawTimeAxis(ctx);
+    }
+
+    // --- Helpers ---
+    function drawTimeAxis(ctx) {
+      ctx.fillStyle = '#A1A1AA';
+      ctx.font = '8px IBM Plex Sans';
+      for (let qi = 0; qi < nQ; qi += 2) {
+        ctx.fillText(QUARTERS[qi], qx(qi) - 8, H - 4);
+      }
+    }
+    function drawLaneLabelsRight(ctx, shares) {
+      ctx.font = '9px IBM Plex Sans';
+      const lastQ = shares[nQ - 1];
+      let y0 = 0;
+      LANES.forEach((l, li) => {
+        const yMid = PAD.t + plotH * (y0 + lastQ[li] / 2);
+        y0 += lastQ[li];
+        ctx.fillStyle = l.color;
+        ctx.fillText(l.name.slice(0, 10), W - 80, yMid + 3);
+      });
+    }
+
+    // === Execute draws ===
+    const drawFns = [drawStream, drawPulse, drawSpotlight, drawDominant, drawBubble, drawRidge];
+    drawFns.forEach((fn, i) => {
+      const cv = document.getElementById(`cv${i}`);
+      if (cv) {
+        const ctx = cv.getContext('2d');
+        fn(ctx);
+      }
+    });
+  </script>
+</body>
+</html>
+</body>
+</html>

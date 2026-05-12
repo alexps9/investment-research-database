@@ -1,0 +1,32 @@
+# Docker Compose Development Override
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+# Enables hot-reload for both backend and frontend
+
+version: '3.8'
+
+services:
+  backend:
+    # Mount source code for hot-reload (read-only to prevent accidental changes)
+    volumes:
+      - ./backend/app:/app/app:ro
+
+    # Override command to enable uvicorn auto-reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+    # Development environment variables
+    environment:
+      - LOG_LEVEL=debug
+      - NODE_ENV=development
+
+  frontend:
+    # Mount source code for hot-reload (read-only to prevent accidental changes)
+    volumes:
+      - ./frontend/src:/app/src:ro
+
+    # Override command to use Next.js dev server
+    command: npm run dev
+
+    # Development environment variables
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://backend:8000

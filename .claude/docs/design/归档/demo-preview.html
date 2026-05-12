@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>技术演化雷达 - Demo Preview</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #050506; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    const Icon = ({ name, className = "", size = 24 }) => {
+      const icons = {
+        Beaker: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M4.5 3h15"/><path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3"/><path d="M6 14h12"/></svg>,
+        Network: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="2"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg>,
+        Clock: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+        Users: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+        Info: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>,
+        TrendingUp: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+        ShieldCheck: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>,
+        Target: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
+        ChevronRight: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m9 18 6-6-6-6"/></svg>,
+        ExternalLink: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>,
+      };
+      return icons[name] || null;
+    };
+
+    const App = () => {
+      const allPapers = [
+        { id: 'a1', title: 'Attention Is All You Need', year: 2017, lane: 0, tier: 1, author: 'Vaswani et al.', stage: 'Mature', growth: '12%', conclusion: '范式始祖。确立了自注意力机制作为深度学习的基础基建。', connections: [], arxivId: '1706.03762',
+          positioning: { role: '范式奠基者', benchmark: '传统 RNN/CNN', coreDiff: '自注意力机制替代循环/卷积', isParadigmShift: true },
+          evolution: { predecessors: [], current: 'Transformer', successors: ['BERT', 'GPT-3', 'FlashAttention'] },
+          stageDetail: { phase: 'Infrastructure', period: '2017-至今', signals: ['累计引用 13 万+，仍在加速', '所有主流 LLM 的底层架构'] },
+          players: { coreResearchers: [{ name: 'Ashish Vaswani', affiliation: 'Google Brain → Adept AI' }, { name: 'Noam Shazeer', affiliation: 'Google → Character.AI' }], activeTeams: ['Google Brain', 'OpenAI', 'Meta FAIR'] },
+          bottlenecks: { current: ['二次复杂度 O(n²) 限制长序列', '推理时 KV Cache 内存膨胀'], unsolved: '能否在保持表达力的同时实现线性复杂度' }
+        },
+        { id: 'a2', title: 'BERT', year: 2018, lane: 0, tier: 2, author: 'Devlin et al.', connections: ['a1'], arxivId: '1810.04805' },
+        { id: 'a3', title: 'GPT-3', year: 2020, lane: 0, tier: 1, author: 'Brown et al.', stage: 'Mature', growth: '18%', conclusion: 'Scaling Law 确立。验证了大规模参数量带来的涌现能力。', connections: ['a1'], arxivId: '2005.14165',
+          positioning: { role: '规模验证者', benchmark: 'GPT-2 / BERT', coreDiff: '175B 参数证明 Scaling Law', isParadigmShift: true },
+          evolution: { predecessors: ['Transformer'], current: 'GPT-3', successors: ['FlashAttention', 'GShard'] },
+          stageDetail: { phase: 'Infrastructure', period: '2020-至今', signals: ['引用 4 万+', '催生整个 LLM 产业'] },
+          players: { coreResearchers: [{ name: 'Tom Brown', affiliation: 'OpenAI' }, { name: 'Sam McCandlish', affiliation: 'OpenAI → Anthropic' }], activeTeams: ['OpenAI', 'Anthropic', 'Google DeepMind'] },
+          bottlenecks: { current: ['训练成本极高（千万美元级）', '推理延迟与成本'], unsolved: '如何在更小参数量下复现涌现能力' }
+        },
+        { id: 'a4', title: 'FlashAttention', year: 2022, lane: 0, tier: 1, author: 'Tri Dao', stage: 'Mature', growth: '25%', conclusion: '工程奇点。通过 IO 感知优化，彻底解决了长序列下的算力浪费问题。', connections: ['a1', 'a3'], arxivId: '2205.14135',
+          positioning: { role: '工程优化者', benchmark: '标准 Attention', coreDiff: 'IO-aware tiling 减少 HBM 访问', isParadigmShift: false },
+          evolution: { predecessors: ['Transformer', 'GPT-3'], current: 'FlashAttention', successors: ['FlashAttention-2', 'Ring Attention', 'DeepSeek-V3'] },
+          stageDetail: { phase: 'Mature / Infra', period: '2022-至今', signals: ['已成为所有主流框架默认实现', 'PyTorch 2.0 原生集成'] },
+          players: { coreResearchers: [{ name: 'Tri Dao', affiliation: 'Stanford → Together AI' }], activeTeams: ['Together AI', 'PyTorch Team', 'NVIDIA'] },
+          bottlenecks: { current: ['仍受限于单机 HBM 容量', '对非标准 Attention 变体支持有限'], unsolved: '跨机分布式 Attention 的通信开销' }
+        },
+        { id: 'a5', title: 'DeepSeek-V3', year: 2024, lane: 0, tier: 1, author: 'DeepSeek Team', stage: 'Growth', growth: '450%', conclusion: '工业巅峰。MLA 架构极大优化了 KV Cache，是目前 Attention 效率的最优解。', connections: ['a4'], arxivId: '2412.19437',
+          positioning: { role: '工业集大成者', benchmark: 'GPT-4 / Llama 3', coreDiff: 'MLA + MoE 双重优化，训练成本降低 10 倍', isParadigmShift: false },
+          evolution: { predecessors: ['FlashAttention'], current: 'DeepSeek-V3', successors: [] },
+          stageDetail: { phase: 'Growth / Scaling', period: '2024-至今', signals: ['引用增速 +450%', '开源社区最强模型之一', '国产 AI 标杆'] },
+          players: { coreResearchers: [{ name: 'DeepSeek Team', affiliation: 'DeepSeek (幻方量化)' }], activeTeams: ['DeepSeek', '国内开源社区'] },
+          bottlenecks: { current: ['MoE 路由负载均衡', '长上下文推理成本仍高'], unsolved: '能否在推理端实现与训练端同等的效率优势' }
+        },
+        { id: 'a6', title: 'Longformer', year: 2020, lane: 0, tier: 2, author: 'Beltagy et al.', connections: ['a1'], arxivId: '2004.05150' },
+        { id: 'a7', title: 'RoPE', year: 2021, lane: 0, tier: 2, author: 'Su et al.', connections: ['a1'], arxivId: '2104.09864' },
+        { id: 'a8', title: 'ALiBi', year: 2021, lane: 0, tier: 2, author: 'Press et al.', connections: ['a1'], arxivId: '2108.12409' },
+        { id: 'a9', title: 'FlashAttention-2', year: 2023, lane: 0, tier: 2, author: 'Tri Dao', connections: ['a4'], arxivId: '2307.08691' },
+        { id: 'a10', title: 'Ring Attention', year: 2024, lane: 0, tier: 2, author: 'Hao Liu et al.', connections: ['a4'], arxivId: '2310.01803' },
+        { id: 'b1', title: 'HiPPO', year: 2020, lane: 1, tier: 2, author: 'Albert Gu', connections: ['a1'], arxivId: '2008.07669' },
+        { id: 'b2', title: 'S4', year: 2021, lane: 1, tier: 1, author: 'Albert Gu', stage: 'Mature', growth: '35%', conclusion: 'SSM 理论基石。首次在数学上证明了状态空间模型在长序列上的线性优势。', connections: ['b1'], arxivId: '2111.00396',
+          positioning: { role: '理论奠基者', benchmark: 'Transformer', coreDiff: '连续状态空间 → 离散化，实现 O(n) 长序列建模', isParadigmShift: true },
+          evolution: { predecessors: ['HiPPO'], current: 'S4', successors: ['H3', 'Mamba', 'Griffin'] },
+          stageDetail: { phase: 'Mature / Foundation', period: '2021-至今', signals: ['引用 2000+', '催生整个 SSM 研究方向'] },
+          players: { coreResearchers: [{ name: 'Albert Gu', affiliation: 'CMU → Cartesia AI' }], activeTeams: ['Stanford Hazy Research', 'CMU'] },
+          bottlenecks: { current: ['固定状态转移矩阵，无法做输入依赖选择', '实际速度优势在短序列上不明显'], unsolved: '如何让 SSM 具备 Attention 的动态选择能力' }
+        },
+        { id: 'b3', title: 'H3', year: 2022, lane: 1, tier: 2, author: 'Fu et al.', connections: ['b2'], arxivId: '2212.14052' },
+        { id: 'b4', title: 'Mamba', year: 2023, lane: 1, tier: 1, author: 'Gu & Dao', stage: 'Growth', growth: '320%', conclusion: '范式挑战者。通过选择性扫描机制，实现了在性能上对齐甚至超越 Transformer。', connections: ['b2', 'b3'], arxivId: '2312.00752',
+          positioning: { role: '范式挑战者', benchmark: 'Transformer', coreDiff: '选择性状态空间 — 输入依赖的线性复杂度序列建模', isParadigmShift: true },
+          evolution: { predecessors: ['S4', 'H3'], current: 'Mamba', successors: ['Jamba', 'Mamba-2', 'Griffin'] },
+          stageDetail: { phase: 'Early Adoption', period: '2023-2024', signals: ['引用增速 +320%', '工业界开始实验（Together AI / inference stack）', '多个混合架构跟进'] },
+          players: { coreResearchers: [{ name: 'Albert Gu', affiliation: 'CMU → Cartesia AI' }, { name: 'Tri Dao', affiliation: 'Stanford → Together AI' }], activeTeams: ['Together AI', 'Cartesia AI', 'AI21 Labs'] },
+          bottlenecks: { current: ['训练稳定性', '长序列优势是否真实（vs attention tricks）', '生态缺失（工具链不成熟）'], unsolved: '逻辑推理精度在极大规模参数下是否能完全对齐 Transformer' }
+        },
+        { id: 'b5', title: 'Jamba', year: 2024, lane: 1, tier: 1, author: 'AI21 Labs', stage: 'Early', growth: '120%', conclusion: '杂交拐点。成功融合了 Transformer 的推理能力与 SSM 的长文本效率。', connections: ['b4'], arxivId: '2403.19887',
+          positioning: { role: '混合架构先驱', benchmark: 'Mamba / Llama 2', coreDiff: 'Transformer + Mamba 混合，1:7 层比例 + MoE', isParadigmShift: false },
+          evolution: { predecessors: ['Mamba'], current: 'Jamba', successors: [] },
+          stageDetail: { phase: 'Experimental', period: '2024', signals: ['首个 52B 参数混合架构', '256K 上下文窗口', '引用增速 +120%'] },
+          players: { coreResearchers: [{ name: 'Opher Lieber', affiliation: 'AI21 Labs' }], activeTeams: ['AI21 Labs'] },
+          bottlenecks: { current: ['最优混合比例未确定', '训练 recipe 不透明', '社区复现困难'], unsolved: 'Attention 和 SSM 的最优组合方式是什么' }
+        },
+        { id: 'b6', title: 'Mamba-2', year: 2024, lane: 1, tier: 2, author: 'Albert Gu', connections: ['b4'], arxivId: '2405.21060' },
+        { id: 'b7', title: 'Griffin', year: 2024, lane: 1, tier: 2, author: 'DeepMind', connections: ['b2'], arxivId: '2402.19427' },
+        { id: 'c1', title: 'Linear Transformer', year: 2020, lane: 2, tier: 2, author: 'Katharopoulos et al.', connections: ['a1'], arxivId: '2006.16236' },
+        { id: 'c2', title: 'RetNet', year: 2023, lane: 2, tier: 2, author: 'Microsoft', connections: ['a1'], arxivId: '2307.08621' },
+        { id: 'c3', title: 'RWKV', year: 2023, lane: 2, tier: 1, author: 'Peng Bo', stage: 'Mature', growth: '20%', conclusion: '线性复兴。证明了开源社区有能力在底层架构上实现范式级的创新。', connections: ['c1'], arxivId: '2305.13048',
+          positioning: { role: '开源先锋', benchmark: 'Transformer / Mamba', coreDiff: 'RNN 线性化 — 训练可并行，推理 O(1) 内存', isParadigmShift: false },
+          evolution: { predecessors: ['Linear Transformer'], current: 'RWKV', successors: ['Eagle (RWKV-5)', 'xLSTM'] },
+          stageDetail: { phase: 'Niche Mature', period: '2023-至今', signals: ['开源社区活跃', '多语言模型已部署', '增速放缓 +20%'] },
+          players: { coreResearchers: [{ name: 'Peng Bo', affiliation: 'RWKV Foundation' }], activeTeams: ['RWKV Foundation', '开源社区'] },
+          bottlenecks: { current: ['模型规模受限（最大 14B）', '复杂推理能力弱于同规模 Transformer', '商业化路径不清晰'], unsolved: '开源社区驱动的架构能否在工业级规模上竞争' }
+        },
+        { id: 'c4', title: 'xLSTM', year: 2024, lane: 2, tier: 1, author: 'Sepp Hochreiter', stage: 'Early', growth: '180%', conclusion: '技术致敬。通过指数门控解决了传统 RNN 的并行化难题，具有极强理论意义。', connections: ['c3'], arxivId: '2405.04517',
+          positioning: { role: '经典复兴者', benchmark: 'LSTM / Mamba', coreDiff: '指数门控 + 矩阵记忆，让 LSTM 重获竞争力', isParadigmShift: false },
+          evolution: { predecessors: ['RWKV'], current: 'xLSTM', successors: [] },
+          stageDetail: { phase: 'Early Research', period: '2024', signals: ['引用增速 +180%', 'LSTM 发明人亲自操刀', '学术关注度高但工业落地未见'] },
+          players: { coreResearchers: [{ name: 'Sepp Hochreiter', affiliation: 'JKU Linz / NXAI' }], activeTeams: ['NXAI', 'JKU Linz'] },
+          bottlenecks: { current: ['缺乏大规模训练验证', '与 Mamba/Transformer 的性能对比不充分', '工具链生态为零'], unsolved: '经典架构的现代化改造能否在实践中胜出' }
+        },
+        { id: 'c5', title: 'TTT Layers', year: 2024, lane: 2, tier: 2, author: 'Sun et al.', connections: ['c1'], arxivId: '2407.04620' },
+        { id: 'c6', title: 'Eagle (RWKV-5)', year: 2024, lane: 2, tier: 2, author: 'RWKV Team', connections: ['c3'], arxivId: '2401.01460' },
+        { id: 'c7', title: 'HGRN', year: 2024, lane: 2, tier: 2, author: 'Qin et al.', connections: ['c1'], arxivId: '2311.12543' },
+        { id: 'd1', title: 'GShard', year: 2020, lane: 3, tier: 2, author: 'Lepikhin et al.', connections: ['a3'], arxivId: '2006.16668' },
+        { id: 'd2', title: 'Switch Transformer', year: 2021, lane: 3, tier: 1, author: 'Fedus et al.', stage: 'Mature', growth: '15%', conclusion: '规模先驱。确立了万亿参数级别下"按需激活"的降本增效范式。', connections: ['d1'], arxivId: '2101.03961',
+          positioning: { role: '规模化先驱', benchmark: 'Dense Transformer', coreDiff: '稀疏 MoE — 万亿参数但只激活部分专家', isParadigmShift: true },
+          evolution: { predecessors: ['GShard'], current: 'Switch Transformer', successors: ['Megablocks', 'Expert Choice MoE', 'Mixtral 8x7B'] },
+          stageDetail: { phase: 'Mature / Infra', period: '2021-至今', signals: ['Google 内部大规模部署', '引用 3000+', 'MoE 成为标准 Scaling 策略'] },
+          players: { coreResearchers: [{ name: 'William Fedus', affiliation: 'Google Brain' }, { name: 'Barret Zoph', affiliation: 'Google Brain' }], activeTeams: ['Google Brain', 'Meta'] },
+          bottlenecks: { current: ['专家负载不均衡', '通信开销大', '训练不稳定'], unsolved: '如何实现真正的动态专家数量分配' }
+        },
+        { id: 'd3', title: 'Megablocks', year: 2022, lane: 3, tier: 2, author: 'Trevor Gale', connections: ['d2'], arxivId: '2211.15841' },
+        { id: 'd4', title: 'Mixtral 8x7B', year: 2023, lane: 3, tier: 1, author: 'Mistral AI', stage: 'Growth', growth: '280%', conclusion: '商业拐点。向市场证明了 MoE 架构是目前性价比最高的技术路径。', connections: ['d2', 'd3'], arxivId: '2401.04088',
+          positioning: { role: '商业化验证者', benchmark: 'Llama 2 70B', coreDiff: '8x7B 稀疏专家匹敌 70B 稠密模型，推理成本降 6 倍', isParadigmShift: false },
+          evolution: { predecessors: ['Switch Transformer', 'Megablocks'], current: 'Mixtral 8x7B', successors: ['DeepSeek-MoE'] },
+          stageDetail: { phase: 'Growth / Adoption', period: '2023-2024', signals: ['引用增速 +280%', '开源社区最受欢迎 MoE 模型', '多家公司基于此微调'] },
+          players: { coreResearchers: [{ name: 'Albert Q. Jiang', affiliation: 'Mistral AI' }], activeTeams: ['Mistral AI', 'DeepSeek', '开源社区'] },
+          bottlenecks: { current: ['专家利用率不均', '部署需要更多显存（全部专家常驻）', '微调困难'], unsolved: '如何让 MoE 在边缘设备上高效运行' }
+        },
+        { id: 'd5', title: 'Expert Choice MoE', year: 2022, lane: 3, tier: 2, author: 'Zhou et al.', connections: ['d2'], arxivId: '2202.09368' },
+        { id: 'd6', title: 'DeepSeek-MoE', year: 2024, lane: 3, tier: 2, author: 'DeepSeek', connections: ['d4'], arxivId: '2401.06066' }
+      ];
+
+      const lanes = [
+        { title: 'Attention 优化主干', key: 'attention', color: '#3b82f6' },
+        { title: '状态空间模型', key: 'ssm', color: '#f97316' },
+        { title: '循环与线性复兴', key: 'rnn', color: '#10b981' },
+        { title: '专家混合', key: 'moe', color: '#a855f7' }
+      ];
+
+      const [selectedId, setSelectedId] = useState('b4');
+      const [hoveredId, setHoveredId] = useState(null);
+      const [selectedLane, setSelectedLane] = useState('all');
+      const selectedPaper = useMemo(() => {
+        const p = allPapers.find(p => p.id === selectedId);
+        return (p && p.tier === 1) ? p : null;
+      }, [selectedId]);
+
+      const filteredPapers = useMemo(() => {
+        if (selectedLane === 'all') return allPapers;
+        return allPapers.filter(p => p.lane === selectedLane);
+      }, [selectedLane]);
+
+      // Pre-compute Y offsets for papers sharing the same (year, lane)
+      const paperOffsets = useMemo(() => {
+        const buckets = {};
+        allPapers.forEach(p => {
+          const key = `${p.year}_${p.lane}`;
+          if (!buckets[key]) buckets[key] = [];
+          buckets[key].push(p.id);
+        });
+        const offsets = {};
+        Object.values(buckets).forEach(ids => {
+          const n = ids.length;
+          if (n <= 1) { offsets[ids[0]] = 0; return; }
+          // Tier-1 gets center, tier-2 spreads around
+          const tier1 = ids.filter(id => allPapers.find(p => p.id === id).tier === 1);
+          const tier2 = ids.filter(id => allPapers.find(p => p.id === id).tier === 2);
+          const sorted = [...tier1, ...tier2];
+          const spread = 4.5; // percent of lane height
+          sorted.forEach((id, i) => {
+            offsets[id] = (i - (n - 1) / 2) * spread;
+          });
+        });
+        return offsets;
+      }, []);
+
+      const getPaperPos = (paper) => {
+        const xPos = ((paper.year - 2017) / 7.5) * 100 + 4;
+        const laneCenter = (paper.lane * 25) + 12.5;
+        const yOffset = paperOffsets[paper.id] || 0;
+        return { x: xPos, y: laneCenter + yOffset };
+      };
+
+      return (
+        <div className="flex h-screen w-full bg-[#050506] text-slate-300 font-sans select-none overflow-hidden">
+          <div className="w-16 border-r border-white/5 flex flex-col items-center py-8 space-y-10 bg-black z-30">
+            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-600/30">
+              <Icon name="Beaker" className="text-white" size={22} />
+            </div>
+            <div className="flex flex-col space-y-8">
+              <Icon name="Network" className="text-blue-500 cursor-pointer" size={22} />
+              <Icon name="Clock" className="text-slate-600" size={22} />
+              <Icon name="Users" className="text-slate-600" size={22} />
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col relative">
+            <header className="h-16 border-b border-white/5 flex items-center justify-between px-8 bg-black/40 backdrop-blur-xl z-20">
+              <div className="flex items-center space-x-4">
+                <h1 className="text-[11px] font-black tracking-[0.2em] text-slate-500 uppercase">HH Intelligence · 技术演化雷达 2026</h1>
+                <div className="h-4 w-px bg-white/10"></div>
+                <span className="text-xs text-blue-400 font-mono">Current Sample: N=30 Critical Nodes</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  {['all', 0, 1, 2, 3].map((lane, i) => (
+                    <button
+                      key={lane}
+                      onClick={() => setSelectedLane(lane)}
+                      className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${
+                        selectedLane === lane 
+                          ? 'bg-white text-black' 
+                          : 'bg-white/5 text-slate-500 hover:bg-white/10 hover:text-slate-300'
+                      }`}
+                    >
+                      {lane === 'all' ? 'All' : lanes[lane].title.split(' ')[0]}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 ml-4">
+                  <div className="w-4 h-4 rounded-full bg-blue-500"></div> TIER 1
+                </div>
+                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500">
+                  <div className="w-4 h-4 rounded-full border-2 border-slate-600"></div> TIER 2
+                </div>
+              </div>
+            </header>
+
+            <div className="flex-1 relative bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:60px_60px] overflow-auto">
+              <div className="absolute inset-0 pointer-events-none">
+                {lanes.map((lane, i) => (
+                  <div key={i} className="h-1/4 border-b border-white/5 relative">
+                    <span className="absolute left-10 top-4 text-[10px] font-black text-slate-800 uppercase tracking-[0.3em]">{lane.title}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="absolute inset-0 flex pointer-events-none">
+                {[2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024].map((year) => (
+                  <div key={year} className="flex-1 border-r border-white/5 relative">
+                    <span className="absolute bottom-8 left-4 text-[11px] font-mono text-slate-800">{year}</span>
+                  </div>
+                ))}
+              </div>
+
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ minWidth: '1400px', padding: '6rem' }}>
+                {filteredPapers.map((paper) => {
+                  const pos = getPaperPos(paper);
+                  return paper.connections.map(connId => {
+                    const targetPaper = allPapers.find(p => p.id === connId);
+                    if (!targetPaper || !filteredPapers.includes(targetPaper)) return null;
+                    const targetPos = getPaperPos(targetPaper);
+                    return (
+                      <line
+                        key={`${paper.id}-${connId}`}
+                        x1={`${targetPos.x}%`}
+                        y1={`${targetPos.y}%`}
+                        x2={`${pos.x}%`}
+                        y2={`${pos.y}%`}
+                        stroke={lanes[paper.lane].color}
+                        strokeWidth="1"
+                        strokeDasharray="4 4"
+                        opacity="0.3"
+                      />
+                    );
+                  });
+                })}
+              </svg>
+
+              <div className="absolute inset-0 min-w-[1400px] p-24">
+                {filteredPapers.map((paper) => {
+                  const pos = getPaperPos(paper);
+                  const isSelected = selectedId === paper.id;
+                  const isHovered = hoveredId === paper.id;
+                  const isTier1 = paper.tier === 1;
+
+                  return (
+                    <div 
+                      key={paper.id}
+                      className="absolute cursor-pointer transition-all duration-300 group"
+                      style={{ left: `${pos.x}%`, top: `${pos.y}%`, transform: 'translate(-50%, -50%)' }}
+                      onClick={() => setSelectedId(paper.id)}
+                      onMouseEnter={() => setHoveredId(paper.id)}
+                      onMouseLeave={() => setHoveredId(null)}
+                    >
+                      {(isHovered || isSelected) && (
+                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black/90 border border-white/20 rounded-lg px-3 py-2 whitespace-nowrap z-50 pointer-events-none">
+                          <div className="text-[11px] font-bold text-white">{paper.title}</div>
+                          <div className="text-[9px] text-slate-400">{paper.author} · {paper.year}</div>
+                        </div>
+                      )}
+                      <div className={`
+                        rounded-full transition-all duration-300 flex items-center justify-center
+                        ${isTier1 ? 'w-7 h-7 z-40' : 'w-4 h-4 z-20 border-2 border-slate-700 bg-black hover:border-slate-400'}
+                        ${isSelected ? 'scale-125 bg-white ring-8 ring-blue-500/20' : ''}
+                        ${isHovered && !isSelected ? 'scale-110 ring-4 ring-white/20' : ''}
+                        ${isTier1 && paper.stage === 'Growth' ? 'animate-pulse' : ''}
+                      `}
+                      style={{ 
+                        backgroundColor: isSelected ? '#fff' : (isTier1 ? lanes[paper.lane].color : 'transparent'),
+                        borderColor: isTier1 ? 'transparent' : lanes[paper.lane].color,
+                        boxShadow: (isTier1 && paper.stage === 'Growth') ? `0 0 30px ${lanes[paper.lane].color}66` : 'none'
+                      }}>
+                        {isTier1 && paper.stage === 'Growth' && (
+                          <div className="absolute inset-0 rounded-full animate-ping opacity-30" style={{ backgroundColor: lanes[paper.lane].color }}></div>
+                        )}
+                      </div>
+
+                      <div className={`
+                        absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap font-black tracking-tight
+                        transition-all duration-300 pointer-events-none
+                        ${isTier1 ? 'text-[11px] text-slate-200' : 'text-[9px] text-slate-600 opacity-60 group-hover:opacity-100 group-hover:text-slate-400'}
+                        ${isSelected ? 'text-white text-xs opacity-100' : ''}
+                      `}>
+                        {paper.title}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <footer className="h-12 border-t border-white/5 bg-black flex items-center px-10 space-x-10 text-[10px] text-slate-600 uppercase tracking-widest font-bold">
+              <div className="flex items-center space-x-3">
+                <Icon name="Info" className="text-slate-700" size={14} />
+                <span>X-Axis: 历史因果序列</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Icon name="TrendingUp" className="text-orange-600" size={14} />
+                <span>闪烁节点: 引用增速指数级增长 (Alpha Signal)</span>
+              </div>
+            </footer>
+          </div>
+
+          <div className="w-[420px] bg-black border-l border-white/5 flex flex-col shadow-2xl z-40">
+            {selectedPaper && (
+              <div className="flex-1 p-8 overflow-y-auto space-y-8">
+                {/* 模块 1：标题区 */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-sm border" style={{ color: lanes[selectedPaper.lane].color, backgroundColor: lanes[selectedPaper.lane].color + '10', borderColor: lanes[selectedPaper.lane].color + '30' }}>
+                      {lanes[selectedPaper.lane].title}
+                    </span>
+                    {selectedPaper.positioning?.isParadigmShift && (
+                      <span className="text-[9px] font-black text-orange-500 bg-orange-500/10 px-2 py-1 rounded-sm border border-orange-500/20 uppercase tracking-widest">Paradigm Shift</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-2xl font-bold text-white tracking-tighter leading-none">{selectedPaper.title}</h2>
+                    <a href={`https://arxiv.org/abs/${selectedPaper.arxivId}`} target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-blue-400 transition-colors flex-shrink-0" title="查看原文">
+                      <Icon name="ExternalLink" size={18} />
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs text-slate-600 font-mono">
+                    <Icon name="Clock" size={14} /> {selectedPaper.year} · {selectedPaper.author}
+                  </div>
+                </div>
+
+                {/* 模块 2：技术定位 */}
+                {selectedPaper.positioning && (
+                  <div className="space-y-3">
+                    <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">技术定位 Positioning</div>
+                    <div className="bg-[#0a0a0c] border border-white/5 rounded-xl p-4 space-y-2.5">
+                      <div className="flex justify-between items-baseline">
+                        <span className="text-[10px] text-slate-600 uppercase tracking-wider">技术角色</span>
+                        <span className="text-sm font-bold text-slate-200">{selectedPaper.positioning.role}</span>
+                      </div>
+                      <div className="flex justify-between items-baseline">
+                        <span className="text-[10px] text-slate-600 uppercase tracking-wider">对标技术</span>
+                        <span className="text-sm text-slate-400">{selectedPaper.positioning.benchmark}</span>
+                      </div>
+                      <div className="border-t border-white/5 pt-2.5">
+                        <span className="text-[10px] text-slate-600 uppercase tracking-wider block mb-1">核心差异</span>
+                        <span className="text-xs text-slate-300 leading-relaxed">{selectedPaper.positioning.coreDiff}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 模块 3：技术演进 */}
+                {selectedPaper.evolution && (
+                  <div className="space-y-3">
+                    <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">技术演进 Evolution</div>
+                    <div className="bg-[#0a0a0c] border border-white/5 rounded-xl p-4">
+                      <div className="flex items-center gap-2 flex-wrap text-xs">
+                        {selectedPaper.evolution.predecessors.map((p, i) => (
+                          <React.Fragment key={p}>
+                            <span className="text-slate-500 bg-white/5 px-2 py-0.5 rounded">{p}</span>
+                            <span className="text-slate-700">→</span>
+                          </React.Fragment>
+                        ))}
+                        <span className="font-bold px-2.5 py-0.5 rounded" style={{ color: lanes[selectedPaper.lane].color, backgroundColor: lanes[selectedPaper.lane].color + '15' }}>
+                          {selectedPaper.evolution.current}
+                        </span>
+                        {selectedPaper.evolution.successors.length > 0 && (
+                          <>
+                            <span className="text-slate-700">→</span>
+                            <div className="flex flex-col gap-1">
+                              {selectedPaper.evolution.successors.map(s => (
+                                <span key={s} className="text-slate-500 bg-white/5 px-2 py-0.5 rounded text-[11px]">{s}</span>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 模块 4：当前阶段 */}
+                {selectedPaper.stageDetail && (
+                  <div className="space-y-3">
+                    <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">当前阶段 Stage</div>
+                    <div className="bg-[#0a0a0c] border border-white/5 rounded-xl p-4 space-y-3">
+                      <div className="flex items-center gap-3">
+                        <span className={`text-lg font-black ${selectedPaper.stage === 'Growth' ? 'text-orange-500' : selectedPaper.stage === 'Early' ? 'text-emerald-500' : 'text-blue-500'}`}>
+                          {selectedPaper.stageDetail.phase}
+                        </span>
+                        <span className="text-[10px] text-slate-600 font-mono">{selectedPaper.stageDetail.period}</span>
+                      </div>
+                      {selectedPaper.growth && (
+                        <div className="flex items-center gap-2">
+                          <Icon name="TrendingUp" className="text-orange-500" size={14} />
+                          <span className="text-sm font-mono font-bold text-white">+{selectedPaper.growth}</span>
+                          <span className="text-[10px] text-slate-600">引文增速 (12M)</span>
+                        </div>
+                      )}
+                      <div className="border-t border-white/5 pt-2.5 space-y-1.5">
+                        <span className="text-[10px] text-slate-600 uppercase tracking-wider">信号 Signals</span>
+                        {selectedPaper.stageDetail.signals.map((s, i) => (
+                          <div key={i} className="flex items-start gap-2 text-xs text-slate-400">
+                            <span className="text-slate-700 mt-0.5">·</span>
+                            <span>{s}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 模块 5：核心玩家 */}
+                {selectedPaper.players && (
+                  <div className="space-y-3">
+                    <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">核心玩家 Key Players</div>
+                    <div className="bg-[#0a0a0c] border border-white/5 rounded-xl p-4 space-y-3">
+                      <div className="space-y-2">
+                        <span className="text-[10px] text-slate-600 uppercase tracking-wider">核心研究者</span>
+                        {selectedPaper.players.coreResearchers.map((r, i) => (
+                          <div key={i} className="flex justify-between items-baseline">
+                            <span className="text-sm text-slate-200 font-medium">{r.name}</span>
+                            <span className="text-[10px] text-slate-600 font-mono">{r.affiliation}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="border-t border-white/5 pt-2.5 space-y-1.5">
+                        <span className="text-[10px] text-slate-600 uppercase tracking-wider">活跃团队</span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {selectedPaper.players.activeTeams.map((t, i) => (
+                            <span key={i} className="text-[10px] text-slate-400 bg-white/5 px-2 py-0.5 rounded">{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 模块 6：瓶颈分析 */}
+                {selectedPaper.bottlenecks && (
+                  <div className="space-y-3">
+                    <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">瓶颈分析 Bottleneck</div>
+                    <div className="bg-[#0a0a0c] border border-white/5 rounded-xl p-4 space-y-3">
+                      <div className="space-y-1.5">
+                        <span className="text-[10px] text-slate-600 uppercase tracking-wider">当前限制</span>
+                        {selectedPaper.bottlenecks.current.map((b, i) => (
+                          <div key={i} className="flex items-start gap-2 text-xs text-slate-400">
+                            <span className="text-red-900 mt-0.5">·</span>
+                            <span>{b}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="border-t border-white/5 pt-2.5">
+                        <span className="text-[10px] text-slate-600 uppercase tracking-wider block mb-1">未解决</span>
+                        <span className="text-xs text-slate-500 italic leading-relaxed">{selectedPaper.bottlenecks.unsolved}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 模块 7：结论（降权） */}
+                {selectedPaper.conclusion && (
+                  <div className="space-y-3 pt-2 border-t border-white/5">
+                    <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">结论 Summary</div>
+                    <p className="text-sm text-slate-400 leading-relaxed">{selectedPaper.conclusion}</p>
+                  </div>
+                )}
+
+                {/* arXiv 按钮 */}
+                <div className="pt-4">
+                  <a
+                    href={`https://arxiv.org/abs/${selectedPaper.arxivId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full h-12 rounded-xl font-black text-[10px] transition-all flex items-center justify-center gap-3 uppercase tracking-[0.3em] active:scale-95 border"
+                    style={{ color: lanes[selectedPaper.lane].color, borderColor: lanes[selectedPaper.lane].color + '40', backgroundColor: lanes[selectedPaper.lane].color + '08' }}
+                  >
+                    查看原文 arXiv <Icon name="ExternalLink" size={16} />
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Tier-2 简化面板 */}
+            {!selectedPaper && selectedId && (() => {
+              const p = allPapers.find(x => x.id === selectedId);
+              if (!p) return null;
+              return (
+                <div className="flex-1 p-8 space-y-6">
+                  <div className="space-y-3">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-sm border" style={{ color: lanes[p.lane].color, borderColor: lanes[p.lane].color + '30' }}>
+                      {lanes[p.lane].title}
+                    </span>
+                    <h2 className="text-xl font-bold text-white tracking-tight">{p.title}</h2>
+                    <div className="text-xs text-slate-600 font-mono">{p.year} · {p.author}</div>
+                  </div>
+                  <a href={`https://arxiv.org/abs/${p.arxivId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-blue-400 flex items-center gap-2">
+                    <Icon name="ExternalLink" size={14} /> arXiv: {p.arxivId}
+                  </a>
+                </div>
+              );
+            })()}
+          </div>
+
+          <style>{`
+            ::-webkit-scrollbar { width: 4px; }
+            ::-webkit-scrollbar-track { background: transparent; }
+            ::-webkit-scrollbar-thumb { background: #1e1e21; border-radius: 10px; }
+            ::-webkit-scrollbar-thumb:hover { background: #2a2a2d; }
+          `}</style>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

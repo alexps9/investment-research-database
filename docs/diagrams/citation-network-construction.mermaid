@@ -1,0 +1,40 @@
+# Citation Network Construction
+
+```mermaid
+flowchart TD
+    A[开始: 获取论文列表] --> B[创建空有向图 G = nx.DiGraph]
+
+    B --> C{遍历每篇论文}
+    C -->|论文 p| D[添加节点: G.add_node]
+    D --> E[节点属性: id, title, cited_by_count]
+    E --> C
+
+    C -->|所有论文处理完| F{遍历引用关系}
+    F -->|引用 r| G{source 和 target 都在图中?}
+    G -->|是| H[添加边: G.add_edge source, target]
+    G -->|否| I[跳过此引用]
+    H --> F
+    I --> F
+
+    F -->|所有引用处理完| J[转换图为无向图: G_undirected]
+    J --> K[社区检测: Louvain algorithm]
+    K --> L[为每个节点标记 community ID]
+
+    L --> M[计算中心性: betweenness_centrality]
+    M --> N[为每个节点添加 centrality 分数]
+
+    N --> O[提取节点列表]
+    O --> P[提取边列表]
+    P --> Q[返回 JSON: nodes + links + metadata]
+
+    Q --> R[结束]
+
+    style A fill:#F5F5F5,stroke:#333,stroke-width:2px
+    style R fill:#F5F5F5,stroke:#333,stroke-width:2px
+    style K fill:#FF4400,stroke:#333,stroke-width:2px,color:#FFF
+    style M fill:#FF4400,stroke:#333,stroke-width:2px,color:#FFF
+```
+
+**核心算法**:
+- **社区检测**: Louvain 算法（无监督聚类）
+- **中心性计算**: Betweenness Centrality（识别关键论文）

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Global View v4 — Density as Signal</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'IBM Plex Sans', sans-serif; background: #fff; }
+    .container { display: flex; height: 100vh; flex-direction: column; }
+    .header { height: 32px; border-bottom: 1px solid #E4E4E7; display: flex; align-items: center; padding: 0 16px; }
+    .header h1 { font-size: 12px; font-weight: 600; color: #18181B; }
+    .main { display: flex; flex: 1; overflow: hidden; }
+    .left-rail { width: 120px; border-right: 1px solid #E4E4E7; padding-top: 28px; }
+    .lane-label { display: flex; flex-direction: column; justify-content: center; padding: 0 10px; }
+    .lane-label .name { font-size: 10px; font-weight: 600; }
+    .lane-label .desc { font-size: 8px; color: #A1A1AA; }
+    .canvas-area { flex: 1; position: relative; overflow: auto; }
+    .timeline { height: 24px; display: flex; border-bottom: 1px solid #F4F4F5; position: sticky; top: 0; background: #fff; z-index: 20; }
+    .timeline span { flex: 1; text-align: center; font-size: 8px; color: #A1A1AA; line-height: 24px; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header"><h1>Frontier Attention — Density View</h1></div>
+  <div class="main">
+    <div class="left-rail" id="left-rail"></div>
+    <div class="canvas-area">
+      <div class="timeline" id="timeline"></div>
+      <canvas id="cv"></canvas>
+    </div>
+  </div>
+</div>
+<script>
+const QUARTERS = ['23Q1','23Q2','23Q3','23Q4','24Q1','24Q2','24Q3','24Q4','25Q1','25Q2','25Q3','25Q4','26Q1','26Q2','26Q3','26Q4'];
+const nQ = 16;
+
+const LANES = [
+  {id:'sequence_scaling', name:'Sequence Scaling', desc:'O(N²) → linear', color:'#2563EB'},
+  {id:'memory_wall', name:'Memory Wall', desc:'KV cache + IO', color:'#059669'},
+  {id:'compute_scaling', name:'Compute Scaling', desc:'MoE + RL + TTC', color:'#EA580C'},
+];
+
+// Attention per lane per quarter
+const ATT = {
+  sequence_scaling: [0.5,0.6,0.8,0.9,0.7,0.5,0.4,0.3,0.2,0.2,0.15,0.1,0.1,0.1,0.1,0.1],
+  memory_wall:      [0.2,0.2,0.3,0.3,0.5,0.8,0.9,0.85,0.7,0.6,0.5,0.4,0.3,0.3,0.25,0.2],
+  compute_scaling:  [0.3,0.3,0.3,0.4,0.3,0.4,0.7,0.9,0.95,1.0,0.9,0.85,0.8,0.75,0.7,0.65],
+};
+
+// Real landmark papers
+const PAPERS = [
+  {id:'mamba',q:2,lane:'sequence_scaling',size:'lg',label:'Mamba'},
+  {id:'mamba2',q:5,lane:'sequence_scaling',size:'lg',label:'Mamba-2'},
+  {id:'rwkv7',q:7,lane:'sequence_scaling',size:'md',label:'RWKV-7'},
+  {id:'jamba',q:4,lane:'sequence_scaling',size:'md',label:'Jamba'},
+  {id:'retnet',q:2,lane:'sequence_scaling',size:'md',label:'RetNet'},
+  {id:'streaming',q:2,lane:'sequence_scaling',size:'sm',label:'StreamingLLM'},
+  {id:'ringattn',q:3,lane:'sequence_scaling',size:'sm',label:'Ring Attn'},
+  {id:'flash2',q:2,lane:'memory_wall',size:'lg',label:'FA v2'},
+  {id:'flash3',q:6,lane:'memory_wall',size:'md',label:'FA v3'},
+  {id:'mla',q:5,lane:'memory_wall',size:'lg',label:'MLA'},
+  {id:'mla3',q:7,lane:'memory_wall',size:'lg',label:'MLA-V3'},
+  {id:'pagedattn',q:2,lane:'memory_wall',size:'lg',label:'PagedAttn'},
+  {id:'sglang',q:3,lane:'memory_wall',size:'md',label:'SGLang'},
+  {id:'vllm2',q:6,lane:'memory_wall',size:'md',label:'vLLM v2'},
+  {id:'transmla',q:9,lane:'memory_wall',size:'md',label:'TransMLA'},
+  {id:'mixtral',q:4,lane:'compute_scaling',size:'lg',label:'Mixtral'},
+  {id:'dsv3',q:7,lane:'compute_scaling',size:'lg',label:'DS-V3'},
+  {id:'o1',q:6,lane:'compute_scaling',size:'lg',label:'o1'},
+  {id:'r1',q:8,lane:'compute_scaling',size:'lg',label:'R1'},
+  {id:'qwen3',q:9,lane:'compute_scaling',size:'md',label:'Qwen3'},
+  {id:'s1',q:9,lane:'compute_scaling',size:'sm',label:'s1'},
+];
+
+// Phantom nodes: generated from attention data
+// More phantoms where attention is higher
+function genPhantoms(lane, laneIdx) {
+  const pts = [];
+  const data = ATT[lane];
+  for (let qi = 0; qi < nQ; qi++) {
+    const count = Math.floor(data[qi] * 18); // more phantoms
+    for (let k = 0; k < count; k++) {
+      pts.push({
+        q: qi + (Math.random() - 0.5) * 0.7,
+        yOff: (Math.random() - 0.5) * 0.8,
+        r: 1 + Math.random() * 2.5 + data[qi] * 1.5,
+        lane: laneIdx,
+        att: data[qi],
+      });
+    }
+  }
+  return pts;
+}
+
+// === RENDER ===
+const LANE_H = 140;
+const W = 1200;
+const H = LANES.length * LANE_H;
+const cv = document.getElementById('cv');
+cv.width = W; cv.height = H;
+cv.style.width = '100%'; cv.style.height = H + 'px';
+const ctx = cv.getContext('2d');
+
+function qx(qi) { return (qi / (nQ - 1)) * W; }
+
+// Build UI
+const timeline = document.getElementById('timeline');
+QUARTERS.forEach(q => {
+  const s = document.createElement('span');
+  s.textContent = q; timeline.appendChild(s);
+});
+const rail = document.getElementById('left-rail');
+LANES.forEach(l => {
+  const div = document.createElement('div');
+  div.className = 'lane-label';
+  div.style.height = LANE_H + 'px';
+  div.innerHTML = `<div class="name" style="color:${l.color}">${l.name}</div><div class="desc">${l.desc}</div>`;
+  rail.appendChild(div);
+});
+
+// Generate all phantoms
+const allPhantoms = [];
+LANES.forEach((l, i) => allPhantoms.push(...genPhantoms(l.id, i)));
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Era backgrounds
+  // Knowledge: 0-3, Reasoning: 4-11, Agency: 12-15
+  ctx.fillStyle = '#FAFAFA';
+  ctx.fillRect(0, 0, qx(3.5), H);
+  ctx.fillStyle = '#FAFAFA';
+  ctx.fillRect(qx(11.5), 0, W - qx(11.5), H);
+
+  // Era dividers
+  ctx.setLineDash([4,4]);
+  ctx.strokeStyle = '#E4E4E7'; ctx.lineWidth = 1;
+  [3.5, 11.5].forEach(b => {
+    ctx.beginPath(); ctx.moveTo(qx(b),0); ctx.lineTo(qx(b),H); ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  // Lane separators
+  LANES.forEach((l, i) => {
+    if (i > 0) {
+      ctx.beginPath();
+      ctx.moveTo(0, i * LANE_H);
+      ctx.lineTo(W, i * LANE_H);
+      ctx.strokeStyle = '#E4E4E7'; ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+  });
+
+  // Draw phantom nodes (density cloud)
+  allPhantoms.forEach(p => {
+    const x = qx(p.q);
+    const baseY = p.lane * LANE_H + LANE_H / 2;
+    const y = baseY + p.yOff * (LANE_H * 0.4);
+    const lane = LANES[p.lane];
+    const qi = Math.min(Math.max(Math.round(p.q), 0), nQ-1);
+    const att = ATT[lane.id][qi];
+    const inFrontier = p.q >= 12;
+
+    ctx.beginPath();
+    ctx.arc(x, y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = lane.color;
+    // Stronger opacity, frontier fades
+    let alpha = 0.08 + att * 0.22;
+    if (inFrontier) alpha *= 0.4;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  // Draw real papers
+  PAPERS.forEach(p => {
+    const li = LANES.findIndex(l => l.id === p.lane);
+    const lane = LANES[li];
+    const x = qx(p.q);
+    const baseY = li * LANE_H + LANE_H / 2;
+    const att = ATT[p.lane][Math.min(p.q, nQ-1)];
+    const inFrontier = p.q >= 12;
+    // Size scales with attention
+    const baseR = p.size === 'lg' ? 7 : p.size === 'md' ? 5 : 3;
+    const r = baseR * (0.7 + att * 0.5);
+
+    // Opacity: attention + frontier fade
+    let alpha = 0.3 + att * 0.7;
+    if (inFrontier) alpha *= 0.5;
+
+    ctx.beginPath();
+    ctx.arc(x, baseY, r, 0, Math.PI * 2);
+    ctx.fillStyle = lane.color;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Label
+    const showLabel = p.size === 'lg' || (p.size === 'md' && att > 0.5);
+    if (showLabel) {
+      ctx.fillStyle = '#18181B';
+      ctx.globalAlpha = alpha * 0.9;
+      ctx.font = p.size === 'lg' ? '600 10px IBM Plex Sans' : '400 9px IBM Plex Sans';
+      ctx.fillText(p.label, x + r + 3, baseY + 3);
+    }
+    ctx.globalAlpha = 1;
+  });
+
+  // NOW line
+  const nowX = qx(9);
+  ctx.beginPath(); ctx.moveTo(nowX, 0); ctx.lineTo(nowX, H);
+  ctx.strokeStyle = '#FF4400'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = '#FF4400'; ctx.font = '600 8px IBM Plex Sans';
+  ctx.fillText('NOW', nowX + 3, 10);
+
+  // Era labels at bottom of each section
+  ctx.font = '500 9px IBM Plex Sans';
+  ctx.fillStyle = '#A1A1AA';
+  ctx.fillText('Knowledge Era', qx(1.5) - 30, H - 6);
+  ctx.fillText('Reasoning Era', qx(7.5) - 30, H - 6);
+  ctx.fillText('Agency Frontier', qx(13) - 30, H - 6);
+}
+
+draw();
+</script>
+</body>
+</html>

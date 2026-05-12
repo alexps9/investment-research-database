@@ -1,0 +1,108 @@
+graph TB
+    subgraph "Phase 1-2: MVP Foundation"
+        OA[OpenAlex API]
+        BE[FastAPI Backend]
+        NX[NetworkX Graph Engine]
+        FE[Next.js Frontend]
+        FG[ForceGraph Component]
+
+        OA -->|Fetch Papers| BE
+        BE -->|Build Network| NX
+        NX -->|Graph JSON| BE
+        FE -->|HTTP Request| BE
+        BE -->|Graph Data| FE
+        FE -->|Render| FG
+    end
+
+    subgraph "Phase 3: Docker Integration"
+        DC[Docker Compose]
+        BD[Backend Container]
+        FD[Frontend Container]
+
+        DC -->|Orchestrates| BD
+        DC -->|Orchestrates| FD
+        BD -.->|Internal Network| FD
+    end
+
+    subgraph "Phase 4.1: Performance Optimization"
+        LAYOUT[Server-side Layout Engine]
+        PRUNE[Graph Pruning Service]
+        CANVAS[Canvas Renderer]
+
+        NX -->|Positions| LAYOUT
+        NX -->|Filter Nodes| PRUNE
+        FG -->|Upgrade| CANVAS
+    end
+
+    subgraph "Phase 4.2: Interactive Filters & Details"
+        FILTER[FilterPanel Component]
+        DETAIL[DetailPanel Component]
+        FHOOK[useGraphFilters Hook]
+
+        FE -->|Add| FILTER
+        FE -->|Add| DETAIL
+        FILTER -->|State| FHOOK
+        FHOOK -->|Filtered Data| FG
+    end
+
+    subgraph "Phase 4.3: Caching Layer"
+        REDIS[(Redis Cache)]
+        CACHE[CacheService]
+
+        BE -->|Cache Get/Set| CACHE
+        CACHE -->|Store| REDIS
+        DC -->|Orchestrates| REDIS
+    end
+
+    subgraph "Phase 4.4: Export Capabilities"
+        EXPORT[ExportMenu Component]
+        PNG[PNG Exporter]
+        JSON[JSON Exporter]
+        SVG[SVG Exporter]
+
+        FE -->|Add| EXPORT
+        EXPORT -->|Generate| PNG
+        EXPORT -->|Generate| JSON
+        EXPORT -->|Generate| SVG
+        CANVAS -.->|Canvas Data| PNG
+        FG -.->|Graph Data| JSON
+    end
+
+    subgraph "Phase 4.5: Search Enhancement"
+        SUGGEST[/suggestions Endpoint]
+        AUTO[Autocomplete Component]
+
+        BE -->|Add| SUGGEST
+        FE -->|Add| AUTO
+        AUTO -->|Query| SUGGEST
+        SUGGEST -->|Cache| REDIS
+    end
+
+    subgraph "Phase 5+: Future Features (P2-P3)"
+        TS[Time-Series Analysis]
+        ML[Multi-Layer Network]
+        DM[Dark Mode Theme]
+        PDF[PDF Report Generator]
+
+        NX -.->|Evolution Data| TS
+        NX -.->|Multi-Partite Graph| ML
+        FE -.->|Theme Toggle| DM
+        BE -.->|Generate| PDF
+    end
+
+    %% Critical Path Connections
+    BE --> CACHE
+    CACHE --> REDIS
+    LAYOUT --> CANVAS
+    PRUNE --> CANVAS
+
+    %% Data Flow Annotations
+    classDef phase1 fill:#F5F5F5,stroke:#333333,color:#333333
+    classDef phase3 fill:#E0E0E0,stroke:#333333,color:#333333
+    classDef phase4 fill:#FF4400,stroke:#333333,color:#FFFFFF
+    classDef phase5 fill:#CCCCCC,stroke:#666666,color:#333333,stroke-dasharray: 5 5
+
+    class OA,BE,NX,FE,FG phase1
+    class DC,BD,FD phase3
+    class LAYOUT,PRUNE,CANVAS,FILTER,DETAIL,FHOOK,REDIS,CACHE,EXPORT,PNG,JSON,SVG,SUGGEST,AUTO phase4
+    class TS,ML,DM,PDF phase5
