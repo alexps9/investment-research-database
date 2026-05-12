@@ -19,7 +19,7 @@ interface Iteration {
 }
 interface MapData { lanes: Lane[]; rows: Row[]; papers: Paper[]; iterations: Iteration[] }
 
-const data: MapData = worldModelData as MapData
+const data = worldModelData as unknown as MapData
 
 // Application domain colors — 6 tracks, investor-first encoding
 const APPLICATION_COLORS: Record<string, string> = {
