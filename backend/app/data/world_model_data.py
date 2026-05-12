@@ -23,9 +23,9 @@ from app.models.evolution import (
 )
 
 LANES = [
+    LaneDef(id="rl_wm", title="强化学习驱动世界模型", subtitle="RL-Based WMs", color="#059669"),
     LaneDef(id="obs_gen", title="观测层生成式世界模型", subtitle="Observation-Level Generative", color="#2563EB"),
     LaneDef(id="latent_wm", title="潜空间世界模型", subtitle="Latent-Space WMs", color="#7C3AED"),
-    LaneDef(id="rl_wm", title="强化学习驱动世界模型", subtitle="RL-Based WMs", color="#059669"),
     LaneDef(id="obj_centric", title="对象中心世界模型", subtitle="Object-Centric WMs", color="#EA580C"),
 ]
 

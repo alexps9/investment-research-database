@@ -1,6 +1,12 @@
 {
   "lanes": [
     {
+      "id": "rl_wm",
+      "title": "强化学习驱动世界模型",
+      "subtitle": "RL-Based WMs",
+      "color": "#059669"
+    },
+    {
       "id": "obs_gen",
       "title": "观测层生成式世界模型",
       "subtitle": "Observation-Level Generative",
@@ -11,12 +17,6 @@
       "title": "潜空间世界模型",
       "subtitle": "Latent-Space WMs",
       "color": "#7C3AED"
-    },
-    {
-      "id": "rl_wm",
-      "title": "强化学习驱动世界模型",
-      "subtitle": "RL-Based WMs",
-      "color": "#059669"
     },
     {
       "id": "obj_centric",
