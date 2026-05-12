@@ -2,8 +2,6 @@
   "experimentalServices": {
     "frontend": {
       "entrypoint": "frontend",
-      "buildCommand": "cd frontend && npm run build",
-      "outputDirectory": "frontend/.next",
       "framework": "nextjs"
     },
     "backend": {
