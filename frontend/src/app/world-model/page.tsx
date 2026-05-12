@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import worldModelData from '@/data/world-model-data.json'
 import styles from '../evolution/page.module.css'
 
 interface Lane { id: string; title: string; subtitle: string; color: string }
@@ -17,6 +18,8 @@ interface Iteration {
   mutations: Record<string, Mutation>
 }
 interface MapData { lanes: Lane[]; rows: Row[]; papers: Paper[]; iterations: Iteration[] }
+
+const data: MapData = worldModelData as MapData
 
 // Application domain colors — 6 tracks, investor-first encoding
 const APPLICATION_COLORS: Record<string, string> = {
@@ -435,24 +438,12 @@ function IterationView({ iteration, papers, lanes, rows, onBack }: {
 // ─── Global View ────────────────────────────────────────────────
 
 export default function WorldModelPage() {
-  const [data, setData] = useState<MapData | null>(null)
-  const [error, setError] = useState<string | null>(null)
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
   const [selected, setSelected] = useState<Paper | null>(null)
   const [currentView, setCurrentView] = useState<{ type: 'global' } | { type: 'iteration'; id: string } | { type: 'topic'; laneId: string }>({ type: 'global' })
   const [hoveredTrack, setHoveredTrack] = useState<string | null>(null)
   const [highlightPlayer, setHighlightPlayer] = useState<string | null>(null)
   const [filterOpen, setFilterOpen] = useState(false)
-
-  useEffect(() => {
-    fetch('http://localhost:8000/api/evolution-map/world-model')
-      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
-      .then(setData)
-      .catch(e => setError(e.message))
-  }, [])
-
-  if (error) return <div className={styles.error}>API Error: {error}</div>
-  if (!data) return <div className={styles.loading}>Loading World Model evolution map...</div>
 
   if (currentView.type === 'topic') {
     return <TopicView laneId={currentView.laneId} papers={data.papers} lanes={data.lanes} rows={data.rows} onBack={() => setCurrentView({ type: 'global' })} />
