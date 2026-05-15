@@ -1,6 +1,37 @@
-# LLM Systems Evolution Map — 项目宪法
+#  Tech trajectory — 项目宪法
 
 > AI 技术演化地铁图。让研究者一眼看出"面对同一瓶颈，人们产生了哪些不同技术哲学，以及谁赢了"。
+
+---
+
+## 协作工作流（每次会话必读）
+
+### 进入会话时
+
+1. 先读`goal.md`了解我们在做什么； `.claude/docs/STATUS.md` — 了解当前阶段、待做事项、最近完成的工作；
+2. 用户给了会议纪要 → 处理流程：
+   - 按 `z-meetings/prompt.md` 提取 Tian 视角摘要 → 加在原始记录前面
+   - 存入 `z-meetings/YYYY-MM-DD-主题.md`
+   - 让用户 review 后：
+     - 方向性校准（赛道变更、taxonomy 调整）→ 更新 `goal.md`
+     - 具体任务 → 更新 `STATUS.md` 的 Action Items
+3. 用户给了论文综述/数据 → 提取论文信息 → **先列出结果让用户确认** → 再写入后端
+
+### 文档导航
+
+| 要找什么 | 去哪里 |
+|---------|--------|
+| 当前状态 / TODO | `.claude/docs/STATUS.md` |
+| 项目目标 + 赛道框架 | `.claude/docs/goal.md` |
+| 功能规格（含 backlog） | `.claude/docs/specs/` |
+| 设计规范（视觉编码/Era/视图） | `.claude/docs/design/` |
+| 论文知识库（综述/数据） | `.claude/docs/knowledge/` |
+| 会议记录 | `.claude/docs/z-meetings/` |
+| 变更日志 / 踩坑 | `.claude/docs/logs/` |
+| HTML 原型 | `.claude/docs/design/prototypes/` |
+| 归档（已完成/过时的 spec） | `specs/归档/`、`design/归档/` |
+
+---
 
 ## 技术栈（严禁偏离）
 
@@ -25,85 +56,30 @@ frontend/src/components/ React 组件
 .claude/docs/design/prototypes/  HTML 原型
 ```
 
-## 开发 SOP
+## 规则（按上下文自动加载）
 
-1. **Plan**: 新功能先产出 Spec 至 `.claude/docs/specs/`
-2. **Prototype**: 视觉类需求先出 HTML 原型到 `prototypes/`，截图确认效果
-3. **Code**: 遵循 TDD（Red → Green → Refactor）
-4. **Review**: 阶段完成更新 `.claude/progress/PROGRESS.md`
+位于 `.claude/rules/`，按 `paths:` frontmatter 条件加载：
 
-## 治理分级
+| 规则文件 | 生效范围 | 内容 |
+|---------|---------|------|
+| `visual-encoding.md` | frontend/、design/、specs/ | 颜色体系、节点编码、允许/禁止清单 |
+| `coding-standards.md` | backend/、frontend/ | 错误透明、零重复、无冗余注释 |
+| `spec-workflow.md` | specs/、logs/、backend/、frontend/、scripts/ | Spec→Code 流程、开发 SOP、Log 触发时机 |
 
-- **T0 (核心数据/API)**: Spec + 高覆盖率 + 审查
-- **T2 (UI 原型/脚本)**: 逻辑通顺 + 关键路径 review
+## 多终端协作规则
 
-## 视觉设计规范
+- **完成一个大需求后**，主动提醒用户 commit + push（防止其他终端覆盖）
+- **world-model-data.json 有 `_schema_version` 字段** — 如果读到的版本和当前 taxonomy 不匹配，先确认再改，不要直接覆盖
+- **改 taxonomy（lane/row 结构）前**，先检查 `world-model-data.json` 当前结构是否和 spec 一致，不一致说明被其他终端改过
+- **禁止在未 commit 的状态下大面积重写数据文件** — 先 commit 当前状态作为 checkpoint
 
-### Rams 原则正确解读
+## 收尾检查（每次实现后）
 
-核心是**每个视觉元素必须编码信息**，不是"尽量少视觉元素"。
-
-- 无功能的装饰 → 删除
-- 编码信息的视觉手段（blur 压力场、glow momentum、形状编码）→ 保留
-
-### 颜色体系
-
-| 用途 | 色值 |
-|------|------|
-| 背景 | #FFFFFF |
-| 面板背景 | #FAFAFA |
-| 文本 | #18181B / #3F3F46 / #71717A / #A1A1AA |
-| 边框 | #E4E4E7（仅 1px） |
-| NOW 线 | #FF4400 |
-| Paradigm 5色 | 灰蓝 #475569 / 蓝 #2563EB / 青绿 #0D9488 / 红 #DC2626 / 橙 #EA580C |
-| Lane 3色 | 蓝 #2563EB / 绿 #059669 / 橙 #EA580C |
-
-### 允许与禁止
-
-| ✅ 允许 | ❌ 禁止 |
-|---------|---------|
-| Gaussian blur 压力场（信息编码） | 装饰性渐变 |
-| box-shadow momentum 发光（信息编码） | 装饰性阴影 |
-| 5种几何形状编码 Layer | 自动布局 |
-| opacity 变化编码活跃度 | 超过 1px 的边框 |
-
-### 节点编码
-
-- **颜色** = Paradigm（5 色，世界观）
-- **形状** = Layer（circle/square/diamond/triangle/hexagon）
-- **大小** = Impact（log citations → sm/md/lg）
-- **连线** = 关系（实线 builds_on / 短虚线 competes / 长虚线 lineage）
-
-## 核心 Ontology（四层因果）
-
-```
-Era（时代背景）→ Bottleneck/Lane（问题压力）→ Paradigm（技术哲学）→ Paper（具体实现）
-```
-
-关键约束：Pressure Field 挂在 **Lane** 上，不是 Paradigm 上（Lane 是稳定 partition）。
-
-## 四个视图
-
-| 视图 | 核心问题 | 布局 |
-|------|---------|------|
-| Global | 为什么时代转向 | 地铁图 hierarchical swimlane |
-| Topic | 为什么路线分叉 | lineage tree |
-| Iteration | 为什么路线持续进化 | vertical mutation timeline |
-| Arena | 为什么有的路线赢了 | parallel race tracks |
-
-## 编码规范
-
-- 错误必须透明显示（禁止 silent failure / 空 fallback）
-- 零代码重复
-- 不加无用注释、不过度工程
-
-## 规则索引（按需读取）
-
-- 视觉编码: `.claude/docs/design/visual-encoding.md`
-- Era 框架: `.claude/docs/design/era-framework.md`
-- Global View spec: `.claude/docs/design/global-view-spec.md`
-- PRD v2: `.claude/docs/design/prd-v2.md`
-- 论文分类: `docs/paper-taxonomy.md`
+实现了 spec 里的功能 → 问自己：
+1. **有决策/踩坑？** → 写 `docs/logs/<topic>.md`（选了什么、放弃了什么、为什么）
+2. **改了已有功能？** → 回去更新对应 spec
+3. **STATUS.md 需要更新？** → 标完成 / 加新待做
+4. **大需求完成？** → 提醒用户 commit + push 保存
 
 ## 常用命令
 

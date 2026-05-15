@@ -66,44 +66,44 @@ PAPERS = [
     # ═══════════════════════════════════════════════════════════
 
     # Row: dreamer_series (主干)
-    EvolutionPaper(id="planet", title="PlaNet", year=2019, quarter=2, paradigm="rssm", layer="arch", lane="rl_wm", row="dreamer_series", path="trunk", size="lg"),
-    EvolutionPaper(id="dreamer_v1", title="Dreamer V1", year=2020, quarter=1, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_series", path="trunk", size="lg", builds_on=["planet"]),
-    EvolutionPaper(id="dreamer_v2", title="Dreamer V2", year=2021, quarter=1, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_series", path="trunk", size="lg", builds_on=["dreamer_v1"]),
-    EvolutionPaper(id="dreamer_v3", title="Dreamer V3", year=2025, quarter=1, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_series", path="trunk", size="lg", builds_on=["dreamer_v2"]),
+    EvolutionPaper(id="planet", title="PlaNet", year=2019, quarter=2, paradigm="rssm", layer="arch", lane="rl_wm", row="dreamer_series", path="trunk", size="lg", cited_by_count=367, institution_tier=1, venue_tier=2),
+    EvolutionPaper(id="dreamer_v1", title="Dreamer V1", year=2020, quarter=1, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_series", path="trunk", size="lg", builds_on=["planet"], cited_by_count=137, institution_tier=1, venue_tier=2),
+    EvolutionPaper(id="dreamer_v2", title="Dreamer V2", year=2021, quarter=1, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_series", path="trunk", size="lg", builds_on=["dreamer_v1"], cited_by_count=23, institution_tier=1, venue_tier=2),
+    EvolutionPaper(id="dreamer_v3", title="Dreamer V3", year=2025, quarter=1, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_series", path="trunk", size="lg", builds_on=["dreamer_v2"], cited_by_count=155, institution_tier=1, venue_tier=2),
 
     # Row: dreamer_variants
-    EvolutionPaper(id="dreamsmooth", title="DreamSmooth", year=2024, quarter=1, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_variants", path="trunk", size="sm", builds_on=["dreamer_v1"]),
+    EvolutionPaper(id="dreamsmooth", title="DreamSmooth", year=2024, quarter=1, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_variants", path="trunk", size="sm", builds_on=["dreamer_v1"], cited_by_count=1),
     EvolutionPaper(id="pigdreamer", title="PIGDreamer", year=2025, quarter=3, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_variants", path="trunk", size="sm", builds_on=["dreamer_v1"]),
-    EvolutionPaper(id="harmonydream", title="HarmonyDream", year=2024, quarter=2, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_variants", path="trunk", size="sm", builds_on=["dreamer_v1"]),
+    EvolutionPaper(id="harmonydream", title="HarmonyDream", year=2024, quarter=2, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_variants", path="trunk", size="sm", builds_on=["dreamer_v1"], cited_by_count=1),
     EvolutionPaper(id="dymodreamer", title="DyMoDreamer", year=2025, quarter=4, paradigm="imagination_rl", layer="arch", lane="rl_wm", row="dreamer_variants", path="trunk", size="sm", builds_on=["dreamer_v1"]),
 
     # Row: tdmpc_series
-    EvolutionPaper(id="tdmpc", title="TD-MPC", year=2022, quarter=2, paradigm="model_based_rl", layer="arch", lane="rl_wm", row="tdmpc_series", path="trunk", size="lg"),
-    EvolutionPaper(id="tdmpc2", title="TD-MPC2", year=2024, quarter=1, paradigm="model_based_rl", layer="arch", lane="rl_wm", row="tdmpc_series", path="trunk", size="lg", builds_on=["tdmpc"]),
-    EvolutionPaper(id="pwm", title="PWM", year=2025, quarter=1, paradigm="model_based_rl", layer="arch", lane="rl_wm", row="tdmpc_series", path="trunk", size="md", builds_on=["tdmpc2"]),
-    EvolutionPaper(id="iq_mpc", title="IQ-MPC", year=2025, quarter=2, paradigm="model_based_rl", layer="arch", lane="rl_wm", row="tdmpc_series", path="trunk", size="sm", builds_on=["tdmpc"]),
+    EvolutionPaper(id="tdmpc", title="TD-MPC", year=2022, quarter=2, paradigm="model_based_rl", layer="arch", lane="rl_wm", row="tdmpc_series", path="trunk", size="lg", cited_by_count=27, institution_tier=2, venue_tier=2),
+    EvolutionPaper(id="tdmpc2", title="TD-MPC2", year=2024, quarter=1, paradigm="model_based_rl", layer="arch", lane="rl_wm", row="tdmpc_series", path="trunk", size="lg", builds_on=["tdmpc"], cited_by_count=8, institution_tier=2, venue_tier=2),
+    EvolutionPaper(id="pwm", title="PWM", year=2025, quarter=1, paradigm="model_based_rl", layer="arch", lane="rl_wm", row="tdmpc_series", path="trunk", size="md", builds_on=["tdmpc2"], cited_by_count=2),
+    EvolutionPaper(id="iq_mpc", title="IQ-MPC", year=2025, quarter=2, paradigm="model_based_rl", layer="arch", lane="rl_wm", row="tdmpc_series", path="trunk", size="sm", builds_on=["tdmpc"], cited_by_count=1),
 
     # Row: hierarchical_wm
     EvolutionPaper(id="hieros", title="Hieros", year=2024, quarter=2, paradigm="hierarchical_rl", layer="arch", lane="rl_wm", row="hierarchical_wm", path="trunk", size="md", builds_on=["dreamer_v1"]),
     EvolutionPaper(id="thick", title="THICK", year=2024, quarter=1, paradigm="hierarchical_rl", layer="arch", lane="rl_wm", row="hierarchical_wm", path="trunk", size="md", builds_on=["dreamer_v2"]),
 
     # Row: multi_agent
-    EvolutionPaper(id="dima", title="DIMA", year=2025, quarter=4, paradigm="multi_agent_wm", layer="arch", lane="rl_wm", row="multi_agent", path="trunk", size="md"),
+    EvolutionPaper(id="dima", title="DIMA", year=2025, quarter=4, paradigm="multi_agent_wm", layer="arch", lane="rl_wm", row="multi_agent", path="trunk", size="md", cited_by_count=11),
     EvolutionPaper(id="coworld", title="CoWorld", year=2024, quarter=4, paradigm="collaborative_wm", layer="arch", lane="rl_wm", row="multi_agent", path="trunk", size="md", builds_on=["dreamer_v1"]),
 
     # Row: specialized_rl
-    EvolutionPaper(id="r2i", title="R2I", year=2024, quarter=1, paradigm="memory_augmented", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="md"),
-    EvolutionPaper(id="leq", title="LEQ", year=2025, quarter=1, paradigm="offline_model_based", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm"),
-    EvolutionPaper(id="pcm", title="PCM", year=2024, quarter=2, paradigm="generalization", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm"),
-    EvolutionPaper(id="waker", title="WAKER", year=2024, quarter=1, paradigm="curriculum_learning", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm"),
-    EvolutionPaper(id="rem", title="REM", year=2024, quarter=2, paradigm="tokenized_wm", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm"),
+    EvolutionPaper(id="r2i", title="R2I", year=2024, quarter=1, paradigm="memory_augmented", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="md", cited_by_count=6),
+    EvolutionPaper(id="leq", title="LEQ", year=2025, quarter=1, paradigm="offline_model_based", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm", cited_by_count=1),
+    EvolutionPaper(id="pcm", title="PCM", year=2024, quarter=2, paradigm="generalization", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm", cited_by_count=0),
+    EvolutionPaper(id="waker", title="WAKER", year=2024, quarter=1, paradigm="curriculum_learning", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm", cited_by_count=0),
+    EvolutionPaper(id="rem", title="REM", year=2024, quarter=2, paradigm="tokenized_wm", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm", cited_by_count=0),
     EvolutionPaper(id="crssm", title="cRSSM", year=2024, quarter=1, paradigm="zero_shot", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm", builds_on=["dreamer_v2"]),
-    EvolutionPaper(id="adaptive_wm", title="Adaptive WM", year=2024, quarter=4, paradigm="non_stationary", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm", builds_on=["dreamer_v1"]),
-    EvolutionPaper(id="mosim", title="MoSim", year=2025, quarter=2, paradigm="simulation", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="md"),
+    EvolutionPaper(id="adaptive_wm", title="Adaptive WM", year=2024, quarter=4, paradigm="non_stationary", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="sm", builds_on=["dreamer_v1"], cited_by_count=0),
+    EvolutionPaper(id="mosim", title="MoSim", year=2025, quarter=2, paradigm="simulation", layer="arch", lane="rl_wm", row="specialized_rl", path="trunk", size="md", cited_by_count=5),
 
     # Row: imagination_robotics (from former Lane E)
-    EvolutionPaper(id="robodreamer", title="RoboDreamer", year=2024, quarter=2, paradigm="robot_imagination", layer="arch", lane="rl_wm", row="imagination_robotics", path="trunk", size="md"),
-    EvolutionPaper(id="vipra", title="ViPRA", year=2025, quarter=4, paradigm="video_prediction_rl", layer="arch", lane="rl_wm", row="imagination_robotics", path="trunk", size="md"),
+    EvolutionPaper(id="robodreamer", title="RoboDreamer", year=2024, quarter=2, paradigm="robot_imagination", layer="arch", lane="rl_wm", row="imagination_robotics", path="trunk", size="md", cited_by_count=4, institution_tier=2, venue_tier=4),
+    EvolutionPaper(id="vipra", title="ViPRA", year=2025, quarter=4, paradigm="video_prediction_rl", layer="arch", lane="rl_wm", row="imagination_robotics", path="trunk", size="md", cited_by_count=10),
     EvolutionPaper(id="flowdreamer", title="FlowDreamer", year=2025, quarter=2, paradigm="flow_motion_wm", layer="arch", lane="rl_wm", row="imagination_robotics", path="trunk", size="sm"),
 
     # ═══════════════════════════════════════════════════════════
@@ -111,94 +111,94 @@ PAPERS = [
     # ═══════════════════════════════════════════════════════════
 
     # Row: language_wm
-    EvolutionPaper(id="gpt4", title="GPT-4", year=2023, quarter=1, paradigm="llm_world_model", layer="arch", lane="obs_gen", row="language_wm", path="trunk", size="lg"),
-    EvolutionPaper(id="llama3", title="LLaMA 3", year=2024, quarter=3, paradigm="llm_world_model", layer="arch", lane="obs_gen", row="language_wm", path="trunk", size="lg", builds_on=["gpt4"]),
+    EvolutionPaper(id="gpt4", title="GPT-4", year=2023, quarter=1, paradigm="llm_world_model", layer="arch", lane="obs_gen", row="language_wm", path="trunk", size="lg", cited_by_count=2318, institution_tier=1, venue_tier=5),
+    EvolutionPaper(id="llama3", title="LLaMA 3", year=2024, quarter=3, paradigm="llm_world_model", layer="arch", lane="obs_gen", row="language_wm", path="trunk", size="lg", builds_on=["gpt4"], cited_by_count=3879, institution_tier=1, venue_tier=4),
     EvolutionPaper(id="llmcwm", title="LLMCWM", year=2025, quarter=1, paradigm="causal_llm", layer="arch", lane="obs_gen", row="language_wm", path="trunk", size="md"),
-    EvolutionPaper(id="rap", title="RAP", year=2023, quarter=4, paradigm="reasoning_planning", layer="arch", lane="obs_gen", row="language_wm", path="trunk", size="md"),
-    EvolutionPaper(id="bytesized32", title="ByteSized32", year=2024, quarter=2, paradigm="text_simulator", layer="arch", lane="obs_gen", row="language_wm", path="trunk", size="sm"),
+    EvolutionPaper(id="rap", title="RAP", year=2023, quarter=4, paradigm="reasoning_planning", layer="arch", lane="obs_gen", row="language_wm", path="trunk", size="md", cited_by_count=211),
+    EvolutionPaper(id="bytesized32", title="ByteSized32", year=2024, quarter=2, paradigm="text_simulator", layer="arch", lane="obs_gen", row="language_wm", path="trunk", size="sm", cited_by_count=1),
 
     # Row: video_generation (主干)
-    EvolutionPaper(id="sora", title="Sora", year=2024, quarter=1, paradigm="diffusion_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="lg"),
-    EvolutionPaper(id="gen3", title="Gen-3 Alpha", year=2024, quarter=2, paradigm="diffusion_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="lg", builds_on=["sora"]),
-    EvolutionPaper(id="wan", title="Wan (Alibaba)", year=2025, quarter=1, paradigm="diffusion_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="lg", builds_on=["sora"]),
-    EvolutionPaper(id="cosmos", title="Cosmos (NVIDIA)", year=2025, quarter=1, paradigm="diffusion_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="lg", builds_on=["sora"]),
-    EvolutionPaper(id="t2v_turbo", title="T2V-Turbo", year=2024, quarter=4, paradigm="efficient_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="sm", builds_on=["sora"]),
-    EvolutionPaper(id="spmem", title="SPMEM", year=2025, quarter=4, paradigm="memory_augmented_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="md"),
-    EvolutionPaper(id="videocrafter2", title="VideoCrafter2", year=2024, quarter=2, paradigm="data_efficient_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="md"),
+    EvolutionPaper(id="sora", title="Sora", year=2024, quarter=1, paradigm="diffusion_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="lg", cited_by_count=101, institution_tier=1, venue_tier=5),
+    EvolutionPaper(id="gen3", title="Gen-3 Alpha", year=2024, quarter=2, paradigm="diffusion_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="lg", builds_on=["sora"], cited_by_count=5, institution_tier=3, venue_tier=5),
+    EvolutionPaper(id="wan", title="Wan (Alibaba, cited_by_count=7, institution_tier=3, venue_tier=4)", year=2025, quarter=1, paradigm="diffusion_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="lg", builds_on=["sora"]),
+    EvolutionPaper(id="cosmos", title="Cosmos (NVIDIA, cited_by_count=7, institution_tier=1, venue_tier=4)", year=2025, quarter=1, paradigm="diffusion_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="lg", builds_on=["sora"]),
+    EvolutionPaper(id="t2v_turbo", title="T2V-Turbo", year=2024, quarter=4, paradigm="efficient_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="sm", builds_on=["sora"], cited_by_count=1),
+    EvolutionPaper(id="spmem", title="SPMEM", year=2025, quarter=4, paradigm="memory_augmented_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="md", cited_by_count=1),
+    EvolutionPaper(id="videocrafter2", title="VideoCrafter2", year=2024, quarter=2, paradigm="data_efficient_video", layer="arch", lane="obs_gen", row="video_generation", path="trunk", size="md", cited_by_count=162),
 
     # Row: autoregressive_video
-    EvolutionPaper(id="emu3", title="Emu3", year=2024, quarter=3, paradigm="ar_video", layer="arch", lane="obs_gen", row="autoregressive_video", path="trunk", size="md"),
-    EvolutionPaper(id="llava", title="LLaVA", year=2023, quarter=4, paradigm="vlm", layer="arch", lane="obs_gen", row="autoregressive_video", path="trunk", size="md"),
+    EvolutionPaper(id="emu3", title="Emu3", year=2024, quarter=3, paradigm="ar_video", layer="arch", lane="obs_gen", row="autoregressive_video", path="trunk", size="md", cited_by_count=4),
+    EvolutionPaper(id="llava", title="LLaVA", year=2023, quarter=4, paradigm="vlm", layer="arch", lane="obs_gen", row="autoregressive_video", path="trunk", size="md", cited_by_count=1140, institution_tier=2, venue_tier=2),
 
     # Row: interactive_worlds
-    EvolutionPaper(id="genie2", title="Genie 2", year=2024, quarter=4, paradigm="interactive_video", layer="arch", lane="obs_gen", row="interactive_worlds", path="game", size="lg", builds_on=["sora"]),
-    EvolutionPaper(id="oasis", title="Oasis", year=2024, quarter=3, paradigm="game_world_model", layer="arch", lane="obs_gen", row="interactive_worlds", path="game", size="md"),
+    EvolutionPaper(id="genie2", title="Genie 2", year=2024, quarter=4, paradigm="interactive_video", layer="arch", lane="obs_gen", row="interactive_worlds", path="game", size="lg", builds_on=["sora"], institution_tier=1, venue_tier=5),
+    EvolutionPaper(id="oasis", title="Oasis", year=2024, quarter=3, paradigm="game_world_model", layer="arch", lane="obs_gen", row="interactive_worlds", path="game", size="md", cited_by_count=0),
     EvolutionPaper(id="teleworld", title="TeleWorld", year=2025, quarter=3, paradigm="long_video", layer="sys", lane="obs_gen", row="interactive_worlds", path="trunk", size="md", builds_on=["sora"]),
     EvolutionPaper(id="vid2world", title="Vid2World", year=2025, quarter=2, paradigm="video_to_world", layer="arch", lane="obs_gen", row="interactive_worlds", path="trunk", size="md", builds_on=["sora"]),
-    EvolutionPaper(id="cola_world", title="CoLA-World", year=2025, quarter=4, paradigm="latent_action", layer="arch", lane="obs_gen", row="interactive_worlds", path="trunk", size="sm"),
+    EvolutionPaper(id="cola_world", title="CoLA-World", year=2025, quarter=4, paradigm="latent_action", layer="arch", lane="obs_gen", row="interactive_worlds", path="trunk", size="sm", cited_by_count=3),
 
     # Row: 3d_4d_generation
-    EvolutionPaper(id="text2room", title="Text2Room", year=2023, quarter=3, paradigm="text_to_3d", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="md"),
-    EvolutionPaper(id="4dfy", title="4D-fy", year=2024, quarter=2, paradigm="text_to_4d", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="md", builds_on=["text2room"]),
-    EvolutionPaper(id="wonderjourney", title="WonderJourney", year=2024, quarter=2, paradigm="perpetual_3d", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="md"),
-    EvolutionPaper(id="scenescape", title="SceneScape", year=2023, quarter=4, paradigm="scene_generation", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="md"),
-    EvolutionPaper(id="wonderworld", title="WonderWorld", year=2025, quarter=2, paradigm="image_to_3d", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="lg", builds_on=["wonderjourney", "text2room"]),
+    EvolutionPaper(id="text2room", title="Text2Room", year=2023, quarter=3, paradigm="text_to_3d", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="md", cited_by_count=129, institution_tier=2, venue_tier=2),
+    EvolutionPaper(id="4dfy", title="4D-fy", year=2024, quarter=2, paradigm="text_to_4d", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="md", builds_on=["text2room"], cited_by_count=46),
+    EvolutionPaper(id="wonderjourney", title="WonderJourney", year=2024, quarter=2, paradigm="perpetual_3d", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="md", cited_by_count=28),
+    EvolutionPaper(id="scenescape", title="SceneScape", year=2023, quarter=4, paradigm="scene_generation", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="md", cited_by_count=24),
+    EvolutionPaper(id="wonderworld", title="WonderWorld", year=2025, quarter=2, paradigm="image_to_3d", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="lg", builds_on=["wonderjourney", "text2room"], cited_by_count=16),
     EvolutionPaper(id="lidar_crafter", title="LiDARCrafter", year=2025, quarter=2, paradigm="lidar_4d", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="md"),
-    EvolutionPaper(id="invisible_stitch", title="Invisible Stitch", year=2024, quarter=1, paradigm="depth_inpainting", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="sm"),
+    EvolutionPaper(id="invisible_stitch", title="Invisible Stitch", year=2024, quarter=1, paradigm="depth_inpainting", layer="arch", lane="obs_gen", row="3d_4d_generation", path="trunk", size="sm", cited_by_count=3),
 
     # Row: embodied_generation (from former Lane E)
-    EvolutionPaper(id="grounding_video", title="Grounding Video", year=2025, quarter=1, paradigm="video_to_action", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="md", builds_on=["sora"]),
-    EvolutionPaper(id="tesseract", title="TesserAct", year=2025, quarter=2, paradigm="4d_embodied", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="md", builds_on=["4dfy"]),
-    EvolutionPaper(id="orv", title="ORV", year=2025, quarter=2, paradigm="occupancy_4d", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="md", builds_on=["tesseract"]),
+    EvolutionPaper(id="grounding_video", title="Grounding Video", year=2025, quarter=1, paradigm="video_to_action", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="md", builds_on=["sora"], cited_by_count=8),
+    EvolutionPaper(id="tesseract", title="TesserAct", year=2025, quarter=2, paradigm="4d_embodied", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="md", builds_on=["4dfy"], cited_by_count=14, institution_tier=2, venue_tier=4),
+    EvolutionPaper(id="orv", title="ORV", year=2025, quarter=2, paradigm="occupancy_4d", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="md", builds_on=["tesseract"], cited_by_count=1),
     EvolutionPaper(id="wristworld", title="WristWorld", year=2025, quarter=4, paradigm="wrist_view_4d", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="sm", builds_on=["tesseract"]),
-    EvolutionPaper(id="irasim", title="IRASim", year=2025, quarter=4, paradigm="detailed_robot_wm", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="md"),
-    EvolutionPaper(id="wisa", title="WISA", year=2025, quarter=4, paradigm="physics_video_wm", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="md"),
+    EvolutionPaper(id="irasim", title="IRASim", year=2025, quarter=4, paradigm="detailed_robot_wm", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="md", cited_by_count=1),
+    EvolutionPaper(id="wisa", title="WISA", year=2025, quarter=4, paradigm="physics_video_wm", layer="arch", lane="obs_gen", row="embodied_generation", path="trunk", size="md", cited_by_count=9),
 
     # ═══════════════════════════════════════════════════════════
     # Lane C: Latent-Space World Models (10 papers)
     # ═══════════════════════════════════════════════════════════
 
     # Row: jepa_family
-    EvolutionPaper(id="i_jepa", title="I-JEPA", year=2023, quarter=2, paradigm="joint_embedding", layer="arch", lane="latent_wm", row="jepa_family", path="trunk", size="lg"),
-    EvolutionPaper(id="v_jepa", title="V-JEPA", year=2024, quarter=1, paradigm="joint_embedding_video", layer="arch", lane="latent_wm", row="jepa_family", path="trunk", size="lg", builds_on=["i_jepa"]),
-    EvolutionPaper(id="v_jepa_2", title="V-JEPA 2", year=2025, quarter=2, paradigm="jepa_planning", layer="arch", lane="latent_wm", row="jepa_family", path="trunk", size="lg", builds_on=["v_jepa"]),
+    EvolutionPaper(id="i_jepa", title="I-JEPA", year=2023, quarter=2, paradigm="joint_embedding", layer="arch", lane="latent_wm", row="jepa_family", path="trunk", size="lg", cited_by_count=272, institution_tier=1, venue_tier=2),
+    EvolutionPaper(id="v_jepa", title="V-JEPA", year=2024, quarter=1, paradigm="joint_embedding_video", layer="arch", lane="latent_wm", row="jepa_family", path="trunk", size="lg", builds_on=["i_jepa"], cited_by_count=56, institution_tier=1, venue_tier=4),
+    EvolutionPaper(id="v_jepa_2", title="V-JEPA 2", year=2025, quarter=2, paradigm="jepa_planning", layer="arch", lane="latent_wm", row="jepa_family", path="trunk", size="lg", builds_on=["v_jepa"], institution_tier=1, venue_tier=4),
     EvolutionPaper(id="seq_jepa", title="seq-JEPA", year=2025, quarter=4, paradigm="sequential_jepa", layer="arch", lane="latent_wm", row="jepa_family", path="trunk", size="md", builds_on=["v_jepa"]),
-    EvolutionPaper(id="mc_jepa", title="MC-JEPA", year=2023, quarter=3, paradigm="motion_content", layer="arch", lane="latent_wm", row="jepa_family", path="trunk", size="sm"),
+    EvolutionPaper(id="mc_jepa", title="MC-JEPA", year=2023, quarter=3, paradigm="motion_content", layer="arch", lane="latent_wm", row="jepa_family", path="trunk", size="sm", cited_by_count=5),
 
     # Row: dino_features
-    EvolutionPaper(id="dino_wm", title="DINO-WM", year=2025, quarter=3, paradigm="feature_world_model", layer="arch", lane="latent_wm", row="dino_features", path="trunk", size="md"),
-    EvolutionPaper(id="dino_world", title="DINO-World", year=2025, quarter=3, paradigm="dino_video_wm", layer="arch", lane="latent_wm", row="dino_features", path="trunk", size="md", builds_on=["dino_wm"]),
-    EvolutionPaper(id="dino_foresight", title="DINO-Foresight", year=2025, quarter=4, paradigm="dino_future_prediction", layer="arch", lane="latent_wm", row="dino_features", path="trunk", size="md", builds_on=["dino_wm"]),
+    EvolutionPaper(id="dino_wm", title="DINO-WM", year=2025, quarter=3, paradigm="feature_world_model", layer="arch", lane="latent_wm", row="dino_features", path="trunk", size="md", cited_by_count=5, institution_tier=1, venue_tier=4),
+    EvolutionPaper(id="dino_world", title="DINO-World", year=2025, quarter=3, paradigm="dino_video_wm", layer="arch", lane="latent_wm", row="dino_features", path="trunk", size="md", builds_on=["dino_wm"], cited_by_count=5),
+    EvolutionPaper(id="dino_foresight", title="DINO-Foresight", year=2025, quarter=4, paradigm="dino_future_prediction", layer="arch", lane="latent_wm", row="dino_features", path="trunk", size="md", builds_on=["dino_wm"], cited_by_count=1),
 
     # Row: structured_latent
-    EvolutionPaper(id="world_models_group_latents", title="WM Group Latents", year=2025, quarter=2, paradigm="group_structure", layer="arch", lane="latent_wm", row="structured_latent", path="trunk", size="md"),
-    EvolutionPaper(id="lwm", title="LWM", year=2025, quarter=1, paradigm="long_context_wm", layer="arch", lane="latent_wm", row="structured_latent", path="trunk", size="md"),
+    EvolutionPaper(id="world_models_group_latents", title="WM Group Latents", year=2025, quarter=2, paradigm="group_structure", layer="arch", lane="latent_wm", row="structured_latent", path="trunk", size="md", cited_by_count=15),
+    EvolutionPaper(id="lwm", title="LWM", year=2025, quarter=1, paradigm="long_context_wm", layer="arch", lane="latent_wm", row="structured_latent", path="trunk", size="md", cited_by_count=17),
 
     # ═══════════════════════════════════════════════════════════
     # Lane D: Object-Centric World Models (14 papers)
     # ═══════════════════════════════════════════════════════════
 
     # Row: slot_attention
-    EvolutionPaper(id="slot_attention", title="Slot Attention", year=2020, quarter=3, paradigm="object_discovery", layer="arch", lane="obj_centric", row="slot_attention", path="trunk", size="lg"),
-    EvolutionPaper(id="slotformer", title="SlotFormer", year=2023, quarter=1, paradigm="object_dynamics", layer="arch", lane="obj_centric", row="slot_attention", path="trunk", size="md", builds_on=["slot_attention"]),
+    EvolutionPaper(id="slot_attention", title="Slot Attention", year=2020, quarter=3, paradigm="object_discovery", layer="arch", lane="obj_centric", row="slot_attention", path="trunk", size="lg", cited_by_count=218, institution_tier=1, venue_tier=2),
+    EvolutionPaper(id="slotformer", title="SlotFormer", year=2023, quarter=1, paradigm="object_dynamics", layer="arch", lane="obj_centric", row="slot_attention", path="trunk", size="md", builds_on=["slot_attention"], cited_by_count=10),
     EvolutionPaper(id="lslotformer", title="LSlotFormer", year=2025, quarter=1, paradigm="language_object_wm", layer="arch", lane="obj_centric", row="slot_attention", path="trunk", size="md", builds_on=["slotformer"]),
-    EvolutionPaper(id="mead", title="MEAD", year=2025, quarter=1, paradigm="exploration_object", layer="arch", lane="obj_centric", row="slot_attention", path="trunk", size="md", builds_on=["slotformer"]),
+    EvolutionPaper(id="mead", title="MEAD", year=2025, quarter=1, paradigm="exploration_object", layer="arch", lane="obj_centric", row="slot_attention", path="trunk", size="md", builds_on=["slotformer"], cited_by_count=44),
 
     # Row: structured_dynamics
-    EvolutionPaper(id="dyn_o", title="Dyn-O", year=2025, quarter=4, paradigm="structured_object_wm", layer="arch", lane="obj_centric", row="structured_dynamics", path="trunk", size="md", builds_on=["slotformer"]),
-    EvolutionPaper(id="g_swm", title="G-SWM", year=2020, quarter=3, paradigm="generative_object", layer="arch", lane="obj_centric", row="structured_dynamics", path="trunk", size="sm"),
-    EvolutionPaper(id="carformer", title="CarFormer", year=2024, quarter=3, paradigm="object_centric_driving", layer="arch", lane="obj_centric", row="structured_dynamics", path="driving", size="md", builds_on=["slotformer"]),
-    EvolutionPaper(id="focus", title="FOCUS", year=2025, quarter=1, paradigm="robot_object_wm", layer="arch", lane="obj_centric", row="structured_dynamics", path="trunk", size="sm", builds_on=["slot_attention"]),
+    EvolutionPaper(id="dyn_o", title="Dyn-O", year=2025, quarter=4, paradigm="structured_object_wm", layer="arch", lane="obj_centric", row="structured_dynamics", path="trunk", size="md", builds_on=["slotformer"], cited_by_count=13),
+    EvolutionPaper(id="g_swm", title="G-SWM", year=2020, quarter=3, paradigm="generative_object", layer="arch", lane="obj_centric", row="structured_dynamics", path="trunk", size="sm", cited_by_count=9),
+    EvolutionPaper(id="carformer", title="CarFormer", year=2024, quarter=3, paradigm="object_centric_driving", layer="arch", lane="obj_centric", row="structured_dynamics", path="driving", size="md", builds_on=["slotformer"], cited_by_count=4),
+    EvolutionPaper(id="focus", title="FOCUS", year=2025, quarter=1, paradigm="robot_object_wm", layer="arch", lane="obj_centric", row="structured_dynamics", path="trunk", size="sm", builds_on=["slot_attention"], cited_by_count=0),
 
     # Row: ocrl
     EvolutionPaper(id="fioc_wm", title="FIOC-WM", year=2025, quarter=1, paradigm="interactive_object_rl", layer="arch", lane="obj_centric", row="ocrl", path="trunk", size="sm", builds_on=["slotformer"]),
-    EvolutionPaper(id="objects_matter", title="Objects Matter", year=2025, quarter=1, paradigm="object_rl_benefits", layer="arch", lane="obj_centric", row="ocrl", path="trunk", size="sm"),
-    EvolutionPaper(id="owm_meets_policy", title="OWM Meets Policy", year=2025, quarter=4, paradigm="object_policy", layer="arch", lane="obj_centric", row="ocrl", path="trunk", size="sm", builds_on=["slotformer"]),
-    EvolutionPaper(id="oc_latent_action", title="OC Latent Action", year=2025, quarter=1, paradigm="object_latent_actions", layer="arch", lane="obj_centric", row="ocrl", path="trunk", size="sm"),
+    EvolutionPaper(id="objects_matter", title="Objects Matter", year=2025, quarter=1, paradigm="object_rl_benefits", layer="arch", lane="obj_centric", row="ocrl", path="trunk", size="sm", cited_by_count=120),
+    EvolutionPaper(id="owm_meets_policy", title="OWM Meets Policy", year=2025, quarter=4, paradigm="object_policy", layer="arch", lane="obj_centric", row="ocrl", path="trunk", size="sm", builds_on=["slotformer"], cited_by_count=91),
+    EvolutionPaper(id="oc_latent_action", title="OC Latent Action", year=2025, quarter=1, paradigm="object_latent_actions", layer="arch", lane="obj_centric", row="ocrl", path="trunk", size="sm", cited_by_count=0),
 
     # Row: causal_compositional
-    EvolutionPaper(id="compositional_ocl", title="Compositional OCL", year=2024, quarter=1, paradigm="causal_object", layer="arch", lane="obj_centric", row="causal_compositional", path="trunk", size="sm"),
-    EvolutionPaper(id="oc_repr_generalize", title="OC Repr Generalize", year=2025, quarter=1, paradigm="compositional_generalization", layer="arch", lane="obj_centric", row="causal_compositional", path="trunk", size="sm", builds_on=["slot_attention"]),
+    EvolutionPaper(id="compositional_ocl", title="Compositional OCL", year=2024, quarter=1, paradigm="causal_object", layer="arch", lane="obj_centric", row="causal_compositional", path="trunk", size="sm", cited_by_count=8),
+    EvolutionPaper(id="oc_repr_generalize", title="OC Repr Generalize", year=2025, quarter=1, paradigm="compositional_generalization", layer="arch", lane="obj_centric", row="causal_compositional", path="trunk", size="sm", builds_on=["slot_attention"], cited_by_count=10),
 
 ]
 

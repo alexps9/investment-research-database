@@ -10,6 +10,9 @@ interface Paper {
   id: string; title: string; year: number; quarter: number
   paradigm: string; layer: string; lane: string; row: string
   path: string; size: string; builds_on: string[]
+  impact_score?: number | null
+  is_rising?: boolean
+  is_weak_signal?: boolean
 }
 interface Mutation { summary: string; detail: string; bottleneck?: string; result?: string }
 interface Iteration {
@@ -21,57 +24,20 @@ interface MapData { lanes: Lane[]; rows: Row[]; papers: Paper[]; iterations: Ite
 
 const data = worldModelData as unknown as MapData
 
-// Application domain colors — 6 tracks, investor-first encoding
-const APPLICATION_COLORS: Record<string, string> = {
-  video_gen: '#2563EB',
-  autonomous_driving: '#EA580C',
-  robotics: '#059669',
-  spatial: '#7C3AED',
-  game_vr: '#DC2626',
-  drone: '#475569',
+// Player colors — max 8, rest is gray
+const PLAYER_COLORS: Record<string, string> = {
+  'DeepMind': '#4285F4',
+  'Meta': '#8B5CF6',
+  'OpenAI': '#10A37F',
+  'NVIDIA': '#76B900',
+  'Physical Intelligence': '#E04E39',
+  'UC Berkeley': '#FDB515',
+  'Wayve': '#6B21A8',
+  'Google Brain': '#4285F4',
 }
+const OTHER_COLOR = '#9CA3AF'
 
-// Map paper IDs to application domain (primary use case)
-const PAPER_APPLICATION: Record<string, string> = {
-  // Lane A: RL-Based — mostly robotics
-  planet: 'robotics', dreamer_v1: 'robotics', dreamer_v2: 'robotics', dreamer_v3: 'robotics',
-  dreamsmooth: 'robotics', pigdreamer: 'robotics', harmonydream: 'robotics', dymodreamer: 'robotics',
-  tdmpc: 'robotics', tdmpc2: 'robotics', pwm: 'robotics', iq_mpc: 'robotics',
-  hieros: 'robotics', thick: 'robotics',
-  dima: 'robotics', coworld: 'robotics',
-  r2i: 'robotics', leq: 'robotics', pcm: 'robotics', waker: 'robotics',
-  rem: 'robotics', crssm: 'robotics', adaptive_wm: 'robotics', mosim: 'robotics',
-  // Lane B: Observation-Level Generative
-  gpt4: 'video_gen', llama3: 'video_gen',
-  llmcwm: 'spatial', rap: 'spatial', bytesized32: 'game_vr',
-  sora: 'video_gen', gen3: 'video_gen', wan: 'video_gen', cosmos: 'video_gen',
-  t2v_turbo: 'video_gen', spmem: 'video_gen', videocrafter2: 'video_gen',
-  emu3: 'video_gen', llava: 'video_gen',
-  genie2: 'game_vr', oasis: 'game_vr',
-  teleworld: 'video_gen', vid2world: 'video_gen', cola_world: 'video_gen',
-  text2room: 'spatial', '4dfy': 'spatial', wonderjourney: 'spatial',
-  scenescape: 'spatial', wonderworld: 'spatial',
-  lidar_crafter: 'autonomous_driving', invisible_stitch: 'spatial',
-  // Lane C: Latent-Space
-  i_jepa: 'spatial', v_jepa: 'spatial', v_jepa_2: 'robotics',
-  seq_jepa: 'spatial', mc_jepa: 'spatial',
-  dino_wm: 'robotics', dino_world: 'robotics', dino_foresight: 'robotics',
-  world_models_group_latents: 'spatial', lwm: 'video_gen',
-  // Lane D: Object-Centric
-  slot_attention: 'spatial', slotformer: 'spatial',
-  lslotformer: 'robotics', mead: 'robotics',
-  dyn_o: 'spatial', g_swm: 'spatial',
-  carformer: 'autonomous_driving', focus: 'robotics',
-  fioc_wm: 'robotics', objects_matter: 'robotics',
-  owm_meets_policy: 'robotics', oc_latent_action: 'robotics',
-  compositional_ocl: 'spatial', oc_repr_generalize: 'spatial',
-  // Former Lane E → redistributed to A & B
-  robodreamer: 'robotics', vipra: 'robotics', flowdreamer: 'robotics',
-  grounding_video: 'robotics', tesseract: 'robotics', orv: 'robotics',
-  wristworld: 'robotics', irasim: 'robotics', wisa: 'robotics',
-}
-
-// Map paper IDs to player/org (used for labels and filter)
+// Map paper IDs to player/org
 const PAPER_PLAYER: Record<string, string> = {
   planet: 'DeepMind', dreamer_v1: 'DeepMind', dreamer_v2: 'DeepMind', dreamer_v3: 'DeepMind',
   dreamsmooth: 'DeepMind', pigdreamer: 'DeepMind', harmonydream: 'DeepMind', dymodreamer: 'DeepMind',
@@ -83,18 +49,59 @@ const PAPER_PLAYER: Record<string, string> = {
   tdmpc: 'UC Berkeley', tdmpc2: 'UC Berkeley', pwm: 'UC Berkeley',
   slot_attention: 'Google Brain', slotformer: 'NUS',
   tesseract: 'MIT', llava: 'UW-Madison',
+  rt2: 'DeepMind', octo: 'UC Berkeley',
+  diffusion_policy: 'Columbia', pi0: 'Physical Intelligence',
+  gaia1: 'Wayve', drivevla: 'Wayve', uniworld: 'Wayve',
+  diffuser: 'UC Berkeley', decision_diffuser: 'UC Berkeley',
+  drive_wm: 'NVIDIA', vista: 'NVIDIA',
+  genie_envisioner: 'DeepMind', gamenngen: 'DeepMind',
+  copilot4d: 'NVIDIA',
 }
 
 function getNodeColor(paperId: string): string {
-  const app = PAPER_APPLICATION[paperId]
-  if (app) return APPLICATION_COLORS[app]
-  return '#6B7280'
+  const player = PAPER_PLAYER[paperId]
+  if (player && PLAYER_COLORS[player]) return PLAYER_COLORS[player]
+  return OTHER_COLOR
 }
 
 function getPlayerLabel(paperId: string): string {
   return PAPER_PLAYER[paperId] || ''
 }
 
+// Track (赛道/application domain) — for filtering
+const TRACKS = ['Multimodal Video', 'Autonomous Driving', 'Embodied Robotics', 'Spatial Intelligence', '3D Games/VR'] as const
+const PAPER_TRACK: Record<string, string> = {
+  sora: 'Multimodal Video', gen3: 'Multimodal Video', wan: 'Multimodal Video', cosmos: 'Multimodal Video',
+  emu3: 'Multimodal Video', lwm: 'Multimodal Video', teleworld: 'Multimodal Video',
+  ivideogpt: 'Multimodal Video', genie_envisioner: 'Multimodal Video',
+  gaia1: 'Autonomous Driving', drivevla: 'Autonomous Driving', uniworld: 'Autonomous Driving',
+  drive_wm: 'Autonomous Driving', vista: 'Autonomous Driving', copilot4d: 'Autonomous Driving',
+  think2drive: 'Autonomous Driving', x_mobility: 'Autonomous Driving',
+  rt2: 'Embodied Robotics', octo: 'Embodied Robotics', pi0: 'Embodied Robotics',
+  diffusion_policy: 'Embodied Robotics', tesseract: 'Embodied Robotics',
+  planet: 'Embodied Robotics', dreamer_v1: 'Embodied Robotics', dreamer_v2: 'Embodied Robotics', dreamer_v3: 'Embodied Robotics',
+  tdmpc: 'Embodied Robotics', tdmpc2: 'Embodied Robotics', pwm: 'Embodied Robotics',
+  robodreamer: 'Embodied Robotics', flowdreamer: 'Embodied Robotics',
+  diffuser: 'Embodied Robotics', decision_diffuser: 'Embodied Robotics', pivot_r: 'Embodied Robotics',
+  navmorph: 'Embodied Robotics',
+  i_jepa: 'Spatial Intelligence', v_jepa: 'Spatial Intelligence', v_jepa_2: 'Spatial Intelligence',
+  seq_jepa: 'Spatial Intelligence', mc_jepa: 'Spatial Intelligence',
+  dino_wm: 'Spatial Intelligence', dino_world: 'Spatial Intelligence', dino_foresight: 'Spatial Intelligence',
+  text2room: 'Spatial Intelligence', wonderworld: 'Spatial Intelligence', falconwing: 'Spatial Intelligence',
+  slot_attention: 'Spatial Intelligence', slotformer: 'Spatial Intelligence',
+  genie2: '3D Games/VR', oasis: '3D Games/VR', gamenngen: '3D Games/VR',
+}
+
+const PATH_LABELS: Record<string, string> = {
+  'diffusion_video:trunk': 'Sora / Wan',
+  'diffusion_video:embodied': 'Embodied Sim',
+  'diffusion_video:game': 'Interactive',
+  'rssm_based:trunk': 'Dreamer',
+  'rssm_based:robotics': 'Robotics',
+  'rssm_based:extensions': 'Extensions',
+  'slot_based:trunk': 'SlotFormer',
+  'slot_based:applications': 'Applications',
+}
 
 const LAYER_SHAPES: Record<string, string> = {
   arch: 'circle', sys: 'square', infer: 'diamond', train: 'triangle', memory: 'hexagon',
@@ -102,20 +109,36 @@ const LAYER_SHAPES: Record<string, string> = {
 
 const START_YEAR = 2020
 const END_YEAR = 2027
-const TOTAL_QUARTERS = (END_YEAR - START_YEAR) * 4
+const NUM_YEARS = END_YEAR - START_YEAR
+
+function getNodeRadius(paper: Paper): number {
+  const MIN_R = 4, MAX_R = 16
+  if (paper.impact_score != null) {
+    return MIN_R + (MAX_R - MIN_R) * Math.pow(paper.impact_score / 100, 0.6)
+  }
+  return paper.size === 'lg' ? 10 : paper.size === 'md' ? 7 : 5
+}
+
+function yearRange(): number[] {
+  const years: number[] = []
+  for (let y = START_YEAR; y < END_YEAR; y++) years.push(y)
+  return years
+}
+
+function qToXDynamic(year: number, quarter: number, yearWidths: number[]): number {
+  const yearIdx = year - START_YEAR
+  let x = 0
+  for (let i = 0; i < Math.min(yearIdx, NUM_YEARS); i++) x += yearWidths[i]
+  if (yearIdx >= 0 && yearIdx < NUM_YEARS) {
+    x += yearWidths[yearIdx] * ((quarter - 1) / 4)
+  }
+  return x
+}
+
+const DEFAULT_YEAR_WIDTHS = new Array(NUM_YEARS).fill(100 / NUM_YEARS)
 
 function qToX(year: number, quarter: number): number {
-  return ((year - START_YEAR) * 4 + (quarter - 1)) / TOTAL_QUARTERS * 100
-}
-
-function getNodeSize(size: string): number {
-  return size === 'lg' ? 10 : size === 'md' ? 7 : 5
-}
-
-function yearRange(): string[] {
-  const years: string[] = []
-  for (let y = START_YEAR; y < END_YEAR; y++) years.push(String(y))
-  return years
+  return qToXDynamic(year, quarter, DEFAULT_YEAR_WIDTHS)
 }
 
 // ─── Topic View (Lineage) ───────────────────────────────────────
@@ -188,36 +211,43 @@ function TopicView({ laneId, papers, lanes, rows, onBack }: {
   function renderNode(paper: Paper) {
     const p = pos(paper.id)
     if (!p) return null
-    const sz = getNodeSize(paper.size)
+    const sz = getNodeRadius(paper)
     const color = getNodeColor(paper.id)
     const isActive = hovered === paper.id
     const r = sz * (isActive ? 1.3 : 1)
     const fillOpacity = isActive ? 0.8 : 0.5
 
+    const sw = isActive ? 2 : 1.5
+    const dash = paper.is_weak_signal ? "3,2" : undefined
     let shapeEl: React.ReactNode
     const shape = LAYER_SHAPES[paper.layer] || 'circle'
     if (shape === 'circle') {
-      shapeEl = <circle cx={p.x} cy={p.y} r={r} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={isActive ? 2 : 1.5} />
+      shapeEl = <circle cx={p.x} cy={p.y} r={r} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
     } else if (shape === 'square') {
-      shapeEl = <rect x={p.x - r} y={p.y - r} width={r * 2} height={r * 2} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={isActive ? 2 : 1.5} />
+      shapeEl = <rect x={p.x - r} y={p.y - r} width={r * 2} height={r * 2} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
     } else if (shape === 'diamond') {
-      shapeEl = <rect x={p.x - r * 0.8} y={p.y - r * 0.8} width={r * 1.6} height={r * 1.6} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={isActive ? 2 : 1.5} transform={`rotate(45 ${p.x} ${p.y})`} />
+      shapeEl = <rect x={p.x - r * 0.8} y={p.y - r * 0.8} width={r * 1.6} height={r * 1.6} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} transform={`rotate(45 ${p.x} ${p.y})`} />
     } else if (shape === 'triangle') {
       const pts = `${p.x},${p.y - r} ${p.x - r},${p.y + r} ${p.x + r},${p.y + r}`
-      shapeEl = <polygon points={pts} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={isActive ? 2 : 1.5} />
+      shapeEl = <polygon points={pts} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
     } else {
       const a = r
       const pts = [0,1,2,3,4,5].map(i => {
         const ang = Math.PI / 6 + i * Math.PI / 3
         return `${p.x + a * Math.cos(ang)},${p.y + a * Math.sin(ang)}`
       }).join(' ')
-      shapeEl = <polygon points={pts} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={isActive ? 2 : 1.5} />
+      shapeEl = <polygon points={pts} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
     }
+
+    const glowEl = paper.is_rising ? (
+      <circle cx={p.x} cy={p.y} r={r + 4} fill="none" stroke={color} strokeWidth={2} opacity={0.3} filter="url(#rising-glow)" />
+    ) : null
 
     return (
       <g key={paper.id} style={{ cursor: 'pointer' }}
         onMouseEnter={() => setHovered(paper.id)}
         onMouseLeave={() => setHovered(null)}>
+        {glowEl}
         {shapeEl}
         <text x={p.x} y={p.y + r + 12} textAnchor="middle" fontSize="9" fill="#52525b" fontFamily="IBM Plex Sans">
           {paper.title}
@@ -321,6 +351,10 @@ function TopicView({ laneId, papers, lanes, rows, onBack }: {
             <marker id="topic-arrow" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
               <polygon points="0 0,6 2.5,0 5" fill="#a1a1aa" fillOpacity="0.6" />
             </marker>
+            <filter id="rising-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
           </defs>
         </svg>
       </div>
@@ -390,7 +424,7 @@ function IterationView({ iteration, papers, lanes, rows, onBack }: {
           {iterPapers.map(paper => {
             const x = qToX(paper.year, paper.quarter)
             const color = getNodeColor(paper.id)
-            const sz = getNodeSize(paper.size) * 1.5
+            const sz = getNodeRadius(paper) * 1.5
             return (
               <div key={paper.id} className={styles.iterNode} style={{ left: `${x}%` }}>
                 <div className={styles.nodeDot} style={{
@@ -438,12 +472,45 @@ function IterationView({ iteration, papers, lanes, rows, onBack }: {
 // ─── Global View ────────────────────────────────────────────────
 
 export default function WorldModelPage() {
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set(data.rows.map(r => r.id)))
   const [selected, setSelected] = useState<Paper | null>(null)
   const [currentView, setCurrentView] = useState<{ type: 'global' } | { type: 'iteration'; id: string } | { type: 'topic'; laneId: string }>({ type: 'global' })
   const [hoveredTrack, setHoveredTrack] = useState<string | null>(null)
-  const [highlightPlayer, setHighlightPlayer] = useState<string | null>(null)
+  const [highlightTrack, setHighlightTrack] = useState<string | null>(null)
   const [filterOpen, setFilterOpen] = useState(false)
+  const [yearWidths, setYearWidths] = useState<number[]>(DEFAULT_YEAR_WIDTHS)
+  const [dragging, setDragging] = useState<{ idx: number; startX: number; startWidths: number[] } | null>(null)
+  const canvasRef = { current: null as HTMLDivElement | null }
+
+  const toX = (year: number, quarter: number) => qToXDynamic(year, quarter, yearWidths)
+
+  const handleDividerDown = (e: React.MouseEvent, idx: number) => {
+    e.preventDefault()
+    setDragging({ idx, startX: e.clientX, startWidths: [...yearWidths] })
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!dragging || !canvasRef.current) return
+    const canvasW = canvasRef.current.getBoundingClientRect().width
+    const dx = e.clientX - dragging.startX
+    const dPct = (dx / canvasW) * 100
+    const sw = dragging.startWidths
+    const idx = dragging.idx
+    const leftSum = sw.slice(0, idx + 1).reduce((a, b) => a + b, 0)
+    const rightSum = sw.slice(idx + 1).reduce((a, b) => a + b, 0)
+    const newLeftSum = leftSum + dPct
+    const newRightSum = rightSum - dPct
+    const minPerYear = 2
+    const leftCount = idx + 1
+    const rightCount = NUM_YEARS - leftCount
+    if (newLeftSum < minPerYear * leftCount || newRightSum < minPerYear * rightCount) return
+    const leftScale = newLeftSum / leftSum
+    const rightScale = newRightSum / rightSum
+    const newWidths = sw.map((w, i) => i <= idx ? w * leftScale : w * rightScale)
+    setYearWidths(newWidths)
+  }
+
+  const handleMouseUp = () => { setDragging(null) }
 
   if (currentView.type === 'topic') {
     return <TopicView laneId={currentView.laneId} papers={data.papers} lanes={data.lanes} rows={data.rows} onBack={() => setCurrentView({ type: 'global' })} />
@@ -499,7 +566,7 @@ export default function WorldModelPage() {
   for (const paper of data.papers) {
     const rl = rowLayouts[paper.row]
     if (!rl) continue
-    const x = qToX(paper.year, paper.quarter)
+    const x = toX(paper.year, paper.quarter)
     const isExpanded = expandedRows.has(paper.row)
     let y: number
     if (isExpanded) {
@@ -519,16 +586,20 @@ export default function WorldModelPage() {
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>World Model Evolution Map</h1>
-          <p className={styles.subtitle}>颜色 = 赛道 · 位置 = 技术范式 × 时间 · 点击节点查看详情</p>
+          <p className={styles.subtitle}>位置 = 建模方式(Lane) × 时间 · 点击节点查看详情</p>
         </div>
         <div className={styles.controls}>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginRight: 16 }}>
-            {Object.entries(APPLICATION_COLORS).map(([id, color]) => (
-              <span key={id} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, fontFamily: 'IBM Plex Sans', color: '#3f3f46' }}>
-                <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: color, display: 'inline-block' }} />
-                {{video_gen:'视频生成',autonomous_driving:'自动驾驶',robotics:'机器人',spatial:'空间智能',game_vr:'游戏/VR',drone:'无人机'}[id]}
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginRight: 16, flexWrap: 'wrap' }}>
+            {Object.entries(PLAYER_COLORS).filter(([k]) => k !== 'Google Brain').map(([name, color]) => (
+              <span key={name} style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 10, fontFamily: 'IBM Plex Sans', color: '#3f3f46' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: color, display: 'inline-block' }} />
+                {name}
               </span>
             ))}
+            <span style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 10, fontFamily: 'IBM Plex Sans', color: '#a1a1aa' }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: OTHER_COLOR, display: 'inline-block' }} />
+              Other
+            </span>
           </div>
           <button onClick={collapseAll} className={styles.btn}>全部折叠</button>
           <button onClick={expandAll} className={styles.btnPrimary}>全部展开</button>
@@ -550,28 +621,46 @@ export default function WorldModelPage() {
             ))}
           </div>
 
-          <div className={styles.canvas} style={{ height: totalHeight, minWidth: 1200 }}>
-            <div className={styles.timeline}>
-              {yearRange().map(y => (
-                <div key={y} className={styles.yearCol}>
+          <div
+            className={styles.canvas}
+            style={{ height: totalHeight, minWidth: 900, cursor: dragging ? 'col-resize' : undefined }}
+            ref={el => { canvasRef.current = el }}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
+            <div className={styles.timeline} style={{ display: 'flex' }}>
+              {yearRange().map((y, i) => (
+                <div key={y} className={styles.yearCol} style={{ width: `${yearWidths[i]}%`, flex: 'none', position: 'relative' }}>
                   <div className={styles.yearLabel}>{y}</div>
                   <div className={styles.quarters}>
                     {['Q1','Q2','Q3','Q4'].map(q => <div key={q} className={styles.qLabel}>{q}</div>)}
                   </div>
+                  {i < NUM_YEARS - 1 && (
+                    <div
+                      onMouseDown={(e) => handleDividerDown(e, i)}
+                      style={{
+                        position: 'absolute', right: -3, top: 0, width: 6, height: '100%',
+                        cursor: 'col-resize', zIndex: 30,
+                      }}
+                    >
+                      <div style={{ position: 'absolute', left: 2, top: 4, bottom: 4, width: 2, borderRadius: 1, background: dragging?.idx === i ? '#2563EB' : '#d4d4d8', transition: 'background 0.15s' }} />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
 
-            {/* Era labels */}
+            {/* Event anchors — 从数据倒推，不预设时代 */}
             <div className={styles.eraRow}>
-              <div className={styles.era} style={{ width: `${(3*4)/TOTAL_QUARTERS*100}%`, background: '#f8f8f8' }}>Era 1: 潜动力学 (2020–2023)</div>
-              <div className={styles.era} style={{ width: `${(2*4)/TOTAL_QUARTERS*100}%` }}>Era 2: 生成式仿真 (2024–2025)</div>
-              <div className={styles.era} style={{ width: `${(2*4)/TOTAL_QUARTERS*100}%`, background: '#fffbeb' }}>Era 3: 因果推理 (2026+)</div>
+              <div className={styles.era} style={{ width: `${yearWidths.slice(0, 4).reduce((a, b) => a + b, 0)}%`, background: '#f8f8f8' }}>Dreamer/PlaNet 主导期 (2019–2023)</div>
+              <div className={styles.era} style={{ width: `${yearWidths.slice(4, 6).reduce((a, b) => a + b, 0)}%` }}>Sora + VLA 爆发 (2024–2025)</div>
+              <div className={styles.era} style={{ width: `${yearWidths.slice(6).reduce((a, b) => a + b, 0)}%`, background: '#fffbeb' }}>产业化收敛 (2026+)</div>
             </div>
 
             {/* NOW line */}
-            <div className={styles.nowLine} style={{ left: `${qToX(2026, 2)}%`, top: TIMELINE_H }} />
-            <div className={styles.nowLabel} style={{ left: `${qToX(2026, 2)}%` }}>NOW</div>
+            <div className={styles.nowLine} style={{ left: `${toX(2026, 2)}%`, top: TIMELINE_H }} />
+            <div className={styles.nowLabel} style={{ left: `${toX(2026, 2)}%` }}>NOW</div>
 
             {data.rows.map(row => {
               const rl = rowLayouts[row.id]
@@ -590,6 +679,8 @@ export default function WorldModelPage() {
                     const iter = getIteration(row.id, path)
                     const trackKey = `${row.id}-${path}`
                     const isHovered = hoveredTrack === trackKey
+                    const multiPath = rl.paths.length > 1
+                    const pathLabel = multiPath ? PATH_LABELS[`${row.id}:${path}`] || path : ''
                     return (
                       <div
                         key={path}
@@ -599,6 +690,10 @@ export default function WorldModelPage() {
                         onMouseLeave={() => setHoveredTrack(null)}
                       >
                         <div className={styles.trackLine} />
+                        {pathLabel && <span style={{
+                          position: 'absolute', left: 4, top: '50%', transform: 'translateY(-50%)',
+                          fontSize: 9, color: '#a1a1aa', fontFamily: 'IBM Plex Sans', whiteSpace: 'nowrap',
+                        }}>{pathLabel}</span>}
                         {iter && isHovered && (
                           <button
                             className={styles.viewEvoBtn}
@@ -614,12 +709,12 @@ export default function WorldModelPage() {
                   {rowPapers.map(paper => {
                     const pos = paperPos[paper.id]
                     if (!pos) return null
-                    const sz = getNodeSize(paper.size)
+                    const sz = getNodeRadius(paper)
                     const color = getNodeColor(paper.id)
                     const isTrunk = paper.path === 'trunk'
                     const show = isExpanded || isTrunk
-                    const playerMatch = !highlightPlayer || PAPER_PLAYER[paper.id] === highlightPlayer
-                    const nodeOpacity = highlightPlayer ? (playerMatch ? 1 : 0.15) : (show ? 1 : 0.4)
+                    const trackMatch = !highlightTrack || PAPER_TRACK[paper.id] === highlightTrack
+                    const nodeOpacity = highlightTrack ? (trackMatch ? 1 : 0.15) : (show ? 1 : 0.4)
 
                     return (
                       <div
@@ -629,7 +724,7 @@ export default function WorldModelPage() {
                           left: `${pos.x}%`,
                           top: pos.y - rl.top - sz,
                           opacity: nodeOpacity,
-                          zIndex: playerMatch && highlightPlayer ? 20 : (isTrunk ? 10 : 5),
+                          zIndex: trackMatch && highlightTrack ? 20 : (isTrunk ? 10 : 5),
                           transition: 'opacity 0.2s',
                         }}
                         onClick={(e) => { e.stopPropagation(); setSelected(paper) }}
@@ -644,13 +739,15 @@ export default function WorldModelPage() {
                             borderRadius: LAYER_SHAPES[paper.layer] === 'circle' ? '50%' :
                               LAYER_SHAPES[paper.layer] === 'diamond' ? '2px' : '0',
                             transform: LAYER_SHAPES[paper.layer] === 'diamond' ? 'rotate(45deg) scale(0.85)' : undefined,
-                            boxShadow: playerMatch && highlightPlayer ? `0 0 8px ${color}` : undefined,
-                            borderWidth: playerMatch && highlightPlayer ? 2.5 : undefined,
+                            boxShadow: paper.is_rising ? `0 0 ${sz}px ${color}` :
+                              (trackMatch && highlightTrack ? `0 0 8px ${color}` : undefined),
+                            borderWidth: trackMatch && highlightTrack ? 2.5 : undefined,
+                            borderStyle: paper.is_weak_signal ? 'dashed' : undefined,
                           }}
                         />
-                        {show && (!highlightPlayer || playerMatch) && (
-                          <div className={styles.nodeLabel}>
-                            <div>{paper.title}{getPlayerLabel(paper.id) ? ` — ${getPlayerLabel(paper.id)}` : ''}</div>
+                        {show && (!highlightTrack || trackMatch) && (paper.impact_score == null ? paper.size !== 'sm' : paper.impact_score > 30) && (
+                          <div className={styles.nodeLabel} style={{ maxWidth: 90 }}>
+                            <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{paper.title}</div>
                             {isExpanded && <div className={styles.nodeDate}>{paper.year} Q{paper.quarter}</div>}
                           </div>
                         )}
@@ -663,47 +760,47 @@ export default function WorldModelPage() {
           </div>
         </div>
 
-        {/* Collapsible Player Filter — floats over canvas */}
+        {/* Collapsible Track Filter — floats over canvas */}
         <div style={{
           position: 'absolute', top: 80, right: 16, zIndex: 100,
           background: '#fff', borderRadius: 6, border: '1px solid #e4e4e7',
           fontFamily: 'IBM Plex Sans', transition: 'width 0.2s, opacity 0.2s',
-          width: filterOpen ? 140 : 'auto',
+          width: filterOpen ? 160 : 'auto',
           overflow: 'hidden',
         }}>
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             style={{
               display: 'flex', alignItems: 'center', gap: 4,
-              fontSize: 11, fontWeight: 600, color: highlightPlayer ? '#2563EB' : '#3f3f46',
+              fontSize: 11, fontWeight: 600, color: highlightTrack ? '#2563EB' : '#3f3f46',
               padding: '6px 10px', border: 'none', background: 'transparent',
               cursor: 'pointer', width: '100%', textAlign: 'left',
             }}
           >
-            {filterOpen ? '▾' : '▸'} Player {highlightPlayer ? `· ${highlightPlayer}` : ''}
+            {filterOpen ? '▾' : '▸'} Track {highlightTrack ? `· ${highlightTrack}` : ''}
           </button>
           {filterOpen && (
             <div style={{ padding: '0 6px 8px', display: 'flex', flexDirection: 'column', gap: 2 }}>
               <button
-                onClick={() => { setHighlightPlayer(null) }}
+                onClick={() => { setHighlightTrack(null) }}
                 style={{
                   fontSize: 11, textAlign: 'left', padding: '3px 6px',
                   border: 'none', borderRadius: 3, cursor: 'pointer',
-                  background: !highlightPlayer ? '#f4f4f5' : 'transparent',
-                  fontWeight: !highlightPlayer ? 700 : 400, color: '#3f3f46',
+                  background: !highlightTrack ? '#f4f4f5' : 'transparent',
+                  fontWeight: !highlightTrack ? 700 : 400, color: '#3f3f46',
                 }}
               >All</button>
-              {[...new Set(Object.values(PAPER_PLAYER))].sort().map(player => (
+              {TRACKS.map(track => (
                 <button
-                  key={player}
-                  onClick={() => setHighlightPlayer(highlightPlayer === player ? null : player)}
+                  key={track}
+                  onClick={() => setHighlightTrack(highlightTrack === track ? null : track)}
                   style={{
                     fontSize: 11, textAlign: 'left', padding: '3px 6px',
                     border: 'none', borderRadius: 3, cursor: 'pointer',
-                    background: highlightPlayer === player ? '#f4f4f5' : 'transparent',
-                    fontWeight: highlightPlayer === player ? 700 : 400, color: '#3f3f46',
+                    background: highlightTrack === track ? '#f4f4f5' : 'transparent',
+                    fontWeight: highlightTrack === track ? 700 : 400, color: '#3f3f46',
                   }}
-                >{player}</button>
+                >{track}</button>
               ))}
             </div>
           )}
@@ -716,7 +813,7 @@ export default function WorldModelPage() {
             <h2 className={styles.panelTitle}>{selected.title}</h2>
             {getPlayerLabel(selected.id) && <div style={{ fontSize: 11, color: '#71717a', marginBottom: 4 }}>{getPlayerLabel(selected.id)}</div>}
             <div className={styles.panelMeta}>{selected.year} Q{selected.quarter}</div>
-            <div className={styles.panelField}><span>Application</span><span>{{video_gen:'视频生成',autonomous_driving:'自动驾驶',robotics:'机器人',spatial:'空间智能',game_vr:'游戏/VR',drone:'无人机'}[PAPER_APPLICATION[selected.id]] || '—'}</span></div>
+            <div className={styles.panelField}><span>Lane</span><span>{{video_gen:'Video-Generative',latent_space:'Latent-Space',rl_based:'RL-Based',vla:'VLA'}[selected.lane] || '—'}</span></div>
             <div className={styles.panelField}><span>Paradigm</span><span>{selected.paradigm}</span></div>
             <div className={styles.panelField}><span>Layer</span><span>{selected.layer}</span></div>
             <div className={styles.panelField}><span>Path</span><span>{selected.path}</span></div>

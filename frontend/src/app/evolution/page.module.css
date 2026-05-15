@@ -7,13 +7,15 @@
 }
 
 .header {
-  height: 56px;
+  min-height: 56px;
   border-bottom: 1px solid #e4e4e7;
-  padding: 0 24px;
+  padding: 8px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 .title { font-size: 18px; font-weight: 700; color: #18181b; margin: 0; }
@@ -40,7 +42,7 @@
   width: 160px; min-width: 160px;
   background: #fafafa;
   border-right: 1px solid #e4e4e7;
-  position: sticky; left: 0; z-index: 20;
+  flex-shrink: 0;
 }
 
 .laneLabel {

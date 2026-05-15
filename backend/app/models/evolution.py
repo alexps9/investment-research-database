@@ -110,11 +110,17 @@ class EvolutionPaper(BaseModel):
     lane: str = Field(..., description="Top-level bottleneck lane ID")
     row: str = Field(..., description="Sub-row within lane")
     path: str = Field(..., description="Track within row (trunk or named fork)")
-    size: Size = Field(default="md", description="Impact: sm/md/lg based on citations")
+    size: Size = Field(default="md", description="Legacy sm/md/lg (fallback if no impact_score)")
     builds_on: List[str] = Field(default_factory=list)
     authors: List[str] = Field(default_factory=list)
     arxiv_id: Optional[str] = None
     cited_by_count: int = 0
+    venue_tier: Optional[int] = Field(default=None, description="1-5, T1=top oral, T5=tech report")
+    institution_tier: Optional[int] = Field(default=None, description="1-4, T1=top AI lab")
+    impact_score: Optional[float] = Field(default=None, description="0-100 continuous, computed")
+    impact_override: Optional[float] = Field(default=None, description="Manual override for impact_score")
+    is_rising: bool = False
+    is_weak_signal: bool = False
 
 
 class LaneDef(BaseModel):
