@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Dot Cloud 6 Schemes - World Model Map</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'IBM Plex Sans', sans-serif; background: #F5F5F5; padding: 40px; }
+h1 { font-size: 28px; font-weight: 700; color: #18181B; margin-bottom: 8px; }
+.subtitle { font-size: 14px; color: #71717A; margin-bottom: 40px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 60px; }
+.scheme { background: #FFFFFF; border: 1px solid #E4E4E7; padding: 24px; }
+.scheme-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.scheme-title { font-size: 18px; font-weight: 600; color: #18181B; }
+.scheme-tag { font-size: 11px; font-weight: 500; padding: 2px 8px; border: 1px solid #E4E4E7; color: #71717A; }
+.scheme-desc { font-size: 13px; color: #3F3F46; margin-bottom: 16px; line-height: 1.6; }
+.tradeoff { font-size: 12px; color: #71717A; border-top: 1px solid #E4E4E7; padding-top: 12px; margin-top: 12px; }
+.tradeoff strong { color: #18181B; }
+.canvas { width: 100%; height: 280px; background: #FAFAFA; border: 1px solid #E4E4E7; }
+.section-title { font-size: 22px; font-weight: 600; color: #18181B; margin-bottom: 24px; border-bottom: 1px solid #E4E4E7; padding-bottom: 12px; }
+.impl { background: #FFF; border: 1px solid #E4E4E7; padding: 32px; margin-bottom: 24px; }
+.impl h3 { font-size: 16px; font-weight: 600; color: #18181B; margin-bottom: 12px; }
+.impl p { font-size: 13px; color: #3F3F46; line-height: 1.7; margin-bottom: 12px; }
+.impl pre { background: #FAFAFA; border: 1px solid #E4E4E7; padding: 16px; font-size: 12px; line-height: 1.5; overflow-x: auto; margin-bottom: 16px; }
+.impl code { font-family: 'IBM Plex Mono', monospace; }
+.impl ul { font-size: 13px; color: #3F3F46; padding-left: 20px; margin-bottom: 12px; line-height: 1.8; }
+.flow-svg { width: 100%; height: 200px; background: #FAFAFA; border: 1px solid #E4E4E7; margin-bottom: 16px; }
+.impl .highlight { background: #FFF7ED; border-left: 3px solid #EA580C; padding: 12px 16px; font-size: 12px; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<h1>Dot Cloud 方案对比</h1>
+<p class="subtitle">6 种不同的"重要节点 + 背景论文"混合呈现方式 · 点击 canvas 可 hover 查看效果</p>
+<div class="grid" id="schemes"></div>
+<div id="implementation">
+<h2 class="section-title">实施计划</h2>
+
+<div class="impl">
+<h3>1. 数据架构变更</h3>
+<p>paper 新增 <code>role</code> 字段区分重要节点和背景论文：</p>
+<pre><code>// world-model-data.json paper schema
+{
+  "id": "sora",
+  "role": "foundation",  // "foundation" | "adaptation" | "background"
+  "lane": "video_gen",
+  "row": "diffusion_video",
+  "year": 2024, "quarter": 1,
+  "impact_score": 92,
+  // background papers 可省略 title 以外字段
+}
+</code></pre>
+<div class="highlight">
+  <strong>审查重点：</strong>role 的阈值——impact_score > 50 自动为 foundation？还是纯手动标注？建议：手动标注 foundation（~30篇），其余自动归为 background。
+</div>
+</div>
+
+<div class="impl">
+<h3>2. 渲染管线（推荐方案 A+B 混合）</h3>
+<p>基于"均匀散点 + 靠近对应 Foundation"的混合策略：</p>
+<pre><code>// page.tsx 核心渲染逻辑
+function renderQuarterCell(papers, cellX, cellY, cellW, cellH) {
+  const foundations = papers.filter(p => p.role === 'foundation');
+  const backgrounds = papers.filter(p => p.role === 'background');
+
+  // 1. 先放 Foundation 节点（大圆，带 label）
+  foundations.forEach((p, i) => {
+    const x = cellX + layoutFoundation(i, foundations.length, cellW);
+    const y = cellY + cellH * 0.4;
+    renderNode(p, x, y);  // 8-16px radius
+  });
+
+  // 2. 散布 Background 小点
+  backgrounds.forEach(p => {
+    const seed = hashStr(p.id);
+    const rng = seededRandom(seed);  // 稳定位置
+    const x = cellX + rng() * cellW;
+    const y = cellY + rng() * cellH;
+    renderDot(p, x, y);  // 2px, opacity 0.3
+  });
+}
+</code></pre>
+<ul>
+<li>小点用 paper.id 的 hash 做 seed → 位置稳定，刷新不跳</li>
+<li>大节点优先占据 cell 中心区域，小点填充剩余空间</li>
+<li>论文越多 → 小点越密 → 自然传达热度</li>
+</ul>
+</div>
+
+<div class="impl">
+<h3>3. 数据流向</h3>
+<svg class="flow-svg" id="flow-diagram" viewBox="0 0 700 200"></svg>
+<p>日报论文的入库路径：</p>
+<ul>
+<li><strong>日报爬取</strong> → 原始 paper list</li>
+<li><strong>LLM 分类</strong> → 自动打 lane + row 标签</li>
+<li><strong>写入 JSON</strong> → role="background"，无需手动</li>
+<li><strong>人工 review</strong> → 发现重要论文 → 升级 role="foundation"</li>
+</ul>
+</div>
+
+<div class="impl">
+<h3>4. 交互设计</h3>
+<ul>
+<li><strong>Hover 小点</strong> → tooltip 显示论文标题 + 日期</li>
+<li><strong>Hover 空白区域</strong> → 若附近有密集点云，显示 "该季度 N 篇论文"</li>
+<li><strong>Click 小点</strong> → 侧边栏展示论文详情 + ArXiv 链接</li>
+<li><strong>区域选择</strong> → 框选多个点 → 列表展示</li>
+</ul>
+<div class="highlight">
+  <strong>审查重点：</strong>500+ 个 SVG circle 的性能——超过 1000 个点考虑用 Canvas 层渲染背景点，SVG 只画 Foundation 节点。
+</div>
+</div>
+
+<div class="impl">
+<h3>5. 关键决策清单</h3>
+<ul>
+<li>□ 选择哪个方案（或混合）？</li>
+<li>□ Foundation 阈值：手动标注 vs impact > X 自动？</li>
+<li>□ 小点大小：固定 2px 还是按 impact 微调(2-4px)？</li>
+<li>□ 性能策略：纯 SVG 还是背景点用 Canvas？</li>
+<li>□ 日报入库：全自动 LLM 分类还是需要人工确认？</li>
+</ul>
+</div>
+
+</div>
+<script>
+const LANES = {
+  video_gen: { color: '#2563EB', label: 'Video-Gen' },
+  latent_space: { color: '#7C3AED', label: 'Latent-Space' },
+  rl_based: { color: '#059669', label: 'RL-Based' },
+  vla: { color: '#EA580C', label: 'VLA' }
+};
+
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0xFFFFFFFF;
+    return (s >>> 0) / 0xFFFFFFFF;
+  };
+}
+
+function hashStr(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) - h) + str.charCodeAt(i);
+    h |= 0;
+  }
+  return Math.abs(h);
+}
+
+const FOUNDATION_PAPERS = [
+  { id: 'sora', title: 'Sora', lane: 'video_gen', impact: 92 },
+  { id: 'cosmos', title: 'Cosmos', lane: 'video_gen', impact: 40 },
+  { id: 'wan', title: 'Wan', lane: 'video_gen', impact: 45 },
+  { id: 'genie2', title: 'Genie 2', lane: 'video_gen', impact: 55 },
+  { id: 'vjepa2', title: 'V-JEPA 2', lane: 'latent_space', impact: 68 },
+  { id: 'dreamerv3', title: 'Dreamer V3', lane: 'rl_based', impact: 72 },
+  { id: 'tdmpc2', title: 'TD-MPC2', lane: 'rl_based', impact: 58 },
+  { id: 'rt2', title: 'RT-2', lane: 'vla', impact: 75 },
+];
+
+function generateCloudPapers(count, lane) {
+  const papers = [];
+  const rng = seededRandom(hashStr(lane + count));
+  for (let i = 0; i < count; i++) {
+    papers.push({ id: `${lane}_bg_${i}`, lane, impact: 10 + rng() * 30 });
+  }
+  return papers;
+}
+
+const SCHEMES = [
+  {
+    id: 'uniform-scatter',
+    title: '方案 A: 均匀散点场',
+    tag: '最简',
+    desc: '重要节点大圆，背景论文2px小点均匀散布在同一区域。不做任何聚类，纯靠大小差异区分。密度自然反映热度。',
+    tradeoff: '✓ 实现简单、一眼看到密度差 | ✗ 论文多时变成噪声、无法识别单个小点',
+    render: function(svg, w, h) {
+      const rng = seededRandom(42);
+      const foundations = FOUNDATION_PAPERS.slice(0, 4);
+      const cloud = generateCloudPapers(45, 'video_gen');
+      cloud.forEach(p => {
+        const cx = 30 + rng() * (w - 60);
+        const cy = 30 + rng() * (h - 60);
+        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('cx', cx);
+        dot.setAttribute('cy', cy);
+        dot.setAttribute('r', 2);
+        dot.setAttribute('fill', LANES[p.lane].color);
+        dot.setAttribute('opacity', 0.3);
+        svg.appendChild(dot);
+      });
+      foundations.forEach((p, i) => {
+        const cx = 60 + i * 100 + rng() * 40;
+        const cy = 80 + rng() * (h - 160);
+        const r = 6 + (p.impact / 92) * 10;
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', cx);
+        circle.setAttribute('cy', cy);
+        circle.setAttribute('r', r);
+        circle.setAttribute('fill', LANES[p.lane].color);
+        circle.setAttribute('opacity', 0.85);
+        svg.appendChild(circle);
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', cx);
+        text.setAttribute('y', cy + r + 14);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '10');
+        text.setAttribute('fill', '#3F3F46');
+        text.textContent = p.title;
+        svg.appendChild(text);
+      });
+    }
+  },
+  {
+    id: 'gravity-well',
+    title: '方案 B: 引力井',
+    tag: '有层次',
+    desc: '重要节点是"引力中心"，背景小点自然聚集在附近（距离∝相关度）。形成星系状结构——每个Foundation周围是它的Adaptation卫星群。',
+    tradeoff: '✓ 空间暗示关系、重要节点被"卫星"衬托更突出 | ✗ 需要相关度数据来排布位置、重叠风险',
+    render: function(svg, w, h) {
+      const rng = seededRandom(77);
+      const centers = [
+        { x: w * 0.25, y: h * 0.4, paper: FOUNDATION_PAPERS[0] },
+        { x: w * 0.6, y: h * 0.35, paper: FOUNDATION_PAPERS[4] },
+        { x: w * 0.8, y: h * 0.6, paper: FOUNDATION_PAPERS[5] },
+      ];
+      centers.forEach(c => {
+        const count = 12 + Math.floor(rng() * 20);
+        for (let i = 0; i < count; i++) {
+          const angle = rng() * Math.PI * 2;
+          const dist = 20 + rng() * 50;
+          const cx = c.x + Math.cos(angle) * dist;
+          const cy = c.y + Math.sin(angle) * dist;
+          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          dot.setAttribute('cx', cx);
+          dot.setAttribute('cy', cy);
+          dot.setAttribute('r', 1.5 + rng() * 1);
+          dot.setAttribute('fill', LANES[c.paper.lane].color);
+          dot.setAttribute('opacity', 0.2 + rng() * 0.15);
+          svg.appendChild(dot);
+        }
+        const r = 8 + (c.paper.impact / 92) * 8;
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', c.x);
+        circle.setAttribute('cy', c.y);
+        circle.setAttribute('r', r);
+        circle.setAttribute('fill', LANES[c.paper.lane].color);
+        circle.setAttribute('opacity', 0.9);
+        svg.appendChild(circle);
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', c.x);
+        text.setAttribute('y', c.y + r + 14);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '10');
+        text.setAttribute('fill', '#18181B');
+        text.textContent = c.paper.title;
+        svg.appendChild(text);
+      });
+    }
+  },
+  {
+    id: 'density-band',
+    title: '方案 C: 密度带',
+    tag: '时间轴强',
+    desc: '横轴=时间。背景论文沿时间轴铺成一条"带"，带的垂直厚度∝该时段论文数。重要节点浮在带的上方，用细线锚定到时间位置。',
+    tradeoff: '✓ 时间趋势一目了然、热度=带厚 | ✗ 垂直空间利用率低、带和节点视觉割裂感',
+    render: function(svg, w, h) {
+      const rng = seededRandom(123);
+      const bandY = h * 0.65;
+      const bandH = 40;
+      const quarters = [
+        { x: w*0.1, count: 5 },
+        { x: w*0.25, count: 12 },
+        { x: w*0.4, count: 22 },
+        { x: w*0.55, count: 18 },
+        { x: w*0.7, count: 35 },
+        { x: w*0.85, count: 28 },
+      ];
+      const axis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      axis.setAttribute('x1', 20); axis.setAttribute('y1', bandY);
+      axis.setAttribute('x2', w-20); axis.setAttribute('y2', bandY);
+      axis.setAttribute('stroke', '#E4E4E7'); axis.setAttribute('stroke-width', 1);
+      svg.appendChild(axis);
+      quarters.forEach(q => {
+        const thickness = (q.count / 35) * bandH;
+        for (let i = 0; i < q.count; i++) {
+          const cx = q.x * w / w + (rng() - 0.5) * 40 + q.x * 0.3;
+          const realCx = q.x + (rng() - 0.5) * 50;
+          const cy = bandY + (rng() - 0.5) * thickness;
+          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          dot.setAttribute('cx', realCx);
+          dot.setAttribute('cy', cy);
+          dot.setAttribute('r', 2);
+          dot.setAttribute('fill', '#2563EB');
+          dot.setAttribute('opacity', 0.25);
+          svg.appendChild(dot);
+        }
+      });
+      const nodes = [
+        { x: w*0.25, title: 'Sora', impact: 92 },
+        { x: w*0.55, title: 'V-JEPA 2', impact: 68 },
+        { x: w*0.7, title: 'Cosmos', impact: 40 },
+      ];
+      nodes.forEach(n => {
+        const nodeY = h * 0.25;
+        const r = 6 + (n.impact / 92) * 8;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', n.x); line.setAttribute('y1', nodeY + r + 2);
+        line.setAttribute('x2', n.x); line.setAttribute('y2', bandY - 5);
+        line.setAttribute('stroke', '#A1A1AA'); line.setAttribute('stroke-width', 0.5);
+        line.setAttribute('stroke-dasharray', '2,2');
+        svg.appendChild(line);
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', n.x);
+        circle.setAttribute('cy', nodeY);
+        circle.setAttribute('r', r);
+        circle.setAttribute('fill', '#2563EB');
+        circle.setAttribute('opacity', 0.85);
+        svg.appendChild(circle);
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', n.x);
+        text.setAttribute('y', nodeY + r + 14);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '10');
+        text.setAttribute('fill', '#18181B');
+        text.textContent = n.title;
+        svg.appendChild(text);
+      });
+      const labels = ['2024Q1','Q2','Q3','Q4','2025Q1','Q2'];
+      labels.forEach((l,i) => {
+        const tx = quarters[i].x;
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', tx);
+        text.setAttribute('y', bandY + bandH + 16);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '9');
+        text.setAttribute('fill', '#A1A1AA');
+        text.textContent = l;
+        svg.appendChild(text);
+      });
+    }
+  }
+];
+
+SCHEMES.push({
+  id: 'heatmap-bg',
+  title: '方案 D: 热力底色',
+  tag: '信息密度高',
+  desc: '每个季度格子的背景用高斯模糊色块表示论文密度（越热颜色越深）。重要节点在色块上方正常显示。无需画出每个点——整体"温度"一目了然。',
+  tradeoff: '✓ 最紧凑、不占额外空间、像天气图直觉 | ✗ 丢失"每个点=1篇论文"的可数感',
+  render: function(svg, w, h) {
+    const rng = seededRandom(200);
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+    filter.setAttribute('id', 'blur-d');
+    const blur = document.createElementNS('http://www.w3.org/2000/svg', 'feGaussianBlur');
+    blur.setAttribute('stdDeviation', '15');
+    filter.appendChild(blur);
+    defs.appendChild(filter);
+    svg.appendChild(defs);
+    const zones = [
+      { x: w*0.15, y: h*0.5, intensity: 0.15 },
+      { x: w*0.35, y: h*0.5, intensity: 0.4 },
+      { x: w*0.55, y: h*0.45, intensity: 0.7 },
+      { x: w*0.75, y: h*0.5, intensity: 0.55 },
+      { x: w*0.9, y: h*0.5, intensity: 0.3 },
+    ];
+    zones.forEach(z => {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+      el.setAttribute('cx', z.x);
+      el.setAttribute('cy', z.y);
+      el.setAttribute('rx', 50);
+      el.setAttribute('ry', 60);
+      el.setAttribute('fill', '#2563EB');
+      el.setAttribute('opacity', z.intensity * 0.3);
+      el.setAttribute('filter', 'url(#blur-d)');
+      svg.appendChild(el);
+    });
+    const nodes = [
+      { x: w*0.35, y: h*0.3, title: 'Sora', impact: 92, lane: 'video_gen' },
+      { x: w*0.55, y: h*0.25, title: 'Cosmos', impact: 40, lane: 'video_gen' },
+      { x: w*0.75, y: h*0.35, title: 'Wan', impact: 45, lane: 'video_gen' },
+    ];
+    nodes.forEach(n => {
+      const r = 6 + (n.impact / 92) * 8;
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', n.x);
+      circle.setAttribute('cy', n.y);
+      circle.setAttribute('r', r);
+      circle.setAttribute('fill', LANES[n.lane].color);
+      circle.setAttribute('opacity', 0.9);
+      svg.appendChild(circle);
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', n.x);
+      text.setAttribute('y', n.y + r + 14);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-size', '10');
+      text.setAttribute('fill', '#18181B');
+      text.textContent = n.title;
+      svg.appendChild(text);
+    });
+  }
+});
+
+SCHEMES.push({
+  id: 'stacked-strips',
+  title: '方案 E: 条形码堆叠',
+  tag: '精确可数',
+  desc: '每篇背景论文=一个短横条(2×8px)按时间横排纵向堆叠，像条形码。重要节点大圆浮在上方。每季度多少篇一目了然可数。',
+  tradeoff: '✓ 每篇论文可见可数、排列整齐 | ✗ 占横向空间大、论文多时条纹很长',
+  render: function(svg, w, h) {
+    const rng = seededRandom(300);
+    const startY = h * 0.55;
+    const quarters = [8, 14, 22, 18, 35, 12];
+    const qWidth = (w - 60) / quarters.length;
+    quarters.forEach((count, qi) => {
+      const baseX = 30 + qi * qWidth;
+      for (let i = 0; i < Math.min(count, 30); i++) {
+        const col = Math.floor(i / 6);
+        const row = i % 6;
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', baseX + col * 10);
+        rect.setAttribute('y', startY + row * 6);
+        rect.setAttribute('width', 7);
+        rect.setAttribute('height', 3);
+        rect.setAttribute('fill', '#2563EB');
+        rect.setAttribute('opacity', 0.3 + rng() * 0.2);
+        rect.setAttribute('rx', 1);
+        svg.appendChild(rect);
+      }
+      const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('x', baseX + 10);
+      label.setAttribute('y', startY - 8);
+      label.setAttribute('font-size', '9');
+      label.setAttribute('fill', '#A1A1AA');
+      label.textContent = 'Q' + (qi + 1);
+      svg.appendChild(label);
+    });
+    const nodes = [
+      { x: 30 + 1*qWidth + 20, y: h*0.25, title: 'Sora', impact: 92, lane: 'video_gen' },
+      { x: 30 + 3*qWidth + 10, y: h*0.3, title: 'V-JEPA 2', impact: 68, lane: 'latent_space' },
+      { x: 30 + 4*qWidth + 15, y: h*0.2, title: 'Dreamer V3', impact: 72, lane: 'rl_based' },
+    ];
+    nodes.forEach(n => {
+      const r = 6 + (n.impact / 92) * 8;
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', n.x);
+      circle.setAttribute('cy', n.y);
+      circle.setAttribute('r', r);
+      circle.setAttribute('fill', LANES[n.lane].color);
+      circle.setAttribute('opacity', 0.9);
+      svg.appendChild(circle);
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', n.x);
+      text.setAttribute('y', n.y + r + 14);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-size', '10');
+      text.setAttribute('fill', '#18181B');
+      text.textContent = n.title;
+      svg.appendChild(text);
+    });
+  }
+});
+
+SCHEMES.push({
+  id: 'orbit-rings',
+  title: '方案 F: 轨道环',
+  tag: '关系最强',
+  desc: '每个重要节点周围画同心虚线环(内环=直接引用, 外环=相关领域)。小点分布在环上。空白区域保持空白——没有背景噪声，只有有归属的点。',
+  tradeoff: '✓ 关系一目了然、无噪声 | ✗ 无归属论文无法显示、需手动标注从属关系',
+  render: function(svg, w, h) {
+    const rng = seededRandom(500);
+    const centers = [
+      { x: w*0.25, y: h*0.45, title: 'Sora', impact: 92, lane: 'video_gen', sats: 18 },
+      { x: w*0.6, y: h*0.4, title: 'Dreamer V3', impact: 72, lane: 'rl_based', sats: 10 },
+      { x: w*0.85, y: h*0.55, title: 'RT-2', impact: 75, lane: 'vla', sats: 7 },
+    ];
+    centers.forEach(c => {
+      [30, 55].forEach(radius => {
+        const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        ring.setAttribute('cx', c.x);
+        ring.setAttribute('cy', c.y);
+        ring.setAttribute('r', radius);
+        ring.setAttribute('fill', 'none');
+        ring.setAttribute('stroke', LANES[c.lane].color);
+        ring.setAttribute('stroke-width', 0.5);
+        ring.setAttribute('stroke-dasharray', '2,3');
+        ring.setAttribute('opacity', 0.3);
+        svg.appendChild(ring);
+      });
+      for (let i = 0; i < c.sats; i++) {
+        const ringR = i < c.sats * 0.6 ? 30 : 55;
+        const angle = (i / c.sats) * Math.PI * 2 + rng() * 0.5;
+        const dist = ringR + (rng() - 0.5) * 10;
+        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('cx', c.x + Math.cos(angle) * dist);
+        dot.setAttribute('cy', c.y + Math.sin(angle) * dist);
+        dot.setAttribute('r', 2);
+        dot.setAttribute('fill', LANES[c.lane].color);
+        dot.setAttribute('opacity', 0.35);
+        svg.appendChild(dot);
+      }
+      const r = 6 + (c.impact / 92) * 8;
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', c.x);
+      circle.setAttribute('cy', c.y);
+      circle.setAttribute('r', r);
+      circle.setAttribute('fill', LANES[c.lane].color);
+      circle.setAttribute('opacity', 0.9);
+      svg.appendChild(circle);
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', c.x);
+      text.setAttribute('y', c.y + r + 14);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-size', '10');
+      text.setAttribute('fill', '#18181B');
+      text.textContent = c.title;
+      svg.appendChild(text);
+    });
+  }
+});
+
+// Render all schemes
+const grid = document.getElementById('schemes');
+SCHEMES.forEach(scheme => {
+  const card = document.createElement('div');
+  card.className = 'scheme';
+  card.innerHTML = `
+    <div class="scheme-header">
+      <span class="scheme-title">${scheme.title}</span>
+      <span class="scheme-tag">${scheme.tag}</span>
+    </div>
+    <p class="scheme-desc">${scheme.desc}</p>
+    <svg class="canvas" id="svg-${scheme.id}" viewBox="0 0 500 280" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="tradeoff">${scheme.tradeoff}</div>
+  `;
+  grid.appendChild(card);
+});
+
+SCHEMES.forEach(scheme => {
+  const svg = document.getElementById('svg-' + scheme.id);
+  if (svg) scheme.render(svg, 500, 280);
+});
+
+// Render flow diagram
+const flow = document.getElementById('flow-diagram');
+if (flow) {
+  const boxes = [
+    { x: 20, y: 70, w: 100, h: 50, label: '日报爬取', sub: 'ArXiv/HF' },
+    { x: 160, y: 70, w: 100, h: 50, label: 'LLM 分类', sub: 'lane+row' },
+    { x: 300, y: 70, w: 120, h: 50, label: 'world-model\n-data.json', sub: 'role=bg' },
+    { x: 470, y: 40, w: 110, h: 40, label: '渲染为小点', sub: '2px dot' },
+    { x: 470, y: 120, w: 110, h: 40, label: '人工升级', sub: '→ foundation' },
+  ];
+  boxes.forEach(b => {
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', b.x); rect.setAttribute('y', b.y);
+    rect.setAttribute('width', b.w); rect.setAttribute('height', b.h);
+    rect.setAttribute('fill', '#FAFAFA'); rect.setAttribute('stroke', '#E4E4E7');
+    flow.appendChild(rect);
+    const t1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t1.setAttribute('x', b.x + b.w/2); t1.setAttribute('y', b.y + 22);
+    t1.setAttribute('text-anchor', 'middle'); t1.setAttribute('font-size', '11');
+    t1.setAttribute('fill', '#18181B'); t1.setAttribute('font-weight', '500');
+    t1.textContent = b.label;
+    flow.appendChild(t1);
+    const t2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t2.setAttribute('x', b.x + b.w/2); t2.setAttribute('y', b.y + 38);
+    t2.setAttribute('text-anchor', 'middle'); t2.setAttribute('font-size', '9');
+    t2.setAttribute('fill', '#71717A');
+    t2.textContent = b.sub;
+    flow.appendChild(t2);
+  });
+  const arrows = [
+    [120, 95, 160, 95],
+    [260, 95, 300, 95],
+    [420, 85, 470, 60],
+    [420, 105, 470, 140],
+  ];
+  arrows.forEach(a => {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1',a[0]); line.setAttribute('y1',a[1]);
+    line.setAttribute('x2',a[2]); line.setAttribute('y2',a[3]);
+    line.setAttribute('stroke','#A1A1AA'); line.setAttribute('stroke-width','1');
+    line.setAttribute('marker-end','url(#arrowhead)');
+    flow.appendChild(line);
+  });
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+  marker.setAttribute('id','arrowhead'); marker.setAttribute('markerWidth','6');
+  marker.setAttribute('markerHeight','4'); marker.setAttribute('refX','6');
+  marker.setAttribute('refY','2'); marker.setAttribute('orient','auto');
+  const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+  poly.setAttribute('points','0 0, 6 2, 0 4'); poly.setAttribute('fill','#A1A1AA');
+  marker.appendChild(poly); defs.appendChild(marker); flow.appendChild(defs);
+}
+</script>
+</body>
+</html>

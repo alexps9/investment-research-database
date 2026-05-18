@@ -20,10 +20,11 @@
 | 纵轴位置（Lane） | 4 路径：Video→Embodied / Latent / RL / End-to-End |
 | 横轴 | 时间 |
 | 颜色 | Player（机构） |
-| 节点大小 | Impact（引用量/重要度，连续值） |
+| 节点大小 | Impact（连续值，log min-max + override） |
+| **节点形状** | **circle = Foundation（提出新架构/新能力），square = Adaptation（在 foundation 上做应用/改进）** |
 | 筛选器 | Track（赛道） |
-| 连线 | builds_on / competes / enables |
-| 详情属性 | integration（IDM/Single-backbone/MoE/Unified VLA/Simulator/Evaluator） |
+| 连线 | builds_on（adaptation → foundation 的依赖关系） / competes / enables |
+| tooltip 标签 | integration（IDM/Single-backbone/MoE/Simulator/Evaluator） |
 
 ---
 
@@ -35,19 +36,40 @@
 
 ### Row 分类（按生成范式）
 
-- **Diffusion-based** `diffusion_video`：Cosmos (NVIDIA, 2025)、Cosmos Predict 2.5 (NVIDIA, 2025)、GigaWorld-0 (极佳视界, 2025)、Drive-WM (NVIDIA, 2024)、Vista (NVIDIA, 2024)、TesserAct (MIT, 2025)、Vid2World (THU, 2025)、Ctrl-World (2025)、DreamGen (NVIDIA, 2025)、IRASim (ByteDance, 2025)、RoboMaster (Kling, 2025)、DreamDojo (NVIDIA, 2026)。
-- **Autoregressive** `autoregressive_video`：Genie 2 (DeepMind, 2024)、Genie Envisioner (AgibotTech, 2025)、iVideoGPT (2025)、LWM (UC Berkeley, 2024)、CogVideoX (THU, 2025)。
-- **3DGS / NeRF** `3dgs_nerf`：WonderWorld (2025)、FalconWing (2025)、LiDARCrafter (2025)、4D-fy (2024)、Kinema4D (2026)。
+Adaptation 论文按依赖的 foundation backbone 归入对应 Row，通过 builds_on 连线指向 foundation 节点。
 
-### Integration 属性（论文如何将 WM 接入 policy，标签而非 row）
+- **Diffusion-based** `diffusion_video`
+  - Foundation（○）：Cosmos (NVIDIA, 2025)、Cosmos Predict 2.5 (NVIDIA, 2025)、Wan 2.2 (Alibaba, 2025)、GigaWorld-0 (极佳视界, 2025)、Drive-WM (NVIDIA, 2024)、Vista (NVIDIA, 2024)、DreamGen (NVIDIA, 2025)、IRASim (ByteDance, 2025)、DreamDojo (NVIDIA, 2026)。
+  - Adaptation（□）：Vidarc → Wan 2.2 [idm]、Cosmos Policy → Cosmos [single_backbone]、UWM [single_backbone]、UVA [single_backbone]、DreamZero/WAM [single_backbone]、Vid2World → Diffusion WM [simulator]、DiWA [simulator]、WMPO [simulator]、WorldEval [evaluator]、TC-IDM [idm]、VPP [idm]、Gen2Act [idm]、V2A [idm]、Video2Act [idm]、mimic-video [idm]、LVP [idm]、TesserAct (MIT, 2025)、Ctrl-World (2025)、RoboMaster (Kling, 2025)、GE-Act → DiT [moe]、DiT4DiT [moe]、LDA-1B (PKU, 2026) [moe]、Fast-WAM [moe]、GigaBrain-0.5M → Wan 2.2 [simulator+moe]。
 
-| Integration | 说明 | 代表论文 |
+- **Autoregressive** `autoregressive_video`
+  - Foundation（○）：Genie 2 (DeepMind, 2024)、Genie Envisioner (AgibotTech, 2025) → LTX-Video [domain adaptation]、iVideoGPT (2025)、LWM (UC Berkeley, 2024)、CogVideoX (THU, 2025)。
+  - Adaptation（□）：GR-1 → GPT-style video [idm]、VidMan [idm]、Say Dream and Act [idm]、VideoVLA [single_backbone]、GigaWorld-Policy → GigaWorld [single_backbone]、UD-VLA [single_backbone]、Motus (THU, 2025) [moe]、BagelVLA [moe]、STARRY [moe]、World-Env [simulator]、Veo+Gemini (Google, 2025) [evaluator]。
+
+- **3DGS / NeRF** `3dgs_nerf`
+  - Foundation（○）：WonderWorld (2025)、4D-fy (2024)、Kinema4D (2026)。
+  - Adaptation（□）：FalconWing (2025)、LiDARCrafter (2025)。
+
+### Integration 属性说明
+
+`integration` 是论文级 tooltip 标签，不影响 Row 布局。论文按 backbone 架构归 Row，按连接方式标 integration。
+
+| Integration | 说明 | 在 Row 中的标记 |
 |------|------|------|
-| IDM-style | 先生成视频，再用 inverse dynamics 翻译成动作 | UniPi (2023)、GR-1 (ByteDance, 2024)、VPP (2024)、VidMan (2024)、Gen2Act (2024)、V2A (2025)、Video2Act (2025)、mimic-video (2025)、LVP (2025)、Vidarc (2025)、TC-IDM (2026)、Say Dream and Act (2026) |
-| Single-backbone | 一个模型同时生成视频和动作 | UVA (2025)、UWM (2025)、VideoVLA (2025)、UD-VLA (2026)、VideoPolicy (2025)、Cosmos Policy (NVIDIA, 2026)、DreamZero/WAM (2026)、GigaWorld-Policy (极佳视界, 2026)、MV-VDP (2026)、Action Images (2026) |
-| MoE/MoT | 视频专家+动作专家分离但频繁交互 | GE-Act (AgibotTech, 2025)、Motus (THU, 2025)、LingBot-VA (2026)、BagelVLA (2026)、LDA-1B (PKU, 2026)、FRAPPE (2026)、DiT4DiT (2026)、Fast-WAM (2026)、STARRY (2026)、MotuBrain (2026)、WAV (2026)、CKT-WAM (2026) |
-| Simulator | 用 video WM 做仿真环境给 RL agent 训练 | Vid2World (2025)、DayDreamer (2023)、UniSim (2024)、DiWA (2025)、World-Env (2025)、VLA-RFT (2025)、WMPO (2025)、WoVR (2026)、World-VLA-Loop (2026)、GigaBrain-0.5M (极佳视界, 2026)、PlayWorld (2026)、VLA-MBPO (2026) |
-| Evaluator | rollout 多个候选 action 打分选最优 | WorldEval (2025)、WorldGym (2025)、Veo+Gemini Robotics (Google, 2025)、GPC (2026)、dWorldEval (2026)、Horizon Imagination (2025) |
+| `idm` | 先生成视频，再 inverse dynamics 翻译成动作 | [idm] |
+| `single_backbone` | 一个模型同时生成视频和动作 | [single_backbone] |
+| `moe` | 视频专家 + 动作专家分离但频繁交互 | [moe] |
+| `simulator` | 用 video WM 做仿真环境给 RL 训练 | [simulator] |
+| `evaluator` | rollout 打分/排序候选动作 | [evaluator] |
+| — | 纯 Foundation，不直接接 policy | 无标记 |
+
+### 归类修正（从综述原始归类中移出 Lane 1）
+
+| 论文 | 综述原归类 | 实际归属 | 原因 |
+|------|-----------|---------|------|
+| FRAPPE (2026) | Lane 1 MoE | **Lane 2 `latent_policy`** | 不依赖 video generation，对齐 CLIP/DINOv2 特征空间 |
+| VLA-MBPO (2026) | Lane 1 Simulator | **Lane 4** | 用多模态大模型 (Bagel) 做 WM，不走视频生成 |
+| DayDreamer (2023) | Lane 1 Simulator | **Lane 3 `rssm_based`** | 用 RSSM 不是 video model |
 
 ### 关键瓶颈
 - 物理一致性：长时间生成会崩
@@ -73,7 +95,7 @@
 - **JEPA-based** `jepa_based`：I-JEPA (Meta AI, 2023)、V-JEPA 2 (Meta AI, 2025)、V-JEPA 2.1 (Meta, 2026)、seq-JEPA (Meta AI, 2025)、LeWorldModel (2026)。
 - **DINO-based** `dino_based`：DINO-WM (NYU/Meta, 2025)、DINO-World (2024)。
 - **Slot-based** `slot_based`：SlotAttention (Google, 2020)、SlotFormer (NVIDIA, 2023)、Dyn-O (NeurIPS, 2025)。
-- **Latent-space Policy** `latent_policy`：在潜空间做 action-conditioned 预测。FLARE (NVIDIA, 2025)、VLA-JEPA (2026)、JEPA-VLA (2026)、VISTA-WM (2026)、World Guidance/WoG (2026)、DIAL (2026)、AIM (2026)、DexWorldModel (2026)。
+- **Latent-space Policy** `latent_policy`：在潜空间做 action-conditioned 预测。FLARE (NVIDIA, 2025)、VLA-JEPA (2026)、JEPA-VLA (2026)、VISTA-WM (2026)、World Guidance/WoG (2026)、DIAL (2026)、AIM (2026)、DexWorldModel (2026)、FRAPPE (2026) [从 Lane 1 MoE 修正归类，实际对齐 CLIP/DINO 特征空间]。
 
 ### 关键瓶颈
 - 能不能 scale？特征空间的物理是否足够精确？
@@ -123,7 +145,7 @@
 - **LLM/VLM + Action** `vla_llm`：RT-2 (Google DeepMind, 2023)、Octo (UC Berkeley, 2024)、OpenVLA (2024)。
 - **Diffusion Policy** `vla_diffusion`：π0 (Physical Intelligence, 2024)、π0.5 (2025)、Diffusion Policy (Columbia, 2023)、X-Mobility (2025)。
 - **Unified VLA** `unified_vla`：训练时预测未来画面，部署时只出动作。GR-1 (ByteDance, 2024)、GR-2 (ByteDance, 2024)、UP-VLA (2025)、DreamVLA (2025)、UniVLA (2025)、Genie Envisioner (AgibotTech, 2025)、CoWVLA (2026)、F1 (2025)、RynnVLA-002 (Alibaba, 2025)、InternVLA-A1 (2026)、HALO (2026)、OA-WAM (2026)。
-- **Driving VLA** `vla_driving`：DriveVLA (2024)、UniWorld (2024)、GAIA-1 (Wayve, 2023)、Think2Drive (2024)。
+- **Driving VLA** `vla_driving`：DriveVLA (2024)、UniWorld (2024)、GAIA-1 (Wayve, 2023)、Think2Drive (2024)、VLA-MBPO (2026) [从 Lane 1 Simulator 修正归类，用多模态大模型做 WM]。
 - **Symbolic World Model** `symbolic`：在"物体、关系、动作"抽象符号层面建模，做任务分解和 compositional reasoning。VisualPredicator (2024)、ExoPredicator (2025)。需要预先定义符号体系，grounding 脆弱，但和 neuro-symbolic 混合可能是长程任务突破口。
 
 ### 关键瓶颈
@@ -178,19 +200,14 @@
 
 ---
 
-## Integration 属性说明
+## Foundation vs Adaptation 判定标准
 
-`integration` 是论文级别的标签（在详情面板/tooltip 中显示），不影响泳道布局：
+| 类型 | 形状 | 判定 | 举例 |
+|------|------|------|------|
+| Foundation | ○ circle | 提出新架构或新能力，被后续论文 builds_on | Cosmos、Genie 2、I-JEPA、Dreamer V3、π0 |
+| Adaptation | □ square | 在已有 foundation 上做应用/改进/接入 policy | Vidarc、GR-1、Cosmos Policy、GigaBrain |
 
-| Integration | 含义 | 主要出现在 |
-|------|------|------|
-| `idm` | 想象→翻译（先生成视频，再 inverse dynamics 出动作） | Lane 1 论文 |
-| `single_backbone` | 一个模型同时生成视频和动作 | Lane 1 论文 |
-| `moe` | 视频专家 + 动作专家分离但频繁交互 | Lane 1 论文 |
-| `unified_vla` | 训练时预测未来，部署时只出动作 | Lane 4 论文 |
-| `simulator` | 用 WM 做仿真环境给 RL 训练 | Lane 1 / Lane 3 论文 |
-| `evaluator` | rollout 打分/排序候选动作 | Lane 1 / Lane 2 论文 |
-| — | 无（纯 Foundation 模型，不直接接 policy） | 所有 Lane |
+灰色地带：Genie Envisioner 在 LTX-Video 上做了完整 domain adaptation（GE-Base + GE-Act + GE-Sim 三件套），本质介于两者之间。归为 Foundation（○）因为它自己也被后续论文引用。
 
 ---
 
@@ -201,7 +218,8 @@
 | Lane 1 定义 | "Video-Generative"（太宽泛） | "Video Foundation → Embodied"（明确终点是机器人） |
 | Lane 4 定义 | "VLA"（只有端到端） | "End-to-End / Symbolic"（加入符号派） |
 | Lane 4 新增 Row | — | unified_vla（爆发最快）、symbolic |
-| Foundation/Adaptation | 没有区分 | 不做视觉二元编码；用 integration 标签 + builds_on 连线自然表达 |
+| Foundation/Adaptation | 没有区分 | **形状编码：○ = Foundation, □ = Adaptation**；adaptation 按 backbone 归入对应 Row，builds_on 连向 foundation |
+| Integration 论文 | 独立分类表 | 归入对应 Row + tooltip 标签（idm/single_backbone/moe/simulator/evaluator） |
 | 论文数量 | ~103 | ~160+（从综述 README 补充） |
 | 纯内容生成 | 和具身混在Lane 1 | 降级为Track筛选器，不占泳道 |
 | 图谱能回答的核心问题 | 各范式分别在做什么 | foundation video model是不是必经之路 |

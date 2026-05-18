@@ -1,0 +1,580 @@
+{
+  "planet": {
+    "cited_by_count": 367,
+    "openalex_title": "Learning Latent Dynamics for Planning from Pixels",
+    "institutions": [
+      "Hasso Plattner Institute",
+      "Google (United States)",
+      "University of Michigan–Ann Arbor",
+      "Ann Arbor Center for Independent Living",
+      "Southmead Hospital"
+    ]
+  },
+  "dreamer_v1": {
+    "cited_by_count": 137,
+    "openalex_title": "Dream to Control: Learning Behaviors by Latent Imagination",
+    "institutions": [
+      "University of Toronto",
+      "University College London",
+      "Google (United States)"
+    ]
+  },
+  "dreamer_v2": {
+    "cited_by_count": 23,
+    "openalex_title": "Mastering Atari with Discrete World Models",
+    "institutions": [
+      "University of Oxford",
+      "Google (United States)"
+    ]
+  },
+  "dreamer_v3": {
+    "cited_by_count": 155,
+    "openalex_title": "Concept of mental health and mental well-being, it's determinants and coping strategies",
+    "institutions": [
+      "Employees' State Insurance Model Hospital",
+      "ESIC Hospital",
+      "Ahmedabad University",
+      "Eternal Hospital",
+      "Central University of Rajasthan"
+    ]
+  },
+  "dreamsmooth": {
+    "cited_by_count": 1,
+    "openalex_title": "DreamSmooth: Improving Model-based Reinforcement Learning via Reward Smoothing",
+    "institutions": []
+  },
+  "pigdreamer": {
+    "cited_by_count": 0,
+    "openalex_title": "PIGDreamer: Privileged Information Guided World Models for Safe Partially Observable Reinforcement Learning",
+    "institutions": []
+  },
+  "harmonydream": {
+    "cited_by_count": 1,
+    "openalex_title": "HarmonyDream: Task Harmonization Inside World Models",
+    "institutions": []
+  },
+  "dymodreamer": {
+    "cited_by_count": 0,
+    "openalex_title": "DyMoDreamer: World Modeling with Dynamic Modulation",
+    "institutions": []
+  },
+  "tdmpc": {
+    "cited_by_count": 27,
+    "openalex_title": "Temporal Difference Learning for Model Predictive Control",
+    "institutions": []
+  },
+  "tdmpc2": {
+    "cited_by_count": 8,
+    "openalex_title": "TD-MPC2: Scalable, Robust World Models for Continuous Control",
+    "institutions": []
+  },
+  "pwm": {
+    "cited_by_count": 2,
+    "openalex_title": "Open-Vocabulary Predictive World Models from Sensor Observations",
+    "institutions": [
+      "Nagoya University",
+      "Gifu University"
+    ]
+  },
+  "iq_mpc": {
+    "cited_by_count": 1,
+    "openalex_title": "Comparative Study of Sphere Decoding Algorithm and FCS-MPC for PMSMs in Aircraft Application",
+    "institutions": []
+  },
+  "hieros": {
+    "cited_by_count": 0,
+    "openalex_title": "Hiero",
+    "institutions": []
+  },
+  "thick": {
+    "cited_by_count": 0,
+    "openalex_title": "Think Hierarchically, Act Dynamically: Hierarchical Multi-modal Fusion and Reasoning for Vision-and-Language Navigation",
+    "institutions": []
+  },
+  "dima": {
+    "cited_by_count": 11,
+    "openalex_title": "DIMA: Digging Into Multigranular Archetype for Fine-Grained Object Detection",
+    "institutions": [
+      "Northwestern Polytechnical University",
+      "Beijing Technology and Business University"
+    ]
+  },
+  "coworld": {
+    "cited_by_count": 0,
+    "openalex_title": "Making Offline RL Online: Collaborative World Models for Offline Visual Reinforcement Learning",
+    "institutions": []
+  },
+  "r2i": {
+    "cited_by_count": 6,
+    "openalex_title": "R2I: A Relative Readability Metric for Decompiled Code",
+    "institutions": [
+      "Sungkyunkwan University"
+    ]
+  },
+  "leq": {
+    "cited_by_count": 1,
+    "openalex_title": "Description of the \\((\\leq 3)\\)-hypomorphic Posets and Bichains. Application to the \\((\\leq 3)\\)-reconstruction",
+    "institutions": [
+      "University of Sfax"
+    ]
+  },
+  "pcm": {
+    "cited_by_count": 262,
+    "openalex_title": "A review on heat transfer enhancement techniques for PCM based thermal energy storage system",
+    "institutions": [
+      "Indian Institute of Technology Dhanbad"
+    ]
+  },
+  "waker": {
+    "cited_by_count": 109,
+    "openalex_title": "Phosphorus price spikes: A wake-up call for phosphorus resilience",
+    "institutions": [
+      "UK Centre for Ecology & Hydrology",
+      "University of Edinburgh",
+      "University of Technology Sydney",
+      "Lancaster University",
+      "United Nations Development Programme"
+    ]
+  },
+  "rem": {
+    "cited_by_count": 73,
+    "openalex_title": "Prefrontal cortical regulation of REM sleep",
+    "institutions": [
+      "University of Pennsylvania",
+      "University of California, Irvine"
+    ]
+  },
+  "crssm": {
+    "cited_by_count": 0,
+    "openalex_title": "Dreaming of Many Worlds: Learning Contextual World Models Aids Zero-Shot Generalization",
+    "institutions": []
+  },
+  "adaptive_wm": {
+    "cited_by_count": 141,
+    "openalex_title": "A novel data augmentation approach to fault diagnosis with class-imbalance problem",
+    "institutions": [
+      "Harbin Institute of Technology",
+      "Norwegian University of Science and Technology"
+    ]
+  },
+  "mosim": {
+    "cited_by_count": 5,
+    "openalex_title": "MOSim: bulk and single-cell multilayer regulatory network simulator",
+    "institutions": [
+      "Institute for Integrative Systems Biology",
+      "Universitat Politècnica de València",
+      "Universitat de València",
+      "Biopolis (Spain)"
+    ]
+  },
+  "robodreamer": {
+    "cited_by_count": 4,
+    "openalex_title": "RoboDreamer: Learning Compositional World Models for Robot Imagination",
+    "institutions": []
+  },
+  "vipra": {
+    "cited_by_count": 10,
+    "openalex_title": "ViPRA-Haplo: <i>De Novo</i> Reconstruction of Viral Populations Using Paired End Sequencing Data",
+    "institutions": [
+      "Cornell University",
+      "Indiana University Bloomington",
+      "Pennsylvania State University",
+      "National Taiwan University",
+      "University of Auckland"
+    ]
+  },
+  "flowdreamer": {
+    "cited_by_count": 0,
+    "openalex_title": "FlowDreamer: A RGB-D World Model with Flow-based Motion Representations for Robot Manipulation",
+    "institutions": []
+  },
+  "gpt4": {
+    "cited_by_count": 2318,
+    "openalex_title": "GPT-4 Technical Report",
+    "institutions": [
+      "Massey University",
+      "Cardiff University"
+    ]
+  },
+  "llama3": {
+    "cited_by_count": 3879,
+    "openalex_title": "LLaMA: Open and Efficient Foundation Language Models",
+    "institutions": []
+  },
+  "llmcwm": {
+    "cited_by_count": 0,
+    "openalex_title": "Language Agents Meet Causality -- Bridging LLMs and Causal World Models",
+    "institutions": []
+  },
+  "rap": {
+    "cited_by_count": 211,
+    "openalex_title": "Performance characterization and enhancement mechanism of recycled asphalt mixtures involving high RAP content and steel slag",
+    "institutions": [
+      "Wuhan University of Technology",
+      "University of Alabama",
+      "Huazhong University of Science and Technology",
+      "Norwegian University of Science and Technology"
+    ]
+  },
+  "bytesized32": {
+    "cited_by_count": 1,
+    "openalex_title": "ByteSized32: A Corpus and Challenge Task for Generating Task-Specific World Models Expressed as Text Games",
+    "institutions": [
+      "University of Arizona",
+      "Microsoft (United States)",
+      "Johns Hopkins University",
+      "New York University"
+    ]
+  },
+  "sora": {
+    "cited_by_count": 101,
+    "openalex_title": "Sora: A Review on Background, Technology, Limitations, and Opportunities of Large Vision Models",
+    "institutions": []
+  },
+  "gen3": {
+    "cited_by_count": 5,
+    "openalex_title": "Design Of Automatic Lighting Instructions Based On Pir Gen 3 Sensors for Physics Learning in The Electronics Skills Course",
+    "institutions": [
+      "University of Sarjanawiyata Tamansiswa",
+      "Hanze University of Applied Sciences",
+      "Shih Chien University",
+      "Australian National University"
+    ]
+  },
+  "wan": {
+    "cited_by_count": 7,
+    "openalex_title": "Wan: Open and Advanced Large-Scale Video Generative Models",
+    "institutions": []
+  },
+  "cosmos": {
+    "cited_by_count": 7,
+    "openalex_title": "Cosmos World Foundation Model Platform for Physical AI",
+    "institutions": []
+  },
+  "t2v_turbo": {
+    "cited_by_count": 1,
+    "openalex_title": "T2V-Turbo: Breaking the Quality Bottleneck of Video Consistency Model with Mixed Reward Feedback",
+    "institutions": []
+  },
+  "spmem": {
+    "cited_by_count": 1,
+    "openalex_title": "Minimization of the cogging torque in stator-PM high-speed flywheel electrical machine",
+    "institutions": [
+      "Harbin Institute of Technology",
+      "Tsinghua University"
+    ]
+  },
+  "videocrafter2": {
+    "cited_by_count": 162,
+    "openalex_title": "VideoCrafter2: Overcoming Data Limitations for High-Quality Video Diffusion Models",
+    "institutions": [
+      "Tencent (China)"
+    ]
+  },
+  "emu3": {
+    "cited_by_count": 4,
+    "openalex_title": "Emu3: Next-Token Prediction is All You Need",
+    "institutions": []
+  },
+  "llava": {
+    "cited_by_count": 1140,
+    "openalex_title": "Improved Baselines with Visual Instruction Tuning",
+    "institutions": [
+      "University of Wisconsin–Madison",
+      "Microsoft Research (United Kingdom)"
+    ]
+  },
+  "genie2": {
+    "cited_by_count": 0,
+    "openalex_title": "The Mathematics of Genie 2: A Large-Scale Foundation World Model",
+    "institutions": []
+  },
+  "oasis": {
+    "cited_by_count": 524,
+    "openalex_title": "Rapid groundwater decline and some cases of recovery in aquifers globally",
+    "institutions": [
+      "University of California, Santa Barbara",
+      "ETH Zurich",
+      "Rutgers, The State University of New Jersey",
+      "Systemic Risk Centre",
+      "University College London"
+    ]
+  },
+  "teleworld": {
+    "cited_by_count": 0,
+    "openalex_title": "TeleWorld: Towards Dynamic Multimodal Synthesis with a 4D World Model",
+    "institutions": []
+  },
+  "vid2world": {
+    "cited_by_count": 0,
+    "openalex_title": "Vid2World: Crafting Video Diffusion Models to Interactive World Models",
+    "institutions": []
+  },
+  "cola_world": {
+    "cited_by_count": 3,
+    "openalex_title": "Soda Science: Making the World Safe for Coca-Cola",
+    "institutions": [
+      "University of Denver"
+    ]
+  },
+  "text2room": {
+    "cited_by_count": 129,
+    "openalex_title": "Text2Room: Extracting Textured 3D Meshes from 2D Text-to-Image Models",
+    "institutions": [
+      "Technical University of Munich",
+      "University of Michigan–Ann Arbor"
+    ]
+  },
+  "4dfy": {
+    "cited_by_count": 46,
+    "openalex_title": "4D-fy: Text-to-4D Generation Using Hybrid Score Distillation Sampling",
+    "institutions": [
+      "University of Toronto",
+      "King Abdullah University of Science and Technology",
+      "Kootenay Association for Science & Technology",
+      "Stanford University",
+      "Snap (United States)"
+    ]
+  },
+  "wonderjourney": {
+    "cited_by_count": 28,
+    "openalex_title": "WonderJourney: Going from Anywhere to Everywhere",
+    "institutions": [
+      "Stanford University",
+      "Google (United States)"
+    ]
+  },
+  "scenescape": {
+    "cited_by_count": 24,
+    "openalex_title": "SceneScape: Text-Driven Consistent Scene Generation",
+    "institutions": []
+  },
+  "wonderworld": {
+    "cited_by_count": 16,
+    "openalex_title": "WonderWorld: Interactive 3D Scene Generation from a Single Image",
+    "institutions": [
+      "Stanford University",
+      "Moscow Institute of Thermal Technology"
+    ]
+  },
+  "lidar_crafter": {
+    "cited_by_count": 0,
+    "openalex_title": "LiDARCrafter: Dynamic 4D World Modeling from LiDAR Sequences",
+    "institutions": []
+  },
+  "invisible_stitch": {
+    "cited_by_count": 3,
+    "openalex_title": "Invisible Stitch: Generating Smooth 3D Scenes with Depth Inpainting",
+    "institutions": [
+      "University of Oxford"
+    ]
+  },
+  "grounding_video": {
+    "cited_by_count": 8,
+    "openalex_title": "Number it: Temporal Grounding Videos like Flipping Manga",
+    "institutions": [
+      "Max Planck Institute for Informatics",
+      "Tencent (China)",
+      "University of California, Berkeley"
+    ]
+  },
+  "tesseract": {
+    "cited_by_count": 14,
+    "openalex_title": "Comparative Analysis of Outcomes of Tesseract OCR for Different Languages",
+    "institutions": [
+      "GLS University"
+    ]
+  },
+  "orv": {
+    "cited_by_count": 1,
+    "openalex_title": "Optimal Operation Method for Multiple ORVs for LNG Stations",
+    "institutions": [
+      "Hebei University of Technology"
+    ]
+  },
+  "wristworld": {
+    "cited_by_count": 0,
+    "openalex_title": "WristWorld: Generating Wrist-Views via 4D World Models for Robotic Manipulation",
+    "institutions": []
+  },
+  "irasim": {
+    "cited_by_count": 1,
+    "openalex_title": "IRASim: A Fine-Grained World Model for Robot Manipulation",
+    "institutions": []
+  },
+  "wisa": {
+    "cited_by_count": 9,
+    "openalex_title": "WiSA: Privacy-enhanced WiFi-based activity intensity recognition in smart buildings using personalized federated learning",
+    "institutions": [
+      "Harbin Institute of Technology",
+      "Ministry of Industry and Information Technology"
+    ]
+  },
+  "i_jepa": {
+    "cited_by_count": 272,
+    "openalex_title": "Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture",
+    "institutions": [
+      "Mila - Quebec Artificial Intelligence Institute",
+      "McGill University",
+      "New York University"
+    ]
+  },
+  "v_jepa": {
+    "cited_by_count": 56,
+    "openalex_title": "When Does Sora Show: The Beginning of TAO to Imaginative Intelligence and Scenarios Engineering",
+    "institutions": [
+      "Macau University of Science and Technology",
+      "Chinese Academy of Sciences",
+      "University of Chinese Academy of Sciences",
+      "University of Indianapolis",
+      "Indiana University – Purdue University Indianapolis"
+    ]
+  },
+  "v_jepa_2": {
+    "cited_by_count": 0,
+    "openalex_title": "V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning",
+    "institutions": []
+  },
+  "seq_jepa": {
+    "cited_by_count": 0,
+    "openalex_title": "seq-JEPA: Autoregressive Predictive Learning of Invariant-Equivariant World Models",
+    "institutions": []
+  },
+  "mc_jepa": {
+    "cited_by_count": 5,
+    "openalex_title": "MC-JEPA: A Joint-Embedding Predictive Architecture for Self-Supervised Learning of Motion and Content Features",
+    "institutions": []
+  },
+  "dino_wm": {
+    "cited_by_count": 5,
+    "openalex_title": "DINO-WM: World Models on Pre-trained Visual Features enable Zero-shot Planning",
+    "institutions": []
+  },
+  "dino_world": {
+    "cited_by_count": 5,
+    "openalex_title": "DINO-WM: World Models on Pre-trained Visual Features enable Zero-shot Planning",
+    "institutions": []
+  },
+  "dino_foresight": {
+    "cited_by_count": 1,
+    "openalex_title": "DINO-Foresight: Looking into the Future with DINO",
+    "institutions": []
+  },
+  "world_models_group_latents": {
+    "cited_by_count": 15,
+    "openalex_title": "Distinct effects of long-term Tai Chi Chuan and aerobic exercise interventions on motor and neurocognitive performance in early-stage Parkinson's disease: a randomized controlled trial",
+    "institutions": [
+      "National Cheng Kung University",
+      "Kaohsiung Chang Gung Memorial Hospital",
+      "Chang Gung University",
+      "National Kaohsiung Normal University",
+      "National Pingtung University of Science and Technology"
+    ]
+  },
+  "lwm": {
+    "cited_by_count": 17,
+    "openalex_title": "LWMS-Net: A novel defect detection network based on multi-wavelet multi-scale for steel surface defects",
+    "institutions": [
+      "Chongqing University of Technology"
+    ]
+  },
+  "slot_attention": {
+    "cited_by_count": 218,
+    "openalex_title": "Object-Centric Learning with Slot Attention",
+    "institutions": [
+      "Google (United States)"
+    ]
+  },
+  "slotformer": {
+    "cited_by_count": 10,
+    "openalex_title": "SlotFormer: Unsupervised Visual Dynamics Simulation with Object-Centric Models",
+    "institutions": []
+  },
+  "lslotformer": {
+    "cited_by_count": 0,
+    "openalex_title": null,
+    "institutions": []
+  },
+  "mead": {
+    "cited_by_count": 44,
+    "openalex_title": "For God'S Sake, Margaret: Conversation With Gregory Bateson And Margaret Mead",
+    "institutions": []
+  },
+  "dyn_o": {
+    "cited_by_count": 13,
+    "openalex_title": "Tailoring single-ion magnet properties of coordination polymer C<sub>11</sub>H<sub>18</sub>DyN<sub>3</sub>O<sub>9</sub> (Dy-CP) using the radial effective charge model (RECM) and superposition model (SPM)",
+    "institutions": [
+      "University of Kalyani",
+      "West Pomeranian University of Technology in Szczecin",
+      "Adam Mickiewicz University in Poznań"
+    ]
+  },
+  "g_swm": {
+    "cited_by_count": 9,
+    "openalex_title": "Improving Generative Imagination in Object-Centric World Models",
+    "institutions": [
+      "Zhejiang University",
+      "Rutgers Sexual and Reproductive Health and Rights",
+      "Tianjin University"
+    ]
+  },
+  "carformer": {
+    "cited_by_count": 4,
+    "openalex_title": "CarFormer: Self-driving with Learned Object-Centric Representations",
+    "institutions": [
+      "Koç University"
+    ]
+  },
+  "focus": {
+    "cited_by_count": 708,
+    "openalex_title": "Diabetes mellitus, the fastest growing global public health concern: Early detection should be focused",
+    "institutions": [
+      "State University of Bangladesh",
+      "Gopalganj Science and Technology University",
+      "BRAC University"
+    ]
+  },
+  "fioc_wm": {
+    "cited_by_count": 0,
+    "openalex_title": "Learning Interactive World Model for Object-Centric Reinforcement Learning",
+    "institutions": []
+  },
+  "objects_matter": {
+    "cited_by_count": 120,
+    "openalex_title": "Hybrid-SORT: Weak Cues Matter for Online Multi-Object Tracking",
+    "institutions": [
+      "Dalian University of Technology"
+    ]
+  },
+  "owm_meets_policy": {
+    "cited_by_count": 91,
+    "openalex_title": "Olive mill wastes: from wastes to resources",
+    "institutions": [
+      "Ruhr University Bochum"
+    ]
+  },
+  "oc_latent_action": {
+    "cited_by_count": 353,
+    "openalex_title": "The roles and regulatory mechanisms of TGF-β and BMP signaling in bone and cartilage development, homeostasis and disease",
+    "institutions": [
+      "Zhejiang University",
+      "Tulane University"
+    ]
+  },
+  "compositional_ocl": {
+    "cited_by_count": 8,
+    "openalex_title": "Shepherding Slots to Objects: Towards Stable and Robust Object-Centric Learning",
+    "institutions": [
+      "Korea Advanced Institute of Science and Technology",
+      "Kootenay Association for Science & Technology",
+      "Yonsei University"
+    ]
+  },
+  "oc_repr_generalize": {
+    "cited_by_count": 10,
+    "openalex_title": "Boost Track++: Using tracklet information to detect more objects in multiple object tracking",
+    "institutions": [
+      "University of Nis"
+    ]
+  }
+}

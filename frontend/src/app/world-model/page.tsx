@@ -13,6 +13,9 @@ interface Paper {
   impact_score?: number | null
   is_rising?: boolean
   is_weak_signal?: boolean
+  shape?: 'circle' | 'square'
+  integration?: string | null
+  full_title?: string | null
 }
 interface Mutation { summary: string; detail: string; bottleneck?: string; result?: string }
 interface Iteration {
@@ -24,7 +27,15 @@ interface MapData { lanes: Lane[]; rows: Row[]; papers: Paper[]; iterations: Ite
 
 const data = worldModelData as unknown as MapData
 
-// Player colors — max 8, rest is gray
+// Lane colors — used as node fill
+const LANE_COLORS: Record<string, string> = {
+  video_gen: '#2563EB',
+  latent_space: '#7C3AED',
+  rl_based: '#059669',
+  vla: '#EA580C',
+}
+
+// Player colors — used only for player filter highlight
 const PLAYER_COLORS: Record<string, string> = {
   'DeepMind': '#4285F4',
   'Meta': '#8B5CF6',
@@ -34,8 +45,12 @@ const PLAYER_COLORS: Record<string, string> = {
   'UC Berkeley': '#FDB515',
   'Wayve': '#6B21A8',
   'Google Brain': '#4285F4',
+  'ByteDance': '#325AB4',
+  'Alibaba': '#FF6A00',
+  'AgibotTech': '#1A73E8',
+  'MIT': '#A31F34',
+  'Columbia': '#B9D9EB',
 }
-const OTHER_COLOR = '#9CA3AF'
 
 // Map paper IDs to player/org
 const PAPER_PLAYER: Record<string, string> = {
@@ -54,11 +69,28 @@ const PAPER_PLAYER: Record<string, string> = {
   gaia1: 'Wayve', drivevla: 'Wayve', uniworld: 'Wayve',
   diffuser: 'UC Berkeley', decision_diffuser: 'UC Berkeley',
   drive_wm: 'NVIDIA', vista: 'NVIDIA',
-  genie_envisioner: 'DeepMind', gamenngen: 'DeepMind',
+  genie_envisioner: 'AgibotTech', gamenngen: 'DeepMind',
   copilot4d: 'NVIDIA',
+  unipi: 'Google Brain', vidarc: 'Alibaba', cosmos_policy: 'NVIDIA',
+  uwm: 'MIT', ge_act: 'AgibotTech', gigabrain: '极佳视界',
+  gr1: 'ByteDance', flare: 'NVIDIA', frappe: 'Other',
+  pi0_5: 'Physical Intelligence', vla_mbpo: 'Other',
+  gen2act: 'Google Brain', video2act: 'Other', tc_idm: 'Other',
+  dreamzero: 'Other', uva: 'Other', video_policy: 'Other',
+  lda_1b: 'Other', dit4dit: 'Other', fast_wam: 'Other',
+  diwa: 'Other', wmpo: 'Other', worldeval: 'Other', worldgym: 'Other',
+  vidman: 'Other', gigaworld_policy: '极佳视界',
+  vla_jepa: 'Meta', dial: 'Other',
+  gr2: 'ByteDance', dreamvla: 'Other',
 }
 
-function getNodeColor(paperId: string): string {
+const OTHER_COLOR = '#9CA3AF'
+
+function getLaneColor(paper: Paper): string {
+  return LANE_COLORS[paper.lane] || OTHER_COLOR
+}
+
+function getPlayerColor(paperId: string): string {
   const player = PAPER_PLAYER[paperId]
   if (player && PLAYER_COLORS[player]) return PLAYER_COLORS[player]
   return OTHER_COLOR
@@ -73,7 +105,7 @@ const TRACKS = ['Multimodal Video', 'Autonomous Driving', 'Embodied Robotics', '
 const PAPER_TRACK: Record<string, string> = {
   sora: 'Multimodal Video', gen3: 'Multimodal Video', wan: 'Multimodal Video', cosmos: 'Multimodal Video',
   emu3: 'Multimodal Video', lwm: 'Multimodal Video', teleworld: 'Multimodal Video',
-  ivideogpt: 'Multimodal Video', genie_envisioner: 'Multimodal Video',
+  ivideogpt: 'Multimodal Video', genie_envisioner: 'Embodied Robotics',
   gaia1: 'Autonomous Driving', drivevla: 'Autonomous Driving', uniworld: 'Autonomous Driving',
   drive_wm: 'Autonomous Driving', vista: 'Autonomous Driving', copilot4d: 'Autonomous Driving',
   think2drive: 'Autonomous Driving', x_mobility: 'Autonomous Driving',
@@ -90,6 +122,17 @@ const PAPER_TRACK: Record<string, string> = {
   text2room: 'Spatial Intelligence', wonderworld: 'Spatial Intelligence', falconwing: 'Spatial Intelligence',
   slot_attention: 'Spatial Intelligence', slotformer: 'Spatial Intelligence',
   genie2: '3D Games/VR', oasis: '3D Games/VR', gamenngen: '3D Games/VR',
+  unipi: 'Embodied Robotics', vidarc: 'Embodied Robotics', cosmos_policy: 'Embodied Robotics',
+  uwm: 'Embodied Robotics', ge_act: 'Embodied Robotics', gigabrain: 'Embodied Robotics',
+  gr1: 'Embodied Robotics', flare: 'Embodied Robotics', frappe: 'Spatial Intelligence',
+  pi0_5: 'Embodied Robotics', vla_mbpo: 'Autonomous Driving',
+  gen2act: 'Embodied Robotics', video2act: 'Embodied Robotics', tc_idm: 'Embodied Robotics',
+  dreamzero: 'Embodied Robotics', uva: 'Embodied Robotics', video_policy: 'Embodied Robotics',
+  lda_1b: 'Embodied Robotics', dit4dit: 'Embodied Robotics', fast_wam: 'Embodied Robotics',
+  diwa: 'Embodied Robotics', wmpo: 'Embodied Robotics', worldeval: 'Embodied Robotics', worldgym: 'Embodied Robotics',
+  vidman: 'Embodied Robotics', gigaworld_policy: 'Embodied Robotics',
+  vla_jepa: 'Spatial Intelligence', dial: 'Spatial Intelligence',
+  gr2: 'Embodied Robotics', dreamvla: 'Embodied Robotics',
 }
 
 const PATH_LABELS: Record<string, string> = {
@@ -112,11 +155,13 @@ const END_YEAR = 2027
 const NUM_YEARS = END_YEAR - START_YEAR
 
 function getNodeRadius(paper: Paper): number {
-  const MIN_R = 4, MAX_R = 16
+  const MIN_R = 4, MAX_R = 18
   if (paper.impact_score != null) {
-    return MIN_R + (MAX_R - MIN_R) * Math.pow(paper.impact_score / 100, 0.6)
+    const DATA_MIN = 13, DATA_MAX = 87
+    const normalized = Math.max(0, Math.min(1, (paper.impact_score - DATA_MIN) / (DATA_MAX - DATA_MIN)))
+    return MIN_R + (MAX_R - MIN_R) * Math.pow(normalized, 0.5)
   }
-  return paper.size === 'lg' ? 10 : paper.size === 'md' ? 7 : 5
+  return paper.size === 'lg' ? 12 : paper.size === 'md' ? 8 : 5
 }
 
 function yearRange(): number[] {
@@ -212,32 +257,16 @@ function TopicView({ laneId, papers, lanes, rows, onBack }: {
     const p = pos(paper.id)
     if (!p) return null
     const sz = getNodeRadius(paper)
-    const color = getNodeColor(paper.id)
+    const color = getLaneColor(paper)
+    const isFoundation = paper.shape !== 'square'
     const isActive = hovered === paper.id
     const r = sz * (isActive ? 1.3 : 1)
-    const fillOpacity = isActive ? 0.8 : 0.5
+    const fillOpacity = isActive ? 0.9 : (isFoundation ? 0.85 : 0.4)
 
     const sw = isActive ? 2 : 1.5
     const dash = paper.is_weak_signal ? "3,2" : undefined
     let shapeEl: React.ReactNode
-    const shape = LAYER_SHAPES[paper.layer] || 'circle'
-    if (shape === 'circle') {
-      shapeEl = <circle cx={p.x} cy={p.y} r={r} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
-    } else if (shape === 'square') {
-      shapeEl = <rect x={p.x - r} y={p.y - r} width={r * 2} height={r * 2} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
-    } else if (shape === 'diamond') {
-      shapeEl = <rect x={p.x - r * 0.8} y={p.y - r * 0.8} width={r * 1.6} height={r * 1.6} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} transform={`rotate(45 ${p.x} ${p.y})`} />
-    } else if (shape === 'triangle') {
-      const pts = `${p.x},${p.y - r} ${p.x - r},${p.y + r} ${p.x + r},${p.y + r}`
-      shapeEl = <polygon points={pts} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
-    } else {
-      const a = r
-      const pts = [0,1,2,3,4,5].map(i => {
-        const ang = Math.PI / 6 + i * Math.PI / 3
-        return `${p.x + a * Math.cos(ang)},${p.y + a * Math.sin(ang)}`
-      }).join(' ')
-      shapeEl = <polygon points={pts} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
-    }
+    shapeEl = <circle cx={p.x} cy={p.y} r={r} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
 
     const glowEl = paper.is_rising ? (
       <circle cx={p.x} cy={p.y} r={r + 4} fill="none" stroke={color} strokeWidth={2} opacity={0.3} filter="url(#rising-glow)" />
@@ -314,7 +343,7 @@ function TopicView({ laneId, papers, lanes, rows, onBack }: {
             const p2 = pos(to)
             if (!p1 || !p2) return null
             const fromPaper = lanePapers.find(p => p.id === from)
-            const color = getNodeColor(fromPaper?.id || '')
+            const color = fromPaper ? getLaneColor(fromPaper) : OTHER_COLOR
             const isActive = hovered === from || hovered === to
             return (
               <line key={`bo-${from}-${to}`}
@@ -330,7 +359,7 @@ function TopicView({ laneId, papers, lanes, rows, onBack }: {
             const p2 = pos(to)
             if (!p1 || !p2) return null
             const fromPaper = lanePapers.find(p => p.id === from)
-            const color = getNodeColor(fromPaper?.id || '')
+            const color = fromPaper ? getLaneColor(fromPaper) : OTHER_COLOR
             const isActive = hovered === from || hovered === to
             const cp1x = p1.x + (p2.x - p1.x) * 0.3
             const cp2x = p1.x + (p2.x - p1.x) * 0.7
@@ -411,7 +440,7 @@ function IterationView({ iteration, papers, lanes, rows, onBack }: {
               const prev = iterPapers[i - 1]
               const x1 = qToX(prev.year, prev.quarter)
               const x2 = qToX(paper.year, paper.quarter)
-              const color = getNodeColor(paper.id)
+              const color = getLaneColor(paper)
               return (
                 <line key={`${prev.id}-${paper.id}`}
                   x1={`${x1}%`} y1="40" x2={`${x2}%`} y2="40"
@@ -423,14 +452,16 @@ function IterationView({ iteration, papers, lanes, rows, onBack }: {
 
           {iterPapers.map(paper => {
             const x = qToX(paper.year, paper.quarter)
-            const color = getNodeColor(paper.id)
+            const color = getLaneColor(paper)
+            const isFoundation = paper.shape !== 'square'
             const sz = getNodeRadius(paper) * 1.5
             return (
               <div key={paper.id} className={styles.iterNode} style={{ left: `${x}%` }}>
                 <div className={styles.nodeDot} style={{
                   width: sz * 2, height: sz * 2,
-                  backgroundColor: `${color}cc`, borderColor: color,
-                  borderRadius: LAYER_SHAPES[paper.layer] === 'circle' ? '50%' : '0',
+                  backgroundColor: color, borderColor: color,
+                  borderRadius: '50%',
+                  opacity: isFoundation ? 0.85 : 0.4,
                 }} />
                 <div className={styles.iterNodeTitle}>{paper.title}</div>
                 <div className={styles.iterNodeDate}>{paper.year} Q{paper.quarter}</div>
@@ -442,7 +473,7 @@ function IterationView({ iteration, papers, lanes, rows, onBack }: {
         <div className={styles.iterCards} style={{ gridTemplateColumns: `repeat(${iterPapers.length}, 1fr)` }}>
           {iterPapers.map(paper => {
             const mutation = iteration.mutations[paper.id]
-            const color = getNodeColor(paper.id)
+            const color = getLaneColor(paper)
             if (!mutation) return <div key={paper.id} />
             return (
               <div key={paper.id} className={styles.iterCard} style={{ borderTopColor: color }}>
@@ -589,16 +620,22 @@ export default function WorldModelPage() {
           <p className={styles.subtitle}>位置 = 建模方式(Lane) × 时间 · 点击节点查看详情</p>
         </div>
         <div className={styles.controls}>
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginRight: 16, flexWrap: 'wrap' }}>
-            {Object.entries(PLAYER_COLORS).filter(([k]) => k !== 'Google Brain').map(([name, color]) => (
-              <span key={name} style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 10, fontFamily: 'IBM Plex Sans', color: '#3f3f46' }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: color, display: 'inline-block' }} />
-                {name}
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginRight: 16, flexWrap: 'wrap' }}>
+            {data.lanes.map(lane => (
+              <span key={lane.id} style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 10, fontFamily: 'IBM Plex Sans', color: '#3f3f46' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: LANE_COLORS[lane.id], display: 'inline-block' }} />
+                {lane.title}
               </span>
             ))}
-            <span style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 10, fontFamily: 'IBM Plex Sans', color: '#a1a1aa' }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: OTHER_COLOR, display: 'inline-block' }} />
-              Other
+            <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, fontFamily: 'IBM Plex Sans', color: '#71717a', marginLeft: 8 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#3f3f46', display: 'inline-block' }} />
+                Foundation
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#3f3f46', opacity: 0.4, display: 'inline-block' }} />
+                Adaptation
+              </span>
             </span>
           </div>
           <button onClick={collapseAll} className={styles.btn}>全部折叠</button>
@@ -706,54 +743,121 @@ export default function WorldModelPage() {
                     )
                   })}
 
-                  {rowPapers.map(paper => {
-                    const pos = paperPos[paper.id]
-                    if (!pos) return null
-                    const sz = getNodeRadius(paper)
-                    const color = getNodeColor(paper.id)
-                    const isTrunk = paper.path === 'trunk'
-                    const show = isExpanded || isTrunk
-                    const trackMatch = !highlightTrack || PAPER_TRACK[paper.id] === highlightTrack
-                    const nodeOpacity = highlightTrack ? (trackMatch ? 1 : 0.15) : (show ? 1 : 0.4)
+                  {(() => {
+                    // Group papers by quarter for clustering
+                    const byQuarter: Record<string, Paper[]> = {}
+                    for (const paper of rowPapers) {
+                      const key = `${paper.path}-${paper.year}-${paper.quarter}`
+                      if (!byQuarter[key]) byQuarter[key] = []
+                      byQuarter[key].push(paper)
+                    }
 
-                    return (
-                      <div
-                        key={paper.id}
-                        className={styles.node}
-                        style={{
-                          left: `${pos.x}%`,
-                          top: pos.y - rl.top - sz,
-                          opacity: nodeOpacity,
-                          zIndex: trackMatch && highlightTrack ? 20 : (isTrunk ? 10 : 5),
-                          transition: 'opacity 0.2s',
-                        }}
-                        onClick={(e) => { e.stopPropagation(); setSelected(paper) }}
-                        title={`${paper.title} · ${paper.year} Q${paper.quarter}`}
-                      >
-                        <div
-                          className={styles.nodeDot}
-                          style={{
-                            width: sz * 2, height: sz * 2,
-                            backgroundColor: `${color}cc`,
-                            borderColor: color,
-                            borderRadius: LAYER_SHAPES[paper.layer] === 'circle' ? '50%' :
-                              LAYER_SHAPES[paper.layer] === 'diamond' ? '2px' : '0',
-                            transform: LAYER_SHAPES[paper.layer] === 'diamond' ? 'rotate(45deg) scale(0.85)' : undefined,
-                            boxShadow: paper.is_rising ? `0 0 ${sz}px ${color}` :
-                              (trackMatch && highlightTrack ? `0 0 8px ${color}` : undefined),
-                            borderWidth: trackMatch && highlightTrack ? 2.5 : undefined,
-                            borderStyle: paper.is_weak_signal ? 'dashed' : undefined,
-                          }}
-                        />
-                        {show && (!highlightTrack || trackMatch) && (paper.impact_score == null ? paper.size !== 'sm' : paper.impact_score > 30) && (
-                          <div className={styles.nodeLabel} style={{ maxWidth: 90 }}>
-                            <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{paper.title}</div>
-                            {isExpanded && <div className={styles.nodeDate}>{paper.year} Q{paper.quarter}</div>}
+                    const elements: React.ReactNode[] = []
+
+                    for (const [key, group] of Object.entries(byQuarter)) {
+                      if (group.length >= 5) {
+                        // Render cluster node
+                        const rep = group.reduce((a, b) => ((a.impact_score || 0) > (b.impact_score || 0) ? a : b))
+                        const pos = paperPos[rep.id]
+                        if (!pos) continue
+                        const color = getLaneColor(rep)
+                        const sz = 14
+                        const isTrunk = rep.path === 'trunk'
+                        const show = isExpanded || isTrunk
+                        const trackMatch = !highlightTrack || group.some(p => PAPER_TRACK[p.id] === highlightTrack)
+                        const nodeOpacity = highlightTrack ? (trackMatch ? 1 : 0.15) : (show ? 1 : 0.4)
+
+                        elements.push(
+                          <div
+                            key={`cluster-${key}`}
+                            className={styles.node}
+                            style={{
+                              left: `${pos.x}%`,
+                              top: pos.y - rl.top - sz,
+                              opacity: nodeOpacity,
+                              zIndex: 15,
+                              transition: 'opacity 0.2s',
+                            }}
+                            onClick={(e) => { e.stopPropagation(); setSelected(rep) }}
+                            title={group.map(p => p.title).join('\n')}
+                          >
+                            <div
+                              className={styles.nodeDot}
+                              style={{
+                                width: sz * 2, height: sz * 2,
+                                backgroundColor: color,
+                                borderColor: color,
+                                borderRadius: '50%',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              }}
+                            >
+                              <span style={{ fontSize: 10, fontWeight: 700, color: '#fff', fontFamily: 'IBM Plex Sans' }}>
+                                {group.length}
+                              </span>
+                            </div>
+                            {show && (
+                              <div className={styles.nodeLabel} style={{ maxWidth: 90 }}>
+                                <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rep.title} +{group.length - 1}</div>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    )
-                  })}
+                        )
+                      } else {
+                        // Render individual nodes
+                        for (const paper of group) {
+                          const pos = paperPos[paper.id]
+                          if (!pos) continue
+                          const sz = getNodeRadius(paper)
+                          const color = getLaneColor(paper)
+                          const isFoundation = paper.shape !== 'square'
+                          const fillOpacity = isFoundation ? 0.85 : 0.4
+                          const isTrunk = paper.path === 'trunk'
+                          const show = isExpanded || isTrunk
+                          const trackMatch = !highlightTrack || PAPER_TRACK[paper.id] === highlightTrack
+                          const nodeOpacity = highlightTrack ? (trackMatch ? 1 : 0.15) : (show ? 1 : 0.4)
+
+                          elements.push(
+                            <div
+                              key={paper.id}
+                              className={styles.node}
+                              style={{
+                                left: `${pos.x}%`,
+                                top: pos.y - rl.top - sz,
+                                opacity: nodeOpacity,
+                                zIndex: trackMatch && highlightTrack ? 20 : (isTrunk ? 10 : 5),
+                                transition: 'opacity 0.2s',
+                              }}
+                              onClick={(e) => { e.stopPropagation(); setSelected(paper) }}
+                              title={`${paper.title} · ${paper.year} Q${paper.quarter}`}
+                            >
+                              <div
+                                className={styles.nodeDot}
+                                style={{
+                                  width: sz * 2, height: sz * 2,
+                                  backgroundColor: color,
+                                  borderColor: color,
+                                  borderRadius: '50%',
+                                  opacity: fillOpacity,
+                                  boxShadow: paper.is_rising ? `0 0 ${sz}px ${color}` :
+                                    (trackMatch && highlightTrack ? `0 0 8px ${color}` : undefined),
+                                  borderWidth: trackMatch && highlightTrack ? 2.5 : undefined,
+                                  borderStyle: paper.is_weak_signal ? 'dashed' : undefined,
+                                }}
+                              />
+                              {show && (!highlightTrack || trackMatch) && (paper.impact_score == null ? paper.size !== 'sm' : paper.impact_score > 30) && (
+                                <div className={styles.nodeLabel} style={{ maxWidth: 90 }}>
+                                  <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{paper.title}</div>
+                                  {isExpanded && <div className={styles.nodeDate}>{paper.year} Q{paper.quarter}</div>}
+                                </div>
+                              )}
+                            </div>
+                          )
+                        }
+                      }
+                    }
+
+                    return elements
+                  })()}
                 </div>
               )
             })}

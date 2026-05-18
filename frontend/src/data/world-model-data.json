@@ -115,9 +115,12 @@
       "path": "trunk",
       "size": "lg",
       "builds_on": [],
-      "impact_score": 70.0,
+      "impact_score": 79.7,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "dreamer_v1",
@@ -133,9 +136,12 @@
       "builds_on": [
         "planet"
       ],
-      "impact_score": 70.0,
+      "impact_score": 74.3,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "dreamer_v2",
@@ -151,9 +157,12 @@
       "builds_on": [
         "dreamer_v1"
       ],
-      "impact_score": 70.0,
+      "impact_score": 64.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "dreamer_v3",
@@ -169,9 +178,12 @@
       "builds_on": [
         "dreamer_v2"
       ],
-      "impact_score": 92.5,
-      "is_rising": true,
-      "is_weak_signal": false
+      "impact_score": 75.0,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "dreamsmooth",
@@ -187,9 +199,12 @@
       "builds_on": [
         "dreamer_v1"
       ],
-      "impact_score": 30.4,
+      "impact_score": 17.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "harmonydream",
@@ -205,9 +220,12 @@
       "builds_on": [
         "dreamer_v1"
       ],
-      "impact_score": 30.4,
+      "impact_score": 17.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "thick",
@@ -225,7 +243,10 @@
       ],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "crssm",
@@ -243,7 +264,10 @@
       ],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "pigdreamer",
@@ -261,7 +285,10 @@
       ],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "dymodreamer",
@@ -279,7 +306,10 @@
       ],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "robodreamer",
@@ -293,9 +323,12 @@
       "path": "robotics",
       "size": "md",
       "builds_on": [],
-      "impact_score": 51.2,
+      "impact_score": 35.0,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "flowdreamer",
@@ -311,7 +344,10 @@
       "builds_on": [],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "vipra",
@@ -325,9 +361,12 @@
       "path": "robotics",
       "size": "md",
       "builds_on": [],
-      "impact_score": 46.4,
+      "impact_score": 26.8,
       "is_rising": true,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "navmorph",
@@ -343,9 +382,12 @@
       "builds_on": [
         "dreamer_v1"
       ],
-      "impact_score": null,
+      "impact_score": 25,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "adaptive_wm",
@@ -363,7 +405,10 @@
       ],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "hieros",
@@ -381,7 +426,10 @@
       ],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "coworld",
@@ -399,7 +447,10 @@
       ],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "dima",
@@ -413,9 +464,12 @@
       "path": "extensions",
       "size": "md",
       "builds_on": [],
-      "impact_score": 48.6,
+      "impact_score": 27.3,
       "is_rising": true,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "r2i",
@@ -429,9 +483,12 @@
       "path": "extensions",
       "size": "md",
       "builds_on": [],
-      "impact_score": 45.4,
+      "impact_score": 24.3,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "mosim",
@@ -445,9 +502,12 @@
       "path": "extensions",
       "size": "md",
       "builds_on": [],
-      "impact_score": 40.8,
+      "impact_score": 23.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "leq",
@@ -461,9 +521,12 @@
       "path": "extensions",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 31.8,
+      "impact_score": 17.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "pcm",
@@ -479,7 +542,10 @@
       "builds_on": [],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "waker",
@@ -495,7 +561,10 @@
       "builds_on": [],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "rem",
@@ -511,7 +580,10 @@
       "builds_on": [],
       "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "tdmpc",
@@ -525,9 +597,12 @@
       "path": "trunk",
       "size": "lg",
       "builds_on": [],
-      "impact_score": 63.8,
+      "impact_score": 59.4,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "tdmpc2",
@@ -543,9 +618,12 @@
       "builds_on": [
         "tdmpc"
       ],
-      "impact_score": 74.6,
+      "impact_score": 53.2,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "pwm",
@@ -561,9 +639,12 @@
       "builds_on": [
         "tdmpc2"
       ],
-      "impact_score": 38.5,
+      "impact_score": 19.7,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "iq_mpc",
@@ -579,9 +660,12 @@
       "builds_on": [
         "tdmpc"
       ],
-      "impact_score": 31.8,
+      "impact_score": 17.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "diffuser",
@@ -595,9 +679,12 @@
       "path": "trunk",
       "size": "lg",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 72.2,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "decision_diffuser",
@@ -613,9 +700,12 @@
       "builds_on": [
         "diffuser"
       ],
-      "impact_score": null,
+      "impact_score": 67.3,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "pivot_r",
@@ -631,9 +721,12 @@
       "builds_on": [
         "diffuser"
       ],
-      "impact_score": null,
+      "impact_score": 25.2,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "sora",
@@ -647,13 +740,16 @@
         "Multimodal Video"
       ],
       "size": "lg",
-      "impact_score": 69.7,
-      "is_rising": true,
+      "impact_score": 92,
+      "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "paradigm": "diffusion_video",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "gen3_alpha",
@@ -671,9 +767,12 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 50,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "wan",
@@ -687,13 +786,16 @@
         "Multimodal Video"
       ],
       "size": "md",
-      "impact_score": 13.8,
+      "impact_score": 45,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "paradigm": "diffusion_video",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "cosmos",
@@ -708,13 +810,16 @@
         "Autonomous Driving"
       ],
       "size": "md",
-      "impact_score": 13.8,
+      "impact_score": 40,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "paradigm": "diffusion_video",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "oasis",
@@ -728,13 +833,16 @@
         "3D Games/VR"
       ],
       "size": "md",
-      "impact_score": 13.8,
+      "impact_score": 35,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "paradigm": "diffusion_video",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "gamenngen",
@@ -752,9 +860,12 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 38.4,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "drive_wm",
@@ -772,9 +883,12 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 35,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "vista",
@@ -792,9 +906,12 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 47.1,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "tesseract",
@@ -808,13 +925,16 @@
         "Embodied Robotics"
       ],
       "size": "sm",
-      "impact_score": 63.4,
+      "impact_score": 41.0,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "paradigm": "diffusion_video",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "vid2world",
@@ -828,13 +948,16 @@
         "Embodied Robotics"
       ],
       "size": "sm",
-      "impact_score": 13.8,
+      "impact_score": 25,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "paradigm": "diffusion_video",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "emu3",
@@ -847,14 +970,17 @@
         "Multimodal Video"
       ],
       "size": "md",
-      "impact_score": 38.8,
+      "impact_score": 22.5,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "path": "trunk",
       "paradigm": "autoregressive_video",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "lwm",
@@ -867,14 +993,17 @@
         "Multimodal Video"
       ],
       "size": "sm",
-      "impact_score": 54.2,
+      "impact_score": 29.5,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "path": "trunk",
       "paradigm": "autoregressive_video",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "genie2",
@@ -887,14 +1016,17 @@
         "3D Games/VR"
       ],
       "size": "md",
-      "impact_score": 28.0,
+      "impact_score": 55,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "path": "trunk",
       "paradigm": "autoregressive_video",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "ivideogpt",
@@ -912,9 +1044,12 @@
       "paradigm": "autoregressive_video",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 28.3,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "text2room",
@@ -927,14 +1062,17 @@
         "Spatial Intelligence"
       ],
       "size": "sm",
-      "impact_score": 60.5,
+      "impact_score": 67.8,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "path": "trunk",
       "paradigm": "3dgs_nerf",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "4d_fy",
@@ -952,9 +1090,12 @@
       "paradigm": "3dgs_nerf",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 70.2,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "wonderworld",
@@ -967,14 +1108,17 @@
         "Spatial Intelligence"
       ],
       "size": "sm",
-      "impact_score": 53.1,
+      "impact_score": 29.2,
       "is_rising": true,
       "is_weak_signal": false,
       "lane": "video_gen",
       "path": "trunk",
       "paradigm": "3dgs_nerf",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "falconwing",
@@ -992,9 +1136,12 @@
       "paradigm": "3dgs_nerf",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 20,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "lidarcrafter",
@@ -1013,9 +1160,12 @@
       "paradigm": "3dgs_nerf",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 20,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "i_jepa",
@@ -1028,14 +1178,17 @@
         "Spatial Intelligence"
       ],
       "size": "lg",
-      "impact_score": 79.6,
+      "impact_score": 78.0,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "path": "trunk",
       "paradigm": "jepa_based",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "v_jepa",
@@ -1048,14 +1201,17 @@
         "Spatial Intelligence"
       ],
       "size": "md",
-      "impact_score": 72.5,
-      "is_rising": true,
+      "impact_score": 54.5,
+      "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "path": "trunk",
       "paradigm": "jepa_based",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "v_jepa2",
@@ -1073,9 +1229,12 @@
       "paradigm": "jepa_based",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 20.0,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "seq_jepa",
@@ -1088,14 +1247,17 @@
         "Spatial Intelligence"
       ],
       "size": "sm",
-      "impact_score": 13.8,
+      "impact_score": 22,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "path": "trunk",
       "paradigm": "jepa_based",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "dino_wm",
@@ -1108,14 +1270,17 @@
         "Spatial Intelligence"
       ],
       "size": "md",
-      "impact_score": 59.5,
+      "impact_score": 42.3,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "path": "trunk",
       "paradigm": "dino_based",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "dino_world",
@@ -1128,14 +1293,17 @@
         "Spatial Intelligence"
       ],
       "size": "sm",
-      "impact_score": 40.8,
+      "impact_score": 23.5,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "path": "trunk",
       "paradigm": "dino_based",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "slot_attention",
@@ -1149,13 +1317,16 @@
         "Spatial Intelligence"
       ],
       "size": "lg",
-      "impact_score": 92.5,
+      "impact_score": 76.8,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "paradigm": "slot_based",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "slotformer",
@@ -1169,13 +1340,16 @@
         "Spatial Intelligence"
       ],
       "size": "md",
-      "impact_score": 20.2,
+      "impact_score": 26.8,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "paradigm": "slot_based",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "steve1",
@@ -1193,9 +1367,12 @@
       "paradigm": "slot_based",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 41.9,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "dyn_o",
@@ -1209,13 +1386,16 @@
         "Spatial Intelligence"
       ],
       "size": "sm",
-      "impact_score": 49.8,
+      "impact_score": 28.1,
       "is_rising": true,
       "is_weak_signal": false,
       "lane": "latent_space",
       "paradigm": "slot_based",
       "layer": "arch",
-      "builds_on": []
+      "builds_on": [],
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "causal_world",
@@ -1233,9 +1413,12 @@
       "paradigm": "slot_based",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 67.3,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "rt2",
@@ -1253,9 +1436,12 @@
       "paradigm": "vla_llm",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 79.7,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "octo",
@@ -1273,9 +1459,12 @@
       "paradigm": "vla_llm",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 57.3,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "pi0",
@@ -1293,9 +1482,12 @@
       "paradigm": "vla_diffusion",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 70,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "diffusion_policy",
@@ -1313,9 +1505,12 @@
       "paradigm": "vla_diffusion",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 86.2,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "x_mobility",
@@ -1333,9 +1528,12 @@
       "paradigm": "vla_diffusion",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 30,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "drivevla",
@@ -1353,9 +1551,12 @@
       "paradigm": "vla_driving",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 49.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "uniworld",
@@ -1373,9 +1574,12 @@
       "paradigm": "vla_driving",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 36.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "gaia1",
@@ -1393,9 +1597,12 @@
       "paradigm": "vla_driving",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 40.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "copilotd4",
@@ -1413,9 +1620,12 @@
       "paradigm": "vla_driving",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 30,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
     },
     {
       "id": "think2drive",
@@ -1433,7 +1643,881 @@
       "paradigm": "vla_driving",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": null,
+      "impact_score": 49.5,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "mc_jepa",
+      "title": "MC-JEPA",
+      "year": 2024,
+      "quarter": 3,
+      "paradigm": "jepa_based",
+      "layer": "arch",
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 20,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "teleworld",
+      "title": "TeleWorld",
+      "year": 2024,
+      "quarter": 4,
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 20,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "dino_foresight",
+      "title": "DINO-Foresight",
+      "year": 2025,
+      "quarter": 1,
+      "paradigm": "dino_based",
+      "layer": "arch",
+      "lane": "latent_space",
+      "row": "dino_based",
+      "path": "trunk",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 31.8,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "irasim",
+      "title": "IRASim",
+      "year": 2025,
+      "quarter": 2,
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "embodied",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 31.8,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "wristworld",
+      "title": "WristWorld",
+      "year": 2025,
+      "quarter": 1,
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "embodied",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 20,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "grounding_video",
+      "title": "Grounding Video",
+      "year": 2024,
+      "quarter": 3,
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 44.1,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "rap",
+      "title": "RAP",
+      "year": 2024,
+      "quarter": 2,
+      "paradigm": "mpc_based",
+      "layer": "arch",
+      "lane": "rl_based",
+      "row": "mpc_based",
+      "path": "trunk",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 39.5,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "focus",
+      "title": "FOCUS",
+      "year": 2024,
+      "quarter": 3,
+      "paradigm": "rssm_based",
+      "layer": "arch",
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 13.8,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "mead",
+      "title": "MEAD",
+      "year": 2024,
+      "quarter": 2,
+      "paradigm": "rssm_based",
+      "layer": "arch",
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 55.4,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "spmem",
+      "title": "SPMem",
+      "year": 2024,
+      "quarter": 3,
+      "paradigm": "rssm_based",
+      "layer": "arch",
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 31.8,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "cola_world",
+      "title": "CoLA-World",
+      "year": 2025,
+      "quarter": 1,
+      "paradigm": "rssm_based",
+      "layer": "arch",
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 39.6,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "carformer",
+      "title": "CarFormer",
+      "year": 2024,
+      "quarter": 2,
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "applications",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 38.8,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "orv",
+      "title": "ORV",
+      "year": 2024,
+      "quarter": 3,
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "applications",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 31.8,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "fioc_wm",
+      "title": "FIOC-WM",
+      "year": 2025,
+      "quarter": 1,
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "applications",
+      "size": "sm",
+      "builds_on": [],
+      "impact_score": 13.8,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "shape": "circle",
+      "integration": null,
+      "full_title": null
+    },
+    {
+      "id": "unipi",
+      "title": "UniPi",
+      "full_title": "Learning Universal Policies via Text-Guided Video Generation",
+      "year": 2023,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "idm",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 55,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "vidarc",
+      "title": "Vidarc",
+      "full_title": "Vidarc: Video as Auto-Regressive Controller",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "idm",
+      "builds_on": [
+        "wan"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 28,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "cosmos_policy",
+      "title": "Cosmos Policy",
+      "full_title": "Cosmos World Foundation Model Policy Learning",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "single_backbone",
+      "builds_on": [
+        "cosmos"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 30,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "uwm",
+      "title": "UWM",
+      "full_title": "Unified World Models: Coupling Video and Action Diffusion",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "single_backbone",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 35,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "ge_act",
+      "title": "GE-Act",
+      "full_title": "Towards Generalizable Robotic Policies via Action Chunking with Mixture of Experts",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "moe",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 38,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "gigabrain",
+      "title": "GigaBrain-0.5M",
+      "full_title": "GigaBrain-0.5M",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "simulator",
+      "builds_on": [
+        "wan"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 28,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "gr1",
+      "title": "GR-1",
+      "full_title": "Unleashing Large-Scale Video Generative Pre-training for Visual Robot Manipulation",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "idm",
+      "builds_on": [],
+      "paradigm": "ar_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 48,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "genie_envisioner",
+      "title": "Genie Envisioner",
+      "full_title": "Genie Envisioner: Building Generalizable Embodied World Models",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "genie2"
+      ],
+      "paradigm": "ar_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 50,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "flare",
+      "title": "FLARE",
+      "full_title": "FLARE: Achieving Masterful and Adaptive Robot Policies with Large-Scale Reinforcement Learning",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [],
+      "paradigm": "joint_embedding",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 45,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "frappe",
+      "title": "FRAPPE",
+      "full_title": "FRAPPE: Feature-space Representation Alignment for Policy Prediction",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "dino_based",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [
+        "dino_wm"
+      ],
+      "paradigm": "feature_world_model",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 22,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "pi0_5",
+      "title": "π0.5",
+      "full_title": "π0.5: A Vision-Language-Action Model with Open-World Generalization",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [
+        "pi0"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 55,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "vla_mbpo",
+      "title": "VLA-MBPO",
+      "full_title": "VLA-MBPO: Model-Based Policy Optimization with VLA World Model",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "vla",
+      "row": "vla_driving",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "simulator",
+      "builds_on": [],
+      "paradigm": "vlm",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 22,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "gen2act",
+      "title": "Gen2Act",
+      "full_title": "Generative and Generalizable Robot Actions Through Large-Scale Video Generation",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "idm",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 35,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "video2act",
+      "title": "Video2Act",
+      "full_title": "Video2Act: Bridging Video Generation and Robot Action",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "idm",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 25,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "tc_idm",
+      "title": "TC-IDM",
+      "full_title": "TC-IDM: Temporal-Consistent Inverse Dynamics Model",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "idm",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 18,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "dreamzero",
+      "title": "DreamZero/WAM",
+      "full_title": "DreamZero: World Action Model with Zero-Shot Generalization",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "single_backbone",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 22,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "uva",
+      "title": "UVA",
+      "full_title": "UVA: Unified Video and Action Generation",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "single_backbone",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 28,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "video_policy",
+      "title": "VideoPolicy",
+      "full_title": "VideoPolicy: Learning to Act by Watching Videos",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "single_backbone",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 25,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "lda_1b",
+      "title": "LDA-1B",
+      "full_title": "LDA-1B: A Large Diffusion Action Model for Generalist Robotic Manipulation",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "moe",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 25,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "dit4dit",
+      "title": "DiT4DiT",
+      "full_title": "DiT4DiT: Mixture-of-Transformers for Video World Models and Robot Control",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "moe",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 22,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "fast_wam",
+      "title": "Fast-WAM",
+      "full_title": "Fast World Action Models for Real-Time Control",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "moe",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 20,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "diwa",
+      "title": "DiWA",
+      "full_title": "DiWA: Diffusion World Model for Autonomous Agents",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "simulator",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 25,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "wmpo",
+      "title": "WMPO",
+      "full_title": "World Model Policy Optimization",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "simulator",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 25,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "worldeval",
+      "title": "WorldEval",
+      "full_title": "WorldEval: Evaluating Robot Policies via Video World Model Rollouts",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "evaluator",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 22,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "worldgym",
+      "title": "WorldGym",
+      "full_title": "WorldGym: Training Robots with World Model Imagination",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "evaluator",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 22,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "vidman",
+      "title": "VidMan",
+      "full_title": "VidMan: Exploiting Implicit Dynamics from Video Diffusion Model for Effective Robot Manipulation",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "idm",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 30,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "gigaworld_policy",
+      "title": "GigaWorld-Policy",
+      "full_title": "GigaWorld Policy Learning",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "single_backbone",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 22,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "vla_jepa",
+      "title": "VLA-JEPA",
+      "full_title": "VLA-JEPA: Joint-Embedding Predictive Architecture for Vision-Language-Action",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [
+        "v_jepa2"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 22,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "dial",
+      "title": "DIAL",
+      "full_title": "DIAL: Diffusion-Informed Action Learning in Latent Space",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 22,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "gr2",
+      "title": "GR-2",
+      "full_title": "GR-2: Generative Robotic Manipulation with Video Generation",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "single_backbone",
+      "builds_on": [
+        "gr1"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 42,
+      "is_rising": false,
+      "is_weak_signal": false
+    },
+    {
+      "id": "dreamvla",
+      "title": "DreamVLA",
+      "full_title": "DreamVLA: Vision-Language-Action with World Model Imagination",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "shape": "square",
+      "integration": "single_backbone",
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 28,
       "is_rising": false,
       "is_weak_signal": false
     }

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Single Lane - B+C 混合方案</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'IBM Plex Sans', sans-serif; background: #FFFFFF; padding: 40px; }
+h1 { font-size: 20px; font-weight: 600; color: #18181B; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #71717A; margin-bottom: 32px; }
+.lane-label { font-size: 12px; font-weight: 500; color: #71717A; margin-bottom: 8px; }
+svg { display: block; border: 1px solid #E4E4E7; }
+.note { font-size: 11px; color: #A1A1AA; margin-top: 12px; }
+</style>
+</head>
+<body>
+<h1>Video-Generative Lane · 引力散点</h1>
+<p class="sub">小点围绕 Foundation 大圆自然散布，密度=热度。横轴仍是时间，但无网格线。</p>
+
+<svg id="main" width="1100" height="260" viewBox="0 0 1100 260"></svg>
+<p class="note">小点围绕最近的 Foundation 聚集，距离越远越稀疏。一眼看出哪个方向论文多。</p>
+
+<script>
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0xFFFFFFFF;
+    return (s >>> 0) / 0xFFFFFFFF;
+  };
+}
+function hashStr(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) - h) + str.charCodeAt(i); h |= 0;
+  }
+  return Math.abs(h);
+}
+
+const BLUE = '#2563EB';
+
+function renderMain() {
+  const svg = document.getElementById('main');
+  const W = 1100, H = 260;
+
+  // 背景
+  svg.style.background = '#FAFAFA';
+
+  // 统一 impact → size 映射 (3-14px)，Foundation +2px bonus
+  function impactToR(impact, isFoundation) {
+    const base = 3 + (impact / 100) * 11; // 3-14px
+    return isFoundation ? base + 2 : base;
+  }
+
+  // Foundation 节点（带 label）
+  const foundations = [
+    { id:'sora', title:'Sora', x:150, y:110, impact:92 },
+    { id:'cosmos', title:'Cosmos', x:420, y:140, impact:40 },
+    { id:'wan', title:'Wan', x:520, y:80, impact:45 },
+    { id:'genie2', title:'Genie 2', x:700, y:110, impact:55 },
+    { id:'oasis', title:'Oasis', x:830, y:90, impact:35 },
+    { id:'gamengen', title:'GameNGen', x:470, y:190, impact:42 },
+    { id:'veo', title:'Veo 2', x:620, y:170, impact:48 },
+  ];
+
+  // 背景论文（无 label），围绕附近 Foundation 分布
+  const bgGroups = [
+    { near:'sora', count:12 },
+    { near:'cosmos', count:8 },
+    { near:'wan', count:10 },
+    { near:'genie2', count:6 },
+    { near:'oasis', count:4 },
+    { near:'gamengen', count:5 },
+    { near:'veo', count:7 },
+  ];
+
+  // 渲染背景论文
+  bgGroups.forEach(g => {
+    const anchor = foundations.find(f => f.id === g.near);
+    const rng = seededRandom(hashStr(g.near + '_bg'));
+    for (let i = 0; i < g.count; i++) {
+      const angle = rng() * Math.PI * 2;
+      const dist = 25 + rng() * 55;
+      const cx = anchor.x + Math.cos(angle) * dist;
+      const cy = anchor.y + Math.sin(angle) * dist;
+      const impact = 10 + rng() * 35;
+      const r = impactToR(impact, false);
+      const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('cx', cx);
+      dot.setAttribute('cy', cy);
+      dot.setAttribute('r', r);
+      dot.setAttribute('fill', BLUE);
+      dot.setAttribute('opacity', 0.3);
+      svg.appendChild(dot);
+    }
+  });
+
+  // 渲染 Foundation（实心 + label）
+  foundations.forEach(f => {
+    const r = impactToR(f.impact, true);
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx', f.x);
+    circle.setAttribute('cy', f.y);
+    circle.setAttribute('r', r);
+    circle.setAttribute('fill', BLUE);
+    circle.setAttribute('opacity', 0.85);
+    svg.appendChild(circle);
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x', f.x);
+    text.setAttribute('y', f.y + r + 13);
+    text.setAttribute('text-anchor','middle');
+    text.setAttribute('font-size','11');
+    text.setAttribute('fill','#18181B');
+    text.setAttribute('font-weight','500');
+    text.textContent = f.title;
+    svg.appendChild(text);
+  });
+
+  // 顶部时间轴（轻量参考线）
+  const axisY = 20;
+  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1', 60); line.setAttribute('y1', axisY);
+  line.setAttribute('x2', W - 40); line.setAttribute('y2', axisY);
+  line.setAttribute('stroke','#E4E4E7'); line.setAttribute('stroke-width','1');
+  svg.appendChild(line);
+  const timeLabels = [
+    {x:180, t:'2024 Q1'}, {x:400, t:'Q3'},
+    {x:550, t:'2025 Q1'}, {x:750, t:'Q3'},
+    {x:950, t:'2026 Q1'},
+  ];
+  timeLabels.forEach(tl => {
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', tl.x); t.setAttribute('y', axisY - 5);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size','9'); t.setAttribute('fill','#A1A1AA');
+    t.textContent = tl.t;
+    svg.appendChild(t);
+  });
+}
+
+renderMain();
+</script>
+</body>
+</html>

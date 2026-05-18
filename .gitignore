@@ -71,6 +71,9 @@ Thumbs.db
 # Claude Code personal settings
 .claude/settings.local.json
 .claude/hooks.json
+.claude/skills/
+.claude/docs/knowledge/lark/连接信息.md
+.claude/docs/z-meetings context/
 
 # Logs
 *.log
