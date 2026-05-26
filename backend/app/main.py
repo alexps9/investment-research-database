@@ -8,6 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
 from app.api.routes import router
+from app.api.world_model import router as world_model_router
+from app.db import init_db
 from app.utils.logger import setup_logging
 
 # Setup structured logging
@@ -34,6 +36,10 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(router)
+app.include_router(world_model_router)
+
+# Initialize SQLite database on startup
+init_db()
 
 # Log application startup
 logger.info(f"Academic Paper Analysis API v{__version__} initialized")

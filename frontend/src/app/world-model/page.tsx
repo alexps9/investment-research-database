@@ -90,7 +90,7 @@ function getLaneColor(paper: Paper): string {
   return LANE_COLORS[paper.lane] || OTHER_COLOR
 }
 
-function getPlayerColor(paperId: string): string {
+function getPlayerColor(paperId: string): string { // eslint-disable-line @typescript-eslint/no-unused-vars
   const player = PAPER_PLAYER[paperId]
   if (player && PLAYER_COLORS[player]) return PLAYER_COLORS[player]
   return OTHER_COLOR
@@ -146,7 +146,7 @@ const PATH_LABELS: Record<string, string> = {
   'slot_based:applications': 'Applications',
 }
 
-const LAYER_SHAPES: Record<string, string> = {
+const LAYER_SHAPES: Record<string, string> = { // eslint-disable-line @typescript-eslint/no-unused-vars
   arch: 'circle', sys: 'square', infer: 'diamond', train: 'triangle', memory: 'hexagon',
 }
 
@@ -155,11 +155,11 @@ const END_YEAR = 2027
 const NUM_YEARS = END_YEAR - START_YEAR
 
 function getNodeRadius(paper: Paper): number {
-  const MIN_R = 4, MAX_R = 18
+  const MIN_R = 4, MAX_R = 22
   if (paper.impact_score != null) {
-    const DATA_MIN = 13, DATA_MAX = 87
+    const DATA_MIN = 13, DATA_MAX = 92
     const normalized = Math.max(0, Math.min(1, (paper.impact_score - DATA_MIN) / (DATA_MAX - DATA_MIN)))
-    return MIN_R + (MAX_R - MIN_R) * Math.pow(normalized, 0.5)
+    return MIN_R + (MAX_R - MIN_R) * Math.pow(normalized, 1.5)
   }
   return paper.size === 'lg' ? 12 : paper.size === 'md' ? 8 : 5
 }
@@ -261,12 +261,11 @@ function TopicView({ laneId, papers, lanes, rows, onBack }: {
     const isFoundation = paper.shape !== 'square'
     const isActive = hovered === paper.id
     const r = sz * (isActive ? 1.3 : 1)
-    const fillOpacity = isActive ? 0.9 : (isFoundation ? 0.85 : 0.4)
+    const fillOpacity = isActive ? 1.0 : (isFoundation ? 1.0 : 0.3)
 
     const sw = isActive ? 2 : 1.5
     const dash = paper.is_weak_signal ? "3,2" : undefined
-    let shapeEl: React.ReactNode
-    shapeEl = <circle cx={p.x} cy={p.y} r={r} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
+    const shapeEl: React.ReactNode = <circle cx={p.x} cy={p.y} r={r} fill={color} fillOpacity={fillOpacity} stroke={color} strokeWidth={sw} strokeDasharray={dash} />
 
     const glowEl = paper.is_rising ? (
       <circle cx={p.x} cy={p.y} r={r + 4} fill="none" stroke={color} strokeWidth={2} opacity={0.3} filter="url(#rising-glow)" />
@@ -633,7 +632,7 @@ export default function WorldModelPage() {
                 Foundation
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#3f3f46', opacity: 0.4, display: 'inline-block' }} />
+                <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#3f3f46', opacity: 0.3, display: 'inline-block' }} />
                 Adaptation
               </span>
             </span>
@@ -810,7 +809,7 @@ export default function WorldModelPage() {
                           const sz = getNodeRadius(paper)
                           const color = getLaneColor(paper)
                           const isFoundation = paper.shape !== 'square'
-                          const fillOpacity = isFoundation ? 0.85 : 0.4
+                          const fillOpacity = isFoundation ? 1.0 : 0.3
                           const isTrunk = paper.path === 'trunk'
                           const show = isExpanded || isTrunk
                           const trackMatch = !highlightTrack || PAPER_TRACK[paper.id] === highlightTrack
@@ -917,7 +916,7 @@ export default function WorldModelPage() {
             <h2 className={styles.panelTitle}>{selected.title}</h2>
             {getPlayerLabel(selected.id) && <div style={{ fontSize: 11, color: '#71717a', marginBottom: 4 }}>{getPlayerLabel(selected.id)}</div>}
             <div className={styles.panelMeta}>{selected.year} Q{selected.quarter}</div>
-            <div className={styles.panelField}><span>Lane</span><span>{{video_gen:'Video-Generative',latent_space:'Latent-Space',rl_based:'RL-Based',vla:'VLA'}[selected.lane] || '—'}</span></div>
+            <div className={styles.panelField}><span>Lane</span><span>{{video_gen:'Video-Generative',latent_space:'Latent-Space',rl_based:'RL-Based',vla:'Policy'}[selected.lane] || '—'}</span></div>
             <div className={styles.panelField}><span>Paradigm</span><span>{selected.paradigm}</span></div>
             <div className={styles.panelField}><span>Layer</span><span>{selected.layer}</span></div>
             <div className={styles.panelField}><span>Path</span><span>{selected.path}</span></div>

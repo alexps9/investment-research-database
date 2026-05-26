@@ -56,31 +56,35 @@ def get_tenant_token():
 
 
 # ── 表结构定义 ────────────────────────────────────────────────────────────────
+# 飞书存的 = 人要看/编辑的字段
+# 本地算的（impact_score, is_rising, cited_by_count 等）不上飞书
 
 PAPER_FIELDS = [
-    {"field_name": "id", "type": 1},           # 文本
-    {"field_name": "title", "type": 1},
-    {"field_name": "year", "type": 2},          # 数字
-    {"field_name": "quarter", "type": 2},
-    {"field_name": "paradigm", "type": 1},
-    {"field_name": "layer", "type": 1},
-    {"field_name": "lane", "type": 1},
-    {"field_name": "row", "type": 1},
-    {"field_name": "path", "type": 1},
-    {"field_name": "size", "type": 1},
-    {"field_name": "builds_on", "type": 1},     # JSON array as text
-    {"field_name": "application", "type": 1},   # track/赛道
-    {"field_name": "institution", "type": 1},   # 机构
-    {"field_name": "cited_by_count", "type": 2},
+    {"field_name": "id", "type": 1},                # 文本 slug
+    {"field_name": "title", "type": 1},             # 文本
+    {"field_name": "year", "type": 2},              # 数字
+    {"field_name": "quarter", "type": 2},           # 数字 1-4
+    {"field_name": "player", "type": 1},            # 文本 机构名
+    {"field_name": "lane", "type": 1},              # 单选: video_embodied/latent/rl/end_to_end
+    {"field_name": "row", "type": 1},               # 单选: diffusion_video/jepa_based/...
+    {"field_name": "is_foundation", "type": 7},     # 勾选 bool
+    {"field_name": "integration", "type": 1},       # 单选: idm/single_backbone/moe/simulator/evaluator
+    {"field_name": "track", "type": 1},             # 文本(逗号分隔): robotics,driving,...
+    {"field_name": "builds_on", "type": 1},         # 文本: foundation paper id
+    {"field_name": "venue_tier", "type": 2},        # 数字 1-5
+    {"field_name": "institution_tier", "type": 2},  # 数字 1-4
+    {"field_name": "impact_override", "type": 2},   # 数字 可空，手动覆盖分数
 ]
 
 
 # ── Push: 本地 → 飞书 ────────────────────────────────────────────────────────
 
-def load_papers_from_backend():
-    sys.path.insert(0, str(Path(__file__).parent.parent / "backend"))
-    from app.data.world_model_data import PAPERS
-    return PAPERS
+def load_papers_from_json():
+    """从前端 JSON 加载论文数据"""
+    if JSON_OUT.exists():
+        data = json.loads(JSON_OUT.read_text())
+        return data.get("papers", data) if isinstance(data, dict) else data
+    raise FileNotFoundError(f"No data file at {JSON_OUT}")
 
 
 def create_bitable(token):
@@ -135,24 +139,23 @@ def push_papers(token, app_token, table_id, papers):
     """批量推送论文到飞书"""
     records = []
     for p in papers:
-        records.append({
-            "fields": {
-                "id": p.id,
-                "title": p.title,
-                "year": p.year,
-                "quarter": p.quarter,
-                "paradigm": p.paradigm,
-                "layer": p.layer,
-                "lane": p.lane,
-                "row": p.row,
-                "path": p.path,
-                "size": p.size,
-                "builds_on": json.dumps(p.builds_on or []),
-                "application": getattr(p, "application", ""),
-                "institution": "",
-                "cited_by_count": p.cited_by_count,
-            }
-        })
+        fields = {
+            "id": p.get("id", ""),
+            "title": p.get("title", ""),
+            "year": p.get("year", 2024),
+            "quarter": p.get("quarter", 1),
+            "player": p.get("player", ""),
+            "lane": p.get("lane", ""),
+            "row": p.get("row", ""),
+            "is_foundation": p.get("is_foundation", False),
+            "integration": p.get("integration", ""),
+            "track": ",".join(p.get("track", [])) if isinstance(p.get("track"), list) else p.get("track", ""),
+            "builds_on": p.get("builds_on", ""),
+            "venue_tier": p.get("venue_tier") or 0,
+            "institution_tier": p.get("institution_tier") or 0,
+            "impact_override": p.get("impact_override") or 0,
+        }
+        records.append({"fields": fields})
 
     # 飞书批量上限 500 条
     batch_size = 500
@@ -176,8 +179,8 @@ def do_push():
     token = get_tenant_token()
     print(f"Got token: {token[:10]}...\n")
 
-    papers = load_papers_from_backend()
-    print(f"Loaded {len(papers)} papers from backend\n")
+    papers = load_papers_from_json()
+    print(f"Loaded {len(papers)} papers from JSON\n")
 
     # 检查是否已有 state
     state = load_state()
@@ -238,33 +241,38 @@ def do_pull():
 
     print(f"Pulled {len(all_records)} records from Lark\n")
 
-    # 转换为 Paper 格式
+    # 转换为 Paper 格式（新 schema v3）
     papers = []
     for rec in all_records:
         f = rec["fields"]
+        track_raw = f.get("track", "")
+        track = [t.strip() for t in track_raw.split(",") if t.strip()] if track_raw else []
         papers.append({
             "id": f.get("id", ""),
             "title": f.get("title", ""),
             "year": int(f.get("year", 2024)),
             "quarter": int(f.get("quarter", 1)),
-            "paradigm": f.get("paradigm", ""),
-            "layer": f.get("layer", "arch"),
+            "player": f.get("player", ""),
             "lane": f.get("lane", ""),
             "row": f.get("row", ""),
-            "path": f.get("path", "trunk"),
-            "size": f.get("size", "md"),
-            "builds_on": json.loads(f.get("builds_on", "[]")),
-            "application": f.get("application", ""),
-            "institution": f.get("institution", ""),
-            "cited_by_count": int(f.get("cited_by_count", 0)),
+            "is_foundation": bool(f.get("is_foundation", False)),
+            "integration": f.get("integration", "") or None,
+            "track": track,
+            "builds_on": f.get("builds_on", "") or None,
+            "venue_tier": int(f.get("venue_tier", 0)) or None,
+            "institution_tier": int(f.get("institution_tier", 0)) or None,
+            "impact_override": float(f.get("impact_override", 0)) or None,
         })
 
-    # 保存为 JSON
+    # 保存为前端 JSON（直接覆盖 world-model-data.json）
     out_path = Path(__file__).parent / "lark-papers.json"
     out_path.write_text(json.dumps(papers, ensure_ascii=False, indent=2))
     print(f"Saved to {out_path}")
     print(f"\nPapers pulled: {len(papers)}")
-    print("Next: review lark-papers.json, then update backend data if needed.")
+    print("Next steps:")
+    print("  1. Review lark-papers.json")
+    print("  2. Run: python scripts/lark_sync.py apply  (to merge into frontend JSON)")
+    print("  3. Run impact scoring to compute impact_score/is_rising")
 
     save_state({**state, "last_pull": time.strftime("%Y-%m-%dT%H:%M:%S")})
 

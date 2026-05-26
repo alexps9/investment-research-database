@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Trunks + Confluence — World Model 演化主干图 v1</title>
+<style>
+  body { font-family: 'IBM Plex Sans', -apple-system, sans-serif; background: #FFFFFF; color: #18181B; margin: 0; padding: 40px 60px; }
+  h1 { font-size: 18px; font-weight: 600; margin: 0 0 4px; }
+  .sub { font-size: 12px; color: #71717A; margin-bottom: 32px; }
+  .legend { display: flex; gap: 24px; font-size: 11px; color: #3F3F46; margin-bottom: 24px; align-items: center; }
+  .legend span.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #3F3F46; margin-right: 6px; vertical-align: middle; }
+  .legend span.star { color: #EA580C; font-size: 14px; margin-right: 6px; vertical-align: middle; }
+  .legend span.bar { display: inline-block; width: 24px; height: 3px; background: #3F3F46; margin-right: 6px; vertical-align: middle; }
+  svg { display: block; background: #FFFFFF; }
+  .trunk { stroke: #3F3F46; fill: none; }
+  .trunk-faint { stroke: #D4D4D8; fill: none; }
+  .milestone { fill: #18181B; }
+  .milestone-label { font-size: 10px; fill: #18181B; font-weight: 500; }
+  .lane-label { font-size: 13px; font-weight: 600; fill: #18181B; }
+  .lane-sub { font-size: 9px; fill: #71717A; }
+  .confluence { fill: #EA580C; }
+  .confluence-label { font-size: 10px; fill: #EA580C; font-weight: 500; }
+  .confluence-fuse { font-size: 9px; fill: #B45309; font-style: italic; }
+  .confluence-line { stroke: #EA580C; stroke-width: 1; stroke-dasharray: 3,2; fill: none; opacity: 0.6; }
+  .year-label { font-size: 11px; fill: #3F3F46; font-weight: 500; }
+  .year-tick { stroke: #E4E4E7; stroke-width: 0.5; }
+  .era-bg { stroke: none; }
+  .era-label { font-size: 10px; fill: #3F3F46; font-weight: 500; }
+  .now-line { stroke: #FF4400; stroke-width: 1; stroke-dasharray: 4,2; }
+  .now-label { font-size: 10px; fill: #FF4400; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<h1>World Model — 主干 × 汇流点</h1>
+<p class="sub">用最少的点呈现演化结构。汇流 = 同时引用了两条以上主干的工作。</p>
+
+<div class="legend">
+  <span><span class="bar"></span>主干（持续演化的技术路径）</span>
+  <span><span class="dot"></span>里程碑论文</span>
+  <span><span class="star">★</span>汇流点（融合 ≥ 2 条主干）</span>
+</div>
+
+<svg id="canvas" width="1200" height="640" viewBox="0 0 1200 640" xmlns="http://www.w3.org/2000/svg"></svg>
+
+<script>
+// ────────────────────────────────────────────────────────────────────
+// Layout
+const W = 1200, H = 640;
+const X0 = 200, X1 = 1140;
+const Y_TOP = 80;
+const ROW_H = 110;
+
+const YEAR_START = 2019, YEAR_END = 2027;
+function tx(year, q) {
+  const t = year + (q - 1) * 0.25;
+  return X0 + (t - YEAR_START) / (YEAR_END - YEAR_START) * (X1 - X0);
+}
+
+const trunks = [
+  { id: 'rl',    title: 'RL / Imagination',  sub: '想象训练，model-based',     y: Y_TOP + 0 * ROW_H },
+  { id: 'video', title: 'Diffusion Video',   sub: '像素级世界生成',            y: Y_TOP + 1 * ROW_H },
+  { id: 'jepa',  title: 'JEPA / Latent',     sub: '抽象表示预测',              y: Y_TOP + 2 * ROW_H },
+  { id: 'policy',title: 'Policy / VLA',      sub: '从理解到行动（应用层）',     y: Y_TOP + 3 * ROW_H },
+];
+
+const milestones = [
+  { trunk: 'rl', year: 2019, q: 4, label: 'Dreamer V1' },
+  { trunk: 'rl', year: 2021, q: 1, label: 'Dreamer V2' },
+  { trunk: 'rl', year: 2024, q: 1, label: 'TD-MPC2' },
+  { trunk: 'rl', year: 2025, q: 1, label: 'Dreamer V3' },
+
+  { trunk: 'video', year: 2024, q: 1, label: 'Sora' },
+  { trunk: 'video', year: 2024, q: 3, label: 'GameNGen' },
+  { trunk: 'video', year: 2024, q: 4, label: 'Genie2' },
+  { trunk: 'video', year: 2025, q: 1, label: 'Cosmos / Wan' },
+
+  { trunk: 'jepa', year: 2023, q: 2, label: 'I-JEPA' },
+  { trunk: 'jepa', year: 2024, q: 1, label: 'V-JEPA' },
+  { trunk: 'jepa', year: 2026, q: 1, label: 'V-JEPA 2' },
+
+  { trunk: 'policy', year: 2024, q: 1, label: 'OpenVLA / Octo' },
+  { trunk: 'policy', year: 2024, q: 3, label: 'Pi-0' },
+  { trunk: 'policy', year: 2025, q: 2, label: 'Pi-0.5' },
+];
+
+const confluences = [
+  { year: 2025, q: 3, label: 'Genie Envisioner', fuse: 'Diffusion Video × Policy', from: ['video', 'policy'] },
+  { year: 2025, q: 4, label: 'Cosmos→Robotics', fuse: 'Diffusion Video → Policy training', from: ['video', 'policy'], yOffset: 30 },
+  { year: 2026, q: 1, label: 'DreamDojo', fuse: 'RL × Diffusion Video', from: ['rl', 'video'] },
+  { year: 2026, q: 1, label: 'DreamZero', fuse: 'RL × Video × Policy', from: ['rl', 'video', 'policy'], yOffset: 30 },
+  { year: 2026, q: 2, label: 'Pi-0.7', fuse: 'Policy × JEPA-style latent WM', from: ['policy', 'jepa'] },
+];
+
+const eras = [
+  { start: [2019, 1], end: [2024, 1], label: 'Dreamer/PlaNet 主导期', bg: '#F5F5F5' },
+  { start: [2024, 1], end: [2026, 1], label: 'Sora 爆发', bg: '#FFFFFF' },
+  { start: [2026, 1], end: [2027, 1], label: '产业化收敛', bg: '#FFFBEB' },
+];
+
+// ────────────────────────────────────────────────────────────────────
+// Render
+const svg = document.getElementById('canvas');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  svg.appendChild(e);
+  return e;
+}
+
+// Era bands
+for (const era of eras) {
+  const x1 = tx(era.start[0], era.start[1]);
+  const x2 = tx(era.end[0], era.end[1]);
+  el('rect', { class: 'era-bg', x: x1, y: 50, width: x2 - x1, height: 22, fill: era.bg, stroke: '#E4E4E7', 'stroke-width': 0.5 });
+  el('text', { class: 'era-label', x: (x1 + x2) / 2, y: 65, 'text-anchor': 'middle' }, era.label);
+}
+
+// Year axis
+for (let y = YEAR_START; y <= YEAR_END; y++) {
+  const x = tx(y, 1);
+  el('line', { class: 'year-tick', x1: x, y1: 72, x2: x, y2: H - 30 });
+  el('text', { class: 'year-label', x: x, y: H - 14, 'text-anchor': 'middle' }, y);
+}
+
+// NOW line
+const nowX = tx(2026, 2);
+el('line', { class: 'now-line', x1: nowX, y1: 72, x2: nowX, y2: H - 30 });
+el('text', { class: 'now-label', x: nowX, y: 80, 'text-anchor': 'middle' }, 'NOW');
+
+// Trunks (horizontal lines + labels)
+const trunkMap = {};
+for (const t of trunks) {
+  trunkMap[t.id] = t;
+  // Faint line spanning all years (so trunks exist even without data)
+  el('line', { class: 'trunk-faint', x1: X0, y1: t.y, x2: X1, y2: t.y, 'stroke-width': 1.5 });
+  // Lane label (left)
+  el('text', { class: 'lane-label', x: 30, y: t.y + 4 }, t.title);
+  el('text', { class: 'lane-sub',   x: 30, y: t.y + 18 }, t.sub);
+}
+
+// Trunk active segments — bold the trunk where milestones exist
+function activeRange(trunkId) {
+  const ms = milestones.filter(m => m.trunk === trunkId);
+  if (ms.length === 0) return null;
+  const ys = ms.map(m => tx(m.year, m.q));
+  return [Math.min(...ys) - 16, Math.max(...ys) + 16];
+}
+for (const t of trunks) {
+  const r = activeRange(t.id);
+  if (!r) continue;
+  el('line', { class: 'trunk', x1: r[0], y1: t.y, x2: r[1], y2: t.y, 'stroke-width': 3 });
+}
+
+// Milestones (drawn before confluences so confluence stars sit on top)
+for (const m of milestones) {
+  const x = tx(m.year, m.q);
+  const y = trunkMap[m.trunk].y;
+  el('circle', { class: 'milestone', cx: x, cy: y, r: 5 });
+  el('text', { class: 'milestone-label', x: x, y: y - 12, 'text-anchor': 'middle' }, m.label);
+}
+
+// Confluences — drawn between trunks they fuse, with dashed lines back to each parent trunk
+for (const c of confluences) {
+  const x = tx(c.year, c.q);
+  const ys = c.from.map(id => trunkMap[id].y);
+  const cy = (Math.min(...ys) + Math.max(...ys)) / 2 + (c.yOffset || 0);
+  for (const id of c.from) {
+    const ty = trunkMap[id].y;
+    el('path', { class: 'confluence-line', d: `M ${x} ${ty} Q ${x + 4} ${(ty + cy) / 2}, ${x} ${cy}` });
+  }
+  el('text', { class: 'confluence', x: x, y: cy + 6, 'text-anchor': 'middle', 'font-size': 18 }, '★');
+  const labelX = x + 14;
+  el('text', { class: 'confluence-label', x: labelX, y: cy + 1 }, c.label);
+  el('text', { class: 'confluence-fuse',  x: labelX, y: cy + 13 }, c.fuse);
+}
+</script>
+</body>
+</html>

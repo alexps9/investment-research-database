@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Trunks V2 — Fork & Confluence</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'IBM Plex Sans', -apple-system, sans-serif; background: #fff; color: #18181b; }
+.header { padding: 16px 24px; border-bottom: 1px solid #e4e4e7; }
+.header h1 { font-size: 16px; font-weight: 700; }
+.header p { font-size: 11px; color: #71717a; margin-top: 2px; }
+.container { padding: 20px; overflow-x: auto; }
+svg { display: block; width: 100%; }
+svg text { font-family: 'IBM Plex Sans', sans-serif; }
+.legend { padding: 12px 24px; border-top: 1px solid #e4e4e7; display: flex; gap: 24px; font-size: 11px; color: #52525b; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Trunks V2 — 技术路径分叉与合流</h1>
+  <p>主干=实线水平延续 · 分叉=贝塞尔弧剥离 · 合流=菱形汇入 · 跨lane=虚线弧</p>
+</div>
+<div class="container">
+<svg viewBox="0 0 1200 580" width="100%" style="max-width:1200px">
+<rect x="0" y="45" width="1200" height="90" fill="#2563EB" opacity="0.02"/>
+<text x="10" y="58" font-size="9" fill="#2563EB" font-weight="700">Video-Generative</text>
+<rect x="0" y="185" width="1200" height="90" fill="#059669" opacity="0.02"/>
+<text x="10" y="198" font-size="9" fill="#059669" font-weight="700">RL-Based</text>
+<rect x="0" y="325" width="1200" height="90" fill="#7C3AED" opacity="0.02"/>
+<text x="10" y="338" font-size="9" fill="#7C3AED" font-weight="700">Latent-Space</text>
+<rect x="0" y="455" width="1200" height="90" fill="#EA580C" opacity="0.02"/>
+<text x="10" y="468" font-size="9" fill="#EA580C" font-weight="700">Policy/VLA</text>
+<line x1="90.0" y1="15" x2="90.0" y2="565" stroke="#e4e4e7" stroke-width="0.5"/>
+<text x="90.0" y="576" text-anchor="middle" font-size="8" fill="#a1a1aa">2019</text>
+<line x1="234.0" y1="15" x2="234.0" y2="565" stroke="#e4e4e7" stroke-width="0.5"/>
+<text x="234.0" y="576" text-anchor="middle" font-size="8" fill="#a1a1aa">2020</text>
+<line x1="378.0" y1="15" x2="378.0" y2="565" stroke="#e4e4e7" stroke-width="0.5"/>
+<text x="378.0" y="576" text-anchor="middle" font-size="8" fill="#a1a1aa">2021</text>
+<line x1="522.0" y1="15" x2="522.0" y2="565" stroke="#e4e4e7" stroke-width="0.5"/>
+<text x="522.0" y="576" text-anchor="middle" font-size="8" fill="#a1a1aa">2022</text>
+<line x1="666.0" y1="15" x2="666.0" y2="565" stroke="#e4e4e7" stroke-width="0.5"/>
+<text x="666.0" y="576" text-anchor="middle" font-size="8" fill="#a1a1aa">2023</text>
+<line x1="810.0" y1="15" x2="810.0" y2="565" stroke="#e4e4e7" stroke-width="0.5"/>
+<text x="810.0" y="576" text-anchor="middle" font-size="8" fill="#a1a1aa">2024</text>
+<line x1="954.0" y1="15" x2="954.0" y2="565" stroke="#e4e4e7" stroke-width="0.5"/>
+<text x="954.0" y="576" text-anchor="middle" font-size="8" fill="#a1a1aa">2025</text>
+<line x1="1098.0" y1="15" x2="1098.0" y2="565" stroke="#e4e4e7" stroke-width="0.5"/>
+<text x="1098.0" y="576" text-anchor="middle" font-size="8" fill="#a1a1aa">2026</text>
+<path d="M810.0,90 L982.8000000000065,90" stroke="#2563EB" stroke-width="3" fill="none" stroke-linecap="round" opacity="1"/>
+<circle cx="810.0" cy="90" r="5" fill="#2563EB" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="810.0" y="106" text-anchor="middle" font-size="7" fill="#2563EB">Sora</text>
+<circle cx="838.8000000000065" cy="90" r="5" fill="#2563EB" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="838.8000000000065" y="106" text-anchor="middle" font-size="7" fill="#2563EB">Drive-WM</text>
+<circle cx="954.0" cy="90" r="4" fill="#2563EB" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+<text x="954.0" y="105" text-anchor="middle" font-size="7" fill="#2563EB">Cosmos</text>
+<circle cx="982.8000000000065" cy="90" r="4" fill="#2563EB" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+<text x="982.8000000000065" y="105" text-anchor="middle" font-size="7" fill="#2563EB">Wan</text>
+<path d="M738.0,60 L738.0,60" stroke="#2563EB" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.5"/>
+<circle cx="738.0" cy="60" r="7" fill="#2563EB" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="738.0" y="78" text-anchor="middle" font-size="7" fill="#2563EB">UniPi</text>
+<path d="M882.0,120 L954.0,120" stroke="#2563EB" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+<circle cx="882.0" cy="120" r="4" fill="#2563EB" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+<text x="882.0" y="135" text-anchor="middle" font-size="7" fill="#2563EB">GameNGen</text>
+<circle cx="925.1999999999935" cy="120" r="4" fill="#2563EB" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+<text x="925.1999999999935" y="135" text-anchor="middle" font-size="7" fill="#2563EB">Genie 2</text>
+<circle cx="954.0" cy="120" r="4" fill="#2563EB" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+<text x="954.0" y="135" text-anchor="middle" font-size="7" fill="#2563EB">Oasis</text>
+<path d="M882.0,65 L910.8000000000065,65" stroke="#2563EB" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4"/>
+<circle cx="882.0" cy="65" r="5" fill="#2563EB" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+<text x="882.0" y="81" text-anchor="middle" font-size="7" fill="#2563EB">LWM</text>
+<circle cx="910.8000000000065" cy="65" r="4" fill="#2563EB" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+<text x="910.8000000000065" y="80" text-anchor="middle" font-size="7" fill="#2563EB">Emu3</text>
+<path d="M162.0,230 L954.0,230" stroke="#059669" stroke-width="3" fill="none" stroke-linecap="round" opacity="1"/>
+<circle cx="162.0" cy="230" r="7" fill="#059669" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="162.0" y="248" text-anchor="middle" font-size="7" fill="#059669">PlaNet</text>
+<circle cx="234.0" cy="230" r="7" fill="#059669" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="234.0" y="248" text-anchor="middle" font-size="7" fill="#059669">Dreamer V1</text>
+<circle cx="378.0" cy="230" r="7" fill="#059669" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="378.0" y="248" text-anchor="middle" font-size="7" fill="#059669">Dreamer V2</text>
+<circle cx="954.0" cy="230" r="7" fill="#059669" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="954.0" y="248" text-anchor="middle" font-size="7" fill="#059669">Dreamer V3</text>
+<path d="M594.0,202 L882.0,202" stroke="#059669" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+<circle cx="594.0" cy="202" r="5" fill="#059669" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="594.0" y="218" text-anchor="middle" font-size="7" fill="#059669">TD-MPC</text>
+<circle cx="882.0" cy="202" r="5" fill="#059669" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="882.0" y="218" text-anchor="middle" font-size="7" fill="#059669">TD-MPC2</text>
+<path d="M594.0,258 L738.0,258" stroke="#059669" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+<circle cx="594.0" cy="258" r="7" fill="#059669" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="594.0" y="276" text-anchor="middle" font-size="7" fill="#059669">Diffuser</text>
+<circle cx="738.0" cy="258" r="5" fill="#059669" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+<text x="738.0" y="274" text-anchor="middle" font-size="7" fill="#059669">DecisionDiff</text>
+<path d="M666.0,370 L954.0,370" stroke="#7C3AED" stroke-width="3" fill="none" stroke-linecap="round" opacity="1"/>
+<circle cx="666.0" cy="370" r="7" fill="#7C3AED" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="666.0" y="388" text-anchor="middle" font-size="7" fill="#7C3AED">I-JEPA</text>
+<circle cx="810.0" cy="370" r="7" fill="#7C3AED" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="810.0" y="388" text-anchor="middle" font-size="7" fill="#7C3AED">V-JEPA</text>
+<circle cx="954.0" cy="370" r="4" fill="#7C3AED" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+<text x="954.0" y="385" text-anchor="middle" font-size="7" fill="#7C3AED">V-JEPA 2</text>
+<path d="M306.0,342 L738.0,342" stroke="#7C3AED" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+<circle cx="306.0" cy="342" r="7" fill="#7C3AED" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="306.0" y="360" text-anchor="middle" font-size="7" fill="#7C3AED">SlotAttn</text>
+<circle cx="738.0" cy="342" r="5" fill="#7C3AED" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="738.0" y="358" text-anchor="middle" font-size="7" fill="#7C3AED">SlotFormer</text>
+<path d="M666.0,500 L954.0,500" stroke="#EA580C" stroke-width="3" fill="none" stroke-linecap="round" opacity="1"/>
+<circle cx="666.0" cy="500" r="7" fill="#EA580C" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="666.0" y="518" text-anchor="middle" font-size="7" fill="#EA580C">Diff Policy</text>
+<circle cx="882.0" cy="500" r="5" fill="#EA580C" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="882.0" y="516" text-anchor="middle" font-size="7" fill="#EA580C">π0</text>
+<circle cx="954.0" cy="500" r="4" fill="#EA580C" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+<text x="954.0" y="515" text-anchor="middle" font-size="7" fill="#EA580C">π0.5</text>
+<path d="M738.0,475 L810.0,475" stroke="#EA580C" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+<circle cx="738.0" cy="475" r="5" fill="#EA580C" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="738.0" y="491" text-anchor="middle" font-size="7" fill="#EA580C">RT-2</text>
+<circle cx="810.0" cy="475" r="5" fill="#EA580C" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+<text x="810.0" y="491" text-anchor="middle" font-size="7" fill="#EA580C">Octo</text>
+<path d="M378.0,230 C464.4,230 464.4,202 594.0,202" stroke="#059669" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+<path d="M378.0,230 C464.4,230 464.4,258 594.0,258" stroke="#059669" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+<path d="M954.0,230 C896.4000000000033,230 896.4000000000033,265 838.8000000000065,265" stroke="#059669" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" stroke-dasharray="6,3"/>
+<path d="M810.0,90 C824.4000000000033,90 824.4000000000033,265 838.8000000000065,265" stroke="#2563EB" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" stroke-dasharray="6,3"/>
+<rect x="830.8000000000065" y="257" width="16" height="16" rx="2" fill="#fff" stroke="#059669" stroke-width="2" transform="rotate(45,838.8000000000065,265)"/>
+<text x="838.8000000000065" y="285" text-anchor="middle" font-size="7" fill="#059669" font-weight="600">UniSim</text>
+<text x="838.8000000000065" y="294" text-anchor="middle" font-size="6" fill="#71717a">RL inside video WM</text>
+<path d="M954.0,230 C968.4000000000033,230 968.4000000000033,125 982.8000000000065,125" stroke="#059669" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" stroke-dasharray="6,3"/>
+<path d="M810.0,90 C896.4000000000033,90 896.4000000000033,125 982.8000000000065,125" stroke="#2563EB" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" stroke-dasharray="6,3"/>
+<rect x="974.8000000000065" y="117" width="16" height="16" rx="2" fill="#fff" stroke="#2563EB" stroke-width="2" transform="rotate(45,982.8000000000065,125)"/>
+<text x="982.8000000000065" y="145" text-anchor="middle" font-size="7" fill="#2563EB" font-weight="600">AR-DiT</text>
+<text x="982.8000000000065" y="154" text-anchor="middle" font-size="6" fill="#71717a">diffusion goes causal</text>
+<path d="M954.0,230 C975.5999999999967,230 975.5999999999967,265 997.1999999999935,265" stroke="#059669" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" stroke-dasharray="6,3"/>
+<path d="M954.0,90 C975.5999999999967,90 975.5999999999967,265 997.1999999999935,265" stroke="#2563EB" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" stroke-dasharray="6,3"/>
+<rect x="989.1999999999935" y="257" width="16" height="16" rx="2" fill="#fff" stroke="#059669" stroke-width="2" transform="rotate(45,997.1999999999935,265)"/>
+<text x="997.1999999999935" y="285" text-anchor="middle" font-size="7" fill="#059669" font-weight="600">DreamGen</text>
+<text x="997.1999999999935" y="294" text-anchor="middle" font-size="6" fill="#71717a">22 behaviors from 1 demo</text>
+<path d="M954.0,230 C1011.5999999999967,230 1011.5999999999967,520 1069.1999999999935,520" stroke="#059669" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" stroke-dasharray="6,3"/>
+<path d="M954.0,90 C1011.5999999999967,90 1011.5999999999967,520 1069.1999999999935,520" stroke="#2563EB" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4" stroke-dasharray="6,3"/>
+<rect x="1061.1999999999935" y="512" width="16" height="16" rx="2" fill="#fff" stroke="#EA580C" stroke-width="2" transform="rotate(45,1069.1999999999935,520)"/>
+<text x="1069.1999999999935" y="540" text-anchor="middle" font-size="7" fill="#EA580C" font-weight="600">DreamDojo/Zero</text>
+<text x="1069.1999999999935" y="549" text-anchor="middle" font-size="6" fill="#71717a">44K hrs + actions</text>
+<path d="M810.0,90 C846.0,90 846.0,120 882.0,120" stroke="#71717a" stroke-width="1.2" fill="none" stroke-dasharray="5,3" opacity="0.5"/>
+<text x="846.0" y="101.0" text-anchor="middle" font-size="7" fill="#71717a" opacity="0.7">borrows diffusion</text>
+</svg>
+</div>
+<div class="legend">
+  <div class="legend-item"><svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#475569" stroke-width="3" stroke-linecap="round"/></svg> 主干 (inherits)</div>
+  <div class="legend-item"><svg width="24" height="10"><path d="M0,8 C8,8 8,2 16,2 L24,2" stroke="#475569" stroke-width="2" fill="none" stroke-linecap="round"/></svg> 分叉 (competes)</div>
+  <div class="legend-item"><svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#71717a" stroke-width="1.2" stroke-dasharray="5,3"/></svg> 借鉴 (borrows)</div>
+  <div class="legend-item"><svg width="16" height="16"><rect x="2" y="2" width="10" height="10" rx="1" fill="#fff" stroke="#475569" stroke-width="1.5" transform="rotate(45,8,8)"/></svg> 合流 (confluence)</div>
+</div>
+</body>
+</html>

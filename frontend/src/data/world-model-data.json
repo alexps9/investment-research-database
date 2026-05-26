@@ -1,30 +1,30 @@
 {
   "_schema_version": "v2",
-  "_lanes_order": "video_gen / latent_space / rl_based / vla",
+  "_lanes_order": "video_gen / rl_based / latent_space / vla",
   "_rows_count": 12,
   "lanes": [
     {
       "id": "video_gen",
       "title": "Video-Generative",
-      "subtitle": "像素生成",
+      "subtitle": "从观看中学习",
       "color": "#2563EB"
-    },
-    {
-      "id": "latent_space",
-      "title": "Latent-Space",
-      "subtitle": "潜空间预测",
-      "color": "#7C3AED"
     },
     {
       "id": "rl_based",
       "title": "RL-Based",
-      "subtitle": "想象力规划",
+      "subtitle": "在想象中训练",
       "color": "#059669"
     },
     {
+      "id": "latent_space",
+      "title": "Latent-Space",
+      "subtitle": "抽象表示预测",
+      "color": "#7C3AED"
+    },
+    {
       "id": "vla",
-      "title": "VLA",
-      "subtitle": "Vision-Language-Action",
+      "title": "Policy",
+      "subtitle": "策略层：从理解到行动",
       "color": "#EA580C"
     }
   ],
@@ -115,12 +115,16 @@
       "path": "trunk",
       "size": "lg",
       "builds_on": [],
-      "impact_score": 79.7,
+      "impact_score": 91.1,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Google",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 1200
     },
     {
       "id": "dreamer_v1",
@@ -136,12 +140,22 @@
       "builds_on": [
         "planet"
       ],
-      "impact_score": 74.3,
+      "impact_score": 89.4,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Google/Danijar",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 900,
+      "connections": [
+        {
+          "target": "planet",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "dreamer_v2",
@@ -157,12 +171,22 @@
       "builds_on": [
         "dreamer_v1"
       ],
-      "impact_score": 64.8,
+      "impact_score": 87.8,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Google/Danijar",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 700,
+      "connections": [
+        {
+          "target": "dreamer_v1",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "dreamer_v3",
@@ -178,12 +202,22 @@
       "builds_on": [
         "dreamer_v2"
       ],
-      "impact_score": 75.0,
+      "impact_score": 83.6,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Google/Danijar",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 350,
+      "connections": [
+        {
+          "target": "dreamer_v2",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "dreamsmooth",
@@ -197,14 +231,19 @@
       "path": "trunk",
       "size": "sm",
       "builds_on": [
-        "dreamer_v1"
+        "dreamer_v1",
+        "dreamer_v3"
       ],
-      "impact_score": 17.5,
+      "impact_score": 58.6,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "KAIST",
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "cited_by_count": 45
     },
     {
       "id": "harmonydream",
@@ -218,14 +257,19 @@
       "path": "trunk",
       "size": "sm",
       "builds_on": [
-        "dreamer_v1"
+        "dreamer_v1",
+        "dreamer_v2"
       ],
-      "impact_score": 17.5,
+      "impact_score": 56.1,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Tsinghua",
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "cited_by_count": 30
     },
     {
       "id": "thick",
@@ -241,12 +285,16 @@
       "builds_on": [
         "dreamer_v2"
       ],
-      "impact_score": 13.8,
+      "impact_score": 67.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Danijar",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 25
     },
     {
       "id": "crssm",
@@ -262,12 +310,16 @@
       "builds_on": [
         "dreamer_v2"
       ],
-      "impact_score": 13.8,
+      "impact_score": 47.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Uni Tubingen",
+      "venue_tier": 2,
+      "institution_tier": 4,
+      "cited_by_count": 20
     },
     {
       "id": "pigdreamer",
@@ -281,14 +333,19 @@
       "path": "robotics",
       "size": "sm",
       "builds_on": [
-        "dreamer_v1"
+        "dreamer_v1",
+        "dreamer_v3"
       ],
-      "impact_score": 13.8,
+      "impact_score": 29.0,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Tsinghua",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 8
     },
     {
       "id": "dymodreamer",
@@ -302,14 +359,19 @@
       "path": "robotics",
       "size": "sm",
       "builds_on": [
-        "dreamer_v1"
+        "dreamer_v1",
+        "dreamer_v3"
       ],
-      "impact_score": 13.8,
+      "impact_score": 26.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Shanghai AI Lab",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 5
     },
     {
       "id": "robodreamer",
@@ -322,13 +384,19 @@
       "row": "rssm_based",
       "path": "robotics",
       "size": "md",
-      "builds_on": [],
-      "impact_score": 35.0,
+      "builds_on": [
+        "dreamer_v3"
+      ],
+      "impact_score": 61.3,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "UCLA",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 25
     },
     {
       "id": "flowdreamer",
@@ -341,13 +409,19 @@
       "row": "rssm_based",
       "path": "robotics",
       "size": "sm",
-      "builds_on": [],
-      "impact_score": 13.8,
+      "builds_on": [
+        "dreamer_v3"
+      ],
+      "impact_score": 31.3,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Tsinghua",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 12
     },
     {
       "id": "vipra",
@@ -361,12 +435,16 @@
       "path": "robotics",
       "size": "md",
       "builds_on": [],
-      "impact_score": 26.8,
-      "is_rising": true,
-      "is_weak_signal": false,
+      "impact_score": 35.3,
+      "is_rising": false,
+      "is_weak_signal": true,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Stanford",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 8
     },
     {
       "id": "navmorph",
@@ -380,14 +458,19 @@
       "path": "robotics",
       "size": "sm",
       "builds_on": [
-        "dreamer_v1"
+        "dreamer_v1",
+        "dreamer_v3"
       ],
-      "impact_score": 25,
+      "impact_score": 38.8,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Stanford",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 15
     },
     {
       "id": "adaptive_wm",
@@ -401,14 +484,19 @@
       "path": "robotics",
       "size": "sm",
       "builds_on": [
-        "dreamer_v1"
+        "dreamer_v1",
+        "dreamer_v3"
       ],
-      "impact_score": 13.8,
+      "impact_score": 36.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Stanford",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 10
     },
     {
       "id": "hieros",
@@ -424,12 +512,16 @@
       "builds_on": [
         "dreamer_v1"
       ],
-      "impact_score": 13.8,
+      "impact_score": 45.8,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Uni Tubingen",
+      "venue_tier": 2,
+      "institution_tier": 4,
+      "cited_by_count": 15
     },
     {
       "id": "coworld",
@@ -443,14 +535,19 @@
       "path": "extensions",
       "size": "md",
       "builds_on": [
-        "dreamer_v1"
+        "dreamer_v1",
+        "dreamer_v3"
       ],
-      "impact_score": 13.8,
+      "impact_score": 29.0,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Tsinghua",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 8
     },
     {
       "id": "dima",
@@ -464,12 +561,16 @@
       "path": "extensions",
       "size": "md",
       "builds_on": [],
-      "impact_score": 27.3,
-      "is_rising": true,
-      "is_weak_signal": false,
+      "impact_score": 33.7,
+      "is_rising": false,
+      "is_weak_signal": true,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "CMU",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 6
     },
     {
       "id": "r2i",
@@ -483,12 +584,16 @@
       "path": "extensions",
       "size": "md",
       "builds_on": [],
-      "impact_score": 24.3,
+      "impact_score": 48.8,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Uni Tubingen",
+      "venue_tier": 2,
+      "institution_tier": 4,
+      "cited_by_count": 25
     },
     {
       "id": "mosim",
@@ -502,12 +607,16 @@
       "path": "extensions",
       "size": "md",
       "builds_on": [],
-      "impact_score": 23.5,
+      "impact_score": 46.7,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "NVIDIA",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 20
     },
     {
       "id": "leq",
@@ -521,12 +630,16 @@
       "path": "extensions",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 17.5,
+      "impact_score": 32.6,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Mila",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 15
     },
     {
       "id": "pcm",
@@ -540,12 +653,16 @@
       "path": "extensions",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 13.8,
+      "impact_score": 32.6,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Shanghai AI Lab",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 15
     },
     {
       "id": "waker",
@@ -559,12 +676,16 @@
       "path": "extensions",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 13.8,
+      "impact_score": 37.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "UC Berkeley",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 12
     },
     {
       "id": "rem",
@@ -578,12 +699,16 @@
       "path": "extensions",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 13.8,
+      "impact_score": 24.0,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Uni Tubingen",
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "cited_by_count": 10
     },
     {
       "id": "tdmpc",
@@ -597,12 +722,16 @@
       "path": "trunk",
       "size": "lg",
       "builds_on": [],
-      "impact_score": 59.4,
+      "impact_score": 73.9,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "MIT",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 200
     },
     {
       "id": "tdmpc2",
@@ -618,12 +747,22 @@
       "builds_on": [
         "tdmpc"
       ],
-      "impact_score": 53.2,
+      "impact_score": 70.8,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "MIT",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 120,
+      "connections": [
+        {
+          "target": "tdmpc",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "pwm",
@@ -639,12 +778,16 @@
       "builds_on": [
         "tdmpc2"
       ],
-      "impact_score": 19.7,
+      "impact_score": 36.6,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Apple",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 30
     },
     {
       "id": "iq_mpc",
@@ -658,14 +801,19 @@
       "path": "trunk",
       "size": "sm",
       "builds_on": [
-        "tdmpc"
+        "tdmpc",
+        "tdmpc2"
       ],
-      "impact_score": 17.5,
+      "impact_score": 36.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "UC Berkeley",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 10
     },
     {
       "id": "diffuser",
@@ -679,12 +827,16 @@
       "path": "trunk",
       "size": "lg",
       "builds_on": [],
-      "impact_score": 72.2,
+      "impact_score": 79.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "UC Berkeley",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 500
     },
     {
       "id": "decision_diffuser",
@@ -700,12 +852,16 @@
       "builds_on": [
         "diffuser"
       ],
-      "impact_score": 67.3,
+      "impact_score": 67.0,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Microsoft",
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "cited_by_count": 180
     },
     {
       "id": "pivot_r",
@@ -721,12 +877,16 @@
       "builds_on": [
         "diffuser"
       ],
-      "impact_score": 25.2,
+      "impact_score": 48.0,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Google DeepMind",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 25
     },
     {
       "id": "sora",
@@ -740,7 +900,7 @@
         "Multimodal Video"
       ],
       "size": "lg",
-      "impact_score": 92,
+      "impact_score": 77.5,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
@@ -749,7 +909,11 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "OpenAI",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 800
     },
     {
       "id": "gen3_alpha",
@@ -767,12 +931,22 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 50,
+      "impact_score": 40.8,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Runway",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 60,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "competes"
+        }
+      ]
     },
     {
       "id": "wan",
@@ -786,7 +960,7 @@
         "Multimodal Video"
       ],
       "size": "md",
-      "impact_score": 45,
+      "impact_score": 45.0,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
@@ -795,7 +969,17 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Alibaba",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 120,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "cosmos",
@@ -810,7 +994,7 @@
         "Autonomous Driving"
       ],
       "size": "md",
-      "impact_score": 40,
+      "impact_score": 56.1,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
@@ -819,7 +1003,17 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "NVIDIA",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 95,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "oasis",
@@ -833,7 +1027,7 @@
         "3D Games/VR"
       ],
       "size": "md",
-      "impact_score": 35,
+      "impact_score": 32.8,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
@@ -842,7 +1036,17 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Decart",
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "cited_by_count": 45,
+      "connections": [
+        {
+          "target": "gamenngen",
+          "type": "competes"
+        }
+      ]
     },
     {
       "id": "gamenngen",
@@ -860,12 +1064,30 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 38.4,
+      "impact_score": 57.0,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Google",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 110,
+      "connections": [
+        {
+          "target": "oasis",
+          "type": "competes"
+        },
+        {
+          "target": "genie2",
+          "type": "competes"
+        },
+        {
+          "target": "sora",
+          "type": "borrows"
+        }
+      ]
     },
     {
       "id": "drive_wm",
@@ -883,12 +1105,16 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 35,
+      "impact_score": 72.3,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "NVIDIA",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 55
     },
     {
       "id": "vista",
@@ -906,12 +1132,22 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 47.1,
+      "impact_score": 64.1,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "MIT",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 40,
+      "connections": [
+        {
+          "target": "drive_wm",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "tesseract",
@@ -925,16 +1161,32 @@
         "Embodied Robotics"
       ],
       "size": "sm",
-      "impact_score": 41.0,
+      "impact_score": 44.6,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "paradigm": "diffusion_video",
       "layer": "arch",
-      "builds_on": [],
+      "builds_on": [
+        "diffusion_policy"
+      ],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "NVIDIA",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 40,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        },
+        {
+          "target": "diffusion_policy",
+          "type": "borrows"
+        }
+      ]
     },
     {
       "id": "vid2world",
@@ -948,7 +1200,7 @@
         "Embodied Robotics"
       ],
       "size": "sm",
-      "impact_score": 25,
+      "impact_score": 40.5,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
@@ -957,7 +1209,17 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "UC Berkeley",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 20,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "emu3",
@@ -970,7 +1232,7 @@
         "Multimodal Video"
       ],
       "size": "md",
-      "impact_score": 22.5,
+      "impact_score": 41.7,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
@@ -980,7 +1242,17 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "ByteDance",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 70,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "competes"
+        }
+      ]
     },
     {
       "id": "lwm",
@@ -993,7 +1265,7 @@
         "Multimodal Video"
       ],
       "size": "sm",
-      "impact_score": 29.5,
+      "impact_score": 67.0,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
@@ -1003,7 +1275,17 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "UC Berkeley",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 65,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "competes"
+        }
+      ]
     },
     {
       "id": "genie2",
@@ -1016,7 +1298,7 @@
         "3D Games/VR"
       ],
       "size": "md",
-      "impact_score": 55,
+      "impact_score": 55.4,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
@@ -1026,7 +1308,17 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Google DeepMind",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 85,
+      "connections": [
+        {
+          "target": "gamenngen",
+          "type": "competes"
+        }
+      ]
     },
     {
       "id": "ivideogpt",
@@ -1044,12 +1336,16 @@
       "paradigm": "autoregressive_video",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 28.3,
+      "impact_score": 63.3,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "CMU",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 35
     },
     {
       "id": "text2room",
@@ -1062,7 +1358,7 @@
         "Spatial Intelligence"
       ],
       "size": "sm",
-      "impact_score": 67.8,
+      "impact_score": 55.8,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
@@ -1072,7 +1368,11 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "TU Munich",
+      "venue_tier": 2,
+      "institution_tier": 4,
+      "cited_by_count": 80
     },
     {
       "id": "4d_fy",
@@ -1090,12 +1390,16 @@
       "paradigm": "3dgs_nerf",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 70.2,
+      "impact_score": 66.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Stanford",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 60
     },
     {
       "id": "wonderworld",
@@ -1108,8 +1412,8 @@
         "Spatial Intelligence"
       ],
       "size": "sm",
-      "impact_score": 29.2,
-      "is_rising": true,
+      "impact_score": 62.4,
+      "is_rising": false,
       "is_weak_signal": false,
       "lane": "video_gen",
       "path": "trunk",
@@ -1118,7 +1422,11 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Stanford",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 30
     },
     {
       "id": "falconwing",
@@ -1136,12 +1444,16 @@
       "paradigm": "3dgs_nerf",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 20,
+      "impact_score": 30.3,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Samsung",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 10
     },
     {
       "id": "lidarcrafter",
@@ -1160,12 +1472,16 @@
       "paradigm": "3dgs_nerf",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 20,
+      "impact_score": 31.3,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Waymo",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 12
     },
     {
       "id": "i_jepa",
@@ -1178,7 +1494,7 @@
         "Spatial Intelligence"
       ],
       "size": "lg",
-      "impact_score": 78.0,
+      "impact_score": 85.1,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
@@ -1188,7 +1504,11 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Meta",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 450
     },
     {
       "id": "v_jepa",
@@ -1201,17 +1521,29 @@
         "Spatial Intelligence"
       ],
       "size": "md",
-      "impact_score": 54.5,
+      "impact_score": 79.5,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "path": "trunk",
       "paradigm": "jepa_based",
       "layer": "arch",
-      "builds_on": [],
+      "builds_on": [
+        "i_jepa"
+      ],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Meta",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 180,
+      "connections": [
+        {
+          "target": "i_jepa",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "v_jepa2",
@@ -1228,13 +1560,25 @@
       "path": "trunk",
       "paradigm": "jepa_based",
       "layer": "arch",
-      "builds_on": [],
-      "impact_score": 20.0,
+      "builds_on": [
+        "v_jepa"
+      ],
+      "impact_score": 50.8,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Meta",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 40,
+      "connections": [
+        {
+          "target": "v_jepa",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "seq_jepa",
@@ -1247,17 +1591,23 @@
         "Spatial Intelligence"
       ],
       "size": "sm",
-      "impact_score": 22,
+      "impact_score": 45.1,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "path": "trunk",
       "paradigm": "jepa_based",
       "layer": "arch",
-      "builds_on": [],
+      "builds_on": [
+        "v_jepa"
+      ],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Meta",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 15
     },
     {
       "id": "dino_wm",
@@ -1270,17 +1620,23 @@
         "Spatial Intelligence"
       ],
       "size": "md",
-      "impact_score": 42.3,
+      "impact_score": 48.0,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "path": "trunk",
       "paradigm": "dino_based",
       "layer": "arch",
-      "builds_on": [],
+      "builds_on": [
+        "v_jepa"
+      ],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Meta",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 25
     },
     {
       "id": "dino_world",
@@ -1293,17 +1649,23 @@
         "Spatial Intelligence"
       ],
       "size": "sm",
-      "impact_score": 23.5,
+      "impact_score": 50.0,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "path": "trunk",
       "paradigm": "dino_based",
       "layer": "arch",
-      "builds_on": [],
+      "builds_on": [
+        "v_jepa"
+      ],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Meta",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 35
     },
     {
       "id": "slot_attention",
@@ -1317,7 +1679,7 @@
         "Spatial Intelligence"
       ],
       "size": "lg",
-      "impact_score": 76.8,
+      "impact_score": 92.5,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
@@ -1326,7 +1688,11 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Google",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 1500
     },
     {
       "id": "slotformer",
@@ -1340,16 +1706,22 @@
         "Spatial Intelligence"
       ],
       "size": "md",
-      "impact_score": 26.8,
+      "impact_score": 74.5,
       "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "paradigm": "slot_based",
       "layer": "arch",
-      "builds_on": [],
+      "builds_on": [
+        "slot_attention"
+      ],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "NVIDIA",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 80
     },
     {
       "id": "steve1",
@@ -1367,12 +1739,16 @@
       "paradigm": "slot_based",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 41.9,
+      "impact_score": 65.4,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Stanford",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 50
     },
     {
       "id": "dyn_o",
@@ -1386,8 +1762,8 @@
         "Spatial Intelligence"
       ],
       "size": "sm",
-      "impact_score": 28.1,
-      "is_rising": true,
+      "impact_score": 36.5,
+      "is_rising": false,
       "is_weak_signal": false,
       "lane": "latent_space",
       "paradigm": "slot_based",
@@ -1395,7 +1771,11 @@
       "builds_on": [],
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "MIT",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 10
     },
     {
       "id": "causal_world",
@@ -1413,12 +1793,16 @@
       "paradigm": "slot_based",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 67.3,
+      "impact_score": 57.8,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "ETH Zurich",
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "cited_by_count": 40
     },
     {
       "id": "rt2",
@@ -1436,12 +1820,16 @@
       "paradigm": "vla_llm",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 79.7,
+      "impact_score": 73.3,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Google DeepMind",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 400
     },
     {
       "id": "octo",
@@ -1458,13 +1846,19 @@
       "path": "trunk",
       "paradigm": "vla_llm",
       "layer": "arch",
-      "builds_on": [],
-      "impact_score": 57.3,
+      "builds_on": [
+        "rt2"
+      ],
+      "impact_score": 72.1,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "UC Berkeley",
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "cited_by_count": 150
     },
     {
       "id": "pi0",
@@ -1481,13 +1875,19 @@
       "path": "trunk",
       "paradigm": "vla_diffusion",
       "layer": "arch",
-      "builds_on": [],
-      "impact_score": 70,
+      "builds_on": [
+        "diffusion_policy"
+      ],
+      "impact_score": 70.4,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Physical Intelligence",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 250
     },
     {
       "id": "diffusion_policy",
@@ -1505,12 +1905,16 @@
       "paradigm": "vla_diffusion",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 86.2,
+      "impact_score": 88.1,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Columbia/MIT",
+      "venue_tier": 1,
+      "institution_tier": 2,
+      "cited_by_count": 600
     },
     {
       "id": "x_mobility",
@@ -1528,12 +1932,16 @@
       "paradigm": "vla_diffusion",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 30,
+      "impact_score": 29.0,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Tencent",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 8
     },
     {
       "id": "drivevla",
@@ -1551,12 +1959,16 @@
       "paradigm": "vla_driving",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 49.8,
+      "impact_score": 37.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Tsinghua",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 35
     },
     {
       "id": "uniworld",
@@ -1574,12 +1986,16 @@
       "paradigm": "vla_driving",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 36.5,
+      "impact_score": 34.2,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Wayve",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 20
     },
     {
       "id": "gaia1",
@@ -1597,12 +2013,16 @@
       "paradigm": "vla_driving",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 40.5,
+      "impact_score": 55.9,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Wayve",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 180
     },
     {
       "id": "copilotd4",
@@ -1620,12 +2040,16 @@
       "paradigm": "vla_driving",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 30,
+      "impact_score": 34.2,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Tsinghua",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 20
     },
     {
       "id": "think2drive",
@@ -1643,12 +2067,16 @@
       "paradigm": "vla_driving",
       "layer": "arch",
       "builds_on": [],
-      "impact_score": 49.5,
+      "impact_score": 56.1,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Tsinghua",
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "cited_by_count": 30
     },
     {
       "id": "mc_jepa",
@@ -1661,13 +2089,19 @@
       "row": "jepa_based",
       "path": "trunk",
       "size": "sm",
-      "builds_on": [],
-      "impact_score": 20,
+      "builds_on": [
+        "v_jepa"
+      ],
+      "impact_score": 46.7,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Meta",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 20
     },
     {
       "id": "teleworld",
@@ -1678,15 +2112,25 @@
       "layer": "arch",
       "lane": "video_gen",
       "row": "diffusion_video",
-      "path": "trunk",
+      "path": "game",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 20,
+      "impact_score": 48.0,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "NVIDIA",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 25,
+      "connections": [
+        {
+          "target": "gamenngen",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "dino_foresight",
@@ -1699,13 +2143,19 @@
       "row": "dino_based",
       "path": "trunk",
       "size": "sm",
-      "builds_on": [],
-      "impact_score": 31.8,
+      "builds_on": [
+        "dino_wm"
+      ],
+      "impact_score": 43.8,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Meta",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 12
     },
     {
       "id": "irasim",
@@ -1719,12 +2169,22 @@
       "path": "embodied",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 31.8,
+      "impact_score": 33.6,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "ByteDance",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 18,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "wristworld",
@@ -1738,12 +2198,22 @@
       "path": "embodied",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 20,
+      "impact_score": 36.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Stanford",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 10,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "grounding_video",
@@ -1754,15 +2224,25 @@
       "layer": "arch",
       "lane": "video_gen",
       "row": "diffusion_video",
-      "path": "trunk",
+      "path": "embodied",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 44.1,
+      "impact_score": 68.6,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Google DeepMind",
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 30,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "rap",
@@ -1776,12 +2256,16 @@
       "path": "trunk",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 39.5,
+      "impact_score": 36.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "UCLA",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 10
     },
     {
       "id": "focus",
@@ -1795,12 +2279,16 @@
       "path": "extensions",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 13.8,
+      "impact_score": 46.1,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Meta",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 18
     },
     {
       "id": "mead",
@@ -1814,12 +2302,16 @@
       "path": "extensions",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 55.4,
+      "impact_score": 35.3,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "MIT",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 8
     },
     {
       "id": "spmem",
@@ -1833,12 +2325,16 @@
       "path": "extensions",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 31.8,
+      "impact_score": 37.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Stanford",
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 12
     },
     {
       "id": "cola_world",
@@ -1852,12 +2348,16 @@
       "path": "extensions",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 39.6,
+      "impact_score": 26.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Peking Uni",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 5
     },
     {
       "id": "carformer",
@@ -1871,12 +2371,16 @@
       "path": "applications",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 38.8,
+      "impact_score": 32.6,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Waymo",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 15
     },
     {
       "id": "orv",
@@ -1890,12 +2394,16 @@
       "path": "applications",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 31.8,
+      "impact_score": 42.8,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "NVIDIA",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 10
     },
     {
       "id": "fioc_wm",
@@ -1909,12 +2417,16 @@
       "path": "applications",
       "size": "sm",
       "builds_on": [],
-      "impact_score": 13.8,
+      "impact_score": 27.5,
       "is_rising": false,
       "is_weak_signal": false,
       "shape": "circle",
       "integration": null,
-      "full_title": null
+      "full_title": null,
+      "org": "Tsinghua",
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 6
     },
     {
       "id": "unipi",
@@ -1927,13 +2439,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "idm",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "md",
-      "impact_score": 55,
+      "impact_score": 80.7,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 220,
+      "org": "Google Brain",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "vidarc",
@@ -1952,9 +2476,19 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 28,
+      "impact_score": 36.6,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 30,
+      "org": "Alibaba",
+      "connections": [
+        {
+          "target": "wan",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "cosmos_policy",
@@ -1973,9 +2507,23 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "md",
-      "impact_score": 30,
+      "impact_score": 41.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": true,
+      "cited_by_count": 8,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "org": "NVIDIA",
+      "connections": [
+        {
+          "target": "cosmos",
+          "type": "inherits"
+        },
+        {
+          "target": "pi0",
+          "type": "borrows"
+        }
+      ]
     },
     {
       "id": "uwm",
@@ -1988,13 +2536,29 @@
       "path": "trunk",
       "shape": "square",
       "integration": "single_backbone",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "md",
-      "impact_score": 35,
+      "impact_score": 44.6,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "cited_by_count": 40,
+      "org": "MIT",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        },
+        {
+          "target": "cosmos",
+          "type": "borrows"
+        }
+      ]
     },
     {
       "id": "ge_act",
@@ -2007,13 +2571,29 @@
       "path": "trunk",
       "shape": "square",
       "integration": "moe",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "md",
-      "impact_score": 38,
+      "impact_score": 35.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 25,
+      "org": "AgibotTech",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        },
+        {
+          "target": "genie_envisioner",
+          "type": "borrows"
+        }
+      ]
     },
     {
       "id": "gigabrain",
@@ -2032,9 +2612,19 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 28,
-      "is_rising": false,
-      "is_weak_signal": false
+      "impact_score": 26.3,
+      "is_rising": true,
+      "is_weak_signal": false,
+      "cited_by_count": 15,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "极佳视界",
+      "connections": [
+        {
+          "target": "wan",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "gr1",
@@ -2047,13 +2637,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "idm",
-      "builds_on": [],
+      "builds_on": [
+        "genie2"
+      ],
       "paradigm": "ar_video",
       "layer": "arch",
       "size": "md",
-      "impact_score": 48,
+      "impact_score": 43.3,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 90,
+      "org": "ByteDance",
+      "connections": [
+        {
+          "target": "genie2",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "genie_envisioner",
@@ -2072,9 +2674,27 @@
       "paradigm": "ar_video",
       "layer": "arch",
       "size": "md",
-      "impact_score": 50,
+      "impact_score": 45.1,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "org": "Google DeepMind",
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 15,
+      "connections": [
+        {
+          "target": "genie2",
+          "type": "inherits"
+        },
+        {
+          "target": "sora",
+          "type": "inherits"
+        },
+        {
+          "target": "pi0",
+          "type": "borrows"
+        }
+      ]
     },
     {
       "id": "flare",
@@ -2091,9 +2711,13 @@
       "paradigm": "joint_embedding",
       "layer": "arch",
       "size": "md",
-      "impact_score": 45,
+      "impact_score": 46.7,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 20,
+      "org": "NVIDIA"
     },
     {
       "id": "frappe",
@@ -2107,14 +2731,19 @@
       "shape": "square",
       "integration": null,
       "builds_on": [
+        "tesseract",
         "dino_wm"
       ],
       "paradigm": "feature_world_model",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 22,
+      "impact_score": 13.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "Unknown"
     },
     {
       "id": "pi0_5",
@@ -2133,9 +2762,19 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "md",
-      "impact_score": 55,
-      "is_rising": false,
-      "is_weak_signal": false
+      "impact_score": 55.0,
+      "is_rising": true,
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "cited_by_count": 80,
+      "org": "Physical Intelligence",
+      "connections": [
+        {
+          "target": "pi0",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "vla_mbpo",
@@ -2148,13 +2787,19 @@
       "path": "trunk",
       "shape": "square",
       "integration": "simulator",
-      "builds_on": [],
+      "builds_on": [
+        "pi0"
+      ],
       "paradigm": "vlm",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 22,
+      "impact_score": 16.0,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "cited_by_count": 2,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "Unknown"
     },
     {
       "id": "gen2act",
@@ -2167,13 +2812,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "idm",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 35,
+      "impact_score": 69.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "cited_by_count": 35,
+      "org": "Google Brain",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "video2act",
@@ -2186,13 +2843,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "idm",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 25,
+      "impact_score": 22.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "cited_by_count": 8,
+      "org": "Unknown",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "tc_idm",
@@ -2205,13 +2874,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "idm",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 18,
+      "impact_score": 20.3,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "cited_by_count": 5,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "Unknown",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "dreamzero",
@@ -2219,18 +2900,36 @@
       "full_title": "DreamZero: World Action Model with Zero-Shot Generalization",
       "year": 2026,
       "quarter": 1,
-      "lane": "video_gen",
-      "row": "diffusion_video",
+      "lane": "vla",
+      "row": "vla_diffusion",
       "path": "trunk",
-      "shape": "square",
+      "shape": "circle",
       "integration": "single_backbone",
       "builds_on": [],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 22,
-      "is_rising": false,
-      "is_weak_signal": false
+      "impact_score": 36.5,
+      "is_rising": true,
+      "is_weak_signal": true,
+      "cited_by_count": 10,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "org": "UC Berkeley",
+      "connections": [
+        {
+          "target": "dreamer_v3",
+          "type": "inherits"
+        },
+        {
+          "target": "cosmos",
+          "type": "inherits"
+        },
+        {
+          "target": "pi0",
+          "type": "competes"
+        }
+      ]
     },
     {
       "id": "uva",
@@ -2243,13 +2942,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "single_backbone",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 28,
+      "impact_score": 21.2,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "cited_by_count": 6,
+      "org": "Unknown",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "video_policy",
@@ -2262,13 +2973,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "single_backbone",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 25,
+      "impact_score": 19.2,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "cited_by_count": 4,
+      "org": "Unknown",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "lda_1b",
@@ -2281,13 +3004,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "moe",
-      "builds_on": [],
+      "builds_on": [
+        "wan"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 25,
+      "impact_score": 29.0,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "cited_by_count": 8,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "org": "Peking Uni",
+      "connections": [
+        {
+          "target": "wan",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "dit4dit",
@@ -2300,13 +3035,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "moe",
-      "builds_on": [],
+      "builds_on": [
+        "cosmos"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 22,
+      "impact_score": 13.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "Unknown",
+      "connections": [
+        {
+          "target": "cosmos",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "fast_wam",
@@ -2314,18 +3061,24 @@
       "full_title": "Fast World Action Models for Real-Time Control",
       "year": 2026,
       "quarter": 2,
-      "lane": "video_gen",
-      "row": "diffusion_video",
+      "lane": "vla",
+      "row": "vla_diffusion",
       "path": "trunk",
       "shape": "square",
       "integration": "moe",
-      "builds_on": [],
+      "builds_on": [
+        "dreamzero"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 20,
+      "impact_score": 25.4,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "cited_by_count": 4,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "org": "Unknown"
     },
     {
       "id": "diwa",
@@ -2338,13 +3091,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "simulator",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 25,
+      "impact_score": 20.3,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "cited_by_count": 5,
+      "org": "Unknown",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "wmpo",
@@ -2357,13 +3122,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "simulator",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 25,
+      "impact_score": 17.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "cited_by_count": 3,
+      "org": "Unknown",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "worldeval",
@@ -2376,13 +3153,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "evaluator",
-      "builds_on": [],
+      "builds_on": [
+        "sora"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 22,
+      "impact_score": 19.2,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "cited_by_count": 4,
+      "org": "Unknown",
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "worldgym",
@@ -2395,13 +3184,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "evaluator",
-      "builds_on": [],
+      "builds_on": [
+        "cosmos"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 22,
+      "impact_score": 17.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "cited_by_count": 3,
+      "org": "Unknown",
+      "connections": [
+        {
+          "target": "cosmos",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "vidman",
@@ -2414,13 +3215,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "idm",
-      "builds_on": [],
+      "builds_on": [
+        "genie2"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 30,
+      "impact_score": 32.6,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "cited_by_count": 15,
+      "org": "ByteDance",
+      "connections": [
+        {
+          "target": "genie2",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "gigaworld_policy",
@@ -2433,13 +3246,25 @@
       "path": "trunk",
       "shape": "square",
       "integration": "single_backbone",
-      "builds_on": [],
+      "builds_on": [
+        "genie_envisioner"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 22,
+      "impact_score": 22.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "cited_by_count": 8,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "极佳视界",
+      "connections": [
+        {
+          "target": "genie_envisioner",
+          "type": "inherits"
+        }
+      ]
     },
     {
       "id": "vla_jepa",
@@ -2453,14 +3278,19 @@
       "shape": "square",
       "integration": null,
       "builds_on": [
-        "v_jepa2"
+        "v_jepa2",
+        "v_jepa"
       ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 22,
+      "impact_score": 24.0,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "cited_by_count": 3,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "org": "Unknown"
     },
     {
       "id": "dial",
@@ -2473,13 +3303,19 @@
       "path": "trunk",
       "shape": "square",
       "integration": null,
-      "builds_on": [],
+      "builds_on": [
+        "pi0"
+      ],
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 22,
+      "impact_score": 13.5,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "Unknown"
     },
     {
       "id": "gr2",
@@ -2498,9 +3334,10 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 42,
+      "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "org": "ByteDance"
     },
     {
       "id": "dreamvla",
@@ -2517,9 +3354,592 @@
       "paradigm": "diffusion_video",
       "layer": "arch",
       "size": "sm",
-      "impact_score": 28,
+      "impact_score": 13.8,
       "is_rising": false,
-      "is_weak_signal": false
+      "is_weak_signal": false,
+      "org": "Unknown"
+    },
+    {
+      "id": "physical_principles",
+      "title": "Physical Principles",
+      "full_title": "Do Generative Video Models Understand Physical Principles?",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "sora"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 66.9,
+      "is_rising": true,
+      "is_weak_signal": false,
+      "org": "Google",
+      "cited_by_count": 78,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
+    },
+    {
+      "id": "worldmodelbench",
+      "title": "WorldModelBench",
+      "full_title": "WorldModelBench: Judging Video Generation Models as World Models",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "sora"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 60.3,
+      "is_rising": true,
+      "is_weak_signal": false,
+      "org": "NeurIPS",
+      "cited_by_count": 60,
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
+    },
+    {
+      "id": "spatial_memory_wm",
+      "title": "Spatial Memory WM",
+      "full_title": "Video World Models with Long-term Spatial Memory",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "sora"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 72.7,
+      "is_rising": true,
+      "is_weak_signal": false,
+      "org": "Stanford/NVIDIA",
+      "cited_by_count": 59,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
+    },
+    {
+      "id": "wisa",
+      "title": "WISA",
+      "full_title": "WISA: World Simulator Assistant for Physics-aware Text-to-Video",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "sora"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 60.1,
+      "is_rising": true,
+      "is_weak_signal": false,
+      "org": "NeurIPS",
+      "cited_by_count": 58,
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "connections": [
+        {
+          "target": "sora",
+          "type": "inherits"
+        }
+      ]
+    },
+    {
+      "id": "sana_wm",
+      "title": "SANA-WM",
+      "full_title": "SANA-WM: Efficient Minute-Scale World Modeling",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "cosmos"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 39.0,
+      "is_rising": true,
+      "is_weak_signal": true,
+      "org": "NVIDIA",
+      "cited_by_count": 5,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "connections": [
+        {
+          "target": "cosmos",
+          "type": "inherits"
+        }
+      ]
+    },
+    {
+      "id": "causal_forcing_pp",
+      "title": "Causal Forcing++",
+      "full_title": "Causal Forcing++: Scalable Few-Step Autoregressive Diffusion Distillation",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "wan"
+      ],
+      "paradigm": "autoregressive",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 24.0,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "org": "Tsinghua",
+      "cited_by_count": 3,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "connections": [
+        {
+          "target": "wan",
+          "type": "inherits"
+        }
+      ]
+    },
+    {
+      "id": "wam_survey",
+      "title": "WAM Survey",
+      "full_title": "World Action Models: The Next Frontier in Embodied AI",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "dreamzero"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 35.3,
+      "is_rising": true,
+      "is_weak_signal": true,
+      "cited_by_count": 8,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "org": "Mike Zheng Shou"
+    },
+    {
+      "id": "motubrain",
+      "title": "MotuBrain",
+      "full_title": "MotuBrain: An Advanced World Action Model for Robot Control",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "pi0"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 25.4,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "org": "Tsinghua",
+      "cited_by_count": 4,
+      "venue_tier": 5,
+      "institution_tier": 3
+    },
+    {
+      "id": "harmowam",
+      "title": "HarmoWAM",
+      "full_title": "HarmoWAM: Adaptive World Action Models",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "mpc_based",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "dreamzero"
+      ],
+      "paradigm": "mpc",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 16.0,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "cited_by_count": 2,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "Unknown"
+    },
+    {
+      "id": "pi0_7",
+      "title": "π0.7",
+      "full_title": "π0.7: a Steerable Generalist Robotic Foundation Model with Emergent Capabilities",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "pi0",
+        "pi0_5"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 51.6,
+      "is_rising": true,
+      "is_weak_signal": false,
+      "org": "Physical Intelligence",
+      "cited_by_count": 45,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "connections": [
+        {
+          "target": "pi0_5",
+          "type": "inherits"
+        }
+      ]
+    },
+    {
+      "id": "wm_robot_survey",
+      "title": "WM Robot Survey",
+      "full_title": "World Model for Robot Learning: A Comprehensive Survey",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [],
+      "paradigm": "rssm",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 37.5,
+      "is_rising": true,
+      "is_weak_signal": true,
+      "cited_by_count": 12,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "org": "Pieter Abbeel"
+    },
+    {
+      "id": "wam_zero_shot",
+      "title": "WAM Zero-shot",
+      "full_title": "World Action Models are Zero-shot Policies",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "dreamzero"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 45.1,
+      "is_rising": true,
+      "is_weak_signal": true,
+      "org": "NVIDIA/Jim Fan",
+      "cited_by_count": 15,
+      "venue_tier": 5,
+      "institution_tier": 1
+    },
+    {
+      "id": "dreamdojo",
+      "title": "DreamDojo",
+      "full_title": "DreamDojo: A Generalist Robot World Model from Large-Scale Human Videos",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "game",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "cosmos"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 46.7,
+      "is_rising": true,
+      "is_weak_signal": false,
+      "org": "NVIDIA/Jim Fan",
+      "cited_by_count": 20,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "connections": [
+        {
+          "target": "cosmos",
+          "type": "inherits"
+        },
+        {
+          "target": "dreamer_v3",
+          "type": "borrows"
+        }
+      ]
+    },
+    {
+      "id": "latent_particle_wm",
+      "title": "Latent Particle WM",
+      "full_title": "Latent Particle World Models: Self-supervised Object-centric Stochastic Dynamics Modeling",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "dreamer_v3"
+      ],
+      "paradigm": "slot",
+      "layer": "arch",
+      "size": "md",
+      "impact_score": 35.3,
+      "is_rising": false,
+      "is_weak_signal": true,
+      "org": "CMU/Deepak Pathak",
+      "cited_by_count": 8,
+      "venue_tier": 5,
+      "institution_tier": 2
+    },
+    {
+      "id": "anyflow",
+      "title": "AnyFlow",
+      "full_title": "AnyFlow: Flow Map based Any-Step Video Diffusion Distillation",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [
+        "wan"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "train",
+      "size": "sm",
+      "impact_score": 17.8,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "cited_by_count": 3,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "Unknown",
+      "connections": [
+        {
+          "target": "wan",
+          "type": "inherits"
+        }
+      ]
+    },
+    {
+      "id": "realtime_vla_flash",
+      "title": "VLA FLASH",
+      "full_title": "Realtime-VLA FLASH: Speculative Inference for Diffusion-Based VLA",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [
+        "pi0"
+      ],
+      "paradigm": "diffusion_video",
+      "layer": "infer",
+      "size": "sm",
+      "impact_score": 30.3,
+      "is_rising": false,
+      "is_weak_signal": true,
+      "cited_by_count": 3,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "org": "Stanford"
+    },
+    {
+      "id": "attena_plus",
+      "title": "AttenA+",
+      "full_title": "AttenA+: Velocity-Driven Action Attention for VLA/WAM",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [],
+      "paradigm": "diffusion_video",
+      "layer": "train",
+      "size": "sm",
+      "impact_score": 16.0,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "cited_by_count": 2,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "Unknown"
+    },
+    {
+      "id": "blitzgs",
+      "title": "BlitzGS",
+      "full_title": "BlitzGS: Distributed 3D Gaussian Splatting for City-Scale",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "shape": "circle",
+      "integration": null,
+      "builds_on": [
+        "cosmos"
+      ],
+      "paradigm": "3dgs",
+      "layer": "sys",
+      "size": "md",
+      "impact_score": 27.5,
+      "is_rising": true,
+      "is_weak_signal": false,
+      "org": "Tsinghua",
+      "cited_by_count": 6,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "connections": [
+        {
+          "target": "cosmos",
+          "type": "inherits"
+        }
+      ]
+    },
+    {
+      "id": "omnilidar",
+      "title": "OmniLiDAR",
+      "full_title": "OmniLiDAR: Unified Cross-Domain LiDAR Scene Generation",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [],
+      "paradigm": "3dgs",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 13.5,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "Unknown"
+    },
+    {
+      "id": "hetscene",
+      "title": "HetScene",
+      "full_title": "HetScene: Heterogeneous Two-Stage Diffusion for Dense Indoor Scene Generation",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [],
+      "paradigm": "3dgs",
+      "layer": "arch",
+      "size": "sm",
+      "impact_score": 13.5,
+      "is_rising": false,
+      "is_weak_signal": false,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "org": "Unknown"
+    },
+    {
+      "id": "rl_token",
+      "title": "RL Token",
+      "full_title": "RL Token: Bootstrapping Online RL with Vision-Language-Action Models",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_llm",
+      "path": "trunk",
+      "shape": "square",
+      "integration": null,
+      "builds_on": [
+        "pi0"
+      ],
+      "paradigm": "vla_llm",
+      "layer": "train",
+      "size": "sm",
+      "impact_score": 39.9,
+      "is_rising": true,
+      "is_weak_signal": true,
+      "cited_by_count": 18,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "org": "UC Berkeley/Levine"
     }
   ],
   "iterations": []

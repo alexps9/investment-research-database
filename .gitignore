@@ -75,6 +75,9 @@ Thumbs.db
 .claude/docs/knowledge/lark/连接信息.md
 .claude/docs/z-meetings context/
 
+# SQLite databases
+backend/data/*.db
+
 # Logs
 *.log
 logs/

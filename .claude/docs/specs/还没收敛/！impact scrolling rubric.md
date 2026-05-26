@@ -2,8 +2,8 @@
 
 > 来源：Thomas "如果一个时序里这个圈大了非常多，就是 rising signal"
 > 优先级：P1
-> 状态：待实现
-> 参考：`knowledge/product/scoring-methodology-reference.md`
+> 状态：**已实现 v1**
+> 实现日志：`logs/impact-scoring.md`
 
 ---
 
@@ -26,18 +26,16 @@
 
 ---
 
-## 影响力由什么决定
+## 影响力维度
 
-四个维度，综合反映一篇论文的影响力：
+Impact 由以下维度综合决定：
 
 | 维度 | 含义 | 数据源 |
 |------|------|--------|
-| 引用量 | 被引次数（同年份归一化） | OpenAlex cited_by_count |
-| 发表场所 | 社区认可度 | 顶会 oral > poster > arXiv |
-| 级联深度 | 技术继承影响力（被引论文又被引 = 深层传播） | builds_on 关系图 |
-| 机构影响力 | 信源可信度 | 发表机构等级 |
-
-权重待数据验证后确定（初始假设：引用 > 场所 ≈ 级联 > 机构）。
+| 引用量 | 学术影响力的硬指标（需压缩幂律分布） | OpenAlex API |
+| 发表场所 | 顶会 oral > poster > arXiv | 人工标注 venue_tier |
+| 机构影响力 | 发表机构等级 | 人工标注 institution_tier |
+| （未来）级联深度 | 被多少后续工作继承 | 依赖 citation analysis |
 
 ## Rising Signal 定义
 
@@ -52,27 +50,27 @@
 
 | 信号类型 | 视觉编码 | 设计依据 |
 |---------|---------|---------|
-| 影响力高低 | 节点半径（连续映射，亚线性避免膨胀） | 大小 = Impact |
-| Rising | 节点外圈 glow | momentum 发光（CLAUDE.md 允许） |
-| Weak Signal | 节点虚线边框 | 区分确定性 |
-| 普通 | 实线边框 | 默认状态 |
+| 影响力高低 | 节点半径连续映射 | 大小 = Impact |
+| Foundation/Adaptation | opacity 深 vs 浅（同色系） | 视觉层级区分 |
+| Rising | box-shadow glow | momentum 发光 |
+| Weak Signal | 虚线边框 dashed border | 区分确定性 |
+| 普通 | 实心圆、无额外装饰 | 默认状态 |
 
-半径范围约束：最小可识别（~4px）→ 最大不遮挡（~16px）。
+## Acceptance Criteria
 
-## 验收标准
-
-- [ ] Attention Is All You Need (2017) 在 Transformer 视图中明显最大
 - [ ] 2024 年新论文中，Sora / π0 明显大于跟进论文
-- [ ] 同年份内百分位归一化生效（不因绝对引用低而全部缩小）
-- [ ] Rising 论文有 glow 且数量合理（不超过 20%）
+- [ ] 同年份内归一化生效（高引用论文不会"碾压"其他所有）
+- [ ] Rising 论文有独立视觉标识且数量合理（~10-15%）
 - [ ] 支持 impact_override 手动覆盖异常值
+- [ ] Foundation vs Adaptation 视觉区分明显
 - [ ] 周度刷新机制可手动触发
+- [ ] venue_tier / institution_tier 全量标注
 
 ## Constraints
 
 - 必须兼容现有数据模型（增量加字段，不破坏已有 Paper 结构）
 - 不引入外部 ML 模型/embedding，纯规则计算
-- 使用已有 OpenAlex 数据源 + builds_on 关系
+- 使用已有 OpenAlex 数据源
 
 ---
 
@@ -101,6 +99,6 @@
 
 ## 待确认
 
-- [ ] 权重比例跑一次数据再定
-- [ ] Rising glow 用赛道同色还是统一橙色？
-- [ ] lineage_score 级联深度实现复杂度是否可接受
+- [ ] lineage_score 级联深度：等 citation analysis 再加
+- [ ] 是否给 Foundation 论文 base bonus（让 foundation/adaptation 分化更明显）
+- [ ] 数据范围是否需要随论文增加动态调整

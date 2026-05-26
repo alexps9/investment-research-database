@@ -42,7 +42,7 @@
 - **Infrastructure**: Docker Compose | GitHub Actions
 - **字体**: IBM Plex Sans
 
-注：禁止 react-force-graph / 任何自动布局库。布局完全人为编排。
+注：禁止 react-force-graph。主视图布局人为编排；当论文数量超出手工管理能力时，允许使用算法辅助布局（Leiden 聚类 + beeswarm/碰撞斥力），但 X 轴必须锁定为时间轴。
 
 ## 目录约定
 
