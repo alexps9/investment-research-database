@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import worldModelData from '@/data/world-model-data.json'
+import { useState, useEffect, useMemo } from 'react'
+import { fetchWorldModel } from '@/lib/api'
 
 interface Lane { id: string; title: string; subtitle: string; color: string }
 interface Row { id: string; lane: string; title: string; subtitle: string }
@@ -24,7 +24,7 @@ interface Paper {
 }
 interface MapData { lanes: Lane[]; rows: Row[]; papers: Paper[] }
 
-const data = worldModelData as unknown as MapData
+const EMPTY_DATA: MapData = { lanes: [], rows: [], papers: [] }
 
 const LANE_COLORS: Record<string, string> = {
   video_gen: '#2563EB',
@@ -137,6 +137,9 @@ function timeToX(year: number, quarter: number, startYear: number, endYear: numb
 
 export default function WorldModelV2() {
   const [hoveredPaper, setHoveredPaper] = useState<Paper | null>(null)
+  const [mapData, setMapData] = useState<MapData>(EMPTY_DATA)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [selectedPaper, setSelectedPaper] = useState<Paper | null>(null)
   const [timeRange, setTimeRange] = useState<[number, number]>([2019, 2027])
   const [filterLane, setFilterLane] = useState<string | null>(null)
@@ -144,9 +147,15 @@ export default function WorldModelV2() {
   const startYear = timeRange[0]
   const endYear = timeRange[1]
 
-  const lanes = data.lanes
-  const rows = data.rows
-  const papers = data.papers
+  useEffect(() => {
+    fetchWorldModel()
+      .then(d => { setMapData(d as unknown as MapData); setLoading(false) })
+      .catch(e => { setError(e.message); setLoading(false) })
+  }, [])
+
+  const lanes = mapData.lanes
+  const rows = mapData.rows
+  const papers = mapData.papers
 
   const signals = useMemo(() => computeSignals(papers), [papers])
 
@@ -171,6 +180,9 @@ export default function WorldModelV2() {
 
   const SVG_H = TOP_MARGIN + Object.values(rowHeightMap).reduce((s, h) => s + h, 0) + 40
 
+  if (loading) return <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", padding: 40, color: '#71717A' }}>Loading...</div>
+  if (error) return <div style={{ fontFamily: "'IBM Plex Sans', sans-serif", padding: 40, color: '#DC2626' }}>Error: {error}</div>
+
   if (view === 'lineage') {
     return (
       <TrunksView
@@ -192,7 +204,7 @@ export default function WorldModelV2() {
           view={view} onViewChange={setView}
         />
         <div style={{ flex: 1, overflow: 'auto' }}>
-          <OverviewStrips papers={papers} lanes={filterLane ? lanes.filter(l => l.id === filterLane) : lanes} rows={rows} startYear={startYear} endYear={endYear} onDrill={(laneId) => { setFilterLane(laneId); setView('global') }} />
+          <OverviewStrips papers={papers} lanes={filterLane ? lanes.filter(l => l.id === filterLane) : lanes} rows={rows} startYear={startYear} endYear={endYear} onDrill={(laneId) => { setFilterLane(laneId); setView('global') }} onSelectPaper={(p) => { setSelectedPaper(p); setView('global') }} />
         </div>
       </div>
     )
@@ -217,6 +229,9 @@ export default function WorldModelV2() {
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          <filter id="blur-small" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="1.8" />
+          </filter>
         </defs>
         <style>{`
           @keyframes pulse-rising {
@@ -227,7 +242,7 @@ export default function WorldModelV2() {
         `}</style>
         <TimeAxis startYear={startYear} endYear={endYear} />
         <EraBand startYear={startYear} endYear={endYear} />
-        <LaneRows laneRows={filteredLaneRows} papers={papers} signals={signals} hoveredPaper={hoveredPaper} onHover={setHoveredPaper} onSelect={setSelectedPaper} startYear={startYear} endYear={endYear} rowHeightMap={rowHeightMap} />
+        <LaneRows laneRows={filteredLaneRows} papers={papers} signals={signals} hoveredPaper={hoveredPaper} selectedPaper={selectedPaper} onHover={setHoveredPaper} onSelect={setSelectedPaper} startYear={startYear} endYear={endYear} rowHeightMap={rowHeightMap} />
       </svg>
       {selectedPaper && <SidePanel paper={selectedPaper} papers={papers} signals={signals} onClose={() => setSelectedPaper(null)} />}
       </div>
@@ -303,6 +318,9 @@ function ControlBar({ startYear, endYear, onTimeChange, filterLane, onFilterLane
           onMouseDown={(e) => { e.preventDefault(); onViewLineage() }}
           style={{ padding: '3px 10px', fontSize: 10, border: '1px solid #E4E4E7', cursor: 'pointer', background: '#FFF', color: '#3F3F46', fontWeight: 500 }}
         >Lineage ↗</button>
+        <a href="/world-model-v2/table"
+          style={{ padding: '3px 10px', fontSize: 10, border: '1px solid #E4E4E7', background: '#FFF', color: '#3F3F46', fontWeight: 500, textDecoration: 'none' }}
+        >Table ↗</a>
       </div>
     </div>
   )
@@ -368,11 +386,12 @@ function EraBand({ startYear, endYear }: { startYear: number; endYear: number })
   )
 }
 
-function LaneRows({ laneRows, papers, signals, hoveredPaper, onHover, onSelect, startYear, endYear, rowHeightMap }: {
+function LaneRows({ laneRows, papers, signals, hoveredPaper, selectedPaper, onHover, onSelect, startYear, endYear, rowHeightMap }: {
   laneRows: { lane: Lane; rows: Row[] }[]
   papers: Paper[]
   signals: Map<string, { is_rising: boolean; is_weak_signal: boolean }>
   hoveredPaper: Paper | null
+  selectedPaper: Paper | null
   onHover: (p: Paper | null) => void
   onSelect: (p: Paper) => void
   startYear: number; endYear: number
@@ -419,6 +438,8 @@ function LaneRows({ laneRows, papers, signals, hoveredPaper, onHover, onSelect, 
                   y={rowY}
                   rowH={rowH}
                   hoveredPaper={hoveredPaper}
+                  selectedPaper={selectedPaper}
+                  allPapers={papers}
                   onHover={onHover}
                   onSelect={onSelect}
                   startYear={startYear}
@@ -470,10 +491,12 @@ function LaneLabel({ lane, startY, laneH, isApplication }: { lane: Lane; startY:
   )
 }
 
-function RowBand({ row, papers, signals, y, rowH, hoveredPaper, onHover, onSelect, startYear, endYear }: {
+function RowBand({ row, papers, signals, y, rowH, hoveredPaper, selectedPaper, allPapers, onHover, onSelect, startYear, endYear }: {
   row: Row; lane: Lane; papers: Paper[]; y: number; rowH: number
   signals: Map<string, { is_rising: boolean; is_weak_signal: boolean }>
   hoveredPaper: Paper | null
+  selectedPaper: Paper | null
+  allPapers: Paper[]
   onHover: (p: Paper | null) => void
   onSelect: (p: Paper) => void
   startYear: number; endYear: number
@@ -501,6 +524,7 @@ function RowBand({ row, papers, signals, y, rowH, hoveredPaper, onHover, onSelec
     return ids
   }, [hoveredFoundationId, papers])
 
+
   return (
     <g>
       <line x1={LEFT_MARGIN} y1={y} x2={CONTENT_W - RIGHT_MARGIN} y2={y} stroke="#F4F4F5" strokeWidth={1} />
@@ -523,6 +547,7 @@ function RowBand({ row, papers, signals, y, rowH, hoveredPaper, onHover, onSelec
         if (hoveredFoundationId && !isHovered) {
           dimmed = !hoveredConnectedIds.has(paper.id)
         }
+        const isSelected = selectedPaper?.id === paper.id
 
         return (
           <g key={paper.id}
@@ -542,11 +567,12 @@ function RowBand({ row, papers, signals, y, rowH, hoveredPaper, onHover, onSelec
               />
             )}
             <circle
-              cx={pos.x} cy={pos.y} r={isHovered ? r + 2 : r}
+              cx={pos.x} cy={pos.y} r={isSelected ? r + 1 : isHovered ? r + 2 : r}
               fill={nodeColor}
-              opacity={isFoundation ? 0.85 : 0.3}
-              stroke={isHovered ? '#18181B' : 'none'}
-              strokeWidth={1}
+              opacity={isFoundation ? 0.85 : (paper.impact_score ?? 20) < 15 ? 0.18 : 0.35}
+              stroke={isSelected ? '#18181B' : isHovered ? '#18181B' : 'none'}
+              strokeWidth={isSelected ? 2.5 : 1}
+              filter={!isFoundation && (paper.impact_score ?? 20) < 20 ? 'url(#blur-small)' : undefined}
             />
             {isFoundation && (
               <>
@@ -664,45 +690,79 @@ function computeRowPositions(papers: Paper[], rowY: number, rowH: number, startY
     placed.push({ x, y, r })
   })
 
-  // Place adaptations around their referenced foundation
+  // Place adaptations: connected ones near their foundation, unconnected spread evenly
+  const connected: Paper[] = []
+  const unconnected: Paper[] = []
   backgrounds.forEach(paper => {
-    const rng = seededRandom(hashStr(paper.id + '_cl'))
     const refs = [...(paper.builds_on || []), ...(paper.connections || []).map(c => c.target)]
     const refFoundation = refs.find(r => foundationIds.has(r) && positions[r])
-    const baseX = timeToX(paper.year, paper.quarter, startYear, endYear)
-    const r = impactToRadius(paper.impact_score, false)
-    let x: number, y: number
+    if (refFoundation) connected.push(paper)
+    else unconnected.push(paper)
+  })
 
-    if (refFoundation) {
-      const fPos = positions[refFoundation]
-      const angle = rng() * Math.PI * 2
-      const dist = 10 + rng() * 28
-      x = fPos.x + Math.cos(angle) * dist
-      y = fPos.y + Math.sin(angle) * dist
-    } else {
-      x = baseX + (rng() - 0.5) * qW * 0.6
-      y = rowY + 15 + rng() * (rowH - 30)
-    }
+  // Place connected adaptations near their foundation
+  connected.forEach(paper => {
+    const rng = seededRandom(hashStr(paper.id + '_cl'))
+    const refs = [...(paper.builds_on || []), ...(paper.connections || []).map(c => c.target)]
+    const refFoundation = refs.find(r => foundationIds.has(r) && positions[r])!
+    const fPos = positions[refFoundation]
+    const r = impactToRadius(paper.impact_score, false)
+    const angle = rng() * Math.PI * 2
+    const dist = 10 + rng() * 28
+    let x = fPos.x + Math.cos(angle) * dist
+    let y = fPos.y + Math.sin(angle) * dist
 
     for (let attempt = 0; attempt < 12; attempt++) {
       let collides = false
       for (const p of placed) {
         const dx = x - p.x
         const dy = y - p.y
-        const dist = Math.sqrt(dx * dx + dy * dy) || 1
+        const d = Math.sqrt(dx * dx + dy * dy) || 1
         const minDist = r + p.r + 3
-        if (dist < minDist) {
-          const push = minDist - dist + 1
-          const angle2 = Math.atan2(dy, dx) || (rng() * Math.PI * 2)
-          x += Math.cos(angle2) * push
-          y += Math.sin(angle2) * push
+        if (d < minDist) {
+          const push = minDist - d + 1
+          const a2 = Math.atan2(dy, dx) || (rng() * Math.PI * 2)
+          x += Math.cos(a2) * push
+          y += Math.sin(a2) * push
           collides = true
           break
         }
       }
       if (!collides) break
     }
+    x = Math.max(xMin, Math.min(xMax, x))
+    y = Math.max(rowY + 5, Math.min(rowY + rowH - 5, y))
+    positions[paper.id] = { x, y }
+    placed.push({ x, y, r })
+  })
 
+  // Place unconnected adaptations with stratified Y to avoid clustering
+  unconnected.forEach((paper, idx) => {
+    const rng = seededRandom(hashStr(paper.id + '_cl'))
+    const baseX = timeToX(paper.year, paper.quarter, startYear, endYear)
+    const r = impactToRadius(paper.impact_score, false)
+    let x = baseX + (rng() - 0.5) * qW * 0.6
+    const ySlot = (idx + 0.5) / Math.max(unconnected.length, 1)
+    let y = rowY + 15 + ySlot * (rowH - 30) + (rng() - 0.5) * 20
+
+    for (let attempt = 0; attempt < 12; attempt++) {
+      let collides = false
+      for (const p of placed) {
+        const dx = x - p.x
+        const dy = y - p.y
+        const d = Math.sqrt(dx * dx + dy * dy) || 1
+        const minDist = r + p.r + 3
+        if (d < minDist) {
+          const push = minDist - d + 1
+          const a2 = Math.atan2(dy, dx) || (rng() * Math.PI * 2)
+          x += Math.cos(a2) * push
+          y += Math.sin(a2) * push
+          collides = true
+          break
+        }
+      }
+      if (!collides) break
+    }
     x = Math.max(xMin, Math.min(xMax, x))
     y = Math.max(rowY + 5, Math.min(rowY + rowH - 5, y))
     positions[paper.id] = { x, y }
@@ -810,10 +870,11 @@ function SidePanel({ paper, papers, signals, onClose }: { paper: Paper; papers: 
   )
 }
 
-function OverviewStrips({ papers, lanes, rows, startYear, endYear, onDrill }: {
+function OverviewStrips({ papers, lanes, rows, startYear, endYear, onDrill, onSelectPaper }: {
   papers: Paper[]; lanes: Lane[]; rows: Row[]
   startYear: number; endYear: number
   onDrill: (laneId: string) => void
+  onSelectPaper: (p: Paper) => void
 }) {
   const STRIP_H = 90
   const W = 1400
@@ -822,11 +883,42 @@ function OverviewStrips({ papers, lanes, rows, startYear, endYear, onDrill }: {
   const TM = 40
   const H = TM + lanes.length * STRIP_H + 20
 
-  function yearToX(year: number, quarter: number) {
-    const t = year + (quarter - 1) * 0.25
-    const pct = (t - startYear) / (endYear - startYear)
-    return LM + pct * (W - LM - RM)
-  }
+  const lanePositions = useMemo(() => {
+    const result: Record<string, Record<string, { x: number; y: number }>> = {}
+    lanes.forEach(lane => {
+      const laneRows = rows.filter(r => r.lane === lane.id)
+      const lanePapers = papers.filter(p => p.lane === lane.id &&
+        (p.year + (p.quarter - 1) * 0.25) >= startYear &&
+        (p.year + (p.quarter - 1) * 0.25) < endYear)
+
+      const rowHeights: Record<string, number> = {}
+      laneRows.forEach(r => {
+        const count = lanePapers.filter(p => p.row === r.id).length
+        rowHeights[r.id] = getRowHeight(count)
+      })
+      const totalH = Object.values(rowHeights).reduce((s, h) => s + h, 0) || 1
+
+      let accY = 0
+      const allPositions: Record<string, { x: number; y: number }> = {}
+      laneRows.forEach(r => {
+        const rh = rowHeights[r.id] || ROW_H_MIN
+        const rowPapers = lanePapers.filter(p => p.row === r.id)
+        if (rowPapers.length > 0) {
+          const pos = computeRowPositions(rowPapers, accY, rh, startYear, endYear)
+          Object.assign(allPositions, pos)
+        }
+        accY += rh
+      })
+
+      // Normalize Y from [0, totalH] → [0, 1]
+      const normalized: Record<string, { x: number; y: number }> = {}
+      for (const [id, pos] of Object.entries(allPositions)) {
+        normalized[id] = { x: pos.x, y: pos.y / totalH }
+      }
+      result[lane.id] = normalized
+    })
+    return result
+  }, [papers, lanes, rows, startYear, endYear])
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{ display: 'block', width: '100%', minWidth: 900, height: 'auto' }}>
@@ -835,7 +927,7 @@ function OverviewStrips({ papers, lanes, rows, startYear, endYear, onDrill }: {
         const years: number[] = []
         for (let y = Math.ceil(startYear); y < endYear; y++) years.push(y)
         return years.map(yr => {
-          const x = yearToX(yr, 1)
+          const x = LM + ((yr - startYear) / (endYear - startYear)) * (W - LM - RM)
           return <g key={yr}>
             <line x1={x} y1={TM - 10} x2={x} y2={H} stroke="#F4F4F5" strokeWidth={1} />
             <text x={x} y={TM - 16} textAnchor="middle" fontSize={11} fontWeight={600} fill="#3F3F46">{yr}</text>
@@ -846,38 +938,34 @@ function OverviewStrips({ papers, lanes, rows, startYear, endYear, onDrill }: {
       {/* Lane strips */}
       {lanes.map((lane, laneIdx) => {
         const stripY = TM + laneIdx * STRIP_H
-        const lanePapers = papers.filter(p => p.lane === lane.id && (p.year + (p.quarter - 1) * 0.25) >= startYear && (p.year + (p.quarter - 1) * 0.25) < endYear)
-        const laneRows = rows.filter(r => r.lane === lane.id)
+        const positions = lanePositions[lane.id] || {}
+        const lanePapers = papers.filter(p => p.lane === lane.id &&
+          (p.year + (p.quarter - 1) * 0.25) >= startYear &&
+          (p.year + (p.quarter - 1) * 0.25) < endYear)
         const color = LANE_COLORS[lane.id] || '#9CA3AF'
 
-        // Assign Y within strip using row index as band
-        const rowIds = laneRows.map(r => r.id)
-        const rowCount = rowIds.length || 1
-        const usableH = STRIP_H - 10
-
         return <g key={lane.id} style={{ cursor: 'pointer' }} onClick={() => onDrill(lane.id)}>
-          {/* Background */}
           <rect x={0} y={stripY} width={W} height={STRIP_H} fill={color} opacity={0.015} />
           <line x1={LM} y1={stripY + STRIP_H} x2={W - RM} y2={stripY + STRIP_H} stroke="#E4E4E7" strokeWidth={0.5} />
-          {/* Lane label */}
           <text x={12} y={stripY + 20} fontSize={12} fontWeight={700} fill={color}>{lane.title}</text>
           <text x={12} y={stripY + 34} fontSize={9} fill="#71717A">{lane.subtitle}</text>
           <text x={12} y={stripY + 50} fontSize={9} fill="#A1A1AA">{lanePapers.length} papers</text>
 
-          {/* Dots: position with X+Y jitter for organic scatter */}
           {lanePapers.map(paper => {
-            const rng = seededRandom(hashStr(paper.id + '_ov'))
-            const baseX = yearToX(paper.year, paper.quarter)
-            const qW = (W - LM - RM) / ((endYear - startYear) * 4)
-            const x = baseX + (rng() - 0.5) * qW * 1.2
-
-            const y = stripY + 8 + rng() * (usableH - 6)
+            const pos = positions[paper.id]
+            if (!pos) return null
+            const x = pos.x
+            const y = stripY + 5 + pos.y * (STRIP_H - 10)
 
             const impact = paper.impact_score ?? 20
             const r = impact >= 70 ? 5 : impact >= 50 ? 3.5 : 2
             const op = impact >= 70 ? 0.75 : impact >= 50 ? 0.45 : 0.2
+            const isFoundation = paper.shape !== 'square'
 
-            return <circle key={paper.id} cx={x} cy={y} r={r} fill={color} opacity={op} />
+            return <circle key={paper.id} cx={x} cy={y} r={r} fill={color} opacity={op}
+              style={isFoundation ? { cursor: 'pointer' } : undefined}
+              onClick={isFoundation ? (e) => { e.stopPropagation(); onSelectPaper(paper) } : undefined}
+            />
           })}
         </g>
       })}

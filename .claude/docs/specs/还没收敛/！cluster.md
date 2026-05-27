@@ -27,13 +27,24 @@
 
 ## 已实现：Phase 1 引力井（v2 页面）
 
-- Union-find 按引用链分组 Foundation
+- Union-find 按引用链分组 Foundation（`shape !== 'square'`）
 - Y band 按 cluster 大小比例分配
 - X = time + ±40% 季度宽度 jitter
 - Y = band center + 随机偏移
 - 径向碰撞推开（30 次迭代）
-- Adaptation 围绕实际引用的 Foundation 散布
+- Adaptation（`shape === 'square'`）分两类布局：
+  - 有 connection → 围绕目标 Foundation 散布（angle+dist）
+  - 无 connection → stratified Y 均匀分布（避免底部堆积）
 - 行高动态：≤6 篇 120px，≤15 篇 160px，>15 篇每多一篇 +8px
+- 小论文（impact < 20）施加 Gaussian blur 滤镜（stdDeviation=1.8）+ 降低 opacity（0.18）
+- Overview 视图从 Detail 的 `computeRowPositions` 投影而来，不再独立随机
+
+### 选中交互
+
+- 点击论文 → 黑色粗描边环（2.5px #18181B）标识选中
+- 侧边栏展示详情 + 引用关系
+- 不淡化其他论文（避免视觉干扰）
+- Overview 中点击大点 → 切 Detail + 选中该论文
 
 ## 未来：Phase 2 Leiden 聚类
 
@@ -57,6 +68,9 @@ Phase 2 可直接复用这套逻辑，输入换成 world-model-data.json 每个 
 
 - [x] 有引用关系的节点在视觉上明显聚集
 - [x] 同季度大节点不重叠（径向碰撞）
+- [x] Overview 与 Detail 空间位置一致（投影映射）
+- [x] 小论文虚化，不干扰大论文的可读性
+- [x] 选中论文有明确视觉反馈（黑色描边）
 - [ ] 切换时间筛选器后布局仍然稳定（不跳动）
 - [ ] 性能：300 节点内布局计算 < 100ms
 

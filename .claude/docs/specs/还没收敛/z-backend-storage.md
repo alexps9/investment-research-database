@@ -1,7 +1,7 @@
 ---
-status: 已实现（前端未接入）
+status: 已实现
 created: 2026-05-12
-updated: 2026-05-26
+updated: 2026-05-27
 complexity: 🟡中等
 ---
 
@@ -11,9 +11,9 @@ complexity: 🟡中等
 
 - **SQLite 数据库**已上线（`backend/data/world_model.db`，~60KB）
 - **8 个 CRUD endpoint** 通过 FastAPI 暴露
-- **137 篇论文**已从 `world-model-data.json` 迁移入库
+- **177 篇论文**已入库（原始 137 + snowball 扩展 40）
 - **37 个测试**全部通过
-- **前端仍用静态 JSON**（`import worldModelData from '@/data/world-model-data.json'`），未接通 API
+- **前端已接入 API**（`fetchWorldModel()` → `GET /api/world-model`），无 JSON fallback
 
 ---
 
@@ -98,12 +98,13 @@ connections (source_id FK, target_id FK, type, PK=(source,target,type))
 ## 数据流
 
 ```
-当前:
-  world-model-data.json ──(静态 import)──→ 前端渲染
-  world-model-data.json ──(migrate脚本)──→ SQLite DB ──(API)──→ 未接入
-
-目标:
-  飞书/日报/手动 ──→ API POST ──→ SQLite DB ──→ GET /api/world-model ──→ 前端 fetch
+当前（已实现）:
+  飞书/日报/手动/snowball ──→ API POST / 脚本写入 ──→ SQLite DB ──→ GET /api/world-model ──→ 前端 fetch
+  
+前端入口:
+  frontend/src/lib/api.ts: fetchWorldModel() → http://localhost:8000/api/world-model
+  frontend/src/app/world-model-v2/page.tsx: useEffect → fetchWorldModel → setMapData
+  frontend/src/app/world-model-v2/table/page.tsx: Table 视图 CRUD
 ```
 
 ---
@@ -137,10 +138,16 @@ WM_KEYWORDS = [
 
 ---
 
+## 已完成
+
+- [x] **前端接入 API**：移除静态 JSON import，纯 API 驱动（含 loading/error 状态）
+- [x] **前端 Table 视图**：`/world-model-v2/table`，支持筛选/排序/inline 编辑/删除
+- [x] **snowball 扩展脚本**：`scripts/expand_from_seeds.py`，从 OpenAlex 雪球拓展候选论文
+- [x] **impact 批量计算**：通过 `backend/app/services/impact_scoring.py` 计算
+
 ## 待做
 
-- [ ] **前端接入 API**：替换静态 JSON import → fetch GET /api/world-model
 - [ ] **scripts/add_from_daily.py**：解析日报 → 过滤 WM → 调 POST /papers
-- [ ] **scripts/update_impact.py**：批量刷新 cited_by_count + 重算 impact
-- [ ] **前端 Table 视图**：看论文列表 / 审核 impact / 编辑字段
+- [ ] **scripts/update_impact.py**：定期批量刷新 cited_by_count + 重算 impact
 - [ ] 跟同事确认 export 格式
+- [ ] Vercel 部署时 API URL 配置

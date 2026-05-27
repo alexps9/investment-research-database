@@ -1,0 +1,1037 @@
+[
+  {
+    "openalex_id": "W4386071957",
+    "title": "Align Your Latents: High-Resolution Video Synthesis with Latent Diffusion Models",
+    "year": 2023,
+    "cited_by_count": 574,
+    "doi": "https://doi.org/10.1109/cvpr52729.2023.02161",
+    "org": "LMU Klinikum",
+    "found_via": [
+      "ref_of:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W3038822267",
+    "title": "Model-based Reinforcement Learning: A Survey",
+    "year": 2023,
+    "cited_by_count": 480,
+    "doi": "https://doi.org/10.1561/2200000086",
+    "org": "Leiden University",
+    "found_via": [
+      "cites:gr2"
+    ]
+  },
+  {
+    "openalex_id": "W4390873135",
+    "title": "Tune-A-Video: One-Shot Tuning of Image Diffusion Models for Text-to-Video Generation",
+    "year": 2023,
+    "cited_by_count": 472,
+    "doi": "https://doi.org/10.1109/iccv51070.2023.00701",
+    "org": "",
+    "found_via": [
+      "ref_of:text2room"
+    ]
+  },
+  {
+    "openalex_id": "W3169291081",
+    "title": "Decision Transformer: Reinforcement Learning via Sequence Modeling",
+    "year": 2021,
+    "cited_by_count": 465,
+    "doi": "https://doi.org/10.48550/arxiv.2106.01345",
+    "org": "",
+    "found_via": [
+      "ref_of:carformer"
+    ]
+  },
+  {
+    "openalex_id": "W2920362155",
+    "title": "Model-Based Reinforcement Learning for Atari",
+    "year": 2019,
+    "cited_by_count": 421,
+    "doi": "https://doi.org/10.48550/arxiv.1903.00374",
+    "org": "",
+    "found_via": [
+      "ref_of:dreamer_v2"
+    ]
+  },
+  {
+    "openalex_id": "W2900152462",
+    "title": "Learning Latent Dynamics for Planning from Pixels",
+    "year": 2018,
+    "cited_by_count": 367,
+    "doi": "https://doi.org/10.48550/arxiv.1811.04551",
+    "org": "Hasso Plattner Institute",
+    "found_via": [
+      "ref_of:dreamer_v2"
+    ]
+  },
+  {
+    "openalex_id": "W4303440777",
+    "title": "Imagen Video: High Definition Video Generation with Diffusion Models",
+    "year": 2022,
+    "cited_by_count": 346,
+    "doi": "https://doi.org/10.48550/arxiv.2210.02303",
+    "org": "",
+    "found_via": [
+      "ref_of:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W4207072548",
+    "title": "A Survey of Embodied AI: From Simulators to Research Tasks",
+    "year": 2022,
+    "cited_by_count": 332,
+    "doi": "https://doi.org/10.1109/tetci.2022.3141105",
+    "org": "Nanyang Technological University",
+    "found_via": [
+      "ref_of:vista"
+    ]
+  },
+  {
+    "openalex_id": "W4298185919",
+    "title": "Make-A-Video: Text-to-Video Generation without Text-Video Data",
+    "year": 2022,
+    "cited_by_count": 313,
+    "doi": "https://doi.org/10.48550/arxiv.2209.14792",
+    "org": "",
+    "found_via": [
+      "ref_of:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W2953708620",
+    "title": "Benchmarking Model-Based Reinforcement Learning",
+    "year": 2019,
+    "cited_by_count": 242,
+    "doi": "https://doi.org/10.48550/arxiv.1907.02057",
+    "org": "University of Toronto",
+    "found_via": [
+      "ref_of:dreamer_v2"
+    ]
+  },
+  {
+    "openalex_id": "W3211462570",
+    "title": "Simple but Effective: CLIP Embeddings for Embodied AI",
+    "year": 2022,
+    "cited_by_count": 152,
+    "doi": "https://doi.org/10.1109/cvpr52688.2022.01441",
+    "org": "Allen Institute",
+    "found_via": [
+      "ref_of:flare"
+    ]
+  },
+  {
+    "openalex_id": "W2889347284",
+    "title": "SOLAR: Deep Structured Representations for Model-Based Reinforcement Learning",
+    "year": 2018,
+    "cited_by_count": 131,
+    "doi": "https://doi.org/10.48550/arxiv.1808.09105",
+    "org": "",
+    "found_via": [
+      "ref_of:dreamer_v2"
+    ]
+  },
+  {
+    "openalex_id": "W2990375436",
+    "title": "ImaGINator: Conditional Spatio-Temporal GAN for Video Generation",
+    "year": 2020,
+    "cited_by_count": 108,
+    "doi": "https://doi.org/10.1109/wacv45572.2020.9093492",
+    "org": "Institut national de recherche en sciences et technologies du numérique",
+    "found_via": [
+      "ref_of:uva"
+    ]
+  },
+  {
+    "openalex_id": "W3203663566",
+    "title": "TEACh: Task-Driven Embodied Agents That Chat",
+    "year": 2022,
+    "cited_by_count": 89,
+    "doi": "https://doi.org/10.1609/aaai.v36i2.20097",
+    "org": "Amazon (United States)",
+    "found_via": [
+      "ref_of:vista"
+    ]
+  },
+  {
+    "openalex_id": "W4408100174",
+    "title": "When Embodied AI Meets Industry 5.0: Human-Centered Smart Manufacturing",
+    "year": 2025,
+    "cited_by_count": 79,
+    "doi": "https://doi.org/10.1109/jas.2025.125327",
+    "org": "East China University of Science and Technology",
+    "found_via": [
+      "cites:rt2",
+      "cites:gen2act"
+    ]
+  },
+  {
+    "openalex_id": "W4303441850",
+    "title": "Phenaki: Variable Length Video Generation From Open Domain Textual Description",
+    "year": 2022,
+    "cited_by_count": 79,
+    "doi": "https://doi.org/10.48550/arxiv.2210.02399",
+    "org": "",
+    "found_via": [
+      "ref_of:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W4412722243",
+    "title": "Aligning Cyber Space With Physical World: A Comprehensive Survey on Embodied AI",
+    "year": 2025,
+    "cited_by_count": 76,
+    "doi": "https://doi.org/10.1109/tmech.2025.3574943",
+    "org": "Sun Yat-sen University",
+    "found_via": [
+      "cites:i_jepa",
+      "cites:vista"
+    ]
+  },
+  {
+    "openalex_id": "W4402727730",
+    "title": "ManipLLM: Embodied Multimodal Large Language Model for Object-Centric Robotic Manipulation",
+    "year": 2024,
+    "cited_by_count": 64,
+    "doi": "https://doi.org/10.1109/cvpr52733.2024.01710",
+    "org": "Peking University",
+    "found_via": [
+      "cites:rt2"
+    ]
+  },
+  {
+    "openalex_id": "W4408555470",
+    "title": "Embodied large language models enable robots to complete complex tasks in unpredictable environments",
+    "year": 2025,
+    "cited_by_count": 63,
+    "doi": "https://doi.org/10.1038/s42256-025-01005-x",
+    "org": "Princeton University",
+    "found_via": [
+      "cites:rt2"
+    ]
+  },
+  {
+    "openalex_id": "W4309800375",
+    "title": "MagicVideo: Efficient Video Generation With Latent Diffusion Models",
+    "year": 2022,
+    "cited_by_count": 63,
+    "doi": "https://doi.org/10.48550/arxiv.2211.11018",
+    "org": "",
+    "found_via": [
+      "ref_of:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W4283218993",
+    "title": "MineDojo: Building Open-Ended Embodied Agents with Internet-Scale Knowledge",
+    "year": 2022,
+    "cited_by_count": 59,
+    "doi": "https://doi.org/10.48550/arxiv.2206.08853",
+    "org": "",
+    "found_via": [
+      "ref_of:dreamer_v3"
+    ]
+  },
+  {
+    "openalex_id": "W4403990754",
+    "title": "Photorealistic Video Generation with Diffusion Models",
+    "year": 2024,
+    "cited_by_count": 55,
+    "doi": "https://doi.org/10.1007/978-3-031-72986-7_23",
+    "org": "Google (United States)",
+    "found_via": [
+      "cites:rt2"
+    ]
+  },
+  {
+    "openalex_id": "W4386554984",
+    "title": "SyncDreamer: Generating Multiview-consistent Images from a Single-view Image",
+    "year": 2023,
+    "cited_by_count": 51,
+    "doi": "https://doi.org/10.48550/arxiv.2309.03453",
+    "org": "",
+    "found_via": [
+      "ref_of:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W4402916447",
+    "title": "Embodied Intelligence Toward Future Smart Manufacturing in the Era of AI Foundation Model",
+    "year": 2024,
+    "cited_by_count": 49,
+    "doi": "https://doi.org/10.1109/tmech.2024.3456250",
+    "org": "Beihang University",
+    "found_via": [
+      "cites:vista"
+    ]
+  },
+  {
+    "openalex_id": "W4402660086",
+    "title": "Holodeck: Language Guided Generation of 3D Embodied AI Environments",
+    "year": 2024,
+    "cited_by_count": 49,
+    "doi": "https://doi.org/10.1109/cvpr52733.2024.01536",
+    "org": "California University of Pennsylvania",
+    "found_via": [
+      "cites:text2room"
+    ]
+  },
+  {
+    "openalex_id": "W4362590704",
+    "title": "Offline Pre-trained Multi-agent Decision Transformer",
+    "year": 2023,
+    "cited_by_count": 46,
+    "doi": "https://doi.org/10.1007/s11633-022-1383-7",
+    "org": "Chinese Academy of Sciences",
+    "found_via": [
+      "cites:gr2"
+    ]
+  },
+  {
+    "openalex_id": "W4379912396",
+    "title": "VideoComposer: Compositional Video Synthesis with Motion Controllability",
+    "year": 2023,
+    "cited_by_count": 43,
+    "doi": "https://doi.org/10.48550/arxiv.2306.02018",
+    "org": "",
+    "found_via": [
+      "ref_of:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W4402703032",
+    "title": "Towards Learning a Generalist Model for Embodied Navigation",
+    "year": 2024,
+    "cited_by_count": 41,
+    "doi": "https://doi.org/10.1109/cvpr52733.2024.01293",
+    "org": "Chinese University of Hong Kong",
+    "found_via": [
+      "cites:rt2"
+    ]
+  },
+  {
+    "openalex_id": "W4394862786",
+    "title": "VLAAD: Vision and Language Assistant for Autonomous Driving",
+    "year": 2024,
+    "cited_by_count": 34,
+    "doi": "https://doi.org/10.1109/wacvw60836.2024.00107",
+    "org": "Seoul National University",
+    "found_via": [
+      "cites:gaia1"
+    ]
+  },
+  {
+    "openalex_id": "W4402961820",
+    "title": "ShapeLLM: Universal 3D Object Understanding for Embodied Interaction",
+    "year": 2024,
+    "cited_by_count": 31,
+    "doi": "https://doi.org/10.1007/978-3-031-72775-7_13",
+    "org": "Xi'an Jiaotong University",
+    "found_via": [
+      "cites:vista"
+    ]
+  },
+  {
+    "openalex_id": "W4298186173",
+    "title": "Bridging the Gap to Real-World Object-Centric Learning",
+    "year": 2022,
+    "cited_by_count": 31,
+    "doi": "https://doi.org/10.48550/arxiv.2209.14860",
+    "org": "",
+    "found_via": [
+      "ref_of:carformer"
+    ]
+  },
+  {
+    "openalex_id": "W4393318705",
+    "title": "A Survey on Generative AI and LLM for Video Generation, Understanding, and Streaming",
+    "year": 2024,
+    "cited_by_count": 30,
+    "doi": "https://doi.org/10.36227/techrxiv.171172801.19993069/v1",
+    "org": "",
+    "found_via": [
+      "cites:rt2"
+    ]
+  },
+  {
+    "openalex_id": "W4403562035",
+    "title": "PhysDreamer: Physics-Based Interaction with 3D Objects via Video Generation",
+    "year": 2024,
+    "cited_by_count": 25,
+    "doi": "https://doi.org/10.1007/978-3-031-72627-9_22",
+    "org": "Massachusetts Institute of Technology",
+    "found_via": [
+      "cites:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W4407837005",
+    "title": "From screens to scenes: A survey of embodied AI in healthcare",
+    "year": 2025,
+    "cited_by_count": 24,
+    "doi": "https://doi.org/10.1016/j.inffus.2025.103033",
+    "org": "Central South University",
+    "found_via": [
+      "cites:diffusion_policy"
+    ]
+  },
+  {
+    "openalex_id": "W4412483164",
+    "title": "Surgical embodied intelligence for generalized task autonomy in laparoscopic robot-assisted surgery",
+    "year": 2025,
+    "cited_by_count": 22,
+    "doi": "https://doi.org/10.1126/scirobotics.adt3093",
+    "org": "Chinese University of Hong Kong",
+    "found_via": [
+      "cites:diffusion_policy"
+    ]
+  },
+  {
+    "openalex_id": "W4402716059",
+    "title": "DriveWorld: 4D Pre-Trained Scene Understanding via World Models for Autonomous Driving",
+    "year": 2024,
+    "cited_by_count": 21,
+    "doi": "https://doi.org/10.1109/cvpr52733.2024.01470",
+    "org": "Peking University",
+    "found_via": [
+      "cites:gaia1"
+    ]
+  },
+  {
+    "openalex_id": "W4377131095",
+    "title": "Swap Attention in Spatiotemporal Diffusions for Text-to-Video Generation",
+    "year": 2023,
+    "cited_by_count": 19,
+    "doi": "https://doi.org/10.48550/arxiv.2305.10874",
+    "org": "",
+    "found_via": [
+      "ref_of:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W4387389936",
+    "title": "SweetDreamer: Aligning Geometric Priors in 2D Diffusion for Consistent Text-to-3D",
+    "year": 2023,
+    "cited_by_count": 19,
+    "doi": "https://doi.org/10.48550/arxiv.2310.02596",
+    "org": "",
+    "found_via": [
+      "ref_of:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W4413157439",
+    "title": "DriveDreamer4D: World Models Are Effective Data Machines for 4D Driving Scene Representation",
+    "year": 2025,
+    "cited_by_count": 17,
+    "doi": "https://doi.org/10.1109/cvpr52734.2025.01122",
+    "org": "Chinese Academy of Sciences",
+    "found_via": [
+      "cites:drive_wm"
+    ]
+  },
+  {
+    "openalex_id": "W4409661400",
+    "title": "Exploring Embodied Multimodal Large Models: Development, datasets, and future directions",
+    "year": 2025,
+    "cited_by_count": 15,
+    "doi": "https://doi.org/10.1016/j.inffus.2025.103198",
+    "org": "Shenzhen University",
+    "found_via": [
+      "cites:unipi",
+      "cites:octo",
+      "cites:gr1"
+    ]
+  },
+  {
+    "openalex_id": "W4407722206",
+    "title": "World and Human Action Models towards gameplay ideation",
+    "year": 2025,
+    "cited_by_count": 15,
+    "doi": "https://doi.org/10.1038/s41586-025-08600-3",
+    "org": "Microsoft Research (United Kingdom)",
+    "found_via": [
+      "cites:sora"
+    ]
+  },
+  {
+    "openalex_id": "W4409917695",
+    "title": "Position: Prospective of Autonomous Driving - Multimodal LLMs, World Models, Embodied Intelligence, AI Alignment, and Mamba",
+    "year": 2025,
+    "cited_by_count": 14,
+    "doi": "https://doi.org/10.1109/wacvw65960.2025.00114",
+    "org": "Purdue University West Lafayette",
+    "found_via": [
+      "cites:drive_wm",
+      "cites:gaia1",
+      "cites:uniworld"
+    ]
+  },
+  {
+    "openalex_id": "W4402753835",
+    "title": "MP5: A Multi-modal Open-ended Embodied System in Minecraft via Active Perception",
+    "year": 2024,
+    "cited_by_count": 13,
+    "doi": "https://doi.org/10.1109/cvpr52733.2024.01543",
+    "org": "Shanghai Artificial Intelligence Laboratory",
+    "found_via": [
+      "cites:steve1"
+    ]
+  },
+  {
+    "openalex_id": "W4414322177",
+    "title": "LucidDreamer: Domain-Free Generation of 3D Gaussian Splatting Scenes",
+    "year": 2025,
+    "cited_by_count": 13,
+    "doi": "https://doi.org/10.1109/tvcg.2025.3611489",
+    "org": "Seoul National University of Science and Technology",
+    "found_via": [
+      "cites:wonderworld",
+      "cites:text2room"
+    ]
+  },
+  {
+    "openalex_id": "W4413558925",
+    "title": "RealmDreamer: Text-Driven 3D Scene Generation with Inpainting and Depth Diffusion",
+    "year": 2025,
+    "cited_by_count": 13,
+    "doi": "https://doi.org/10.1109/3dv66043.2025.00086",
+    "org": "University of California, San Diego",
+    "found_via": [
+      "cites:text2room"
+    ]
+  },
+  {
+    "openalex_id": "W4390872143",
+    "title": "Object-Centric Multiple Object Tracking",
+    "year": 2023,
+    "cited_by_count": 12,
+    "doi": "https://doi.org/10.1109/iccv51070.2023.01522",
+    "org": "Amazon (United States)",
+    "found_via": [
+      "cites:slotformer"
+    ]
+  },
+  {
+    "openalex_id": "W4408858466",
+    "title": "FusDreamer: Label-Efficient Remote Sensing World Model for Multimodal Data Classification",
+    "year": 2025,
+    "cited_by_count": 10,
+    "doi": "https://doi.org/10.1109/tgrs.2025.3554862",
+    "org": "Guangdong Polytechnic Normal University",
+    "found_via": [
+      "cites:drive_wm"
+    ]
+  },
+  {
+    "openalex_id": "W4387796650",
+    "title": "LAMP: Learn A Motion Pattern for Few-Shot-Based Video Generation",
+    "year": 2023,
+    "cited_by_count": 10,
+    "doi": "https://doi.org/10.48550/arxiv.2310.10769",
+    "org": "",
+    "found_via": [
+      "ref_of:4d_fy"
+    ]
+  },
+  {
+    "openalex_id": "W4386071988",
+    "title": "Intrinsic Physical Concepts Discovery with Object-Centric Predictive Models",
+    "year": 2023,
+    "cited_by_count": 8,
+    "doi": "https://doi.org/10.1109/cvpr52729.2023.02227",
+    "org": "Chinese Academy of Sciences",
+    "found_via": [
+      "cites:slotformer"
+    ]
+  },
+  {
+    "openalex_id": "W4386597189",
+    "title": "Object-Centric Video Prediction Via Decoupling of Object Dynamics and Interactions",
+    "year": 2023,
+    "cited_by_count": 7,
+    "doi": "https://doi.org/10.1109/icip49359.2023.10222810",
+    "org": "University of Bonn",
+    "found_via": [
+      "cites:slotformer"
+    ]
+  },
+  {
+    "openalex_id": "W4411211063",
+    "title": "Reinforced Intelligence Through Active Interaction in Real World: A Survey on Embodied AI",
+    "year": 2025,
+    "cited_by_count": 6,
+    "doi": "https://doi.org/10.1007/s12555-025-0127-1",
+    "org": "Electronics and Telecommunications Research Institute",
+    "found_via": [
+      "cites:tdmpc2"
+    ]
+  },
+  {
+    "openalex_id": "W4400487957",
+    "title": "ViewInfer3D: 3D Visual Grounding Based on Embodied Viewpoint Inference",
+    "year": 2024,
+    "cited_by_count": 5,
+    "doi": "https://doi.org/10.1109/lra.2024.3426286",
+    "org": "Beijing University of Posts and Telecommunications",
+    "found_via": [
+      "cites:vista"
+    ]
+  },
+  {
+    "openalex_id": "W4413017878",
+    "title": "MUVO: A Multimodal Generative World Model for Autonomous Driving with Geometric Representations",
+    "year": 2025,
+    "cited_by_count": 4,
+    "doi": "https://doi.org/10.1109/iv64158.2025.11097718",
+    "org": "FZI Research Center for Information Technology",
+    "found_via": [
+      "cites:drive_wm",
+      "cites:uniworld"
+    ]
+  },
+  {
+    "openalex_id": "W4416748905",
+    "title": "AgiBot World Colosseo: A Large-Scale Manipulation Platform for Scalable and Intelligent Embodied Systems",
+    "year": 2025,
+    "cited_by_count": 4,
+    "doi": "https://doi.org/10.1109/iros60139.2025.11247088",
+    "org": "",
+    "found_via": [
+      "cites:octo"
+    ]
+  },
+  {
+    "openalex_id": "W7117457333",
+    "title": "Embodied AI: From LLMs to World Models [Feature]",
+    "year": 2025,
+    "cited_by_count": 4,
+    "doi": "https://doi.org/10.1109/mcas.2025.3603693",
+    "org": "Tsinghua University",
+    "found_via": [
+      "cites:octo"
+    ]
+  },
+  {
+    "openalex_id": "W4415035887",
+    "title": "Embodied AI with Foundation Models for Mobile Service Robots: A Systematic Review",
+    "year": 2026,
+    "cited_by_count": 3,
+    "doi": "https://doi.org/10.3390/robotics15030055",
+    "org": "University of Toronto",
+    "found_via": [
+      "cites:octo",
+      "cites:flare"
+    ]
+  },
+  {
+    "openalex_id": "W4415247156",
+    "title": "World model-based reinforcement learning for autonomous ship safe collision avoidance",
+    "year": 2025,
+    "cited_by_count": 3,
+    "doi": "https://doi.org/10.1016/j.engappai.2025.112732",
+    "org": "Dalian Maritime University",
+    "found_via": [
+      "cites:robodreamer",
+      "cites:gaia1",
+      "cites:uniworld"
+    ]
+  },
+  {
+    "openalex_id": "W4285238035",
+    "title": "Model-Based Reinforcement Learning",
+    "year": 2022,
+    "cited_by_count": 2,
+    "doi": "https://doi.org/10.1007/978-981-19-0638-1_5",
+    "org": "Leiden University",
+    "found_via": [
+      "cites:dreamer_v2"
+    ]
+  },
+  {
+    "openalex_id": "W4401415850",
+    "title": "Merging Decision Transformers: Weight Averaging for Forming Multi-Task Policies",
+    "year": 2024,
+    "cited_by_count": 2,
+    "doi": "https://doi.org/10.1109/icra57147.2024.10610919",
+    "org": "Purdue University West Lafayette",
+    "found_via": [
+      "cites:unipi"
+    ]
+  },
+  {
+    "openalex_id": "W4406984533",
+    "title": "A Review of Embodied Grasping",
+    "year": 2025,
+    "cited_by_count": 2,
+    "doi": "https://doi.org/10.3390/s25030852",
+    "org": "Henan University of Science and Technology",
+    "found_via": [
+      "cites:unipi"
+    ]
+  },
+  {
+    "openalex_id": "W4403907850",
+    "title": "PreLAR: World Model Pre-training with Learnable Action Representation",
+    "year": 2024,
+    "cited_by_count": 2,
+    "doi": "https://doi.org/10.1007/978-3-031-73337-6_11",
+    "org": "Chinese Academy of Sciences",
+    "found_via": [
+      "cites:drive_wm"
+    ]
+  },
+  {
+    "openalex_id": "W4413377820",
+    "title": "Research on World Models for Connected Automated Driving: Advances, Challenges, and Outlook",
+    "year": 2025,
+    "cited_by_count": 2,
+    "doi": "https://doi.org/10.3390/app15168986",
+    "org": "Shanghai University of Engineering Science",
+    "found_via": [
+      "cites:drive_wm",
+      "cites:think2drive"
+    ]
+  },
+  {
+    "openalex_id": "W4412993735",
+    "title": "World model-based end-to-end scene generation for accident anticipation in autonomous driving",
+    "year": 2025,
+    "cited_by_count": 2,
+    "doi": "https://doi.org/10.1038/s44172-025-00474-7",
+    "org": "University of Macau",
+    "found_via": [
+      "cites:drive_wm",
+      "cites:gaia1"
+    ]
+  },
+  {
+    "openalex_id": "W4416748412",
+    "title": "ReBot: Scaling Robot Learning with Real-to-Sim-to-Real Robotic Video Synthesis",
+    "year": 2025,
+    "cited_by_count": 2,
+    "doi": "https://doi.org/10.1109/iros60139.2025.11246305",
+    "org": "University of North Carolina at Chapel Hill",
+    "found_via": [
+      "cites:octo"
+    ]
+  },
+  {
+    "openalex_id": "W4415145523",
+    "title": "Predictive Autonomy for UAV Remote Sensing: A Survey of Video Prediction",
+    "year": 2025,
+    "cited_by_count": 2,
+    "doi": "https://doi.org/10.3390/rs17203423",
+    "org": "Chinese Academy of Sciences",
+    "found_via": [
+      "cites:uwm"
+    ]
+  },
+  {
+    "openalex_id": "W4313181475",
+    "title": "Robot Control based on World Models and Predictive Learning",
+    "year": 2022,
+    "cited_by_count": 1,
+    "doi": "https://doi.org/10.7210/jrsj.40.790",
+    "org": "Panasonic (Japan)",
+    "found_via": [
+      "cites:dreamer_v2"
+    ]
+  },
+  {
+    "openalex_id": "W3005701902",
+    "title": "On the Sensory Commutativity of Action Sequences for Embodied Agents",
+    "year": 2020,
+    "cited_by_count": 1,
+    "doi": "https://doi.org/10.48550/arxiv.2002.05630",
+    "org": "SoftBank Robotics (France)",
+    "found_via": [
+      "cites:dreamer_v2"
+    ]
+  },
+  {
+    "openalex_id": "W4401415179",
+    "title": "TiV-ODE: A Neural ODE-based Approach for Controllable Video Generation From Text-Image Pairs",
+    "year": 2024,
+    "cited_by_count": 1,
+    "doi": "https://doi.org/10.1109/icra57147.2024.10610149",
+    "org": "University of Edinburgh",
+    "found_via": [
+      "cites:unipi",
+      "cites:slotformer"
+    ]
+  },
+  {
+    "openalex_id": "W4408414553",
+    "title": "Representation Learning for Vision-Based Autonomous Driving via Probabilistic World Modeling",
+    "year": 2025,
+    "cited_by_count": 1,
+    "doi": "https://doi.org/10.3390/machines13030231",
+    "org": "National University of Defense Technology",
+    "found_via": [
+      "cites:drive_wm"
+    ]
+  },
+  {
+    "openalex_id": "W4413925450",
+    "title": "Learning Multiple Probabilistic Decisions from Latent World Model in Autonomous Driving",
+    "year": 2025,
+    "cited_by_count": 1,
+    "doi": "https://doi.org/10.1109/icra55743.2025.11127996",
+    "org": "Southeast University",
+    "found_via": [
+      "cites:drive_wm",
+      "cites:carformer"
+    ]
+  },
+  {
+    "openalex_id": "W4416748856",
+    "title": "Refined Policy Distillation: From VLA Generalists to RL Experts",
+    "year": 2025,
+    "cited_by_count": 1,
+    "doi": "https://doi.org/10.1109/iros60139.2025.11246761",
+    "org": "Artificial Intelligence in Medicine (Canada)",
+    "found_via": [
+      "cites:octo"
+    ]
+  },
+  {
+    "openalex_id": "W4408700591",
+    "title": "Dream to Drive: Learning Conditional Driving Policies in Imagination",
+    "year": 2024,
+    "cited_by_count": 1,
+    "doi": "https://doi.org/10.1109/itsc58415.2024.10919538",
+    "org": "FZI Research Center for Information Technology",
+    "found_via": [
+      "cites:gaia1"
+    ]
+  },
+  {
+    "openalex_id": "W4408450645",
+    "title": "Environment model construction toward auto-tuning of quantum dot devices based on model-based reinforcement learning",
+    "year": 2025,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1063/5.0251336",
+    "org": "Tokyo Institute of Technology",
+    "found_via": [
+      "cites:dreamer_v2"
+    ]
+  },
+  {
+    "openalex_id": "W4391805293",
+    "title": "A World Model Reinforcement Learning Method That Is Not Distracted by Background Information by Using Representation Learning via Invariant Causal Mechanisms for Non-Contrastive Learning",
+    "year": 2024,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.3156/jsoft.36.1_571",
+    "org": "Chiba Institute of Technology",
+    "found_via": [
+      "cites:dreamer_v2"
+    ]
+  },
+  {
+    "openalex_id": "W4387172173",
+    "title": "VMBRL3: A Simple Visual Model-Based Reinforcement Learning Framework for Continuous Control",
+    "year": 2023,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.3233/faia230550",
+    "org": "Sun Yat-sen University",
+    "found_via": [
+      "cites:dreamer_v2"
+    ]
+  },
+  {
+    "openalex_id": "W7162308810",
+    "title": "Discerning Quantity: Numerosity in Two Embodied Machine Learning Agents",
+    "year": 2026,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.3390/bs16050813",
+    "org": "University of Exeter",
+    "found_via": [
+      "cites:dreamer_v3"
+    ]
+  },
+  {
+    "openalex_id": "W4415208268",
+    "title": "Robotic computing system and embodied AI evolution: an algorithm-hardware co-design perspective",
+    "year": 2025,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1088/1674-4926/25020034",
+    "org": "Hong Kong University of Science and Technology",
+    "found_via": [
+      "cites:unipi"
+    ]
+  },
+  {
+    "openalex_id": "W4412505732",
+    "title": "ROLA: real-world object-centric learning with attention optimization",
+    "year": 2025,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1007/s11432-024-4342-6",
+    "org": "Beijing Academy of Artificial Intelligence",
+    "found_via": [
+      "cites:slotformer"
+    ]
+  },
+  {
+    "openalex_id": "W7160046344",
+    "title": "Learning 4D Embodied World Models",
+    "year": 2025,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1109/iccv51701.2025.00507",
+    "org": "University of Massachusetts Amherst",
+    "found_via": [
+      "cites:4d_fy",
+      "cites:wonderworld"
+    ]
+  },
+  {
+    "openalex_id": "W7160195028",
+    "title": "GenFlowRL: Shaping Rewards with Generative Object-Centric Flow in Visual Reinforcement Learning",
+    "year": 2025,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1109/iccv51701.2025.01225",
+    "org": "University of Maryland, College Park",
+    "found_via": [
+      "cites:ivideogpt"
+    ]
+  },
+  {
+    "openalex_id": "W4404717804",
+    "title": "AVID: Adapting Video Diffusion Models to World Models",
+    "year": 2024,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.32388/h7bfdw",
+    "org": "Microsoft Research (United Kingdom)",
+    "found_via": [
+      "cites:robodreamer",
+      "cites:irasim"
+    ]
+  },
+  {
+    "openalex_id": "W7162254407",
+    "title": "Embodied AI",
+    "year": 2026,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1007/978-981-95-7750-7_1",
+    "org": "Tsinghua University",
+    "found_via": [
+      "cites:worldmodelbench",
+      "cites:vla_jepa"
+    ]
+  },
+  {
+    "openalex_id": "W7116381495",
+    "title": "Physical AI: bridging the sim-to-real divide toward embodied, ethical, and autonomous intelligence",
+    "year": 2025,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1007/s44379-025-00050-y",
+    "org": "Sikkim University",
+    "found_via": [
+      "cites:worldmodelbench",
+      "cites:vla_jepa"
+    ]
+  },
+  {
+    "openalex_id": "W7138834023",
+    "title": "Application of Embodied Intelligence in Intelligent Warehousing and Logistics Scenarios",
+    "year": 2026,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1002/eng2.70671",
+    "org": "State Grid Corporation of China (China)",
+    "found_via": [
+      "cites:worldmodelbench",
+      "cites:vla_jepa"
+    ]
+  },
+  {
+    "openalex_id": "W7162253192",
+    "title": "Self-evolving World Model",
+    "year": 2026,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1007/978-981-95-7750-7_5",
+    "org": "Tsinghua University",
+    "found_via": [
+      "cites:worldmodelbench",
+      "cites:vla_jepa"
+    ]
+  },
+  {
+    "openalex_id": "W7162258066",
+    "title": "Self-evolving Embodied Intelligence",
+    "year": 2026,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1007/978-981-95-7750-7_4",
+    "org": "Tsinghua University",
+    "found_via": [
+      "cites:worldmodelbench",
+      "cites:vla_jepa"
+    ]
+  },
+  {
+    "openalex_id": "W4416750162",
+    "title": "Imagine-2-Drive: Leveraging High-Fidelity World Models via Multi-Modal Diffusion Policies",
+    "year": 2025,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1109/iros60139.2025.11246663",
+    "org": "Indian Institute of Technology Hyderabad",
+    "found_via": [
+      "cites:think2drive"
+    ]
+  },
+  {
+    "openalex_id": "W7155064388",
+    "title": "Towards Dynamic World Model Generation with Monocular Video",
+    "year": 2026,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1109/icassp55912.2026.11463651",
+    "org": "University of Electronic Science and Technology of China",
+    "found_via": [
+      "cites:think2drive"
+    ]
+  },
+  {
+    "openalex_id": "W4413017856",
+    "title": "PlanVWM: Autonomous Vehicle Planning Method Based on Vectorized World Model Modeling",
+    "year": 2025,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1109/iv64158.2025.11097598",
+    "org": "Tsinghua–Berkeley Shenzhen Institute",
+    "found_via": [
+      "cites:gaia1"
+    ]
+  },
+  {
+    "openalex_id": "W4404955314",
+    "title": "World Models: The Safety Perspective",
+    "year": 2024,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1109/issrew63542.2024.00104",
+    "org": "Huawei Technologies (Germany)",
+    "found_via": [
+      "cites:gaia1",
+      "cites:uniworld"
+    ]
+  },
+  {
+    "openalex_id": "W7133529606",
+    "title": "Embodied AI with Foundation Models for Mobile Service Robots: A Systematic Review",
+    "year": 2026,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.3390/robotics15030055",
+    "org": "University of Toronto",
+    "found_via": [
+      "cites:flare"
+    ]
+  },
+  {
+    "openalex_id": "W7130312935",
+    "title": "Algorithmic Aesthetics: Machine Learning for Reconstructing Poetic Imagination in English Literature",
+    "year": 2025,
+    "cited_by_count": 0,
+    "doi": "https://doi.org/10.1109/iconstem65670.2025.11374627",
+    "org": "SRM Institute of Science and Technology",
+    "found_via": [
+      "cites:gen3_alpha"
+    ]
+  }
+]

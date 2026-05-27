@@ -11,56 +11,52 @@
 
 一屏内展示 4 条赛道的**时间-密度**对比，作为全局导航入口。
 
-## 设计
+## 已实现
 
 ### 布局
 
-4 条水平 strip，纵向堆叠，每条高度 ~80-100px。全部一屏可见（total ~400px）。
+4 条水平 strip（`OverviewStrips` 组件），纵向堆叠，每条高度 90px。
 
 每条 strip 内容：
-- 左侧：lane 名称 + subtitle
-- 主体：X 轴 = 时间（2019-2026），节点 = 论文圆点
-- 圆点大小 = impact（2px/3px/5px 三档）
-- 圆点颜色 = lane color，opacity 编码 impact（高 impact 更实）
-- **无标题、无标注**——纯密度感知
-- Y 轴：该 lane 内所有论文随机散布在 strip 高度内（不分 row）
+- 左侧：lane 名称 + subtitle + 论文数
+- 主体：X 轴 = 时间，节点 = 论文圆点
+- **Y 轴 = Detail 视图的投影**（非随机）：调用 `computeRowPositions` 计算 Detail 布局，将 Y 归一化到 strip 高度内
 
 ### 交互
 
-- Hover strip → 显示该 lane 的论文数 + 近一年增长
-- 点击 strip → 跳转到 v2 全局视图并筛选该 lane（`filterLane = lane.id`）
+- 点击 lane 背景 → 跳转到该 lane 的 Detail 视图（`filterLane + setView('global')`）
+- 点击大点（foundation） → 切 Detail 并选中该论文（弹出侧边栏）
+- 小点不可点击
 
 ### 位置
 
 作为 v2 页面的**默认首屏**：
-- 进入 `/world-model-v2` 时先看 Overview
-- 页面顶部加一个 tab：`Overview | Detail`
-- Overview = 四条 heatstrip
-- Detail = 当前的全局散点视图
-
-或者更简单：放在当前视图的**上方**作为一个折叠面板。
+- 进入 `/world-model-v2` 时显示 Overview
+- 顶部 tab：`Overview | Detail | Lineage ↗ | Table ↗`
 
 ## 视觉编码
 
 | 元素 | 编码 |
 |------|------|
-| 圆点大小 | impact: ≥70→5px, ≥50→3px, <50→2px |
-| 圆点 opacity | impact: ≥70→0.8, ≥50→0.5, <50→0.25 |
+| 圆点大小 | impact: ≥70→5px, ≥50→3.5px, <50→2px |
+| 圆点 opacity | impact: ≥70→0.75, ≥50→0.45, <50→0.2 |
 | 圆点颜色 | lane color（蓝/绿/紫/橙） |
-| 背景 | lane color opacity 0.02 |
-| strip 间距 | 1px solid #E4E4E7 |
+| 背景 | lane color opacity 0.015 |
+| strip 间距 | 0.5px solid #E4E4E7 |
 
-## 约束
+## 关键设计决策
 
-- X 轴 = 时间（与 v2 对齐）
-- 一屏可见（4 strips total height ≤ 450px）
-- 不显示任何文字标题（纯密度图）
-- 不做碰撞排布（允许重叠，重叠本身=密度信息）
-- 保持 lane 颜色体系
+| 决策 | 原因 |
+|------|------|
+| Y 从 Detail 投影，不独立随机 | 保持 Overview→Detail 的空间记忆连续性 |
+| 点击大点直接进 Detail+选中 | 减少导航层级，快速定位 |
+| 小点不可点击 | 避免 90px strip 内小目标误触 |
 
 ## 验收标准
 
-- [ ] 一屏内可见 4 条赛道全部论文的时间分布
-- [ ] 视觉上能明显区分"密集区"和"稀疏区"
-- [ ] 点击 strip 可跳转到对应 lane 的详细视图
+- [x] 一屏内可见 4 条赛道全部论文的时间分布
+- [x] 视觉上能明显区分"密集区"和"稀疏区"
+- [x] 点击 strip 可跳转到对应 lane 的详细视图
+- [x] 点击大点可切 Detail 并选中
+- [x] Overview 与 Detail Y 位置一致
 - [ ] 响应式：窄屏时 strip 高度自适应

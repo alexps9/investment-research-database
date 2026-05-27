@@ -1,7 +1,7 @@
 # 项目状态
 
 > Claude 每次新会话先读这个文件。用户 review 后更新。
-> **最后更新**: 2026-05-26
+> **最后更新**: 2026-05-27
 
 ---
 
@@ -26,3 +26,7 @@ World Model 技术路线图 — 增量迭代期（大框架已成型，填充内
 | 13 | 飞书多维表格双向同步 | P1 | 已完成 | `scripts/lark_sync.py` |
 | 14 | Cluster 布局 Phase 1（引力井） | P1 | 已完成 | v2 页面已用聚类布局；Phase 2(Leiden) 待论文 300+ 时再做 |
 | 15 | v2 页面溢出修复 | P1 | 已完成 | SVG 改 width:100% + viewBox；右边距增大 |
+| 16 | 后端 API 接入前端 | P1 | 已完成 | 移除 JSON fallback，纯 API 驱动；Table CRUD 视图 |
+| 17 | 论文数据扩展（snowball） | P1 | 已完成 | 177 篇；expand_from_seeds.py；小论文补充+impact算分 |
+| 18 | Overview 投影 Detail 布局 | P1 | 已完成 | Overview Y 轴从 computeRowPositions 归一化映射 |
+| 19 | 选中交互（黑色描边环） | P1 | 已完成 | 点击→黑边标识+侧边栏；Overview 点大点→跳 Detail+选中 |
