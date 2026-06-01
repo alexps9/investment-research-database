@@ -1,0 +1,449 @@
+from typing import Optional, Sequence
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func, or_, and_
+from sqlalchemy.orm import selectinload
+
+from app.models import (
+    Organization, Source, SourceAccount, Tag, SourceTag,
+    Signal, SignalAnalysis, SignalEntity,
+    Entity, EntityAlias, EntityRelation,
+    PipelineRun,
+)
+from app.schemas import (
+    OrganizationCreate, OrganizationUpdate,
+    SourceCreate, SourceUpdate, SourceAccountCreate, SourceTagCreate,
+    SignalCreate, SignalUpdate, SignalAnalysisCreate, SignalEntityCreate,
+    EntityCreate, EntityUpdate, EntityAliasCreate, EntityRelationCreate,
+    PipelineRunCreate,
+)
+
+
+# ── Organization ─────────────────────────────────────────────────────────────
+
+class OrganizationRepo:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def list(self, skip: int = 0, limit: int = 100) -> Sequence[Organization]:
+        result = await self.db.execute(select(Organization).offset(skip).limit(limit))
+        return result.scalars().all()
+
+    async def count(self) -> int:
+        result = await self.db.execute(select(func.count()).select_from(Organization))
+        return result.scalar_one()
+
+    async def get(self, org_id: str) -> Optional[Organization]:
+        result = await self.db.execute(select(Organization).where(Organization.id == org_id))
+        return result.scalar_one_or_none()
+
+    async def create(self, data: OrganizationCreate) -> Organization:
+        obj = Organization(**data.model_dump())
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
+
+    async def update(self, org: Organization, data: OrganizationUpdate) -> Organization:
+        for key, value in data.model_dump(exclude_unset=True).items():
+            setattr(org, key, value)
+        await self.db.commit()
+        await self.db.refresh(org)
+        return org
+
+    async def delete(self, org: Organization) -> None:
+        await self.db.delete(org)
+        await self.db.commit()
+
+
+# ── Source ────────────────────────────────────────────────────────────────────
+
+class SourceRepo:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def list(self, skip: int = 0, limit: int = 100) -> Sequence[Source]:
+        result = await self.db.execute(
+            select(Source)
+            .options(
+                selectinload(Source.organization),
+                selectinload(Source.accounts),
+                selectinload(Source.source_tags).selectinload(SourceTag.tag),
+            )
+            .offset(skip)
+            .limit(limit)
+        )
+        return result.scalars().all()
+
+    async def count(self) -> int:
+        result = await self.db.execute(select(func.count()).select_from(Source))
+        return result.scalar_one()
+
+    async def get(self, source_id: str) -> Optional[Source]:
+        result = await self.db.execute(
+            select(Source)
+            .where(Source.id == source_id)
+            .options(
+                selectinload(Source.organization),
+                selectinload(Source.accounts),
+                selectinload(Source.source_tags).selectinload(SourceTag.tag),
+            )
+        )
+        return result.scalar_one_or_none()
+
+    async def create(self, data: SourceCreate) -> Source:
+        obj = Source(**data.model_dump())
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return await self.get(obj.id)
+
+    async def update(self, source: Source, data: SourceUpdate) -> Source:
+        for key, value in data.model_dump(exclude_unset=True).items():
+            setattr(source, key, value)
+        await self.db.commit()
+        return await self.get(source.id)
+
+    async def delete(self, source: Source) -> None:
+        await self.db.delete(source)
+        await self.db.commit()
+
+    async def add_account(self, source_id: str, data: SourceAccountCreate) -> SourceAccount:
+        obj = SourceAccount(source_id=source_id, **data.model_dump())
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
+
+    async def add_tag(self, source_id: str, data: SourceTagCreate) -> SourceTag:
+        obj = SourceTag(source_id=source_id, **data.model_dump())
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
+
+    async def search(self, q: str, limit: int = 10) -> Sequence[Source]:
+        result = await self.db.execute(
+            select(Source)
+            .options(selectinload(Source.organization), selectinload(Source.accounts))
+            .where(Source.name.ilike(f"%{q}%"))
+            .limit(limit)
+        )
+        return result.scalars().all()
+
+
+# ── Tag ───────────────────────────────────────────────────────────────────────
+
+class TagRepo:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def list(self) -> Sequence[Tag]:
+        result = await self.db.execute(select(Tag))
+        return result.scalars().all()
+
+    async def get_by_name(self, name: str) -> Optional[Tag]:
+        result = await self.db.execute(select(Tag).where(Tag.name == name))
+        return result.scalar_one_or_none()
+
+    async def create(self, name: str, tag_type: str = "topic") -> Tag:
+        obj = Tag(name=name, tag_type=tag_type)
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
+
+
+# ── Signal ────────────────────────────────────────────────────────────────────
+
+class SignalRepo:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def list(
+        self,
+        skip: int = 0,
+        limit: int = 50,
+        signal_type: Optional[str] = None,
+        source_id: Optional[str] = None,
+        organization_id: Optional[str] = None,
+        status: Optional[str] = None,
+        q: Optional[str] = None,
+        published_from: Optional[str] = None,
+        published_to: Optional[str] = None,
+    ) -> Sequence[Signal]:
+        stmt = (
+            select(Signal)
+            .options(selectinload(Signal.analysis))
+            .order_by(Signal.created_at.desc())
+        )
+        if signal_type:
+            stmt = stmt.where(Signal.signal_type == signal_type)
+        if source_id:
+            stmt = stmt.where(Signal.source_id == source_id)
+        if organization_id:
+            stmt = stmt.where(Signal.organization_id == organization_id)
+        if status:
+            stmt = stmt.where(Signal.status == status)
+        if q:
+            stmt = stmt.where(or_(Signal.title.ilike(f"%{q}%"), Signal.abstract.ilike(f"%{q}%")))
+        if published_from:
+            stmt = stmt.where(Signal.published_at >= published_from)
+        if published_to:
+            stmt = stmt.where(Signal.published_at <= published_to)
+        stmt = stmt.offset(skip).limit(limit)
+        result = await self.db.execute(stmt)
+        return result.scalars().all()
+
+    async def count(self, **kwargs) -> int:
+        result = await self.db.execute(select(func.count()).select_from(Signal))
+        return result.scalar_one()
+
+    async def get(self, signal_id: str) -> Optional[Signal]:
+        result = await self.db.execute(
+            select(Signal)
+            .where(Signal.id == signal_id)
+            .options(
+                selectinload(Signal.analysis),
+                selectinload(Signal.signal_entities).selectinload(SignalEntity.entity),
+            )
+        )
+        return result.scalar_one_or_none()
+
+    async def create(self, data: SignalCreate) -> Signal:
+        obj = Signal(**data.model_dump())
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
+
+    async def update(self, signal: Signal, data: SignalUpdate) -> Signal:
+        for key, value in data.model_dump(exclude_unset=True).items():
+            setattr(signal, key, value)
+        await self.db.commit()
+        await self.db.refresh(signal)
+        return signal
+
+    async def add_analysis(self, signal_id: str, data: SignalAnalysisCreate) -> SignalAnalysis:
+        payload = data.model_dump()
+        metadata = payload.pop("metadata", {})
+        obj = SignalAnalysis(signal_id=signal_id, metadata_=metadata, **payload)
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
+
+    async def add_entity(self, signal_id: str, data: SignalEntityCreate) -> SignalEntity:
+        obj = SignalEntity(signal_id=signal_id, **data.model_dump())
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
+
+    async def get_related(self, signal_id: str, limit: int = 10) -> Sequence[Signal]:
+        # Related signals share entity links
+        subq = (
+            select(SignalEntity.entity_id)
+            .where(SignalEntity.signal_id == signal_id)
+            .scalar_subquery()
+        )
+        result = await self.db.execute(
+            select(Signal)
+            .join(SignalEntity, Signal.id == SignalEntity.signal_id)
+            .where(
+                and_(
+                    SignalEntity.entity_id.in_(subq),
+                    Signal.id != signal_id,
+                )
+            )
+            .options(selectinload(Signal.analysis))
+            .limit(limit)
+        )
+        return result.scalars().all()
+
+    async def search(self, q: str, limit: int = 10) -> Sequence[Signal]:
+        result = await self.db.execute(
+            select(Signal)
+            .options(selectinload(Signal.analysis))
+            .where(or_(Signal.title.ilike(f"%{q}%"), Signal.abstract.ilike(f"%{q}%")))
+            .limit(limit)
+        )
+        return result.scalars().all()
+
+
+# ── Entity ────────────────────────────────────────────────────────────────────
+
+class EntityRepo:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def list(
+        self,
+        skip: int = 0,
+        limit: int = 100,
+        entity_type: Optional[str] = None,
+        q: Optional[str] = None,
+    ) -> Sequence[Entity]:
+        stmt = (
+            select(Entity)
+            .options(selectinload(Entity.aliases))
+            .order_by(Entity.canonical_name)
+        )
+        if entity_type:
+            stmt = stmt.where(Entity.entity_type == entity_type)
+        if q:
+            stmt = stmt.where(
+                or_(Entity.name.ilike(f"%{q}%"), Entity.canonical_name.ilike(f"%{q}%"))
+            )
+        stmt = stmt.offset(skip).limit(limit)
+        result = await self.db.execute(stmt)
+        return result.scalars().all()
+
+    async def count(self) -> int:
+        result = await self.db.execute(select(func.count()).select_from(Entity))
+        return result.scalar_one()
+
+    async def get(self, entity_id: str) -> Optional[Entity]:
+        result = await self.db.execute(
+            select(Entity)
+            .where(Entity.id == entity_id)
+            .options(selectinload(Entity.aliases))
+        )
+        return result.scalar_one_or_none()
+
+    async def create(self, data: EntityCreate) -> Entity:
+        payload = data.model_dump()
+        metadata = payload.pop("metadata", {})
+        obj = Entity(metadata_=metadata, **payload)
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return await self.get(obj.id)
+
+    async def update(self, entity: Entity, data: EntityUpdate) -> Entity:
+        payload = data.model_dump(exclude_unset=True)
+        if "metadata" in payload:
+            payload["metadata_"] = payload.pop("metadata")
+        for key, value in payload.items():
+            setattr(entity, key, value)
+        await self.db.commit()
+        return await self.get(entity.id)
+
+    async def add_alias(self, entity_id: str, data: EntityAliasCreate) -> EntityAlias:
+        obj = EntityAlias(entity_id=entity_id, **data.model_dump())
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
+
+    async def get_signals(self, entity_id: str, limit: int = 20) -> Sequence[Signal]:
+        result = await self.db.execute(
+            select(Signal)
+            .join(SignalEntity, Signal.id == SignalEntity.signal_id)
+            .where(SignalEntity.entity_id == entity_id)
+            .options(selectinload(Signal.analysis))
+            .order_by(Signal.published_at.desc())
+            .limit(limit)
+        )
+        return result.scalars().all()
+
+    async def get_relations(self, entity_id: str) -> Sequence[EntityRelation]:
+        result = await self.db.execute(
+            select(EntityRelation)
+            .where(
+                or_(
+                    EntityRelation.subject_entity_id == entity_id,
+                    EntityRelation.object_entity_id == entity_id,
+                )
+            )
+            .options(
+                selectinload(EntityRelation.subject),
+                selectinload(EntityRelation.object_entity),
+            )
+        )
+        return result.scalars().all()
+
+    async def add_relation(self, data: EntityRelationCreate) -> EntityRelation:
+        obj = EntityRelation(**data.model_dump())
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
+
+    async def count_signal_entities(self, entity_id: str) -> int:
+        result = await self.db.execute(
+            select(func.count()).select_from(SignalEntity).where(SignalEntity.entity_id == entity_id)
+        )
+        return result.scalar_one()
+
+    async def count_relations(self, entity_id: str) -> int:
+        result = await self.db.execute(
+            select(func.count())
+            .select_from(EntityRelation)
+            .where(
+                or_(
+                    EntityRelation.subject_entity_id == entity_id,
+                    EntityRelation.object_entity_id == entity_id,
+                )
+            )
+        )
+        return result.scalar_one()
+
+    async def search(self, q: str, limit: int = 10) -> Sequence[Entity]:
+        result = await self.db.execute(
+            select(Entity)
+            .options(selectinload(Entity.aliases))
+            .where(
+                or_(Entity.name.ilike(f"%{q}%"), Entity.canonical_name.ilike(f"%{q}%"))
+            )
+            .limit(limit)
+        )
+        return result.scalars().all()
+
+    async def get_outgoing_relations(self, entity_id: str) -> Sequence[EntityRelation]:
+        result = await self.db.execute(
+            select(EntityRelation)
+            .where(EntityRelation.subject_entity_id == entity_id)
+            .options(selectinload(EntityRelation.object_entity).selectinload(Entity.aliases))
+        )
+        return result.scalars().all()
+
+    async def get_incoming_relations(self, entity_id: str) -> Sequence[EntityRelation]:
+        result = await self.db.execute(
+            select(EntityRelation)
+            .where(EntityRelation.object_entity_id == entity_id)
+            .options(selectinload(EntityRelation.subject).selectinload(Entity.aliases))
+        )
+        return result.scalars().all()
+
+    async def get_all_relations(self, limit: int = 500) -> Sequence[EntityRelation]:
+        result = await self.db.execute(
+            select(EntityRelation)
+            .options(
+                selectinload(EntityRelation.subject),
+                selectinload(EntityRelation.object_entity),
+            )
+            .limit(limit)
+        )
+        return result.scalars().all()
+
+
+# ── Pipeline ──────────────────────────────────────────────────────────────────
+
+class PipelineRepo:
+    def __init__(self, db: AsyncSession):
+        self.db = db
+
+    async def list(self, limit: int = 50) -> Sequence[PipelineRun]:
+        result = await self.db.execute(
+            select(PipelineRun).order_by(PipelineRun.started_at.desc()).limit(limit)
+        )
+        return result.scalars().all()
+
+    async def create(self, data: PipelineRunCreate) -> PipelineRun:
+        payload = data.model_dump()
+        metadata = payload.pop("metadata", {})
+        obj = PipelineRun(metadata_=metadata, **payload)
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        return obj
