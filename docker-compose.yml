@@ -45,5 +45,19 @@ services:
     depends_on:
       - backend
 
+  mcp:
+    build:
+      context: ./mcp_server
+      dockerfile: Dockerfile
+    ports:
+      - "8765:8765"
+    environment:
+      KB_API_BASE_URL: http://backend:8000
+      MCP_TRANSPORT: streamable-http
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: 8765
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:

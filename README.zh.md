@@ -33,6 +33,11 @@
 │  entities   entity_aliases   entity_relations               │
 │  embeddings (pgvector-ready)   pipeline_runs                │
 └─────────────────────────────────────────────────────────────┘
+
+  其他 agent（Claude / Cursor / 自建）──MCP──► mcp_server
+  （stdio 或 streamable-http）                    │ HTTP /api/*
+                                                 ▼
+                                          FastAPI 后端
 ```
 
 ```
@@ -110,6 +115,10 @@ npm run dev
 │       ├── app/               # Next.js App Router 页面
 │       ├── components/        # Sidebar + UI 组件
 │       └── lib/               # API 客户端 & TypeScript 类型
+├── mcp_server/                # MCP 服务，把知识库能力开放给其他 agent
+│   ├── server.py
+│   ├── requirements.txt
+│   └── README.md
 ├── docker-compose.yml
 └── .env.example
 ```
@@ -158,6 +167,29 @@ pytest tests/test_models.py -v
 # API 冒烟测试（需要运行中的后端）
 pytest tests/test_api.py -v
 ```
+
+---
+
+## MCP 服务（开放给其他 agent）
+
+知识库同时通过 **Model Context Protocol** 对外开放，其他 agent（Claude Desktop、
+Cursor、自建 agent）可以搜索、读取实体 Wiki、写入 Signal/实体。它封装的是同一个
+FastAPI 后端（通过 HTTP 调用）。
+
+```bash
+cd mcp_server
+pip install -r requirements.txt
+
+# stdio（本地客户端）
+python server.py
+
+# streamable-http（远程 / 多 agent）→ http://localhost:8765/mcp
+MCP_TRANSPORT=streamable-http python server.py
+```
+
+工具包含 `search_knowledge`、`get_entity_wiki`、`list_signals`、`create_signal`、
+`add_entity_relation` 等。完整工具列表与客户端配置见
+[mcp_server/README.md](./mcp_server/README.md)。
 
 ---
 

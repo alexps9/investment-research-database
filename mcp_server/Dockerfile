@@ -1,0 +1,18 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# Default to streamable-http so the server is reachable from other containers/agents.
+ENV MCP_TRANSPORT=streamable-http
+ENV MCP_HOST=0.0.0.0
+ENV MCP_PORT=8765
+ENV KB_API_BASE_URL=http://backend:8000
+
+EXPOSE 8765
+
+CMD ["python", "server.py"]

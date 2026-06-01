@@ -33,6 +33,11 @@
 │  entities   entity_aliases   entity_relations               │
 │  embeddings (pgvector-ready)   pipeline_runs                │
 └─────────────────────────────────────────────────────────────┘
+
+  Other agents (Claude / Cursor / custom) ──MCP──► mcp_server
+  (stdio or streamable-http)                          │ HTTP /api/*
+                                                      ▼
+                                              FastAPI backend
 ```
 
 ```
@@ -110,6 +115,10 @@ npm run dev
 │       ├── app/               # Next.js App Router pages
 │       ├── components/        # Sidebar + UI components
 │       └── lib/               # API client & TypeScript types
+├── mcp_server/                # MCP server exposing the KB to other agents
+│   ├── server.py
+│   ├── requirements.txt
+│   └── README.md
 ├── docker-compose.yml
 └── .env.example
 ```
@@ -158,6 +167,29 @@ pytest tests/test_models.py -v
 # API smoke tests — requires running backend
 pytest tests/test_api.py -v
 ```
+
+---
+
+## MCP Server (for other agents)
+
+The knowledge base is also exposed over the **Model Context Protocol**, so other
+agents (Claude Desktop, Cursor, custom agents) can search, read Wiki profiles,
+and contribute signals/entities. It wraps the same FastAPI backend over HTTP.
+
+```bash
+cd mcp_server
+pip install -r requirements.txt
+
+# stdio (local clients)
+python server.py
+
+# streamable-http (remote / multi-agent) → http://localhost:8765/mcp
+MCP_TRANSPORT=streamable-http python server.py
+```
+
+Tools include `search_knowledge`, `get_entity_wiki`, `list_signals`,
+`create_signal`, `add_entity_relation`, etc. Full tool list and client config:
+see [mcp_server/README.md](./mcp_server/README.md).
 
 ---
 
