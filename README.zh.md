@@ -1,22 +1,22 @@
-# AI Intelligence Knowledge Base
+# AI 智能知识库
 
-> Signal collection and knowledge management system for AI researchers.
+> 面向 AI 研究者的信号收集与知识管理系统。
 
-**Knowledge chain:** Source → Signal → Entity → Relation → Wiki / Search
+**知识链：** Source → Signal → Entity → Relation → Wiki / Search
 
 ---
 
-## Architecture
+## 架构总览
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        Browser                              │
+│                        浏览器                               │
 │              Next.js 14  (localhost:3000)                   │
 │   /dashboard  /sources  /signals  /entities  /wiki  /graph  │
 └────────────────────────┬────────────────────────────────────┘
-                         │  HTTP  /api/*  (rewrite proxy)
+                         │  HTTP  /api/*  (rewrite 代理)
 ┌────────────────────────▼────────────────────────────────────┐
-│                    FastAPI Backend                          │
+│                  FastAPI 后端                               │
 │                   (localhost:8000)                          │
 │                                                             │
 │  Routers → Repositories → SQLAlchemy 2.x (async)           │
@@ -36,50 +36,50 @@
 ```
 
 ```
-Data flow
-─────────
-External sources ──► Signal (evidence) ──► Entity (knowledge node)
-                                                  │
-                                           EntityRelation
-                                                  │
-                                           Wiki / Graph
+数据流
+──────
+外部来源 ──► Signal（证据）──► Entity（知识节点）
+                                     │
+                               EntityRelation
+                                     │
+                               Wiki / Graph
 ```
 
 ---
 
-## Quick Start
+## 快速启动
 
-### Docker Compose (recommended)
+### Docker Compose（推荐）
 
 ```bash
 cp .env.example backend/.env
 docker compose up --build
 ```
 
-| Service | URL |
-|---------|-----|
-| Frontend | http://localhost:3000 |
-| Backend API | http://localhost:8000 |
-| Interactive API docs | http://localhost:8000/docs |
+| 服务 | 地址 |
+|------|------|
+| 前端 | http://localhost:3000 |
+| 后端 API | http://localhost:8000 |
+| 交互式 API 文档 | http://localhost:8000/docs |
 
-On first run, the backend automatically runs migrations, loads seed data, then starts the server.
+首次启动会自动执行：数据库迁移 → 写入 Seed 数据 → 启动服务器。
 
 ---
 
-### Local Development
+### 本地开发
 
-**Prerequisites:** Python 3.12+, Node.js 20+, PostgreSQL 16
+**前置条件：** Python 3.12+、Node.js 20+、PostgreSQL 16
 
 ```bash
-# Backend
+# 后端
 cd backend
 pip install -r requirements.txt
-cp ../.env.example .env        # edit DB connection as needed
+cp ../.env.example .env          # 按需修改数据库连接
 alembic upgrade head
 python seed.py
 uvicorn app.main:app --reload --port 8000
 
-# Frontend (separate terminal)
+# 前端（另开终端）
 cd frontend
 npm install
 echo "NEXT_PUBLIC_API_URL=http://localhost:8000" > .env.local
@@ -88,38 +88,38 @@ npm run dev
 
 ---
 
-## Project Structure
+## 目录结构
 
 ```
 .
 ├── backend/
 │   ├── app/
-│   │   ├── main.py            # FastAPI entry, CORS, router registration
-│   │   ├── database.py        # Engine & session
-│   │   ├── models/            # SQLAlchemy ORM (13 tables)
-│   │   ├── schemas/           # Pydantic v2 request/response
-│   │   ├── repositories/      # Data access layer
-│   │   ├── routers/           # Route handlers
-│   │   └── core/config.py     # Settings from env vars
-│   ├── alembic/               # Database migrations
-│   ├── tests/                 # pytest suite
-│   ├── seed.py                # Seed script
+│   │   ├── main.py            # FastAPI 入口，CORS，路由注册
+│   │   ├── database.py        # 引擎 & Session
+│   │   ├── models/            # SQLAlchemy ORM（13 张表）
+│   │   ├── schemas/           # Pydantic v2 请求/响应
+│   │   ├── repositories/      # 数据访问层（Router 不直接写 SQL）
+│   │   ├── routers/           # 路由处理器
+│   │   └── core/config.py     # 环境变量配置
+│   ├── alembic/               # 数据库迁移
+│   ├── tests/                 # pytest 测试
+│   ├── seed.py                # Seed 脚本
 │   └── requirements.txt
 ├── frontend/
 │   └── src/
-│       ├── app/               # Next.js App Router pages
-│       ├── components/        # Sidebar + UI components
-│       └── lib/               # API client & TypeScript types
+│       ├── app/               # Next.js App Router 页面
+│       ├── components/        # Sidebar + UI 组件
+│       └── lib/               # API 客户端 & TypeScript 类型
 ├── docker-compose.yml
 └── .env.example
 ```
 
 ---
 
-## API Endpoints
+## API 端点
 
-| Resource | Endpoints |
-|----------|-----------|
+| 资源 | 端点 |
+|------|------|
 | Sources | `GET/POST /api/sources` · `PATCH/DELETE /api/sources/{id}` · `POST .../accounts` · `POST .../tags` |
 | Signals | `GET/POST /api/signals` · `PATCH /api/signals/{id}` · `POST .../analysis` · `GET .../related` |
 | Entities | `GET/POST /api/entities` · `PATCH /api/entities/{id}` · `POST .../aliases` · `GET/POST .../relations` |
@@ -129,39 +129,39 @@ npm run dev
 | Dashboard | `GET /api/dashboard/stats` · `GET .../latest-signals` · `GET .../latest-runs` |
 | Runs | `GET /api/runs` · `POST /api/runs/mock` |
 
-Full interactive docs: http://localhost:8000/docs
+完整交互文档：http://localhost:8000/docs
 
 ---
 
-## Frontend Pages
+## 前端页面
 
-| Path | Description |
-|------|-------------|
-| `/dashboard` | Stats + latest signals + pipeline runs |
-| `/sources` | Source management table |
-| `/signals` | Signal card list |
-| `/entities` | Entity table with wiki links |
-| `/wiki` | Global search (grouped by entity / signal / source) |
-| `/wiki/entities/[id]` | Entity wiki detail (relations, signals, aliases) |
-| `/graph-lite` | Relation graph (nodes + edges table) |
+| 路径 | 说明 |
+|------|------|
+| `/dashboard` | 统计卡片 + 最新 Signal + Pipeline 记录 |
+| `/sources` | 来源管理表格，支持新建 |
+| `/signals` | Signal 卡片列表，支持新建 |
+| `/entities` | 实体表格，支持新建 |
+| `/wiki` | 全局搜索（实体 / Signal / 来源分组） |
+| `/wiki/entities/[id]` | 实体 Wiki 详情（关系、Signal、别名） |
+| `/graph-lite` | 关系图（节点 + 边表格，基于 PostgreSQL） |
 
 ---
 
-## Tests
+## 测试
 
 ```bash
 cd backend
 
-# Unit tests — no DB required
+# 单元测试（无需数据库）
 pytest tests/test_models.py -v
 
-# API smoke tests — requires running backend
+# API 冒烟测试（需要运行中的后端）
 pytest tests/test_api.py -v
 ```
 
 ---
 
-## Database Schema (13 tables)
+## 数据库 Schema（13 张表）
 
 ```
 organizations ──< sources ──< source_accounts
@@ -172,12 +172,9 @@ signals ──< signal_analysis
    │
    └──< signal_entities >── entities ──< entity_aliases
                                 │
-                         entity_relations (subject → type → object)
+                         entity_relations（主体 → 关系类型 → 客体）
 
 embeddings   pipeline_runs
 ```
 
----
-
-
-中文文档：[README.zh.md](./README.zh.md)
+English documentation: [README.md](./README.md)
