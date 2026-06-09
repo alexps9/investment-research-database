@@ -32,7 +32,7 @@ export default async function DashboardPage() {
     { label: 'Sources', value: stats.total_sources, href: '/sources', color: 'text-blue-600' },
     { label: 'Signals', value: stats.total_signals, href: '/signals', color: 'text-purple-600' },
     { label: 'Entities', value: stats.total_entities, href: '/entities', color: 'text-green-600' },
-    { label: 'Relations', value: stats.total_relations, href: '/graph-lite', color: 'text-orange-600' },
+    { label: 'Relations', value: stats.total_relations, href: '/graph', color: 'text-orange-600' },
   ];
 
   return (

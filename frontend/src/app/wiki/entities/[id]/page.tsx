@@ -2,8 +2,9 @@ import { api } from '@/lib/api';
 import type { WikiEntityProfile } from '@/lib/types';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import EntityEgoGraph from '@/components/graph/EntityEgoGraph';
 import Link from 'next/link';
-import { ArrowRight, ExternalLink, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ExternalLink, ArrowLeft, Network } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
 async function getWiki(id: string): Promise<WikiEntityProfile | null> {
@@ -50,6 +51,27 @@ export default async function WikiEntityPage({ params }: { params: { id: string 
       </div>
 
       <div className="space-y-6">
+        {(outgoing_relations.length > 0 || incoming_relations.length > 0) && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-1.5">
+                <Network size={14} className="text-blue-600" /> Relationship Graph
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <EntityEgoGraph
+                entity={entity}
+                outgoing={outgoing_relations}
+                incoming={incoming_relations}
+                related={related_entities}
+              />
+              <p className="mt-2 text-xs text-gray-400">
+                Click a connected node to navigate. Drag to rearrange, scroll to zoom.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
         {outgoing_relations.length > 0 && (
           <Card>
             <CardHeader><CardTitle>Outgoing Relations ({outgoing_relations.length})</CardTitle></CardHeader>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import {
-  LayoutDashboard, Radio, Zap, Box, BookOpen, GitBranch,
+  LayoutDashboard, Radio, Zap, Box, BookOpen, Network,
 } from 'lucide-react';
 
 const nav = [
@@ -12,7 +12,7 @@ const nav = [
   { href: '/signals', label: 'Signals', icon: Zap },
   { href: '/entities', label: 'Entities', icon: Box },
   { href: '/wiki', label: 'Wiki', icon: BookOpen },
-  { href: '/graph-lite', label: 'Graph', icon: GitBranch },
+  { href: '/graph', label: 'Graph', icon: Network },
 ];
 
 export default function Sidebar() {

@@ -15,7 +15,8 @@
     "react-dom": "^18",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
-    "lucide-react": "^0.378.0"
+    "lucide-react": "^0.378.0",
+    "react-force-graph-2d": "^1.27.1"
   },
   "devDependencies": {
     "@types/node": "^20",

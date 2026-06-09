@@ -1,10 +1,20 @@
-// Central API client. All calls go through Next.js rewrite proxy (/api → backend).
+// Central API client.
+// - In the browser: calls go through the Next.js rewrite proxy (/api → backend).
+// - On the server (RSC / server components): relative URLs have no origin, so we
+//   target the backend directly via NEXT_PUBLIC_API_URL.
 
-const BASE = '/api';
+function resolveUrl(path: string): string {
+  if (typeof window === 'undefined') {
+    const origin = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    return `${origin}/api${path}`;
+  }
+  return `/api${path}`;
+}
 
 async function fetcher<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await fetch(resolveUrl(path), {
     headers: { 'Content-Type': 'application/json', ...init?.headers },
+    cache: 'no-store',
     ...init,
   });
   if (!res.ok) {
