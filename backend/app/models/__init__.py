@@ -3,7 +3,11 @@ from datetime import datetime
 from sqlalchemy import String, Text, Boolean, Float, Integer, ForeignKey, DateTime, func, Index
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from pgvector.sqlalchemy import Vector
 from app.database import Base
+from app.core.config import get_settings
+
+_settings = get_settings()
 
 
 def gen_uuid():
@@ -330,7 +334,10 @@ class Embedding(Base):
     embedding_type: Mapped[str] = mapped_column(
         String(50), nullable=False
     )  # title, abstract, content, summary, entity_description
-    # vector column is added conditionally if pgvector is available
+    # Populated by the embed pipeline stage; dimension set via EMBEDDING_DIMENSIONS env var.
+    vector: Mapped[list[float] | None] = mapped_column(
+        Vector(_settings.embedding_dimensions), nullable=True
+    )
     model_name: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 

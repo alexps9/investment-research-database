@@ -2,7 +2,9 @@ version: '3.9'
 
 services:
   db:
-    image: postgres:16-alpine
+    # pgvector/pgvector includes the vector extension pre-installed.
+    # Equivalent to postgres:16 for all other purposes.
+    image: pgvector/pgvector:pg16
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -17,6 +19,51 @@ services:
       timeout: 5s
       retries: 5
 
+  # Local stand-in for Amazon ElastiCache for Redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Local stand-in for Amazon S3 (S3-compatible API)
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # One-shot job that creates the dev bucket on first boot
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 minioadmin minioadmin &&
+      mc mb --ignore-existing local/hh-research &&
+      mc anonymous set download local/hh-research;
+      exit 0;
+      "
+
   backend:
     build:
       context: ./backend
@@ -26,8 +73,18 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/ai_knowledge
       DATABASE_URL_SYNC: postgresql+psycopg2://postgres:postgres@db:5432/ai_knowledge
+      REDIS_URL: redis://redis:6379/0
+      S3_ENDPOINT_URL: http://minio:9000
+      S3_BUCKET: hh-research
+      S3_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
     depends_on:
       db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
         condition: service_healthy
     volumes:
       - ./backend:/app
@@ -61,3 +118,5 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
+  minio_data:
