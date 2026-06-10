@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import type { Signal } from '@/lib/types';
+import { useLang } from '@/lib/i18n';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Plus, ExternalLink } from 'lucide-react';
@@ -15,6 +16,7 @@ const statusBadge: Record<string, 'green' | 'yellow' | 'gray' | 'default'> = {
 };
 
 export default function SignalsPage() {
+  const { t } = useLang();
   const [signals, setSignals] = useState<Signal[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -37,7 +39,7 @@ export default function SignalsPage() {
   return (
     <div className="p-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Signals</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('signals.title')}</h1>
         <button onClick={() => setShowForm(!showForm)}
           className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
           <Plus size={16} /> New Signal
@@ -82,7 +84,7 @@ export default function SignalsPage() {
       )}
 
       {loading ? (
-        <p className="text-sm text-gray-400">Loading…</p>
+        <p className="text-sm text-gray-400">{t('common.loading')}</p>
       ) : (
         <div className="grid gap-4">
           {signals.map((sig) => (

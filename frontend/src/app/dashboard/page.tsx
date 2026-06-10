@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
+import { useLang } from '@/lib/i18n';
 
 const EMPTY_STATS: DashboardStats = {
   total_sources: 0, total_signals: 0, total_entities: 0, total_relations: 0,
@@ -19,6 +20,7 @@ const runStatusBadge: Record<string, 'green' | 'red' | 'yellow' | 'default'> = {
 };
 
 export default function DashboardPage() {
+  const { t } = useLang();
   const [stats, setStats] = useState<DashboardStats>(EMPTY_STATS);
   const [signals, setSignals] = useState<Signal[]>([]);
   const [runs, setRuns] = useState<PipelineRun[]>([]);
@@ -37,15 +39,15 @@ export default function DashboardPage() {
   }, []);
 
   const statCards = [
-    { label: 'Sources',   value: stats.total_sources,   href: '/sources',  color: 'text-blue-600'   },
-    { label: 'Signals',   value: stats.total_signals,   href: '/signals',  color: 'text-purple-600' },
-    { label: 'Entities',  value: stats.total_entities,  href: '/entities', color: 'text-green-600'  },
-    { label: 'Relations', value: stats.total_relations, href: '/graph',    color: 'text-orange-600' },
+    { labelKey: 'dashboard.stats.sources',  value: stats.total_sources,   href: '/sources',  color: 'text-blue-600'   },
+    { labelKey: 'dashboard.stats.signals',  value: stats.total_signals,   href: '/signals',  color: 'text-purple-600' },
+    { labelKey: 'dashboard.stats.entities', value: stats.total_entities,  href: '/entities', color: 'text-green-600'  },
+    { labelKey: 'dashboard.stats.orgs',     value: stats.total_relations, href: '/graph',    color: 'text-orange-600' },
   ];
 
   return (
     <div className="p-8">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Dashboard</h1>
+      <h1 className="mb-6 text-2xl font-bold text-gray-900">{t('dashboard.title')}</h1>
 
       {loading ? (
         <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -55,11 +57,11 @@ export default function DashboardPage() {
         </div>
       ) : (
         <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {statCards.map(({ label, value, href, color }) => (
-            <Link key={label} href={href}>
+          {statCards.map(({ labelKey, value, href, color }) => (
+            <Link key={labelKey} href={href}>
               <Card className="cursor-pointer transition-shadow hover:shadow-md">
                 <CardContent className="pt-4">
-                  <p className="text-sm text-gray-500">{label}</p>
+                  <p className="text-sm text-gray-500">{t(labelKey)}</p>
                   <p className={`mt-1 text-3xl font-bold ${color}`}>{value}</p>
                 </CardContent>
               </Card>
@@ -70,10 +72,10 @@ export default function DashboardPage() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
-          <CardHeader><CardTitle>Latest Signals</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t('dashboard.recent_signals')}</CardTitle></CardHeader>
           <CardContent className="p-0">
             {signals.length === 0 ? (
-              <p className="px-5 py-4 text-sm text-gray-400">{loading ? 'Loading…' : 'No signals yet.'}</p>
+              <p className="px-5 py-4 text-sm text-gray-400">{loading ? t('common.loading') : t('dashboard.no_signals')}</p>
             ) : (
               <ul className="divide-y divide-gray-100">
                 {signals.map((sig) => (
@@ -98,10 +100,10 @@ export default function DashboardPage() {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle>Pipeline Runs</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t('dashboard.recent_runs')}</CardTitle></CardHeader>
           <CardContent className="p-0">
             {runs.length === 0 ? (
-              <p className="px-5 py-4 text-sm text-gray-400">{loading ? 'Loading…' : 'No runs yet.'}</p>
+              <p className="px-5 py-4 text-sm text-gray-400">{loading ? t('common.loading') : t('dashboard.no_runs')}</p>
             ) : (
               <ul className="divide-y divide-gray-100">
                 {runs.map((run) => (

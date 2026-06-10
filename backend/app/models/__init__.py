@@ -57,6 +57,27 @@ class Source(Base):
     importance_score: Mapped[float] = mapped_column(Float, nullable=False, server_default="0.5")
     reliability_score: Mapped[float] = mapped_column(Float, nullable=False, server_default="0.5")
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="true")
+
+    # ── Extended fields from pipeline signal-source registry ──────────────────
+    tier: Mapped[str | None] = mapped_column(String(10), nullable=True)   # P0+, P1, P2, P3
+    sector: Mapped[str | None] = mapped_column(String(50), nullable=True) # industry, academia, other
+    research_focus: Mapped[str | None] = mapped_column(Text, nullable=True)
+    tier_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    source_authority: Mapped[str | None] = mapped_column(String(50), nullable=True)  # official, founder, researcher, academic
+    last_tweet_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    avg_interval_days: Mapped[float | None] = mapped_column(Float, nullable=True)
+    arxiv_author_query: Mapped[str | None] = mapped_column(Text, nullable=True)
+    affiliation_regex: Mapped[str | None] = mapped_column(Text, nullable=True)
+    orcid: Mapped[str | None] = mapped_column(Text, nullable=True)
+    twitter_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    openalex_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    scholar_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    github_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    personal_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    arxiv_homepage_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # ─────────────────────────────────────────────────────────────────────────
+
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

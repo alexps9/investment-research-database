@@ -5,12 +5,14 @@ import type { Source, SourceCreate } from '@/lib/types';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Plus, ExternalLink } from 'lucide-react';
+import { useLang } from '@/lib/i18n';
 
 const activityColor: Record<string, 'green' | 'blue' | 'yellow' | 'gray'> = {
   very_active: 'green', active: 'blue', normal: 'yellow', inactive: 'gray', unknown: 'gray',
 };
 
 export default function SourcesPage() {
+  const { t } = useLang();
   const [sources, setSources] = useState<Source[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -35,7 +37,7 @@ export default function SourcesPage() {
   return (
     <div className="p-8">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Sources</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('sources.title')}</h1>
         <button
           onClick={() => setShowForm(!showForm)}
           className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
@@ -85,13 +87,16 @@ export default function SourcesPage() {
       )}
 
       {loading ? (
-        <p className="text-sm text-gray-400">Loading…</p>
+        <p className="text-sm text-gray-400">{t('common.loading')}</p>
       ) : (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
               <tr>
-                {['Name', 'Type', 'Organization', 'Accounts', 'Tags', 'Status', 'Importance'].map(h => (
+                {[
+                  t('sources.col.name'), t('sources.col.type'), t('sources.col.org'),
+                  'Accounts', 'Tags', t('sources.col.activity'), 'Score',
+                ].map(h => (
                   <th key={h} className="px-4 py-3">{h}</th>
                 ))}
               </tr>

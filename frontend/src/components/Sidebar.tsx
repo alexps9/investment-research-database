@@ -6,18 +6,21 @@ import clsx from 'clsx';
 import {
   LayoutDashboard, Radio, Zap, Box, BookOpen, Network,
 } from 'lucide-react';
+import { useLang } from '@/lib/i18n';
 
-const nav = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/sources',   label: 'Sources',   icon: Radio            },
-  { href: '/signals',   label: 'Signals',   icon: Zap              },
-  { href: '/entities',  label: 'Entities',  icon: Box              },
-  { href: '/wiki',      label: 'Wiki',      icon: BookOpen         },
-  { href: '/graph',     label: 'Graph',     icon: Network          },
+const NAV_KEYS = [
+  { href: '/dashboard', tKey: 'nav.dashboard', icon: LayoutDashboard },
+  { href: '/sources',   tKey: 'nav.sources',   icon: Radio            },
+  { href: '/signals',   tKey: 'nav.signals',   icon: Zap              },
+  { href: '/entities',  tKey: 'nav.entities',  icon: Box              },
+  { href: '/wiki',      tKey: 'nav.wiki',      icon: BookOpen         },
+  { href: '/graph',     tKey: 'nav.graph',     icon: Network          },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { lang, setLang, t } = useLang();
+
   return (
     <aside className="flex h-screen w-56 flex-col border-r border-gray-200 bg-gray-50">
       {/* Logo */}
@@ -34,8 +37,9 @@ export default function Sidebar() {
         </Link>
       </div>
 
+      {/* Navigation */}
       <nav className="flex-1 space-y-0.5 px-3 pt-3">
-        {nav.map(({ href, label, icon: Icon }) => {
+        {NAV_KEYS.map(({ href, tKey, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/');
           return (
             <Link
@@ -49,11 +53,39 @@ export default function Sidebar() {
               )}
             >
               <Icon size={16} />
-              {label}
+              {t(tKey)}
             </Link>
           );
         })}
       </nav>
+
+      {/* Language toggle */}
+      <div className="px-3 pb-4 pt-2 border-t border-gray-100">
+        <div className="flex items-center rounded-lg overflow-hidden border border-gray-200 text-xs font-medium">
+          <button
+            onClick={() => setLang('zh')}
+            className={clsx(
+              'flex-1 py-1.5 transition-colors',
+              lang === 'zh'
+                ? 'bg-blue-600 text-white'
+                : 'bg-white text-gray-500 hover:bg-gray-50'
+            )}
+          >
+            中文
+          </button>
+          <button
+            onClick={() => setLang('en')}
+            className={clsx(
+              'flex-1 py-1.5 transition-colors',
+              lang === 'en'
+                ? 'bg-blue-600 text-white'
+                : 'bg-white text-gray-500 hover:bg-gray-50'
+            )}
+          >
+            EN
+          </button>
+        </div>
+      </div>
     </aside>
   );
 }
