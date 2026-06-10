@@ -356,8 +356,8 @@ class EntityRepo:
                 )
             )
             .options(
-                selectinload(EntityRelation.subject),
-                selectinload(EntityRelation.object_entity),
+                selectinload(EntityRelation.subject).selectinload(Entity.aliases),
+                selectinload(EntityRelation.object_entity).selectinload(Entity.aliases),
             )
         )
         return result.scalars().all()
@@ -419,8 +419,8 @@ class EntityRepo:
         result = await self.db.execute(
             select(EntityRelation)
             .options(
-                selectinload(EntityRelation.subject),
-                selectinload(EntityRelation.object_entity),
+                selectinload(EntityRelation.subject).selectinload(Entity.aliases),
+                selectinload(EntityRelation.object_entity).selectinload(Entity.aliases),
             )
             .limit(limit)
         )

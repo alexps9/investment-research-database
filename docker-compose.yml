@@ -1,9 +1,24 @@
 version: '3.9'
 
+# =============================================================================
+# 两种启动模式：
+#
+#   [EC2 / AWS 托管服务]  直接连 RDS + ElastiCache + S3，不启动本地 DB/缓存：
+#       docker compose up -d
+#
+#   [本地开发]  启动全部容器（含 postgres/redis/minio）：
+#       docker compose --profile local up -d
+# =============================================================================
+
 services:
+
+  # ---------------------------------------------------------------------------
+  # 本地开发专用容器（仅 --profile local 时启动）
+  # ---------------------------------------------------------------------------
+
   db:
-    # pgvector/pgvector includes the vector extension pre-installed.
-    # Equivalent to postgres:16 for all other purposes.
+    profiles: [local]
+    # pgvector/pgvector 包含 vector 扩展，其余与 postgres:16 完全相同
     image: pgvector/pgvector:pg16
     environment:
       POSTGRES_USER: postgres
@@ -19,8 +34,8 @@ services:
       timeout: 5s
       retries: 5
 
-  # Local stand-in for Amazon ElastiCache for Redis
   redis:
+    profiles: [local]
     image: redis:7-alpine
     ports:
       - "6379:6379"
@@ -32,16 +47,16 @@ services:
       timeout: 5s
       retries: 5
 
-  # Local stand-in for Amazon S3 (S3-compatible API)
   minio:
+    profiles: [local]
     image: minio/minio:latest
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     ports:
-      - "9000:9000"   # S3 API
-      - "9001:9001"   # Web console
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio_data:/data
     healthcheck:
@@ -50,8 +65,8 @@ services:
       timeout: 5s
       retries: 5
 
-  # One-shot job that creates the dev bucket on first boot
   minio-init:
+    profiles: [local]
     image: minio/mc:latest
     depends_on:
       minio:
@@ -64,32 +79,34 @@ services:
       exit 0;
       "
 
+  # ---------------------------------------------------------------------------
+  # 应用服务（两种模式都会启动）
+  # ---------------------------------------------------------------------------
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    environment:
-      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/ai_knowledge
-      DATABASE_URL_SYNC: postgresql+psycopg2://postgres:postgres@db:5432/ai_knowledge
-      REDIS_URL: redis://redis:6379/0
-      S3_ENDPOINT_URL: http://minio:9000
-      S3_BUCKET: hh-research
-      S3_REGION: us-east-1
-      AWS_ACCESS_KEY_ID: minioadmin
-      AWS_SECRET_ACCESS_KEY: minioadmin
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
+        required: false   # AWS 模式下 db 未启动时不阻塞
       redis:
         condition: service_healthy
+        required: false
       minio:
         condition: service_healthy
+        required: false
     volumes:
       - ./backend:/app
+    # seed.py 只需首次初始化时手动执行一次：
+    #   docker compose exec backend python seed.py
     command: >
-      sh -c "alembic upgrade head && python seed.py && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
 
   frontend:
     build:
@@ -98,7 +115,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
     depends_on:
       - backend
 

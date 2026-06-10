@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import clsx from 'clsx';
 import {
   LayoutDashboard, Radio, Zap, Box, BookOpen, Network,
@@ -8,21 +9,32 @@ import {
 
 const nav = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/sources', label: 'Sources', icon: Radio },
-  { href: '/signals', label: 'Signals', icon: Zap },
-  { href: '/entities', label: 'Entities', icon: Box },
-  { href: '/wiki', label: 'Wiki', icon: BookOpen },
-  { href: '/graph', label: 'Graph', icon: Network },
+  { href: '/sources',   label: 'Sources',   icon: Radio            },
+  { href: '/signals',   label: 'Signals',   icon: Zap              },
+  { href: '/entities',  label: 'Entities',  icon: Box              },
+  { href: '/wiki',      label: 'Wiki',      icon: BookOpen         },
+  { href: '/graph',     label: 'Graph',     icon: Network          },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   return (
     <aside className="flex h-screen w-56 flex-col border-r border-gray-200 bg-gray-50">
-      <div className="flex items-center gap-2 px-5 py-5">
-        <span className="text-lg font-bold text-blue-600">AI KB</span>
+      {/* Logo */}
+      <div className="flex items-center justify-center px-4 py-4 border-b border-gray-100">
+        <Link href="/dashboard">
+          <Image
+            src="/logo.png"
+            alt="Aseed+ Lab"
+            width={140}
+            height={56}
+            priority
+            className="object-contain"
+          />
+        </Link>
       </div>
-      <nav className="flex-1 space-y-0.5 px-3">
+
+      <nav className="flex-1 space-y-0.5 px-3 pt-3">
         {nav.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(href + '/');
           return (

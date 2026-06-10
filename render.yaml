@@ -1,0 +1,41 @@
+# Render.com Infrastructure-as-Code
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Deploy steps:
+#   1. Push this repo to GitHub (or connect the public mirror).
+#   2. On render.com → New → Blueprint → select this repo.
+#   3. Render auto-creates the web service below.
+#   4. After first deploy, set the environment variables marked `sync: false`
+#      in the Render dashboard (Environment tab of the service).
+
+services:
+  - type: web
+    name: hh-research-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash start.sh
+    healthCheckPath: /health
+    envVars:
+      # --- Supabase PostgreSQL ---
+      # Format: postgresql+asyncpg://postgres.[project-ref]:[password]@db.[project-ref].supabase.co:5432/postgres
+      - key: DATABASE_URL
+        sync: false   # set manually in Render dashboard
+
+      # Format: postgresql+psycopg2://postgres.[project-ref]:[password]@db.[project-ref].supabase.co:5432/postgres
+      - key: DATABASE_URL_SYNC
+        sync: false   # set manually in Render dashboard
+
+      - key: DB_SSL_MODE
+        value: require
+
+      # --- App settings ---
+      - key: DEBUG
+        value: false
+
+      - key: EMBEDDING_DIMENSIONS
+        value: '1536'
+
+      # Redis is optional; omit to disable caching.
+      # - key: REDIS_URL
+      #   sync: false

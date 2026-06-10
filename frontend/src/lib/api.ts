@@ -1,13 +1,12 @@
 // Central API client.
-// - In the browser: calls go through the Next.js rewrite proxy (/api → backend).
-// - On the server (RSC / server components): relative URLs have no origin, so we
-//   target the backend directly via NEXT_PUBLIC_API_URL.
+//
+// Resolution strategy:
+//   - NEXT_PUBLIC_API_URL is set  → call backend directly (production / static export)
+//   - NEXT_PUBLIC_API_URL not set  → use relative /api/* (Next.js dev-server rewrite proxy)
 
 function resolveUrl(path: string): string {
-  if (typeof window === 'undefined') {
-    const origin = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-    return `${origin}/api${path}`;
-  }
+  const origin = process.env.NEXT_PUBLIC_API_URL;
+  if (origin) return `${origin}/api${path}`;
   return `/api${path}`;
 }
 

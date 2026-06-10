@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, AliasChoices
 
 
 # ── Organization ────────────────────────────────────────────────────────────
@@ -252,8 +252,11 @@ class EntityUpdate(BaseModel):
 
 
 class EntityOut(EntityBase):
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
     id: str
+    # ORM attribute is `metadata_` (column "metadata"); `metadata` collides with
+    # SQLAlchemy's reserved attribute, so read it via an alias.
+    metadata: dict = Field(default={}, validation_alias=AliasChoices("metadata_", "metadata"))
     aliases: list[EntityAliasOut] = []
     created_at: datetime
     updated_at: datetime
