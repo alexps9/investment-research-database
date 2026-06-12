@@ -23,6 +23,7 @@ from typing import Any, Optional
 
 import httpx
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 
 API_BASE_URL = os.getenv("KB_API_BASE_URL", "http://localhost:8000").rstrip("/")
 API_PREFIX = "/api"
@@ -35,7 +36,15 @@ VALID_RELATION_TYPES = [
     "FOCUSES_ON", "RELATED_TO", "COMPETES_WITH", "IMPROVES", "INTRODUCES",
 ]
 
-mcp = FastMCP("ai-knowledge-base", json_response=True)
+# When bound to 0.0.0.0 (containers / HF Spaces), the MCP SDK otherwise enables
+# DNS-rebinding protection with an empty allow-list and rejects every request
+# behind a proxy with HTTP 421. This server sits behind the platform gateway, so
+# disable the host-header check to allow access from any agent.
+mcp = FastMCP(
+    "ai-knowledge-base",
+    json_response=True,
+    transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
+)
 
 
 async def _request(method: str, path: str, **kwargs: Any) -> Any:
