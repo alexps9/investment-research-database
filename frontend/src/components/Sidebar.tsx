@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import clsx from 'clsx';
 import {
-  LayoutDashboard, Radio, Zap, Box, BookOpen, Network,
+  LayoutDashboard, Radio, Zap, Box, BookOpen, Network, Sparkles,
 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 
@@ -15,6 +15,7 @@ const NAV_KEYS = [
   { href: '/entities',  tKey: 'nav.entities',  icon: Box              },
   { href: '/wiki',      tKey: 'nav.wiki',      icon: BookOpen         },
   { href: '/graph',     tKey: 'nav.graph',     icon: Network          },
+  { href: '/ask',       tKey: 'nav.ask',       icon: Sparkles         },
 ];
 
 export default function Sidebar() {

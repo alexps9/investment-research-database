@@ -28,6 +28,19 @@ class Settings(BaseSettings):
     # 3072 = OpenAI text-embedding-3-large
     embedding_dimensions: int = 1536
 
+    # --- Embeddings (OpenAI-compatible) -------------------------------------
+    # Used for semantic search. Leave key empty to disable semantic features.
+    openai_api_key: str | None = None
+    openai_base_url: str = "https://api.openai.com/v1"
+    embedding_model: str = "text-embedding-3-small"
+
+    # --- LLM chat (DeepSeek, OpenAI-compatible API) -------------------------
+    # Used for RAG question answering and analysis. Leave key empty to disable.
+    deepseek_api_key: str | None = None
+    deepseek_base_url: str = "https://api.deepseek.com/v1"
+    llm_model: str = "deepseek-chat"
+    llm_timeout_seconds: int = 60
+
     # --- Redis (local: docker compose; prod: Amazon ElastiCache) ------------
     redis_url: str = "redis://localhost:6379/0"
 

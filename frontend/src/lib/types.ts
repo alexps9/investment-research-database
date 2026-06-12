@@ -200,3 +200,23 @@ export interface WikiEntityProfile {
   incoming_relations: EntityRelation[];
   related_entities: Entity[];
 }
+
+export interface AIStatus {
+  embeddings_enabled: boolean;
+  chat_enabled: boolean;
+  embedding_model: string;
+  llm_model: string;
+}
+
+export interface SearchHit {
+  object_type: string;
+  object_id: string;
+  name: string;
+  description?: string;
+  score: number;
+}
+
+export interface AskResponse {
+  answer: string;
+  sources: SearchHit[];
+}
