@@ -388,3 +388,54 @@ class PipelineRun(Base):
     failed_items: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     metadata_: Mapped[dict] = mapped_column("metadata", JSONB, nullable=False, server_default="{}")
+
+
+class DailyDigest(Base):
+    """Auto-generated daily highlight summary (Daily Boost)."""
+    __tablename__ = "daily_digests"
+
+    id: Mapped[str] = mapped_column(UUID(as_uuid=False), primary_key=True, default=gen_uuid)
+    digest_date: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)  # YYYY-MM-DD
+    summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    highlights: Mapped[list] = mapped_column(JSONB, nullable=False, server_default="[]")
+    signal_count: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+    model_name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+    __table_args__ = (
+        Index("ix_daily_digests_date", "digest_date"),
+    )
+
+
+class FundingEvent(Base):
+    """Investment / financing event (manual entry now; LLM-extracted later)."""
+    __tablename__ = "funding_events"
+
+    id: Mapped[str] = mapped_column(UUID(as_uuid=False), primary_key=True, default=gen_uuid)
+    company_name: Mapped[str] = mapped_column(Text, nullable=False)
+    organization_id: Mapped[str | None] = mapped_column(
+        UUID(as_uuid=False), ForeignKey("organizations.id", ondelete="SET NULL"), nullable=True
+    )
+    round: Mapped[str | None] = mapped_column(String(50), nullable=True)  # seed, angel, A, B, C, ...
+    amount_usd: Mapped[float | None] = mapped_column(Float, nullable=True)  # normalised to USD millions
+    amount_raw: Mapped[str | None] = mapped_column(Text, nullable=True)    # original text e.g. "￥2亿"
+    currency: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    investors: Mapped[list] = mapped_column(JSONB, nullable=False, server_default="[]")
+    sector: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    announced_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    source_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    extracted_by: Mapped[str | None] = mapped_column(Text, nullable=True)  # manual, llm, external
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+    __table_args__ = (
+        Index("ix_funding_announced_at", "announced_at"),
+        Index("ix_funding_round", "round"),
+        Index("ix_funding_sector", "sector"),
+    )

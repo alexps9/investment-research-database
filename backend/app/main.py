@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
-from app.routers import sources, signals, entities, search, wiki, runs, dashboard, graph, export, ai
+from app.routers import (
+    sources, signals, entities, search, wiki, runs, dashboard, graph,
+    export, ai, daily, funding,
+)
 
 settings = get_settings()
 
@@ -31,6 +34,8 @@ app.include_router(dashboard.router, prefix=prefix)
 app.include_router(graph.router, prefix=prefix)
 app.include_router(export.router, prefix=prefix)
 app.include_router(ai.router, prefix=prefix)
+app.include_router(daily.router, prefix=prefix)
+app.include_router(funding.router, prefix=prefix)
 
 
 @app.get("/health")

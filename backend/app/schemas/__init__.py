@@ -358,6 +358,71 @@ class WikiEntityProfile(BaseModel):
     related_entities: list[EntityOut] = []
 
 
+# ── Daily Digest (Daily Boost) ────────────────────────────────────────────────
+
+class DigestHighlight(BaseModel):
+    signal_id: Optional[str] = None
+    title: str
+    url: Optional[str] = None
+    signal_type: Optional[str] = None
+    reason: Optional[str] = None
+
+
+class DailyDigestOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: str
+    digest_date: str
+    summary: Optional[str] = None
+    highlights: list = []
+    signal_count: int
+    model_name: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+
+
+# ── Funding ────────────────────────────────────────────────────────────────────
+
+class FundingBase(BaseModel):
+    company_name: str
+    organization_id: Optional[str] = None
+    round: Optional[str] = None
+    amount_usd: Optional[float] = None
+    amount_raw: Optional[str] = None
+    currency: Optional[str] = None
+    investors: list = []
+    sector: Optional[str] = None
+    announced_at: Optional[datetime] = None
+    source_url: Optional[str] = None
+    description: Optional[str] = None
+    extracted_by: Optional[str] = "manual"
+
+
+class FundingCreate(FundingBase):
+    pass
+
+
+class FundingUpdate(BaseModel):
+    company_name: Optional[str] = None
+    organization_id: Optional[str] = None
+    round: Optional[str] = None
+    amount_usd: Optional[float] = None
+    amount_raw: Optional[str] = None
+    currency: Optional[str] = None
+    investors: Optional[list] = None
+    sector: Optional[str] = None
+    announced_at: Optional[datetime] = None
+    source_url: Optional[str] = None
+    description: Optional[str] = None
+    extracted_by: Optional[str] = None
+
+
+class FundingOut(FundingBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: str
+    created_at: datetime
+    updated_at: datetime
+
+
 # ── Pagination ────────────────────────────────────────────────────────────────
 
 class PaginatedResponse(BaseModel):

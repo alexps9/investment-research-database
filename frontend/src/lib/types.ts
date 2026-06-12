@@ -220,3 +220,56 @@ export interface AskResponse {
   answer: string;
   sources: SearchHit[];
 }
+
+export interface DigestHighlight {
+  signal_id?: string;
+  title: string;
+  url?: string;
+  signal_type?: string;
+  reason?: string;
+}
+
+export interface DailyDigest {
+  id: string;
+  digest_date: string;
+  summary?: string;
+  highlights: DigestHighlight[];
+  signal_count: number;
+  model_name?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FundingEvent {
+  id: string;
+  company_name: string;
+  organization_id?: string;
+  round?: string;
+  amount_usd?: number;
+  amount_raw?: string;
+  currency?: string;
+  investors: string[];
+  sector?: string;
+  announced_at?: string;
+  source_url?: string;
+  description?: string;
+  extracted_by?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type FundingCreate = Omit<FundingEvent, 'id' | 'created_at' | 'updated_at'>;
+export type FundingUpdate = Partial<FundingCreate>;
+
+export interface FundingTrendBucket {
+  count: number;
+  amount_usd: number;
+}
+
+export interface FundingTrends {
+  total_count: number;
+  total_amount_usd: number;
+  by_month: (FundingTrendBucket & { month: string })[];
+  by_round: (FundingTrendBucket & { round: string })[];
+  by_sector: (FundingTrendBucket & { sector: string })[];
+}

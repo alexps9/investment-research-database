@@ -293,6 +293,234 @@ async def add_entity_relation(
     return await _request("POST", f"/entities/{subject_entity_id}/relations", json=body)
 
 
+# ── Update / delete tools (full CRUD) ─────────────────────────────────────────
+
+@mcp.tool()
+async def update_signal(
+    signal_id: str,
+    title: Optional[str] = None,
+    signal_type: Optional[str] = None,
+    abstract: Optional[str] = None,
+    content: Optional[str] = None,
+    published_at: Optional[str] = None,
+    status: Optional[str] = None,
+) -> dict:
+    """Patch an existing signal. Only the provided fields are changed."""
+    body = _clean({
+        "title": title, "signal_type": signal_type, "abstract": abstract,
+        "content": content, "published_at": published_at, "status": status,
+    })
+    return await _request("PATCH", f"/signals/{signal_id}", json=body)
+
+
+@mcp.tool()
+async def delete_signal(signal_id: str) -> dict:
+    """Delete a signal by id."""
+    return await _request("DELETE", f"/signals/{signal_id}")
+
+
+@mcp.tool()
+async def update_source(
+    source_id: str,
+    name: Optional[str] = None,
+    source_type: Optional[str] = None,
+    tier: Optional[str] = None,
+    sector: Optional[str] = None,
+    description: Optional[str] = None,
+    activity_status: Optional[str] = None,
+    is_active: Optional[bool] = None,
+) -> dict:
+    """Patch an existing source. Only the provided fields are changed."""
+    body = _clean({
+        "name": name, "source_type": source_type, "tier": tier, "sector": sector,
+        "description": description, "activity_status": activity_status, "is_active": is_active,
+    })
+    return await _request("PATCH", f"/sources/{source_id}", json=body)
+
+
+@mcp.tool()
+async def delete_source(source_id: str) -> dict:
+    """Delete a source by id."""
+    return await _request("DELETE", f"/sources/{source_id}")
+
+
+@mcp.tool()
+async def update_entity(
+    entity_id: str,
+    name: Optional[str] = None,
+    canonical_name: Optional[str] = None,
+    entity_type: Optional[str] = None,
+    description: Optional[str] = None,
+    homepage_url: Optional[str] = None,
+) -> dict:
+    """Patch an existing entity. Only the provided fields are changed."""
+    body = _clean({
+        "name": name, "canonical_name": canonical_name, "entity_type": entity_type,
+        "description": description, "homepage_url": homepage_url,
+    })
+    return await _request("PATCH", f"/entities/{entity_id}", json=body)
+
+
+# ── Semantic / vector search + RAG ────────────────────────────────────────────
+
+@mcp.tool()
+async def ai_status() -> dict:
+    """Report whether embeddings (vector search) and chat (RAG) are configured."""
+    return await _request("GET", "/ai/status")
+
+
+@mcp.tool()
+async def semantic_search(q: str, types: Optional[str] = None, limit: int = 10) -> Any:
+    """Vector (embedding) similarity search across the knowledge base.
+
+    Unlike `search_knowledge` (keyword match), this finds semantically related
+    entities/sources/signals even without shared words.
+
+    Args:
+        q: natural-language query.
+        types: comma-separated subset of entity,source,signal (default: all).
+        limit: max hits.
+    Returns a ranked list of {object_type, object_id, name, description, score}.
+    Requires EMBEDDING_API_KEY configured on the backend (build the index first
+    with `reindex_embeddings`).
+    """
+    return await _request("GET", "/ai/search", params=_clean({"q": q, "types": types, "limit": limit}))
+
+
+@mcp.tool()
+async def ask(question: str, top_k: int = 8) -> dict:
+    """RAG question answering grounded in the knowledge base.
+
+    Retrieves the most relevant entries by vector similarity, then asks the chat
+    LLM (DeepSeek) to answer using only that context. Returns {answer, sources}.
+    Requires EMBEDDING_API_KEY and DEEPSEEK_API_KEY configured on the backend.
+    """
+    return await _request("POST", "/ai/ask", json={"question": question, "top_k": top_k})
+
+
+@mcp.tool()
+async def reindex_embeddings(object_types: Optional[list[str]] = None) -> dict:
+    """(Re)build the vector index for semantic_search / ask.
+
+    Args:
+        object_types: subset of ["entity","source","signal"]; default all.
+    Run once after data changes. Requires EMBEDDING_API_KEY on the backend.
+    """
+    return await _request("POST", "/ai/reindex", json=_clean({"object_types": object_types}))
+
+
+# ── Funding (investment / financing) tools ────────────────────────────────────
+
+@mcp.tool()
+async def list_funding(
+    sector: Optional[str] = None,
+    round: Optional[str] = None,
+    q: Optional[str] = None,
+    limit: int = 100,
+) -> Any:
+    """List investment / financing events. Filter by sector, round, or company (q)."""
+    return await _request("GET", "/funding", params=_clean({
+        "sector": sector, "round": round, "q": q, "limit": limit,
+    }))
+
+
+@mcp.tool()
+async def get_funding(funding_id: str) -> dict:
+    """Get one funding event by id."""
+    return await _request("GET", f"/funding/{funding_id}")
+
+
+@mcp.tool()
+async def funding_trends() -> dict:
+    """Aggregated funding analytics: totals plus breakdowns by month, round, sector."""
+    return await _request("GET", "/funding/trends")
+
+
+@mcp.tool()
+async def create_funding(
+    company_name: str,
+    round: Optional[str] = None,
+    amount_usd: Optional[float] = None,
+    currency: Optional[str] = None,
+    sector: Optional[str] = None,
+    investors: Optional[list[str]] = None,
+    announced_at: Optional[str] = None,
+    source_url: Optional[str] = None,
+    description: Optional[str] = None,
+) -> dict:
+    """Create an investment/financing event.
+
+    `amount_usd` is in USD millions. `announced_at` is ISO-8601.
+    `investors` is a list of investor names.
+    """
+    body = _clean({
+        "company_name": company_name, "round": round, "amount_usd": amount_usd,
+        "currency": currency, "sector": sector, "investors": investors or [],
+        "announced_at": announced_at, "source_url": source_url,
+        "description": description, "extracted_by": "mcp",
+    })
+    return await _request("POST", "/funding", json=body)
+
+
+@mcp.tool()
+async def update_funding(
+    funding_id: str,
+    company_name: Optional[str] = None,
+    round: Optional[str] = None,
+    amount_usd: Optional[float] = None,
+    currency: Optional[str] = None,
+    sector: Optional[str] = None,
+    investors: Optional[list[str]] = None,
+    announced_at: Optional[str] = None,
+    source_url: Optional[str] = None,
+    description: Optional[str] = None,
+) -> dict:
+    """Patch a funding event. Only the provided fields are changed."""
+    body = _clean({
+        "company_name": company_name, "round": round, "amount_usd": amount_usd,
+        "currency": currency, "sector": sector, "investors": investors,
+        "announced_at": announced_at, "source_url": source_url, "description": description,
+    })
+    return await _request("PATCH", f"/funding/{funding_id}", json=body)
+
+
+@mcp.tool()
+async def delete_funding(funding_id: str) -> dict:
+    """Delete a funding event by id."""
+    return await _request("DELETE", f"/funding/{funding_id}")
+
+
+# ── Daily Boost (daily digest) tools ──────────────────────────────────────────
+
+@mcp.tool()
+async def get_daily_digest(date: Optional[str] = None) -> dict:
+    """Get the Daily Boost digest for a date (YYYY-MM-DD), or the latest if omitted."""
+    if date:
+        return await _request("GET", f"/daily/{date}")
+    return await _request("GET", "/daily/latest")
+
+
+@mcp.tool()
+async def list_daily_digests(limit: int = 30) -> Any:
+    """List recent Daily Boost digests (most recent first)."""
+    return await _request("GET", "/daily", params={"limit": limit})
+
+
+@mcp.tool()
+async def generate_daily_digest(
+    date: Optional[str] = None,
+    window_days: int = 1,
+    limit: int = 8,
+) -> dict:
+    """Generate (or regenerate) the Daily Boost digest.
+
+    Picks the most important signals in the window ending on `date` (default
+    today, UTC) and writes an LLM summary. `window_days` widens the look-back.
+    """
+    params = _clean({"digest_date": date, "window_days": window_days, "limit": limit})
+    return await _request("POST", "/daily/generate", params=params)
+
+
 # ── Resources ─────────────────────────────────────────────────────────────────
 
 @mcp.resource("kb://stats")
@@ -305,6 +533,12 @@ async def stats_resource() -> dict:
 async def entity_resource(entity_id: str) -> dict:
     """Full Wiki profile of an entity, addressable by URI."""
     return await _request("GET", f"/wiki/entities/{entity_id}")
+
+
+@mcp.resource("kb://daily/latest")
+async def daily_latest_resource() -> dict:
+    """Latest Daily Boost digest, addressable as a resource."""
+    return await _request("GET", "/daily/latest")
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────

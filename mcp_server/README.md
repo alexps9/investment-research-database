@@ -31,15 +31,29 @@ Agent (Claude / Cursor / custom)
 - `list_relation_types()` — allowlist for relations
 - `list_pipeline_runs(limit)`
 
-**Write**
-- `create_signal(title, url, signal_type, ...)`
-- `create_entity(name, canonical_name, entity_type, ...)`
-- `create_source(name, source_type, ...)`
+**Write (create / update / delete — full CRUD)**
+- `create_signal(...)` / `update_signal(signal_id, ...)` / `delete_signal(signal_id)`
+- `create_source(...)` / `update_source(source_id, ...)` / `delete_source(source_id)`
+- `create_entity(...)` / `update_entity(entity_id, ...)`
 - `add_entity_relation(subject_entity_id, relation_type, object_entity_id, ...)`
+
+**Vector search & RAG**
+- `ai_status()` — whether embeddings / chat are configured
+- `semantic_search(q, types, limit)` — embedding similarity search
+- `ask(question, top_k)` — RAG question answering (DeepSeek + retrieval)
+- `reindex_embeddings(object_types)` — (re)build the vector index
+
+**Funding (investment / financing)**
+- `list_funding(sector, round, q, limit)` / `get_funding(id)` / `funding_trends()`
+- `create_funding(...)` / `update_funding(id, ...)` / `delete_funding(id)`
+
+**Daily Boost**
+- `get_daily_digest(date)` / `list_daily_digests(limit)` / `generate_daily_digest(date, window_days, limit)`
 
 **Resources**
 - `kb://stats` — aggregate counts
 - `kb://entities/{entity_id}` — full entity Wiki profile
+- `kb://daily/latest` — latest Daily Boost digest
 
 ---
 

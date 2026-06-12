@@ -5,6 +5,7 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import {
   LayoutDashboard, Radio, Zap, Box, BookOpen, Network, Sparkles,
+  Flame, TrendingUp,
 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 
@@ -16,6 +17,8 @@ const NAV_KEYS = [
   { href: '/wiki',      tKey: 'nav.wiki',      icon: BookOpen         },
   { href: '/graph',     tKey: 'nav.graph',     icon: Network          },
   { href: '/ask',       tKey: 'nav.ask',       icon: Sparkles         },
+  { href: '/daily',     tKey: 'nav.daily',     icon: Flame            },
+  { href: '/funding',   tKey: 'nav.funding',   icon: TrendingUp       },
 ];
 
 export default function Sidebar() {
