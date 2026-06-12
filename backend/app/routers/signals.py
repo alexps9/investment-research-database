@@ -63,6 +63,15 @@ async def update_signal(signal_id: str, data: SignalUpdate, db: AsyncSession = D
     return await repo.update(signal, data)
 
 
+@router.delete("/{signal_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_signal(signal_id: str, db: AsyncSession = Depends(get_db)):
+    repo = SignalRepo(db)
+    signal = await repo.get(signal_id)
+    if not signal:
+        raise HTTPException(status_code=404, detail="Signal not found")
+    await repo.delete(signal)
+
+
 @router.post("/{signal_id}/analysis", response_model=SignalAnalysisOut, status_code=201)
 async def add_analysis(signal_id: str, data: SignalAnalysisCreate, db: AsyncSession = Depends(get_db)):
     repo = SignalRepo(db)

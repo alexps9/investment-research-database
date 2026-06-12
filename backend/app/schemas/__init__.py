@@ -54,7 +54,28 @@ class SourceTagOut(BaseModel):
     tag: Optional["TagOut"] = None
 
 
-class SourceBase(BaseModel):
+class SourceExtended(BaseModel):
+    """Extended pipeline signal-source fields (CSV registry)."""
+    tier: Optional[str] = None
+    sector: Optional[str] = None
+    research_focus: Optional[str] = None
+    tier_reason: Optional[str] = None
+    notes: Optional[str] = None
+    source_authority: Optional[str] = None
+    last_tweet_at: Optional[datetime] = None
+    avg_interval_days: Optional[float] = None
+    arxiv_author_query: Optional[str] = None
+    affiliation_regex: Optional[str] = None
+    orcid: Optional[str] = None
+    twitter_url: Optional[str] = None
+    openalex_url: Optional[str] = None
+    scholar_url: Optional[str] = None
+    github_url: Optional[str] = None
+    personal_url: Optional[str] = None
+    arxiv_homepage_url: Optional[str] = None
+
+
+class SourceBase(SourceExtended):
     name: str
     source_type: str = "person"
     organization_id: Optional[str] = None
@@ -71,7 +92,7 @@ class SourceCreate(SourceBase):
     pass
 
 
-class SourceUpdate(BaseModel):
+class SourceUpdate(SourceExtended):
     name: Optional[str] = None
     source_type: Optional[str] = None
     organization_id: Optional[str] = None

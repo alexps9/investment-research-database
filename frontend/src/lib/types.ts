@@ -32,18 +32,42 @@ export interface SourceTag {
   tag?: Tag;
 }
 
-export interface SourceCreate {
+export interface SourceExtended {
+  tier?: string;
+  sector?: string;
+  research_focus?: string;
+  tier_reason?: string;
+  notes?: string;
+  source_authority?: string;
+  last_tweet_at?: string;
+  avg_interval_days?: number;
+  arxiv_author_query?: string;
+  affiliation_regex?: string;
+  orcid?: string;
+  twitter_url?: string;
+  openalex_url?: string;
+  scholar_url?: string;
+  github_url?: string;
+  personal_url?: string;
+  arxiv_homepage_url?: string;
+}
+
+export interface SourceCreate extends SourceExtended {
   name: string;
   source_type?: string;
   organization_id?: string;
   affiliation_type?: string;
+  role_title?: string;
+  description?: string;
   activity_status?: string;
   importance_score?: number;
   reliability_score?: number;
   is_active?: boolean;
 }
 
-export interface Source {
+export type SourceUpdate = Partial<SourceCreate>;
+
+export interface Source extends SourceExtended {
   id: string;
   name: string;
   source_type: string;
@@ -97,6 +121,18 @@ export interface Signal {
   analysis?: SignalAnalysis;
   created_at: string;
   updated_at: string;
+}
+
+export interface SignalUpdate {
+  title?: string;
+  url?: string;
+  signal_type?: string;
+  source_id?: string;
+  organization_id?: string;
+  abstract?: string;
+  content?: string;
+  published_at?: string;
+  status?: string;
 }
 
 export interface EntityAlias {

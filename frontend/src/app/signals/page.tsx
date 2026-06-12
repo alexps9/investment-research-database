@@ -5,8 +5,9 @@ import type { Signal } from '@/lib/types';
 import { useLang } from '@/lib/i18n';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
-import { Plus, ExternalLink } from 'lucide-react';
+import { Plus, ExternalLink, Pencil, Trash2, Download } from 'lucide-react';
 import { format } from 'date-fns';
+import { SignalEditModal } from '@/components/SignalEditModal';
 
 const typeBadge: Record<string, 'blue' | 'green' | 'purple' | 'yellow' | 'default'> = {
   paper: 'blue', blog: 'green', tweet: 'purple', model_release: 'yellow', news: 'default',
@@ -19,69 +20,59 @@ export default function SignalsPage() {
   const { t } = useLang();
   const [signals, setSignals] = useState<Signal[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ title: '', url: '', signal_type: 'paper', status: 'collected' });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState<Signal | null>(null);
 
   useEffect(() => {
-    api.get<Signal[]>('/signals').then(setSignals).catch(console.error).finally(() => setLoading(false));
+    api.get<Signal[]>('/signals?limit=200').then(setSignals).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  async function handleCreate(e: React.FormEvent) {
-    e.preventDefault();
+  function openCreate() {
+    setEditing(null);
+    setModalOpen(true);
+  }
+  function openEdit(sig: Signal) {
+    setEditing(sig);
+    setModalOpen(true);
+  }
+
+  function handleSaved(saved: Signal) {
+    setSignals((prev) => {
+      const idx = prev.findIndex((s) => s.id === saved.id);
+      if (idx === -1) return [saved, ...prev];
+      const next = [...prev];
+      next[idx] = saved;
+      return next;
+    });
+  }
+
+  async function handleDelete(sig: Signal) {
+    if (!confirm(t('action.confirm_delete').replace('{name}', sig.title))) return;
     try {
-      const created = await api.post<Signal>('/signals', form);
-      setSignals((prev) => [created, ...prev]);
-      setShowForm(false);
-      setForm({ title: '', url: '', signal_type: 'paper', status: 'collected' });
-    } catch (err) { alert(String(err)); }
+      await api.delete(`/signals/${sig.id}`);
+      setSignals((prev) => prev.filter((s) => s.id !== sig.id));
+    } catch (err) {
+      alert(`${t('action.delete_failed')}: ${String(err)}`);
+    }
   }
 
   return (
     <div className="p-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">{t('signals.title')}</h1>
-        <button onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
-          <Plus size={16} /> New Signal
-        </button>
+        <div className="flex items-center gap-2">
+          <a
+            href={api.url('/export/signals.csv')}
+            className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            <Download size={16} /> {t('action.export')}
+          </a>
+          <button onClick={openCreate}
+            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+            <Plus size={16} /> {t('action.new')}
+          </button>
+        </div>
       </div>
-
-      {showForm && (
-        <Card className="mb-6 p-5">
-          <h2 className="mb-4 text-sm font-semibold text-gray-700">Create Signal</h2>
-          <form onSubmit={handleCreate} className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <label className="block text-xs font-medium text-gray-600 mb-1">Title *</label>
-              <input required value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-            <div className="col-span-2">
-              <label className="block text-xs font-medium text-gray-600 mb-1">URL *</label>
-              <input required type="url" value={form.url} onChange={e => setForm(f => ({ ...f, url: e.target.value }))}
-                className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Type</label>
-              <select value={form.signal_type} onChange={e => setForm(f => ({ ...f, signal_type: e.target.value }))}
-                className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                {['paper', 'tweet', 'blog', 'news', 'tech_report', 'github_release', 'model_release', 'benchmark', 'dataset', 'other'].map(t =>
-                  <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
-              <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
-                className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                {['collected', 'processed', 'duplicated', 'ignored', 'archived'].map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-            <div className="col-span-2 flex gap-3">
-              <button type="submit" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">Create</button>
-              <button type="button" onClick={() => setShowForm(false)} className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700">Cancel</button>
-            </div>
-          </form>
-        </Card>
-      )}
 
       {loading ? (
         <p className="text-sm text-gray-400">{t('common.loading')}</p>
@@ -106,20 +97,37 @@ export default function SignalsPage() {
                 )}
                 {sig.analysis?.topic_tags && sig.analysis.topic_tags.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1">
-                    {sig.analysis.topic_tags.map(t => <Badge key={t} variant="purple">{t}</Badge>)}
+                    {sig.analysis.topic_tags.map((tag) => <Badge key={tag} variant="purple">{tag}</Badge>)}
                   </div>
                 )}
               </div>
-              {sig.analysis?.reading_priority && (
-                <Badge variant={sig.analysis.reading_priority === 'must_read' ? 'red' : 'default'}>
-                  {sig.analysis.reading_priority}
-                </Badge>
-              )}
+              <div className="flex items-center gap-1">
+                {sig.analysis?.reading_priority && (
+                  <Badge variant={sig.analysis.reading_priority === 'must_read' ? 'red' : 'default'}>
+                    {sig.analysis.reading_priority}
+                  </Badge>
+                )}
+                <button onClick={() => openEdit(sig)}
+                  className="rounded-md p-1.5 text-gray-400 hover:bg-blue-50 hover:text-blue-600" title={t('action.edit')}>
+                  <Pencil size={15} />
+                </button>
+                <button onClick={() => handleDelete(sig)}
+                  className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600" title={t('action.delete')}>
+                  <Trash2 size={15} />
+                </button>
+              </div>
             </Card>
           ))}
-          {signals.length === 0 && <p className="text-center text-sm text-gray-400 py-12">No signals found.</p>}
+          {signals.length === 0 && <p className="text-center text-sm text-gray-400 py-12">{t('common.empty')}</p>}
         </div>
       )}
+
+      <SignalEditModal
+        open={modalOpen}
+        signal={editing}
+        onClose={() => setModalOpen(false)}
+        onSaved={handleSaved}
+      />
     </div>
   );
 }

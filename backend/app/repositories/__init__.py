@@ -223,6 +223,10 @@ class SignalRepo:
         await self.db.refresh(signal)
         return signal
 
+    async def delete(self, signal: Signal) -> None:
+        await self.db.delete(signal)
+        await self.db.commit()
+
     async def add_analysis(self, signal_id: str, data: SignalAnalysisCreate) -> SignalAnalysis:
         payload = data.model_dump()
         metadata = payload.pop("metadata", {})

@@ -30,4 +30,6 @@ export const api = {
   patch: <T>(path: string, body: unknown) =>
     fetcher<T>(path, { method: 'PATCH', body: JSON.stringify(body) }),
   delete: (path: string) => fetcher<void>(path, { method: 'DELETE' }),
+  // Absolute URL for file downloads (CSV export etc.), usable as an <a href>.
+  url: (path: string) => resolveUrl(path),
 };
