@@ -97,7 +97,7 @@ async def ask(req: AskRequest, db: AsyncSession = Depends(get_db)):
     if not llm.chat_enabled():
         raise HTTPException(status_code=400, detail="DEEPSEEK_API_KEY is not set; Q&A disabled.")
     if not llm.embeddings_enabled():
-        raise HTTPException(status_code=400, detail="OPENAI_API_KEY is not set; retrieval disabled.")
+        raise HTTPException(status_code=400, detail="EMBEDDING_API_KEY is not set; retrieval disabled.")
 
     try:
         hits = await semantic.semantic_search(

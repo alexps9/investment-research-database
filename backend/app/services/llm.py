@@ -21,7 +21,7 @@ class LLMNotConfigured(RuntimeError):
 
 
 def embeddings_enabled() -> bool:
-    return bool(settings.openai_api_key)
+    return bool(settings.embedding_api_key)
 
 
 def chat_enabled() -> bool:
@@ -31,12 +31,12 @@ def chat_enabled() -> bool:
 async def embed_texts(texts: list[str]) -> list[list[float]]:
     """Return one embedding vector per input text."""
     if not embeddings_enabled():
-        raise LLMNotConfigured("OPENAI_API_KEY is not set; embeddings disabled.")
+        raise LLMNotConfigured("EMBEDDING_API_KEY is not set; embeddings disabled.")
     if not texts:
         return []
 
-    url = f"{settings.openai_base_url.rstrip('/')}/embeddings"
-    headers = {"Authorization": f"Bearer {settings.openai_api_key}"}
+    url = f"{settings.embedding_base_url.rstrip('/')}/embeddings"
+    headers = {"Authorization": f"Bearer {settings.embedding_api_key}"}
     payload = {"model": settings.embedding_model, "input": texts}
 
     async with httpx.AsyncClient(timeout=settings.llm_timeout_seconds) as client:

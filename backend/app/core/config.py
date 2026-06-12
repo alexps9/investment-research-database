@@ -22,17 +22,19 @@ class Settings(BaseSettings):
     #   "verify-full" – RDS with downloaded RDS CA bundle
     db_ssl_mode: str = "disable"
 
-    # --- pgvector -----------------------------------------------------------
-    # Dimension must match the embedding model used by the pipeline.
-    # 1536 = OpenAI text-embedding-3-small / ada-002
-    # 3072 = OpenAI text-embedding-3-large
-    embedding_dimensions: int = 1536
-
-    # --- Embeddings (OpenAI-compatible) -------------------------------------
-    # Used for semantic search. Leave key empty to disable semantic features.
-    openai_api_key: str | None = None
-    openai_base_url: str = "https://api.openai.com/v1"
-    embedding_model: str = "text-embedding-3-small"
+    # --- Embeddings (OpenAI-compatible provider) ----------------------------
+    # Default: SiliconFlow BAAI/bge-m3 (1024 dims, free quota, strong Chinese).
+    # Works with any OpenAI-compatible /embeddings endpoint — just change the
+    # three vars below. Leave the key empty to disable semantic features.
+    #   OpenAI   : base=https://api.openai.com/v1   model=text-embedding-3-small  dim=1536
+    #   SiliconFlow: base=https://api.siliconflow.cn/v1 model=BAAI/bge-m3         dim=1024
+    #   Zhipu    : base=https://open.bigmodel.cn/api/paas/v4 model=embedding-3    dim=1024/2048
+    # IMPORTANT: embedding_dimensions MUST match the model AND the pgvector
+    # column type (run set_embedding_dim.sql in Supabase when you change it).
+    embedding_api_key: str | None = None
+    embedding_base_url: str = "https://api.siliconflow.cn/v1"
+    embedding_model: str = "BAAI/bge-m3"
+    embedding_dimensions: int = 1024
 
     # --- LLM chat (DeepSeek, OpenAI-compatible API) -------------------------
     # Used for RAG question answering and analysis. Leave key empty to disable.

@@ -69,7 +69,7 @@ async def _upsert_embeddings(db: AsyncSession, rows: list[dict]) -> None:
 async def reindex(db: AsyncSession, object_types: Optional[list[str]] = None) -> dict:
     """(Re)generate embeddings for the given object types. Returns per-type counts."""
     if not llm.embeddings_enabled():
-        raise llm.LLMNotConfigured("OPENAI_API_KEY is not set; cannot build embeddings.")
+        raise llm.LLMNotConfigured("EMBEDDING_API_KEY is not set; cannot build embeddings.")
 
     types = object_types or list(SUPPORTED_TYPES)
     counts: dict[str, int] = {}
@@ -122,7 +122,7 @@ async def semantic_search(
 ) -> list[dict]:
     """Embed the query and return nearest objects by cosine distance."""
     if not llm.embeddings_enabled():
-        raise llm.LLMNotConfigured("OPENAI_API_KEY is not set; semantic search disabled.")
+        raise llm.LLMNotConfigured("EMBEDDING_API_KEY is not set; semantic search disabled.")
 
     qvec = await llm.embed_text(query)
     types = object_types or list(SUPPORTED_TYPES)
