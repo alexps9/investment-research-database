@@ -1,3 +1,13 @@
+---
+title: HH Research MCP
+emoji: "\U0001F50C"
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 8765
+pinned: false
+---
+
 # Knowledge Base MCP Server
 
 Exposes the AI Intelligence Knowledge Base to other agents via the
@@ -128,6 +138,24 @@ docker compose up --build mcp
 ```
 
 ---
+
+## Deploy online (Hugging Face Docker Space)
+
+1. Create a new **Docker** Space, e.g. `Alexps9yyy/hh-research-mcp`.
+2. In the Space **Settings → Variables and secrets** add:
+   - `KB_API_BASE_URL = https://Alexps9yyy-hh-research-api.hf.space`
+   - `MCP_TRANSPORT = streamable-http`
+   - `MCP_HOST = 0.0.0.0`
+   - `MCP_PORT = 8765`  (matches `app_port` above)
+3. Push only this folder to the Space:
+
+   ```bash
+   git subtree split --prefix mcp_server -b mcp-deploy
+   git push https://USER:HF_TOKEN@huggingface.co/spaces/Alexps9yyy/hh-research-mcp mcp-deploy:main --force
+   ```
+
+4. Endpoint becomes `https://Alexps9yyy-hh-research-mcp.hf.space/mcp` (streamable-http).
+   Configure any MCP client with that URL.
 
 ## Quick check (MCP Inspector)
 
