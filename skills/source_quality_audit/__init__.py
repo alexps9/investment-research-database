@@ -1,12 +1,7 @@
-"""Data-quality skills: audit and improve the knowledge base.
-
-Skills are higher-level workflows composed from atomic ``tools``. They return
-human-readable summaries (strings) so they can be used both programmatically and
-as agent tools.
-"""
+"""Skill: audit source data completeness."""
 from __future__ import annotations
 
-from tools import kb_client as kb
+from tools.sources import list_sources
 
 # Fields we consider important for a "complete" source profile.
 _KEY_SOURCE_FIELDS = ["tier", "sector", "organization_id", "description", "activity_status"]
@@ -17,7 +12,7 @@ async def audit_source_quality(limit: int = 200) -> str:
 
     Returns a markdown summary the operator (or agent) can act on.
     """
-    sources = await kb.list_sources(limit=limit)
+    sources = await list_sources(limit=limit)
     if isinstance(sources, dict) and sources.get("error"):
         return f"Failed to list sources: {sources}"
 
@@ -45,21 +40,4 @@ async def audit_source_quality(limit: int = 200) -> str:
     return "\n".join(lines)
 
 
-async def find_duplicate_signals(limit: int = 200) -> str:
-    """Heuristically flag signals that look like duplicates (same normalised title)."""
-    signals = await kb.list_signals(limit=limit)
-    if isinstance(signals, dict) and signals.get("error"):
-        return f"Failed to list signals: {signals}"
-
-    seen: dict[str, list[str]] = {}
-    for s in signals:
-        key = (s.get("title") or "").strip().lower()
-        seen.setdefault(key, []).append(s.get("id"))
-
-    dups = {k: v for k, v in seen.items() if len(v) > 1}
-    if not dups:
-        return "No duplicate signal titles found."
-    lines = [f"# Potential duplicate signals ({len(dups)} groups)"]
-    for title, ids in list(dups.items())[:50]:
-        lines.append(f"- \"{title}\" → {len(ids)} copies: {', '.join(ids)}")
-    return "\n".join(lines)
+__all__ = ["audit_source_quality"]

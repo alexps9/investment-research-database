@@ -4,21 +4,30 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import clsx from 'clsx';
 import {
-  LayoutDashboard, Radio, Zap, Box, BookOpen, Network, Sparkles,
-  Flame, TrendingUp,
+  LayoutDashboard, Database, Sparkles, Network, Flame, TrendingUp,
 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 
-const NAV_KEYS = [
-  { href: '/dashboard', tKey: 'nav.dashboard', icon: LayoutDashboard },
-  { href: '/sources',   tKey: 'nav.sources',   icon: Radio            },
-  { href: '/signals',   tKey: 'nav.signals',   icon: Zap              },
-  { href: '/entities',  tKey: 'nav.entities',  icon: Box              },
-  { href: '/wiki',      tKey: 'nav.wiki',      icon: BookOpen         },
-  { href: '/graph',     tKey: 'nav.graph',     icon: Network          },
-  { href: '/ask',       tKey: 'nav.ask',       icon: Sparkles         },
-  { href: '/daily',     tKey: 'nav.daily',     icon: Flame            },
-  { href: '/funding',   tKey: 'nav.funding',   icon: TrendingUp       },
+const NAV_GROUPS = [
+  {
+    titleKey: 'nav.group.overview',
+    items: [{ href: '/dashboard', tKey: 'nav.dashboard', icon: LayoutDashboard }],
+  },
+  {
+    titleKey: 'nav.group.knowledge',
+    items: [
+      { href: '/data', tKey: 'nav.data', icon: Database },
+      { href: '/explore', tKey: 'nav.explore', icon: Sparkles },
+      { href: '/graph', tKey: 'nav.graph', icon: Network },
+    ],
+  },
+  {
+    titleKey: 'nav.group.insight',
+    items: [
+      { href: '/daily', tKey: 'nav.daily', icon: Flame },
+      { href: '/funding', tKey: 'nav.funding', icon: TrendingUp },
+    ],
+  },
 ];
 
 export default function Sidebar() {
@@ -26,65 +35,58 @@ export default function Sidebar() {
   const { lang, setLang, t } = useLang();
 
   return (
-    <aside className="flex h-screen w-56 flex-col border-r border-gray-200 bg-gray-50">
+    <aside className="flex h-screen w-60 flex-col border-r border-gray-200 bg-white">
       {/* Logo */}
-      <div className="flex items-center justify-center px-4 py-4 border-b border-gray-100">
+      <div className="flex items-center justify-center border-b border-gray-100 px-4 py-5">
         <Link href="/dashboard">
-          <Image
-            src="/logo.png"
-            alt="Aseed+ Lab"
-            width={140}
-            height={56}
-            priority
-            className="object-contain"
-          />
+          <Image src="/logo.png" alt="Aseed+ Lab" width={150} height={60} priority className="object-contain" />
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-0.5 px-3 pt-3">
-        {NAV_KEYS.map(({ href, tKey, icon: Icon }) => {
-          const active = pathname === href || pathname.startsWith(href + '/');
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={clsx(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                active
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-              )}
-            >
-              <Icon size={16} />
-              {t(tKey)}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 space-y-5 overflow-y-auto px-3 pt-5">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.titleKey}>
+            <p className="mb-1.5 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+              {t(group.titleKey)}
+            </p>
+            <div className="space-y-0.5">
+              {group.items.map(({ href, tKey, icon: Icon }) => {
+                const active = pathname === href || pathname.startsWith(href + '/');
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={clsx(
+                      'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all',
+                      active
+                        ? 'bg-blue-50 text-blue-700'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                    )}
+                  >
+                    {active && <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-blue-600" />}
+                    <Icon size={17} className={active ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'} />
+                    {t(tKey)}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Language toggle */}
-      <div className="px-3 pb-4 pt-2 border-t border-gray-100">
-        <div className="flex items-center rounded-lg overflow-hidden border border-gray-200 text-xs font-medium">
+      <div className="border-t border-gray-100 px-3 pb-4 pt-3">
+        <div className="flex items-center overflow-hidden rounded-lg border border-gray-200 text-xs font-medium">
           <button
             onClick={() => setLang('zh')}
-            className={clsx(
-              'flex-1 py-1.5 transition-colors',
-              lang === 'zh'
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-500 hover:bg-gray-50'
-            )}
+            className={clsx('flex-1 py-1.5 transition-colors', lang === 'zh' ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 hover:bg-gray-50')}
           >
             中文
           </button>
           <button
             onClick={() => setLang('en')}
-            className={clsx(
-              'flex-1 py-1.5 transition-colors',
-              lang === 'en'
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-500 hover:bg-gray-50'
-            )}
+            className={clsx('flex-1 py-1.5 transition-colors', lang === 'en' ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 hover:bg-gray-50')}
           >
             EN
           </button>

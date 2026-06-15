@@ -4,6 +4,7 @@ import { api } from '@/lib/api';
 import type { DailyDigest } from '@/lib/types';
 import { useLang } from '@/lib/i18n';
 import { Badge } from '@/components/ui/Badge';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Flame, RefreshCw, ExternalLink, Calendar } from 'lucide-react';
 
 export default function DailyPage() {
@@ -53,11 +54,7 @@ export default function DailyPage() {
 
   return (
     <div className="mx-auto max-w-4xl p-8">
-      <div className="mb-2 flex items-center gap-2">
-        <Flame className="text-orange-500" size={22} />
-        <h1 className="text-2xl font-bold text-gray-900">{t('daily.title')}</h1>
-      </div>
-      <p className="mb-6 text-sm text-gray-500">{t('daily.subtitle')}</p>
+      <PageHeader icon={Flame} title={t('daily.title')} subtitle={t('daily.subtitle')} />
 
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <label className="flex items-center gap-1.5 text-xs text-gray-500">

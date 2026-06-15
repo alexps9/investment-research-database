@@ -4,9 +4,11 @@ import { api } from '@/lib/api';
 import type { DashboardStats, Signal, PipelineRun } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { PageHeader } from '@/components/ui/PageHeader';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { useLang } from '@/lib/i18n';
+import { LayoutDashboard, Radio, Zap, Box, Network } from 'lucide-react';
 
 const EMPTY_STATS: DashboardStats = {
   total_sources: 0, total_signals: 0, total_entities: 0, total_relations: 0,
@@ -39,15 +41,15 @@ export default function DashboardPage() {
   }, []);
 
   const statCards = [
-    { labelKey: 'dashboard.stats.sources',  value: stats.total_sources,   href: '/sources',  color: 'text-blue-600'   },
-    { labelKey: 'dashboard.stats.signals',  value: stats.total_signals,   href: '/signals',  color: 'text-purple-600' },
-    { labelKey: 'dashboard.stats.entities', value: stats.total_entities,  href: '/entities', color: 'text-green-600'  },
-    { labelKey: 'dashboard.stats.orgs',     value: stats.total_relations, href: '/graph',    color: 'text-orange-600' },
+    { labelKey: 'dashboard.stats.sources',  value: stats.total_sources,   href: '/data?tab=sources',  color: 'text-blue-600',   icon: Radio,   bg: 'from-blue-500 to-sky-500'      },
+    { labelKey: 'dashboard.stats.signals',  value: stats.total_signals,   href: '/data?tab=signals',  color: 'text-purple-600', icon: Zap,     bg: 'from-purple-500 to-fuchsia-500' },
+    { labelKey: 'dashboard.stats.entities', value: stats.total_entities,  href: '/data?tab=entities', color: 'text-green-600',  icon: Box,     bg: 'from-emerald-500 to-green-500'  },
+    { labelKey: 'dashboard.stats.orgs',     value: stats.total_relations, href: '/graph',             color: 'text-orange-600', icon: Network, bg: 'from-orange-500 to-amber-500'   },
   ];
 
   return (
     <div className="p-8">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+      <PageHeader icon={LayoutDashboard} title={t('dashboard.title')} />
 
       {loading ? (
         <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -57,12 +59,17 @@ export default function DashboardPage() {
         </div>
       ) : (
         <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {statCards.map(({ labelKey, value, href, color }) => (
+          {statCards.map(({ labelKey, value, href, color, icon: Icon, bg }) => (
             <Link key={labelKey} href={href}>
-              <Card className="cursor-pointer transition-shadow hover:shadow-md">
-                <CardContent className="pt-4">
-                  <p className="text-sm text-gray-500">{t(labelKey)}</p>
-                  <p className={`mt-1 text-3xl font-bold ${color}`}>{value}</p>
+              <Card className="group cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-md">
+                <CardContent className="flex items-center justify-between pt-4">
+                  <div>
+                    <p className="text-sm text-gray-500">{t(labelKey)}</p>
+                    <p className={`mt-1 text-3xl font-bold ${color}`}>{value}</p>
+                  </div>
+                  <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${bg} text-white opacity-90 shadow-sm transition-transform group-hover:scale-105`}>
+                    <Icon size={20} />
+                  </div>
                 </CardContent>
               </Card>
             </Link>

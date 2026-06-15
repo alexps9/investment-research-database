@@ -1,4 +1,14 @@
-"""Reusable, atomic knowledge-base tools (one function per backend endpoint).
+"""Atomic knowledge-base tools, organised one package per functional domain.
+
+Layout (each directory is named after its function):
+    tools/dashboard   overview counts + keyword search
+    tools/sources     source CRUD
+    tools/signals     signal CRUD
+    tools/entities    entity & knowledge-graph
+    tools/search      semantic search & RAG
+    tools/funding     investment / financing
+    tools/daily       Daily Boost digests
+    tools/_client     shared HTTP plumbing (not a tool)
 
 Import the curated tool lists into any agent framework:
 
@@ -7,45 +17,53 @@ Import the curated tool lists into any agent framework:
 ``READONLY_TOOLS`` never mutate data (safe to expose widely); ``WRITE_TOOLS``
 create/update/delete and should be gated behind confirmation in production.
 """
-from tools import kb_client as kb
+from tools.dashboard import dashboard_stats, search_knowledge
+from tools.sources import (
+    list_sources, get_source, create_source, update_source, delete_source,
+)
+from tools.signals import (
+    list_signals, get_signal, create_signal, update_signal, delete_signal,
+)
+from tools.entities import (
+    list_entities, get_entity, get_entity_wiki, add_entity_relation,
+)
+from tools.search import ai_status, semantic_search, ask, reindex_embeddings
+from tools.funding import (
+    list_funding, get_funding, funding_trends,
+    create_funding, update_funding, delete_funding,
+)
+from tools.daily import get_daily_digest, list_daily_digests, generate_daily_digest
 
 # Read-only (safe) tools
 READONLY_TOOLS = [
-    kb.dashboard_stats,
-    kb.search_knowledge,
-    kb.list_sources,
-    kb.get_source,
-    kb.list_signals,
-    kb.get_signal,
-    kb.list_entities,
-    kb.get_entity,
-    kb.get_entity_wiki,
-    kb.ai_status,
-    kb.semantic_search,
-    kb.ask,
-    kb.list_funding,
-    kb.get_funding,
-    kb.funding_trends,
-    kb.get_daily_digest,
-    kb.list_daily_digests,
+    dashboard_stats, search_knowledge,
+    list_sources, get_source,
+    list_signals, get_signal,
+    list_entities, get_entity, get_entity_wiki,
+    ai_status, semantic_search, ask,
+    list_funding, get_funding, funding_trends,
+    get_daily_digest, list_daily_digests,
 ]
 
 # Mutating tools (create / update / delete / index / generate)
 WRITE_TOOLS = [
-    kb.create_source,
-    kb.update_source,
-    kb.delete_source,
-    kb.create_signal,
-    kb.update_signal,
-    kb.delete_signal,
-    kb.add_entity_relation,
-    kb.reindex_embeddings,
-    kb.create_funding,
-    kb.update_funding,
-    kb.delete_funding,
-    kb.generate_daily_digest,
+    create_source, update_source, delete_source,
+    create_signal, update_signal, delete_signal,
+    add_entity_relation, reindex_embeddings,
+    create_funding, update_funding, delete_funding,
+    generate_daily_digest,
 ]
 
 ALL_TOOLS = READONLY_TOOLS + WRITE_TOOLS
 
-__all__ = ["kb", "READONLY_TOOLS", "WRITE_TOOLS", "ALL_TOOLS"]
+__all__ = [
+    "READONLY_TOOLS", "WRITE_TOOLS", "ALL_TOOLS",
+    "dashboard_stats", "search_knowledge",
+    "list_sources", "get_source", "create_source", "update_source", "delete_source",
+    "list_signals", "get_signal", "create_signal", "update_signal", "delete_signal",
+    "list_entities", "get_entity", "get_entity_wiki", "add_entity_relation",
+    "ai_status", "semantic_search", "ask", "reindex_embeddings",
+    "list_funding", "get_funding", "funding_trends",
+    "create_funding", "update_funding", "delete_funding",
+    "get_daily_digest", "list_daily_digests", "generate_daily_digest",
+]

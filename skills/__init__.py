@@ -1,14 +1,24 @@
 """Composed skills (workflows) built on top of atomic ``tools``.
 
+Each skill lives in its own directory named after its function:
+    skills/source_quality_audit   audit_source_quality
+    skills/duplicate_signals      find_duplicate_signals
+    skills/daily_brief            daily_brief
+    skills/funding_summary        funding_landscape_summary
+    skills/rag_answer             answer_with_sources
+
 Skills vs tools:
     - ``tools`` are atomic, 1:1 with a backend endpoint (e.g. ``list_sources``).
     - ``skills`` orchestrate several tools into a useful workflow that returns a
-      human-readable result (e.g. ``audit_source_quality``, ``daily_brief``).
+      human-readable result.
 
 Expose them to an agent via ``SKILLS``.
 """
-from skills.data_quality import audit_source_quality, find_duplicate_signals
-from skills.reporting import answer_with_sources, daily_brief, funding_landscape_summary
+from skills.source_quality_audit import audit_source_quality
+from skills.duplicate_signals import find_duplicate_signals
+from skills.daily_brief import daily_brief
+from skills.funding_summary import funding_landscape_summary
+from skills.rag_answer import answer_with_sources
 
 SKILLS = [
     audit_source_quality,

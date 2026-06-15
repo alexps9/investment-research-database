@@ -5,6 +5,7 @@ import type { FundingEvent, FundingTrends } from '@/lib/types';
 import { useLang } from '@/lib/i18n';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { Plus, Pencil, Trash2, ExternalLink, TrendingUp, List } from 'lucide-react';
 import { format } from 'date-fns';
 import { FundingEditModal } from '@/components/FundingEditModal';
@@ -83,11 +84,7 @@ export default function FundingPage() {
 
   return (
     <div className="p-8">
-      <div className="mb-2 flex items-center gap-2">
-        <TrendingUp className="text-blue-600" size={22} />
-        <h1 className="text-2xl font-bold text-gray-900">{t('funding.title')}</h1>
-      </div>
-      <p className="mb-6 text-sm text-gray-500">{t('funding.subtitle')}</p>
+      <PageHeader icon={TrendingUp} title={t('funding.title')} subtitle={t('funding.subtitle')} />
 
       {/* tabs + actions */}
       <div className="mb-5 flex items-center justify-between">

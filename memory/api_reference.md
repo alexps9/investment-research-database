@@ -61,4 +61,4 @@ are under the `/api` prefix. Interactive docs at `/docs`.
 ## Pipeline
 - `GET /api/runs?limit=` · `POST /api/runs/mock`
 
-> The Python wrappers for all of these live in [`tools/kb_client.py`](../tools/kb_client.py).
+> The Python wrappers for all of these live in [`tools/`](../tools) (one package per domain).
