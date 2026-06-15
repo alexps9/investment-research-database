@@ -5,6 +5,15 @@
 backend/.env
 frontend/.env.local
 
+# SSH / private keys — NEVER commit
+*.pem
+*.key
+id_rsa
+id_ed25519
+
+# Credential notes (contain raw API keys) — NEVER commit
+resource.md
+
 # Python
 __pycache__/
 *.py[cod]

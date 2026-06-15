@@ -1,0 +1,25 @@
+# LiteLLM proxy → AWS Bedrock (Claude). Exposes an OpenAI-compatible API so the
+# backend (DEEPSEEK_BASE_URL) and agent (LLM_BASE_URL) can use Claude unchanged.
+# Auth to Bedrock uses the bearer token in AWS_BEARER_TOKEN_BEDROCK (set in .env).
+model_list:
+  - model_name: claude-sonnet-4-6
+    litellm_params:
+      model: bedrock/us.anthropic.claude-sonnet-4-6
+      aws_region_name: us-east-1
+  - model_name: claude-opus-4-6
+    litellm_params:
+      model: bedrock/us.anthropic.claude-opus-4-6-v1
+      aws_region_name: us-east-1
+  # Back-compat alias: existing configs default LLM_MODEL=deepseek-chat. Route it
+  # to Claude Sonnet so nothing breaks if an env var is left at the old default.
+  - model_name: deepseek-chat
+    litellm_params:
+      model: bedrock/us.anthropic.claude-sonnet-4-6
+      aws_region_name: us-east-1
+
+litellm_settings:
+  drop_params: true          # silently drop params Bedrock doesn't accept
+  request_timeout: 600
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY

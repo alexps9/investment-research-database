@@ -1,0 +1,107 @@
+# Server deployment: litellm gateway + backend + mcp_server + agent on one host.
+# Database stays on Supabase (DATABASE_URL in .env); frontend stays on Vercel.
+# The litellm gateway exposes an OpenAI-compatible API that proxies to AWS Bedrock
+# (Claude), so backend + agent point their chat base_url at it with no code change.
+#
+# Run from the deploy dir on the server (where this file + .env + config live):
+#   docker compose -f docker-compose.server.yml --env-file .env up -d --build
+name: hh-research
+
+services:
+  # Outbound proxy: connects to an overseas SS node and exposes an HTTP proxy on
+  # :8118 for the gateway, so Bedrock (Anthropic) calls egress from a supported
+  # region. PROXY_FORWARD_URL (ss://...) comes from .env.
+  proxy:
+    image: ginuerzh/gost:latest
+    restart: unless-stopped
+    entrypoint: ["/bin/gost"]
+    command: ["-L=http://:8118", "-F=${PROXY_FORWARD_URL}"]
+    expose:
+      - "8118"
+
+  # OpenAI-compatible → AWS Bedrock (Claude) gateway.
+  litellm:
+    image: ghcr.io/berriai/litellm:main-stable
+    restart: unless-stopped
+    environment:
+      AWS_BEARER_TOKEN_BEDROCK: ${AWS_BEARER_TOKEN_BEDROCK}
+      AWS_REGION_NAME: ${AWS_REGION_NAME:-us-east-1}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      # Egress Bedrock calls through an overseas proxy (Anthropic geo-blocks CN IPs).
+      # Leave BEDROCK_PROXY_URL empty to disable. Keep localhost out of the proxy.
+      HTTP_PROXY: ${BEDROCK_PROXY_URL:-}
+      HTTPS_PROXY: ${BEDROCK_PROXY_URL:-}
+      NO_PROXY: localhost,127.0.0.1,backend,mcp,agent,litellm,proxy
+    depends_on:
+      proxy:
+        condition: service_started
+    volumes:
+      - ./litellm.config.yaml:/app/config.yaml:ro
+    command: ["--config", "/app/config.yaml", "--port", "4000", "--num_workers", "1"]
+    ports:
+      - "4000:4000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:4000/health/liveliness').status==200 else 1)\""]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: hh-research-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    # DB schema already lives on Supabase (shared with the HF backend), so we skip
+    # alembic and just run the API server.
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    depends_on:
+      litellm:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)\""]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  mcp:
+    build:
+      context: ../mcp_server
+      dockerfile: Dockerfile
+    image: hh-research-mcp
+    restart: unless-stopped
+    environment:
+      KB_API_BASE_URL: http://backend:8000
+      MCP_TRANSPORT: streamable-http
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: 8765
+    ports:
+      - "8765:8765"
+    depends_on:
+      backend:
+        condition: service_started
+
+  agent:
+    build:
+      context: ..
+      dockerfile: deploy/agent.Dockerfile
+    image: hh-research-agent
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Talk to the backend + gateway over the compose network (overrides .env).
+      KB_API_BASE_URL: http://backend:8000
+      LLM_BASE_URL: http://litellm:4000/v1
+    depends_on:
+      backend:
+        condition: service_started
+      litellm:
+        condition: service_started
+    command: ["tail", "-f", "/dev/null"]

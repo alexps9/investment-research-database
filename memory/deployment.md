@@ -67,3 +67,35 @@ Run in the Supabase SQL editor when schema changes:
 
 Runs locally or on any host; not a deployed service. Needs `LLM_API_KEY` and
 `KB_API_BASE_URL`. See [`agent/README.md`](../agent/README.md).
+
+## Self-hosted server (Tencent Cloud, Docker) — backend + mcp + agent
+
+An alternative to the HF Spaces for backend + MCP: run all three on one Docker
+host while keeping the DB on Supabase and the frontend on Vercel. Artifacts live in
+[`deploy/`](../deploy) (`docker-compose.server.yml`, `agent.Dockerfile`,
+`.env.server.example`); full steps in [`deploy/README.md`](../deploy/README.md).
+
+- Host: `ubuntu@110.40.131.38` (SSH alias `hh-server`, key `~/.ssh/database.pem`).
+- Services (5 containers): `proxy` (gost) → `litellm:4000` (OpenAI→Bedrock gateway)
+  → `backend:8000` (→ Supabase, alembic skipped since schema is shared),
+  `mcp:8765` (→ `http://backend:8000`), `agent` (idle container, run pipelines on
+  demand / via cron).
+- The agent image build context is the **repo root** (it imports `agent/` + `tools/`
+  + `skills/`); backend/mcp build from their own dirs.
+- **LLM = AWS Bedrock Claude via the LiteLLM gateway.** Backend (`DEEPSEEK_*` +
+  `LLM_MODEL=claude-sonnet-4-6`) and agent (`LLM_*`) point their OpenAI base_url at
+  `http://litellm:4000/v1` with `LITELLM_MASTER_KEY` as the key — no app code change.
+  litellm maps `claude-sonnet-4-6`/`claude-opus-4-6`/`deepseek-chat` → Bedrock ids.
+- **Bedrock geo-block workaround:** Anthropic on Bedrock blocks mainland-China IPs.
+  The `proxy` (gost) tunnels to an overseas Shadowsocks node (US); litellm egresses
+  Bedrock calls through it via `HTTPS_PROXY=http://proxy:8118` (`BEDROCK_PROXY_URL`).
+  `PROXY_FORWARD_URL=ss://...` is the node. Correct Bedrock model id is
+  `us.anthropic.claude-sonnet-4-6` (no `-v1:0`; note `anthropic` spelling).
+- Embeddings stay on **SiliconFlow bge-m3 (1024 dims)** — reachable from CN directly.
+- ghcr/dockerhub pulls from CN: used the **NJU mirror** `ghcr.nju.edu.cn` for the
+  litellm image (direct ghcr blob CDN stalls from China); dockerhub `ginuerzh/gost`
+  pulled fine. pip in Dockerfiles uses the **Tsinghua mirror** (`PIP_INDEX_URL`).
+- Secrets in `deploy/.env` (gitignored): DB, embeddings, `AWS_BEARER_TOKEN_BEDROCK`,
+  `LITELLM_MASTER_KEY` (= `DEEPSEEK_API_KEY` = `LLM_API_KEY`), `PROXY_FORWARD_URL`.
+- **Open ports 8000 / 8765 in the Tencent Cloud security group** for external access
+  (4000/8118 stay internal to the compose network).
