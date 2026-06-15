@@ -7,6 +7,10 @@ Each skill lives in its own directory named after its function:
     skills/funding_summary        funding_landscape_summary
     skills/rag_answer             answer_with_sources
     skills/signal_triage          triage_signals (score/triangulate/dedup)
+    skills/headline_selection     select_headlines (classify + rank → headline tiers)
+
+Support packages (not skills, no SKILLS entry):
+    skills/headline               vendored v8.0 HeadlineClassifier + HeadlineSelector
 
 Skills vs tools:
     - ``tools`` are atomic, 1:1 with a backend endpoint (e.g. ``list_sources``).
@@ -21,6 +25,7 @@ from skills.daily_brief import daily_brief
 from skills.funding_summary import funding_landscape_summary
 from skills.rag_answer import answer_with_sources
 from skills.signal_triage import triage_signals
+from skills.headline_selection import select_headlines
 
 SKILLS = [
     audit_source_quality,
@@ -29,6 +34,7 @@ SKILLS = [
     funding_landscape_summary,
     answer_with_sources,
     triage_signals,
+    select_headlines,
 ]
 
 __all__ = [
@@ -39,4 +45,5 @@ __all__ = [
     "funding_landscape_summary",
     "answer_with_sources",
     "triage_signals",
+    "select_headlines",
 ]

@@ -1,0 +1,4 @@
+# Digest-agent extras — install on top of agent/requirements.txt
+# (which provides autogen-agentchat, autogen-ext[openai], httpx, python-dotenv).
+PyYAML>=6.0          # whitelist loading for skills.headline (P0+/P0 tier lookup)
+jieba>=0.42          # better Chinese tokenisation for the headline classifier (optional)

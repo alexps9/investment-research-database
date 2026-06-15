@@ -28,7 +28,7 @@ prefilter 噪音硬过滤(可选)       agent/alert_agent/prefilter.py   ┘
 | `score.py`（分级/打分/三角验证/去重） | `skills/signal_triage` | jieba 可选，去掉 LLM 升级判重 |
 | `kb_sync.py`（写信号到知识库） | `tools/signals.create_signal` | 复用既有 CRUD 工具 |
 | `fetcher.py` / `store.py` / `prefilter.py` / `config/` | 保留在本目录 | alert 专属的数据基础设施 |
-| HeadlineClassifier（v8.0 强约束判别） | `agent/alert_agent/headline/`（vendored） | 从 jingruzhao103-bit/HH-Research `daily-digest` 抽取，自包含、离线可用 |
+| HeadlineClassifier（v8.0 强约束判别） | `skills/headline/`（vendored，共享支持包） | 从 jingruzhao103-bit/HH-Research `daily-digest` 抽取，自包含、离线可用；alert prefilter 与 `skills.headline_selection` 共用 |
 
 ## 快速开始
 

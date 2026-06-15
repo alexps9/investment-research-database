@@ -2,7 +2,7 @@
 
 AutoGen-based **multi-agent system** for the HH-Research knowledge base.
 
-It ships two specialists:
+It ships three specialists:
 
 - **Data Agent** (`data_agent/`) — reads, writes and analyses the KB (sources,
   signals, entities, funding, daily digests) through the atomic [`tools/`](../tools)
@@ -12,21 +12,31 @@ It ships two specialists:
   cross-verifies the primary source, pushes worthy alerts to Feishu, and persists
   them to the KB. It's **pipeline-driven** (processed per-signal), not a chat
   participant — see [`alert_agent/README.md`](alert_agent/README.md).
+- **Digest Agent** (`digest_agent/`) — the HH Research Daily writer. It buckets the
+  day's KB signals into headline / capital / frontier / industry arrays, ranks
+  headline candidates with `skills.headline_selection`, then curates + writes a
+  ≤15-card Feishu-XML 精选日报 and can publish it. Also **pipeline-driven** — see
+  [`digest_agent/README.md`](digest_agent/README.md).
 
 Each agent lives in **its own directory** under `agent/` (named after the agent):
 
 ```
 agent/
   config.py            # OpenAI-compatible model client (DeepSeek by default)
-  team.py              # build_team() + build_alert_agent()
+  team.py              # build_team() + build_alert_agent() + build_digest_agent()
   main.py              # CLI entrypoint (chat team)
   data_agent/          # the Data Agent (tools + skills + system prompt)
     __init__.py
   alert_agent/         # the Alert Agent + its fetch/triage/prefilter pipeline
     __init__.py        #   build_alert_agent() + prompts
-    pipeline.py        #   fetch → triage → agent judge → push/persist
-    headline/          #   vendored HH-Research v8.0 HeadlineClassifier (prefilter brain)
+    pipeline.py        #   fetch → triage → prefilter → agent judge → push/persist
     fetcher.py store.py prefilter.py approve.py config/
+  digest_agent/        # the Digest Agent (daily brief writer)
+    __init__.py        #   build_digest_agent() + DIGEST_AGENT_SYSTEM_MESSAGE
+    pipeline.py        #   bucket KB signals → rank headlines → agent writes → push
+
+# The v8.0 HeadlineClassifier + HeadlineSelector are vendored in the shared
+# skills/headline package (used by the alert prefilter AND digest headline ranking).
 ```
 
 ## Architecture
@@ -61,6 +71,10 @@ python -m agent.main
 # Alert pipeline (real-time signal triage → Feishu + KB)
 pip install -r agent/alert_agent/requirements.txt
 python -m agent.alert_agent.pipeline --limit 5
+
+# Digest pipeline (curate the day's signals → HH Research Daily XML)
+pip install -r agent/digest_agent/requirements.txt
+python -m agent.digest_agent.pipeline --date 2026-06-15
 ```
 
 Example tasks:

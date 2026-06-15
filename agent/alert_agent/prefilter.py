@@ -7,54 +7,27 @@ If it fails all constraints but scores >=2, it's a borderline case that still
 goes to the agent for judgment. If it scores <2, it's noise — skip entirely.
 
 This saves LLM calls on obvious noise while staying aligned with the daily
-digest's classification criteria. The classifier is vendored locally in
-``agent/alert_agent/headline/`` (extracted from jingruzhao103-bit/HH-Research),
+digest's classification criteria. The classifier is vendored in the shared
+``skills/headline/`` support package (extracted from jingruzhao103-bit/HH-Research),
 so no external package is required.
 """
 
 from pathlib import Path
 from datetime import datetime, timezone
 
-import yaml
-
-from .headline import HeadlineClassifier, Signal, COMPANY_CANONICAL_MAP
+from skills.headline import (
+    COMPANY_CANONICAL_MAP,
+    HeadlineClassifier,
+    Signal,
+    load_whitelist,
+    name_canon_map,
+)
 
 _WHITELIST_PATH = Path(__file__).resolve().parent / "config" / "p0_whitelist.yml"
 
-
-def _load_tier_lookup() -> dict:
-    """Load {entity_name: tier} from p0_whitelist.yml."""
-    lookup = {}
-    try:
-        with open(_WHITELIST_PATH, encoding="utf-8") as f:
-            data = yaml.safe_load(f)
-        for entry in data.get("entities", []):
-            name = entry.get("name", "")
-            tier = entry.get("tier", "P2")
-            if name:
-                lookup[name] = tier
-    except Exception:
-        pass
-    return lookup
-
-
-_TIER_LOOKUP_RAW = _load_tier_lookup()
-_TIER_LOOKUP_LOWER = {k.lower(): v for k, v in _TIER_LOOKUP_RAW.items()}
-_NAME_CANON = {k.lower(): k for k in _TIER_LOOKUP_RAW}
-
-_ORG_LOOKUP = {}
-try:
-    with open(_WHITELIST_PATH, encoding="utf-8") as f:
-        data = yaml.safe_load(f)
-    for entry in data.get("entities", []):
-        name = entry.get("name", "")
-        org = entry.get("org_in_bitable", "")
-        if name and org:
-            _ORG_LOOKUP[name] = org
-except Exception:
-    pass
-
-_TIER_LOOKUP = _TIER_LOOKUP_RAW
+_TIER_LOOKUP, _ORG_LOOKUP = load_whitelist(_WHITELIST_PATH)
+_TIER_LOOKUP_LOWER = {k.lower(): v for k, v in _TIER_LOOKUP.items()}
+_NAME_CANON = name_canon_map(_TIER_LOOKUP)
 
 _CLASSIFIER = HeadlineClassifier(
     tier_lookup=_TIER_LOOKUP,

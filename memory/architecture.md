@@ -69,29 +69,42 @@ Next.js 14 app router. Pages are consolidated (do NOT recreate the old split pag
   search + primary-source lookup) are dependency-light tools used by the alert
   agent.
 - `skills/` — one **directory per skill**, named by function; `skills/__init__.py`
-  exposes `SKILLS`. `signal_triage` is a deterministic skill (tier/engagement
-  scoring, cross-language triangulation, cluster-dedup; jieba optional).
+  exposes `SKILLS`. Two deterministic (no-backend) skills:
+  - `signal_triage` — tier/engagement scoring, cross-language triangulation,
+    cluster-dedup (jieba optional). Used by the alert pipeline.
+  - `headline_selection` — `select_headlines()`: classify (m1–m5 + 8 strong
+    constraints) and rank a batch into auto-headline / edge / body tiers. Used by
+    the digest pipeline.
+  - `skills/headline/` — **shared support package** (not a skill, no `SKILLS`
+    entry): the **vendored** HH-Research v8.0 `HeadlineClassifier` +
+    `HeadlineSelector`, extracted from jingruzhao103-bit/HH-Research
+    `daily-digest/src/hh_research` (`headline_classifier` + `headline_selector` +
+    `canonical_entity` + a zero-dependency `Signal` dataclass + `whitelist` loader).
+    Self-contained & offline. It scores a signal on 5 dims and tests 8 strong
+    constraints using the P0+/P0 names in a `p0_whitelist.yml`. **Shared by both**
+    the alert prefilter and `skills.headline_selection`.
 - `agent/` — one **directory per agent**, each exposing a `build_<agent>()`
   factory; `agent/team.py` assembles the chat team.
   - `agent/data_agent/` — KB read/write/analysis specialist (group-chat).
   - `agent/alert_agent/` — real-time AI-signal triage. Refactored from a former
     standalone `alert/` pipeline: deterministic fetch (`fetcher.py`) + triage
-    (`skills.signal_triage`) + prefilter (`headline/`), then an AutoGen agent does
-    judge → summary → cross-verify → push (`tools.notify`) → persist
-    (`tools.signals.create_signal`). Driven per-signal by
-    `agent/alert_agent/pipeline.py` (not a round-robin chat participant).
-    - `agent/alert_agent/headline/` — **vendored** HH-Research v8.0
-      `HeadlineClassifier` (the prefilter brain), extracted from
-      jingruzhao103-bit/HH-Research `daily-digest/src/hh_research`
-      (`headline_classifier.py` + `canonical_entity.py` + a zero-dependency
-      `Signal` dataclass). Self-contained & offline — no external package on
-      PYTHONPATH. It scores a signal on 5 dims and tests 8 strong constraints
-      using the P0+/P0 names in `config/p0_whitelist.yml`.
+    (`skills.signal_triage`) + prefilter (`prefilter.py`, on `skills.headline`),
+    then an AutoGen agent does judge → summary → cross-verify → push
+    (`tools.notify`) → persist (`tools.signals.create_signal`). Driven per-signal
+    by `agent/alert_agent/pipeline.py` (not a round-robin chat participant).
+  - `agent/digest_agent/` — the HH Research Daily writer. Refactored from the
+    standalone `digest` subsystem (`add-digest-agent` branch). `pipeline.py`
+    deterministically buckets the day's KB signals into the four payload arrays
+    (`HEADLINE_CANDIDATES` / `CAPITAL_SIGNALS` / `FRONTIER_RESEARCH_SIGNALS` /
+    `INDUSTRY_APPLICATION_SIGNALS`), ranks headline candidates via
+    `skills.headline_selection`, then an AutoGen agent curates + writes a ≤15-card
+    Feishu-XML 精选日报 (v7.0 spec ported from the digest's `daily_digest.md`) and
+    optionally publishes it via `tools.notify.send_feishu`. Also pipeline-driven.
 
 ### Lesson: refactoring a standalone pipeline into the agent system
 
-When merging external pipeline code (the `add-alert-agent` branch), split it by
-responsibility instead of copying wholesale:
+When merging external pipeline code (the `add-alert-agent` / `add-digest-agent`
+branches), split it by responsibility instead of copying wholesale:
 - **side-effecting atoms** (push, web search, KB write) → `tools/` (async, never
   raise, return `{"ok"|"error": ...}`).
 - **deterministic, tuned logic** (scoring, clustering, dedup) → `skills/` (keep it
@@ -102,9 +115,23 @@ responsibility instead of copying wholesale:
 - **source-specific plumbing & config** (feed fetchers, sqlite dedup, whitelists)
   → stays inside the agent package as infrastructure.
 - **upstream deps that were "optional/degrade gracefully"** (here the
-  `HeadlineClassifier` prefilter) → **vendor** them in (e.g.
-  `agent/alert_agent/headline/`) so the feature actually works out of the box;
-  trim heavy deps (pydantic `Signal` → dataclass) and rewire relative imports.
+  `HeadlineClassifier` prefilter) → **vendor** them in so the feature actually
+  works out of the box; trim heavy deps (pydantic `Signal` → dataclass) and rewire
+  relative imports.
+- **the LLM "brain" of a writer pipeline** (the digest's `daily_digest.md` +
+  `taxonomy.md` prompts) → port faithfully into the agent's `system_message`; feed
+  it pre-bucketed JSON arrays built deterministically from the KB so the agent only
+  does curation + writing, not data plumbing.
+
+### Lesson: vendored code shared by >1 agent goes in a neutral place
+
+The v8.0 `HeadlineClassifier` was first vendored under `agent/alert_agent/headline/`.
+When the digest agent also needed it (for headline ranking), it was promoted to the
+shared `skills/headline/` support package and the `headline_selector` was added.
+**Layering rule: skills/tools must not import from `agent/*`.** So anything two
+agents share (vendored classifiers, lookups, schemas) lives under `skills/`
+(or `tools/`) as a clearly-labelled *support package* — not inside one agent's
+directory. The alert prefilter now imports `from skills.headline import …`.
 
 ### Lesson: Windows file encoding
 

@@ -46,6 +46,8 @@ class Signal:
     constraint_rule: Optional[str] = None
     primary_org: Optional[str] = None
     canonical_event_key: Optional[str] = None
+    auto_headline: bool = False     # set by HeadlineSelector
+    edge_case: bool = False         # set by HeadlineSelector
 
 
 __all__ = ["Signal"]

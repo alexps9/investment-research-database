@@ -19,9 +19,9 @@ multi-agent system all talk to it over `/api/*`.
 backend/      FastAPI app — the ONLY component that touches the database
 frontend/     Next.js 14 app (deployed on Vercel) — merged Data Hub + Explore pages
 mcp_server/   MCP (Model Context Protocol) wrapper over the backend REST API
-agent/        AutoGen 0.7 multi-agent system — one dir per agent (data_agent/, alert_agent/)
+agent/        AutoGen 0.7 multi-agent system — one dir per agent (data_agent/, alert_agent/, digest_agent/)
 tools/        Atomic KB tools — one package per domain (sources/signals/…/notify/websearch)
-skills/       Composed workflows — one dir per skill (…/signal_triage), built on tools/
+skills/       Composed workflows — one dir per skill (…/signal_triage, headline_selection); skills/headline/ is a shared vendored support pkg
 memory/       Project docs (overview / architecture / data model / api / deploy)
 *.sql         Supabase manual migrations
 ```
@@ -53,7 +53,12 @@ directory per agent (named by agent), each exposing a `build_<name>()` factory.
    split it: side-effecting atoms → `tools/`, deterministic tuned logic → `skills/`,
    LLM prompts → the agent `system_message` (use the shared DeepSeek model client,
    not a provider-specific SDK), source-specific plumbing → the agent package. See
-   `agent/alert_agent/` (refactored from a standalone Bedrock pipeline) as the model.
+   `agent/alert_agent/` and `agent/digest_agent/` (refactored from standalone
+   pipelines) as the models. **Anything shared by >1 agent (vendored classifiers,
+   lookups, schemas) goes in a neutral support package under `skills/` or `tools/`
+   — never inside one agent's dir** (skills/tools must not import from `agent/*`);
+   e.g. `skills/headline/` (the v8.0 HeadlineClassifier+Selector) is shared by the
+   alert prefilter and `skills/headline_selection`.
 6. **Don't commit secrets.** Use env vars / `.env` (gitignored). Examples live in
    `*.env.example`. Never hardcode API keys or tokens.
 
