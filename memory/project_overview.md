@@ -25,20 +25,23 @@ investment/financing tracker on top.
 | Component | Path | Stack | Hosting |
 |-----------|------|-------|---------|
 | Backend API | `backend/` | FastAPI, SQLAlchemy async, Alembic | Hugging Face Space (Docker) |
-| Frontend | `frontend/` | Next.js 14, React 18, Tailwind | GitHub Pages (static export) |
+| Frontend | `frontend/` | Next.js 14, React 18, Tailwind | Vercel |
 | MCP server | `mcp_server/` | `mcp` SDK, streamable-http | Hugging Face Space (Docker) |
 | Multi-agent | `agent/` | AutoGen 0.7 | run locally / any host |
 | Database | (Supabase) | PostgreSQL 16 + pgvector | Supabase |
+
+> Frontend is live at https://investment-research-database.vercel.app/ (Vercel
+> auto-deploys on push to the `public` repo's `main`). GitHub Pages is **not** used.
 
 ## Repo map
 
 ```
 backend/      FastAPI app (routers, models, schemas, repositories, services, alembic)
-frontend/     Next.js app (app router, components, lib)
+frontend/     Next.js app (app router, components, lib) — merged Data Hub + Explore
 mcp_server/   MCP wrapper over the backend REST API
-agent/        AutoGen multi-agent system (data_agent first)
-tools/        Atomic KB tools (1 fn per backend endpoint) — used by agents
-skills/       Composed workflows built on tools/
+agent/        AutoGen multi-agent system; one dir per agent (agent/data_agent/)
+tools/        Atomic KB tools; one package per domain (sources/signals/entities/…)
+skills/       Composed workflows; one dir per skill, built on tools/
 memory/       This documentation set (for humans + code agents)
 migration_*.sql, set_embedding_dim.sql   Supabase manual DB migrations
 ```

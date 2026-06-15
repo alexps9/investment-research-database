@@ -17,14 +17,18 @@ multi-agent system all talk to it over `/api/*`.
 
 ```
 backend/      FastAPI app — the ONLY component that touches the database
-frontend/     Next.js 14 static site
+frontend/     Next.js 14 app (deployed on Vercel) — merged Data Hub + Explore pages
 mcp_server/   MCP (Model Context Protocol) wrapper over the backend REST API
-agent/        AutoGen 0.7 multi-agent system (data_agent first)
-tools/        Atomic KB tools (1 async fn per backend endpoint)
-skills/       Composed workflows built on tools/
+agent/        AutoGen 0.7 multi-agent system — one dir per agent (agent/data_agent/)
+tools/        Atomic KB tools — one package per domain (sources/signals/entities/…)
+skills/       Composed workflows — one dir per skill, built on tools/
 memory/       Project docs (overview / architecture / data model / api / deploy)
 *.sql         Supabase manual migrations
 ```
+
+Directory conventions (mirror each other): **tools** = one package per functional
+domain; **skills** = one directory per skill (named by function); **agents** = one
+directory per agent (named by agent), each exposing a `build_<name>()` factory.
 
 ## Golden rules
 
@@ -38,9 +42,12 @@ memory/       Project docs (overview / architecture / data model / api / deploy)
    and a migration. Update [`memory/data_model.md`](memory/data_model.md) too.
 4. **Migrations are manual on Supabase.** Add an Alembic revision under
    `backend/alembic/versions/` AND a runnable `migration_*.sql` for the SQL editor.
-5. **Tools vs skills**: a *tool* is atomic (1 endpoint); a *skill* composes tools
-   into a workflow returning human-readable output. Register new tools in
-   `tools/__init__.py` and new skills in `skills/__init__.py`.
+5. **Tools vs skills**: a *tool* is atomic (1 endpoint), lives in its domain
+   package (e.g. `tools/sources/`); a *skill* composes tools into a workflow
+   returning human-readable output and lives in its own dir (e.g.
+   `skills/daily_brief/`). Register new tools in `tools/__init__.py`
+   (`READONLY_TOOLS`/`WRITE_TOOLS`) and new skills in `skills/__init__.py` (`SKILLS`).
+   Add a new agent as `agent/<name>/` and wire it into `agent/team.py`.
 6. **Don't commit secrets.** Use env vars / `.env` (gitignored). Examples live in
    `*.env.example`. Never hardcode API keys or tokens.
 
@@ -86,6 +93,21 @@ python -m agent.main "Audit source data quality"
 - Semantic search / RAG / funding / daily features require their env keys and the
   `migration_0004.sql` tables; otherwise those endpoints return errors while the
   rest of the API keeps working.
+
+## Deployment & frontend notes
+
+- **Frontend deploys to Vercel** (live: https://investment-research-database.vercel.app/),
+  not GitHub Pages. Deploy = `git push public database/v1.0:main --force`; Vercel
+  auto-builds. Set Vercel env `NEXT_PUBLIC_API_URL` to the backend URL. A
+  `deploy-pages.yml` workflow exists but is **not** the deploy path — ignore it.
+- Backend + MCP deploy to Hugging Face Spaces via `git subtree split` (see
+  [`memory/deployment.md`](memory/deployment.md)).
+- **Frontend pages are merged** — `/data` (Sources/Signals/Entities tabs, `?tab=`)
+  and `/explore` (AI Q&A + semantic + keyword search). Old routes
+  (`/sources /signals /entities /wiki /ask`) are client redirects; don't recreate
+  them as full pages. Selective CSV export is client-side (`frontend/src/lib/csv.ts`).
+- **Static-export gotcha**: with `output: 'export'`, a dynamic route's
+  `generateStaticParams()` must return a non-empty array (see `wiki/entities/[id]`).
 
 ## Where to look
 

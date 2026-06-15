@@ -7,7 +7,7 @@ Three free-tier hosts + Supabase. Working branch: `database/v1.0`.
 | Remote | Target | Purpose |
 |--------|--------|---------|
 | `origin` | `github.com/jingruzhao103-bit/HH-Research` | source of truth (push `database/v1.0`) |
-| `public` | `github.com/alexps9/investment-research-database` | frontend → GitHub Pages (push to `main`) |
+| `public` | `github.com/alexps9/investment-research-database` | frontend → **Vercel** (push to `main`) |
 | `hf` | HF Space `Alexps9yyy/hh-research-api` | backend (subtree of `backend/`) |
 | (mcp) | HF Space `Alexps9yyy/hh-research-mcp` | MCP server (subtree of `mcp_server/`) |
 
@@ -34,14 +34,28 @@ Endpoint: `https://Alexps9yyy-hh-research-mcp.hf.space/mcp`.
 > Note: the `mcp` SDK enables DNS-rebinding protection when bound to `0.0.0.0`,
 > which 421s behind a proxy. We pass `TransportSecuritySettings(enable_dns_rebinding_protection=False)`.
 
-## Frontend → GitHub Pages
+## Frontend → Vercel  (live: https://investment-research-database.vercel.app/)
 
-Push `database/v1.0` to `public:main`; the `deploy-pages.yml` Action builds the
-Next.js static export. Set repo var `NEXT_PUBLIC_API_URL` to the backend URL.
+The `public` repo is connected to **Vercel**, which auto-deploys on every push to
+its `main`. So deploying the frontend is just:
 
 ```bash
-git push public database/v1.0:main --force
+git push public database/v1.0:main --force   # Vercel auto-builds & deploys
 ```
+
+Set the Vercel project env var `NEXT_PUBLIC_API_URL` to the backend URL
+(`https://Alexps9yyy-hh-research-api.hf.space`) so the static client knows where
+the API is.
+
+> History / gotchas:
+> - We do **NOT** use GitHub Pages. A `deploy-pages.yml` workflow exists but is not
+>   the deploy path; ignore it (Pages was never the production host).
+> - `next.config.js` only sets `output: 'export'` when `NEXT_BUILD_STATIC=true`;
+>   Vercel builds in normal (non-export) mode, so SSR/dynamic routes are fine there.
+> - **Static-export gotcha**: with `output: 'export'`, a dynamic route's
+>   `generateStaticParams()` must return a **non-empty** array or the build fails
+>   with *"is missing generateStaticParams()"*. `wiki/entities/[id]` therefore
+>   returns a `placeholder` param when the backend isn't reachable at build time.
 
 ## Database (Supabase, manual SQL)
 
