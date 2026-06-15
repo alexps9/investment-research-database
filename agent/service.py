@@ -48,6 +48,8 @@ async def qa(body: QARequest):
     try:
         answer = await ask_data_agent(body.question)
     except Exception as exc:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=502, detail=str(exc)) from exc
     return QAResponse(question=body.question, answer=answer or "(no answer)")
 

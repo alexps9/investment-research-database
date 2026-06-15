@@ -41,7 +41,9 @@ def build_data_agent():
     """Create a read-only ReAct agent for Q&A."""
     llm = get_chat_model(temperature=0.2)
     tools = _build_readonly_tools()
-    return create_react_agent(llm, tools, state_modifier=DATA_AGENT_SYSTEM_MESSAGE)
+    # LangGraph 1.x: 'state_modifier' renamed to 'prompt'
+    agent = create_react_agent(llm, tools, prompt=DATA_AGENT_SYSTEM_MESSAGE)
+    return agent
 
 
 async def ask_data_agent(question: str) -> str:
