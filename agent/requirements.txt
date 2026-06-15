@@ -1,0 +1,5 @@
+# Multi-agent system (AutoGen 0.7.x)
+autogen-agentchat==0.7.2
+autogen-ext[openai]==0.7.2
+httpx>=0.27.1,<1
+python-dotenv==1.0.1
