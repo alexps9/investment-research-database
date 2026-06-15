@@ -1,8 +1,10 @@
 """Data agent — operates on the knowledge base (read + write + analyse).
 
-It is the first specialist in the multi-agent system. It is given the atomic KB
-tools and the composed skills, and a system prompt that teaches it the data model
-and safe-operation rules.
+The first specialist in the multi-agent system. It is given the atomic KB tools
+and the composed skills, plus a system prompt that teaches it the data model and
+safe-operation rules.
+
+Each agent lives in its own directory under ``agent/`` (e.g. ``agent/data_agent``).
 """
 from __future__ import annotations
 
@@ -54,3 +56,6 @@ def build_data_agent(model_client) -> AssistantAgent:
         reflect_on_tool_use=True,
         model_client_stream=False,
     )
+
+
+__all__ = ["build_data_agent", "DATA_AGENT_SYSTEM_MESSAGE"]

@@ -9,7 +9,7 @@ from __future__ import annotations
 from autogen_agentchat.conditions import MaxMessageTermination, TextMentionTermination
 from autogen_agentchat.teams import RoundRobinGroupChat
 
-from agent.agents import build_data_agent
+from agent.data_agent import build_data_agent
 
 
 def build_team(model_client, max_messages: int = 20):

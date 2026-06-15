@@ -7,13 +7,15 @@ analyses the KB (sources, signals, entities, funding, daily digests) through the
 atomic [`tools/`](../tools) and composed [`skills/`](../skills). The team is built
 so additional specialists can be added later.
 
+Each agent lives in **its own directory** under `agent/` (named after the agent):
+
 ```
 agent/
   config.py            # OpenAI-compatible model client (DeepSeek by default)
   team.py              # build_team(): RoundRobinGroupChat of specialists
   main.py              # CLI entrypoint
-  agents/
-    data_agent.py      # the Data Agent (tools + skills + system prompt)
+  data_agent/          # the Data Agent (tools + skills + system prompt)
+    __init__.py
 ```
 
 ## Architecture
@@ -54,9 +56,10 @@ Example tasks:
 
 ## Extending the team
 
-Add a new specialist in `agents/`, build it in `team.py`'s `build_team()` and
-append it to `participants`. For role-based routing consider switching
-`RoundRobinGroupChat` to `SelectorGroupChat` (AutoGen 0.7).
+Create a new specialist in its own directory `agent/<agent_name>/` with an
+`__init__.py` exposing a `build_<agent_name>()` factory, then build it in
+`team.py`'s `build_team()` and append it to `participants`. For role-based routing
+consider switching `RoundRobinGroupChat` to `SelectorGroupChat` (AutoGen 0.7).
 
 ## Safety
 
