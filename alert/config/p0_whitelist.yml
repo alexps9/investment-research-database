@@ -1,0 +1,3883 @@
+metadata:
+  generated_at: '2026-05-28T12:53:30.781343+00:00'
+  base_token: UdwrbpCMoasCs3snCvbcKgbsnfc
+  table_id: tblpVgQBAkPptnip
+  total_rows: 347
+  p0_plus_count: 40
+  p0_count: 86
+  p1_count: 21
+  p2_count: 200
+  version: v8.0
+entities:
+- record_id: recvhHhTcDJ7TJ
+  name: xAI
+  org_in_bitable: xAI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/xai](https://x.com/xai)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDrECw
+  name: Hieu Pham
+  org_in_bitable: xAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/hyhieu226](https://x.com/hyhieu226)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDVcbL
+  name: Lianmin Zheng
+  org_in_bitable: xAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/lm_zheng](https://x.com/lm_zheng)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDV330
+  name: Ze Liu
+  org_in_bitable: xAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/zeliu_](https://x.com/zeliu_)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDt8D4
+  name: Zexuan Zhong
+  org_in_bitable: xAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/zexuanzhong](https://x.com/zexuanzhong)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDEJBx
+  name: Qian Huang
+  org_in_bitable: xAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/qhwang3](https://x.com/qhwang3)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDrr9h
+  name: Greg Yang
+  org_in_bitable: xAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/TheGregYang](https://x.com/TheGregYang)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDcNPV
+  name: Eric Zelikman
+  org_in_bitable: xAI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/ericzelikman](https://x.com/ericzelikman)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDIU21
+  name: Yuhuai (Tony) Wu
+  org_in_bitable: xAI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/Yuhu_ai_](https://x.com/Yuhu_ai_)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDg97v
+  name: Ting Chen
+  org_in_bitable: xAI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/tingchenai](https://x.com/tingchenai)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDgVfB
+  name: Zihang Dai
+  org_in_bitable: xAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/ZihangDai](https://x.com/ZihangDai)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDryfU
+  name: Guodong Zhang
+  org_in_bitable: xAI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/Guodzh](https://x.com/Guodzh)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDFZWg
+  name: Jimmy Ba
+  org_in_bitable: xAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/jimmybajimmyba](https://x.com/jimmybajimmyba)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDwbN2
+  name: Meta
+  org_in_bitable: Meta
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/AIatMeta](https://x.com/AIatMeta)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDCHaI
+  name: Reality Labs at Meta
+  org_in_bitable: Meta
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/RealityLabs](https://x.com/RealityLabs)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDdFfV
+  name: Yi Wan
+  org_in_bitable: Meta
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/yiwan89352121](https://x.com/yiwan89352121)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDwe1I
+  name: Mike Lewis
+  org_in_bitable: Meta
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/ml_perception](https://x.com/ml_perception)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDEFGt
+  name: Zeyuan Allen-Zhu
+  org_in_bitable: Meta
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/ZeyuanAllenZhu](https://x.com/ZeyuanAllenZhu)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDMxI8
+  name: 'Yuxiang Wei
+
+    '
+  org_in_bitable: Meta
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/YuxiangWei9](https://x.com/YuxiangWei9)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDL39E
+  name: Jason Weston
+  org_in_bitable: Meta
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/jaseweston](https://x.com/jaseweston)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDcfRW
+  name: Chunting Zhou
+  org_in_bitable: Meta
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/violet_zct](https://x.com/violet_zct)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDTnkI
+  name: Aston Zhang
+  org_in_bitable: Meta
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/astonzhangAZ](https://x.com/astonzhangAZ)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDCOVj
+  name: Ishan Misra
+  org_in_bitable: Meta
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/imisra_](https://x.com/imisra_)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDhWhr
+  name: Armen Aghajanyan
+  org_in_bitable: Meta
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/armenagha](https://x.com/armenagha)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDYf4m
+  name: Soumith Chintala
+  org_in_bitable: Meta
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/soumithchintala](https://x.com/soumithchintala)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcD9Mnq
+  name: GoogleAI
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/GoogleAI](https://x.com/GoogleAI)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDQ3QI
+  name: Google Deepmind
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/GoogleDeepMind](https://x.com/GoogleDeepMind)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDOcWB
+  name: Google AI Developers
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/googleaidevs](https://x.com/googleaidevs)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDSva3
+  name: Steven Johnson
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/stevenbjohnson](https://x.com/stevenbjohnson)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcD83r3
+  name: Samuel L Smith
+  org_in_bitable: Google
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/SamuelMLSmith](https://x.com/SamuelMLSmith)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDOSmj
+  name: Pengcheng Yin(殷鹏程)
+  org_in_bitable: Google
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/pengchengyin](https://x.com/pengchengyin)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDVhIJ
+  name: Denny Zhou
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/denny_zhou](https://x.com/denny_zhou)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDb6kF
+  name: Neel Nanda
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/NeelNanda5](https://x.com/NeelNanda5)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcD0nxD
+  name: Jon Barron
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/jon_barron](https://x.com/jon_barron)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDaDCs
+  name: Songyou Peng
+  org_in_bitable: Google
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/songyoupeng?lang=en](https://x.com/songyoupeng?lang=en)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDzMRp
+  name: Tim Rocktaschel
+  org_in_bitable: Google
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/_rockt](https://x.com/_rockt)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcD2AeX
+  name: 'Hao Liu '
+  org_in_bitable: Google
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/haoliuhl](https://x.com/haoliuhl)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDtcCY
+  name: Yi Tay
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/YiTayML](https://x.com/YiTayML)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 活跃=非常
+- record_id: recvhHhTcDI1sW
+  name: Fuzhao Xue
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/XueFz](https://x.com/XueFz)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDL3yj
+  name: Jeff Dean
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/JeffDean](https://x.com/JeffDean)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcD4ok2
+  name: Mostafa Dehghani
+  org_in_bitable: Google
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/m__dehghani](https://x.com/m__dehghani)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDCZzG
+  name: TensorFlow
+  org_in_bitable: Google
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/TensorFlow](https://x.com/TensorFlow)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDVteZ
+  name: Unitree
+  org_in_bitable: Unitree
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/UnitreeRobotics](https://x.com/UnitreeRobotics)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDlSHf
+  name: NVIDIA AI
+  org_in_bitable: NVIDIA
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/NVIDIAAI](https://x.com/NVIDIAAI)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDbIr7
+  name: NVIDIA AI Developer
+  org_in_bitable: NVIDIA
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/NVIDIAAIDev](https://x.com/NVIDIAAIDev)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDnpxD
+  name: De-An Huang
+  org_in_bitable: NVIDIA
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/deanh_tw](https://x.com/deanh_tw)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDNLum
+  name: Peng Xu
+  org_in_bitable: NVIDIA
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/PengXu51108979](https://x.com/PengXu51108979)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDQFl1
+  name: Haoxiang Wang
+  org_in_bitable: NVIDIA
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/Haoxiang__Wang](https://x.com/Haoxiang__Wang)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDuQQh
+  name: Jim Fan
+  org_in_bitable: NVIDIA
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/DrJimFan](https://x.com/DrJimFan)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDqB3w
+  name: Wenliang Dai
+  org_in_bitable: NVIDIA
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/wenliang_dai](https://x.com/wenliang_dai)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDoIAN
+  name: OpenAI
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/OpenAI](https://x.com/OpenAI)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcD1f0M
+  name: OpenAI Developers
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/OpenAIDevs](https://x.com/OpenAIDevs)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDGM3q
+  name: Greg Brockman
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/gdb](https://x.com/gdb)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 活跃=非常
+- record_id: recvhHhTcDQVp2
+  name: Lilian Weng
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/lilianweng](https://x.com/lilianweng)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDaFfn
+  name: Jason Wei
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/_jasonwei](https://x.com/_jasonwei)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDdq47
+  name: Cheng Lu
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/clu_cheng](https://x.com/clu_cheng)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDTJhB
+  name: Jakub Pachocki
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/merettm](https://x.com/merettm)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 高管词 + 顶级机构
+- record_id: recvhHhTcDrSkZ
+  name: Noam Brown
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/polynoamial](https://x.com/polynoamial)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDcqKA
+  name: Barret Zoph
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/barret_zoph](https://x.com/barret_zoph)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDzTku
+  name: Yang Song
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/DrYangSong](https://x.com/DrYangSong)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDSsOR
+  name: Shunyu Yao
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/ShunyuYao12](https://x.com/ShunyuYao12)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcD4m56
+  name: Karina Nguyen
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/karinanguyen_](https://x.com/karinanguyen_)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcD8bY5
+  name: Hyung Won Chung
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/hwchung27](https://x.com/hwchung27)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDNzTB
+  name: Bob McGrew
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/bobmcgrewai](https://x.com/bobmcgrewai)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDSkxX
+  name: Botao Hao
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/botaohao2](https://x.com/botaohao2)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDlsGG
+  name: Ilya Sutskever
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/ilyasut](https://x.com/ilyasut)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDOnaE
+  name: Leopold Aschenbrenner
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/leopoldasch](https://x.com/leopoldasch)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDyXUI
+  name: Sam Altman
+  org_in_bitable: OpenAI
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/sama](https://x.com/sama)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcD7zjO
+  name: MSR
+  org_in_bitable: Microsoft
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/MSFTResearch](https://x.com/MSFTResearch)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDoaR6
+  name: Dylan Foster
+  org_in_bitable: Microsoft
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/canondetortugas](https://x.com/canondetortugas)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDJPXM
+  name: Bo Zhang (Tony)
+  org_in_bitable: Microsoft
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/zhangboknight](https://x.com/zhangboknight)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDNXe4
+  name: Yi Zhang
+  org_in_bitable: Microsoft
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/YiZhangZZZ](https://x.com/YiZhangZZZ)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcD7CJX
+  name: Chunyuan Li
+  org_in_bitable: Microsoft
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/ChunyuanLi](https://x.com/ChunyuanLi)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcDtYXN
+  name: John Langford
+  org_in_bitable: Microsoft
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/JohnCLangford](https://x.com/JohnCLangford)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDQGkz
+  name: Can Xu
+  org_in_bitable: Microsoft
+  category: 业界
+  active: 非常
+  twitter: '[https://twitter.com/CanXu20](https://twitter.com/CanXu20)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 活跃=非常
+- record_id: recvhHhTcDEqv9
+  name: Jianfeng Gao
+  org_in_bitable: Microsoft
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/jianfenggao0217?lang=en](https://x.com/jianfenggao0217?lang=en)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDJrIx
+  name: Steven Sinofsky
+  org_in_bitable: Microsoft
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/stevesi](https://x.com/stevesi)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcDxaRW
+  name: Anthropic
+  org_in_bitable: Anthropic
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/AnthropicAI](https://x.com/AnthropicAI)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDSWO2
+  name: Jerry Wei
+  org_in_bitable: Anthropic
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/JerryWeiAI](https://x.com/JerryWeiAI)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDzbRs
+  name: Julian Schrittwieser
+  org_in_bitable: Anthropic
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/Mononofu](https://x.com/Mononofu)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDACSw
+  name: John Schulman
+  org_in_bitable: Anthropic
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/johnschulman2](https://x.com/johnschulman2)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 高管词 + 顶级机构
+- record_id: recvhHhTcDqWPG
+  name: Durk Kingma
+  org_in_bitable: Anthropic
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/dpkingma](https://x.com/dpkingma)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcDZpFv
+  name: Trenton Bricken
+  org_in_bitable: Anthropic
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/TrentonBricken](https://x.com/TrentonBricken)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcDUdhy
+  name: Sholto Douglas
+  org_in_bitable: Anthropic
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/_sholtodouglas](https://x.com/_sholtodouglas)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcDXZkn
+  name: cat
+  org_in_bitable: Anthropic
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/_catwu](https://x.com/_catwu)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcDTPny
+  name: Perplexity
+  org_in_bitable: Perplexity
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/perplexity_ai](https://x.com/perplexity_ai)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcDzkdk
+  name: World Labs
+  org_in_bitable: World Labs
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/theworldlabs](https://x.com/theworldlabs)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcEDvLLM
+  name: vLLM
+  org_in_bitable: vLLM
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/vllm_project](https://x.com/vllm_project)'
+  tier: P0
+  entity_type: lab
+  source_authority: official
+  notes: 'LLM推理引擎开源项目官方号，工业级标准'
+- record_id: recvhHhTcDNNt5
+  name: Mistral AI
+  org_in_bitable: Mistral AI
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/MistralAI](https://x.com/MistralAI)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcD1OsP
+  name: Albert Qiaochu(乔楚) Jiang
+  org_in_bitable: Mistral AI
+  category: 业界
+  active: 非常
+  twitter: '[https://twitter.com/AlbertQJiang](https://twitter.com/AlbertQJiang)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcDOGIe
+  name: Scale AI
+  org_in_bitable: Scale AI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/scale_AI](https://x.com/scale_AI)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcE6F8U
+  name: Sierra AI
+  org_in_bitable: Sierra AI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/sierraplatform](https://x.com/sierraplatform)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcEIimY
+  name: Karthik Narasimhan
+  org_in_bitable: Sierra AI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/karthik_r_n](https://x.com/karthik_r_n)'
+  tier: P1
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 (非顶级)
+- record_id: recvhHhTcENVkI
+  name: Liquid AI
+  org_in_bitable: Liquid AI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/LiquidAI_](https://x.com/LiquidAI_)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcEOd0w
+  name: Epoch AI
+  org_in_bitable: Epoch AI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/EpochAIResearch](https://x.com/EpochAIResearch)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcEp82B
+  name: Deepseek
+  org_in_bitable: Deepseek
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/deepseek_ai](https://x.com/deepseek_ai)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcEBEIE
+  name: Xiaokang Chen
+  org_in_bitable: Deepseek
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/PKUCXK](https://x.com/PKUCXK)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcEQDWo
+  name: Gradient AI
+  org_in_bitable: Gradient AI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/Gradient_AI_](https://x.com/Gradient_AI_)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcEAlUb
+  name: Lewis Tunstall
+  org_in_bitable: Hugging face
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/_lewtun](https://x.com/_lewtun)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcESCzF
+  name: Andrew Ng
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/AndrewYNg](https://x.com/AndrewYNg)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 'R2: 拆细到 DeepLearning.AI'
+- record_id: recvhHhTcENFNQ
+  name: Ross Taylor
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/rosstaylor90](https://x.com/rosstaylor90)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 'R2: 拆细到 前 Meta reasoning lead (待 verify)'
+- record_id: recvhHhTcEaYZB
+  name: Robert Wachen
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/robertwachen](https://x.com/robertwachen)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcEqDRy
+  name: Kyle Corbitt
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/corbtt](https://x.com/corbtt)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 'R2: 拆细到 OpenPipe AI'
+- record_id: recvhHhTcEFDjE
+  name: François Chollet
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/fchollet](https://x.com/fchollet)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 'R2: 拆细到 ARC Prize Foundation'
+- record_id: recvhHhTcEPqIr
+  name: Yue Cao
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/YueCao72324941](https://x.com/YueCao72324941)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcEXjTn
+  name: Jiaming Song
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/baaadas](https://x.com/baaadas)'
+  tier: P0+
+  entity_type: person
+  source_authority: employee
+  notes: 'R2: 拆细到 Luma AI'
+- record_id: recvhHhTcE9M1m
+  name: Andrej Karpathy
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/karpathy](https://x.com/karpathy)'
+  tier: P0+
+  entity_type: person
+  source_authority: employee
+  notes: 'R2: 拆细到 Eureka Labs'
+- record_id: recvhHhTcEuwB6
+  name: Gavin Uberti
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/UbertiGavin](https://x.com/UbertiGavin)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcE46tE
+  name: Daniel Han
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/danielhanchen](https://x.com/danielhanchen)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 'R2: 拆细到 Unsloth AI'
+- record_id: recvhHhTcEfQ6Z
+  name: hardmaru
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/hardmaru](https://x.com/hardmaru)'
+  tier: P0+
+  entity_type: person
+  source_authority: employee
+  notes: 'R2: 拆细到 Sakana AI'
+- record_id: recvhHhTcEgDmU
+  name: Georges Harik
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/gharik](https://x.com/gharik)'
+  tier: P1
+  entity_type: person
+  source_authority: employee
+  notes: 'R2: 拆细到 Investor'
+- record_id: recvhHhTcE31Rw
+  name: 'George Hotz '
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 看不到帖子
+  twitter: '[https://x.com/realGeorgeHotz](https://x.com/realGeorgeHotz)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=看不到帖子)
+- record_id: recvhHhTcEPCnZ
+  name: Yang You
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/YangYou1991](https://x.com/YangYou1991)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcEACmZ
+  name: Eric Steinberger
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/EricSteinb](https://x.com/EricSteinb)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcEZMGg
+  name: Deepak Pathak
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/pathak2206](https://x.com/pathak2206)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcEl9Ga
+  name: Brett Adcock
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/adcock_brett](https://x.com/adcock_brett)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 'R2: 拆细到 Figure AI'
+- record_id: recvhHhTcEuG5i
+  name: Junnan Li
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/LiJunnan0409](https://x.com/LiJunnan0409)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 'R2: 拆细到 Rhymes AI'
+- record_id: recvhHhTcEqcf8
+  name: Lucia Specia
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/lspecia](https://x.com/lspecia)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcEmbSg
+  name: Jiatao Gu
+  org_in_bitable: Apple
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/thoma_gu](https://x.com/thoma_gu)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcEAp33
+  name: Daniel Gross
+  org_in_bitable: Apple
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/danielgross](https://x.com/danielgross)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcE6Z3C
+  name: Qinghao Ye
+  org_in_bitable: Alibaba
+  category: 业界
+  active: 不活跃
+  twitter: '[https://x.com/qinghao_ye24089](https://x.com/qinghao_ye24089)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcE14yc
+  name: Alibaba Cloud
+  org_in_bitable: Alibaba
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/alibaba_cloud](https://x.com/alibaba_cloud)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcEJTNv
+  name: Genmo
+  org_in_bitable: Genmo
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/genmoai](https://x.com/genmoai)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcEF6j5
+  name: Physical Intelligence
+  org_in_bitable: Physical Intelligence
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/physical_int](https://x.com/physical_int)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcE0xaW
+  name: The Humanoid Hub
+  org_in_bitable: The Humanoid Hub
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/TheHumanoidHub](https://x.com/TheHumanoidHub)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcEGDsU
+  name: Paul Graham
+  org_in_bitable: Y Combinator
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/paulg](https://x.com/paulg)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEHW9E
+  name: Garry Tan
+  org_in_bitable: Y Combinator
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/garrytan](https://x.com/garrytan)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEVRF3
+  name: Marc Andreessen
+  org_in_bitable: a16z
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/pmarca](https://x.com/pmarca)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcECfgJ
+  name: Aaron Levie
+  org_in_bitable: Box
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/levie](https://x.com/levie)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEWf7l
+  name: Amjad Masad
+  org_in_bitable: Replit
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/amasad](https://x.com/amasad)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEF0uL
+  name: tobi lutke
+  org_in_bitable: Shopify
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/tobi](https://x.com/tobi)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEYJ3y
+  name: Austen Allred
+  org_in_bitable: Gauntlet AI
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/Austen](https://x.com/Austen)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEwnkH
+  name: Bill Gurley
+  org_in_bitable: Benchmark
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/bgurley](https://x.com/bgurley)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEl5Re
+  name: Suhail
+  org_in_bitable: Playground AI
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/Suhail](https://x.com/Suhail)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEqOFt
+  name: Alexis Ohanian 🗽
+  org_in_bitable: 776 Ventures
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/alexisohanian](https://x.com/alexisohanian)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEBien
+  name: Patrick Collison
+  org_in_bitable: Stripe
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/patrickc](https://x.com/patrickc)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcETEGe
+  name: Antonio García Martínez (agm.eth)
+  org_in_bitable: Coinbase Base
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/antoniogm](https://x.com/antoniogm)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcE2Nfg
+  name: Kevin Hou
+  org_in_bitable: Windsurf AI
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/kevinhou22](https://x.com/kevinhou22)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEpjf1
+  name: Wolfram Ravenwolf
+  org_in_bitable: Ella Mind AI
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/WolframRvnwlf](https://x.com/WolframRvnwlf)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcELBhf
+  name: Michael Truell
+  org_in_bitable: Cursor AI
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/mntruell](https://x.com/mntruell)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEi8eu
+  name: Molson Hart
+  org_in_bitable: Viahart
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/Molson_Hart](https://x.com/Molson_Hart)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcE08PR
+  name: dex
+  org_in_bitable: HumanLayer
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/dexhorthy](https://x.com/dexhorthy)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEG8i3
+  name: Bespoke Labs
+  org_in_bitable: Bespoke Labs
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/bespokelabsai](https://x.com/bespokelabsai)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcE0EB5
+  name: Jason Zhou
+  org_in_bitable: Relevance AI
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/jasonzhou1993](https://x.com/jasonzhou1993)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcE7Sn2
+  name: Geordie Rose
+  org_in_bitable: Sanctuary AI
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/realgeordierose](https://x.com/realgeordierose)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcE4oRG
+  name: Misha Laskin
+  org_in_bitable: Reflection AI
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/MishaLaskin](https://x.com/MishaLaskin)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEPYRS
+  name: Balaji
+  org_in_bitable: Network State
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/balajis](https://x.com/balajis)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEDWb1
+  name: Sriram Krishnan
+  org_in_bitable: Twitter
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/sriramk](https://x.com/sriramk)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEVTLG
+  name: Brendan Falk
+  org_in_bitable: Amazon
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/BrendanFalk](https://x.com/BrendanFalk)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEBsDD
+  name: Ashish Vaswani
+  org_in_bitable: Essential AI
+  category: 业界
+  active: ''
+  twitter: '[https://x.com/ashVaswani](https://x.com/ashVaswani)'
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEyclS
+  name: Demis Hassabis
+  org_in_bitable: Google DeepMind
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/demishassabis](https://x.com/demishassabis)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 活跃=非常
+- record_id: recvhHhTcEnnwK
+  name: Isomorphic Labs
+  org_in_bitable: Alphabet
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/IsomorphicLabs](https://x.com/IsomorphicLabs)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhTcEguBb
+  name: Jesse Lyu
+  org_in_bitable: Rabbit inc
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/jessechenglyu](https://x.com/jessechenglyu)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 活跃=非常
+- record_id: recvhHhTcE76OS
+  name: Leo Gao
+  org_in_bitable: EleutherAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/nabla_theta](https://x.com/nabla_theta)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcEktlr
+  name: John Carmack
+  org_in_bitable: Keen Technologies
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/ID_AA_Carmack](https://x.com/ID_AA_Carmack)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcE4bH0
+  name: AK
+  org_in_bitable: Hugging Face
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/_akhaliq](https://x.com/_akhaliq)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEDrQE
+  name: Zhuohan Li
+  org_in_bitable: UCB
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/zhuohan123](https://x.com/zhuohan123)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcE6Q2A
+  name: Sergey Levine
+  org_in_bitable: UCB
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/svlevine](https://x.com/svlevine)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcEjnTk
+  name: Jiantao Jiao
+  org_in_bitable: UCB
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/jiantaoj](https://x.com/jiantaoj)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcEDG27
+  name: Pieter Abbeel
+  org_in_bitable: UCB
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/pabbeel](https://x.com/pabbeel)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcEYT7A
+  name: Edward Frenkel
+  org_in_bitable: UCB
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/edfrenkel](https://x.com/edfrenkel)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcES1cP
+  name: Jiaxin Wen
+  org_in_bitable: UCB
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/jiaxinwen22](https://x.com/jiaxinwen22)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcEJsLd
+  name: Xiang Yue
+  org_in_bitable: CMU
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/xiangyue96](https://x.com/xiangyue96)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcE52sT
+  name: Beidi Chen
+  org_in_bitable: CMU
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/BeidiChen](https://x.com/BeidiChen)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcEarco
+  name: Albert Gu
+  org_in_bitable: CMU
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/_albertgu](https://x.com/_albertgu)'
+  tier: P0+
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcENjV7
+  name: Ziming Liu
+  org_in_bitable: MIT
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/ZimingLiu11](https://x.com/ZimingLiu11)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcEvCqm
+  name: Songlin Yang
+  org_in_bitable: MIT
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/SonglinYang4](https://x.com/SonglinYang4)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcESpND
+  name: Muyang Li
+  org_in_bitable: MIT
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/lmxyy1999](https://x.com/lmxyy1999)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcEae0F
+  name: Chuang Gan
+  org_in_bitable: MIT
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/gan_chuang](https://x.com/gan_chuang)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcFqgEM
+  name: Omar Khattab
+  org_in_bitable: MIT
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/lateinteraction](https://x.com/lateinteraction)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFnei2
+  name: Song Han
+  org_in_bitable: MIT
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/songhan_mit](https://x.com/songhan_mit)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcFvS3I
+  name: Rohan Paul
+  org_in_bitable: MIT
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/rohanpaul_ai](https://x.com/rohanpaul_ai)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFq5zE
+  name: Shengbang Tong
+  org_in_bitable: NYU
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/TongPetersb](https://x.com/TongPetersb)'
+  tier: P1
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 (非顶级)
+- record_id: recvhHhTcFooW3
+  name: Saining Xie
+  org_in_bitable: NYU
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/sainingxie](https://x.com/sainingxie)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFL6ue
+  name: He He 何河
+  org_in_bitable: NYU
+  category: 学界
+  active: 不活跃
+  twitter: '[https://twitter.com/hhexiy](https://twitter.com/hhexiy)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcFD0H0
+  name: Yanjun Han
+  org_in_bitable: NYU
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/yanjun_han](https://x.com/yanjun_han)'
+  tier: P1
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 (非顶级)
+- record_id: recvhHhTcFN9WB
+  name: Yann LeCun
+  org_in_bitable: NYU
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/ylecun](https://x.com/ylecun)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFFv0c
+  name: Peter Tong
+  org_in_bitable: NYU
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/TongPetersb](https://x.com/TongPetersb)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhTcFdUni
+  name: Mike Shou
+  org_in_bitable: NUS
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/mikeshou1](https://x.com/mikeshou1)'
+  tier: P1
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 (非顶级)
+- record_id: recvhHhTcFMHXm
+  name: Lin Shao
+  org_in_bitable: NUS
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/linshaonju](https://x.com/linshaonju)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcFO9N4
+  name: Wenhai Wang
+  org_in_bitable: CUHK
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/wangwenhai362](https://x.com/wangwenhai362)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcF5sX2
+  name: Xiaolong Wang
+  org_in_bitable: UCSD
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/xiaolonw](https://x.com/xiaolonw)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFTvWO
+  name: Hao Su
+  org_in_bitable: UCSD
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/haosu_twitr](https://x.com/haosu_twitr)'
+  tier: P1
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 (非顶级)
+- record_id: recvhHhTcFkc83
+  name: Zhiting Hu
+  org_in_bitable: UCSD
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/zhitinghu](https://x.com/zhitinghu)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFnGfd
+  name: Jack Morris
+  org_in_bitable: Cornell
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/jxmnop](https://x.com/jxmnop)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFa8AB
+  name: Sasha Rush
+  org_in_bitable: Cornell
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/srush_nlp](https://x.com/srush_nlp)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFiccq
+  name: Noah Snavely
+  org_in_bitable: Cornell
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/jimantha?lang=en](https://x.com/jimantha?lang=en)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcFe5ef
+  name: Sima Jin
+  org_in_bitable: Caltech
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/jin_sima_](https://x.com/jin_sima_)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcF41B5
+  name: Eran Malach
+  org_in_bitable: Harvard
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/EranMalach](https://x.com/EranMalach)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcFimYW
+  name: Rafael Rafailov
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/rm_rafailov](https://x.com/rm_rafailov)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFJdjm
+  name: Rylan Schaeffer
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/RylanSchaeffer](https://x.com/RylanSchaeffer)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFoRd3
+  name: Yijia Shao
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/echoshao8899](https://x.com/echoshao8899)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFxr1a
+  name: Tony Z. Zhao
+  org_in_bitable: Stanford
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/tonyzzhao](https://x.com/tonyzzhao)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcF4oLC
+  name: Manling Li
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/ManlingLi_](https://x.com/ManlingLi_)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFWnei
+  name: Hao Zhu
+  org_in_bitable: Stanford
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/_hao_zhu](https://x.com/_hao_zhu)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcF7pxo
+  name: Tengyu Ma
+  org_in_bitable: Stanford
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/tengyuma](https://x.com/tengyuma)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcFkRGk
+  name: Chelsea Finn
+  org_in_bitable: Stanford
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/chelseabfinn](https://x.com/chelseabfinn)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcFYJVS
+  name: Nick Haber
+  org_in_bitable: Stanford
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/nickhaber](https://x.com/nickhaber)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhTcF5sL2
+  name: Jiajun Wu
+  org_in_bitable: Stanford
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/jiajunwu_cs?lang=en](https://x.com/jiajunwu_cs?lang=en)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhTcFHx6q
+  name: Percy Liang
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/percyliang](https://x.com/percyliang)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhTcFu9pV
+  name: Noah D. Goodman
+  org_in_bitable: Stanford
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/noahdgoodman](https://x.com/noahdgoodman)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhVSNBsV7
+  name: Fei-Fei Li
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/drfeifei](https://x.com/drfeifei)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSNG7RJ
+  name: Naman Jain
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/StringChaos](https://x.com/StringChaos)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSNhDLI
+  name: Jifeng Dai
+  org_in_bitable: Tsinghua
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/JifengDai](https://x.com/JifengDai)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhVSNm90S
+  name: Jie Tang
+  org_in_bitable: Tsinghua
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/jietang](https://x.com/jietang)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhVSNxbBn
+  name: Zhiyuan Liu
+  org_in_bitable: Tsinghua
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/zibuyu9](https://x.com/zibuyu9)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSNdHqN
+  name: Hang Zhao
+  org_in_bitable: Tsinghua
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/zhaohang0124](https://x.com/zhaohang0124)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhVSNsmc4
+  name: Tianle Cai
+  org_in_bitable: Princeton
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/tianle_cai](https://x.com/tianle_cai)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 + 顶级机构
+- record_id: recvhHhVSN8p2P
+  name: Tri Dao
+  org_in_bitable: Princeton
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/tri_dao](https://x.com/tri_dao)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSNrW4C
+  name: Jonathan Gorard
+  org_in_bitable: Princeton
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/getjonwithit](https://x.com/getjonwithit)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSNuTnz
+  name: Miles Cranmer
+  org_in_bitable: Cambridge
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/MilesCranmer](https://x.com/MilesCranmer)'
+  tier: P1
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 (非顶级)
+- record_id: recvhHhVSNgHXQ
+  name: Yuheng Bu
+  org_in_bitable: ECE Florida
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/yuhengbu](https://x.com/yuhengbu)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhVSNGjTV
+  name: Ding Liang
+  org_in_bitable: USYD
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/liangdingNLP](https://x.com/liangdingNLP)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhVSNe9m5
+  name: Wenhu Chen
+  org_in_bitable: Waterloo
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/WenhuChen](https://x.com/WenhuChen)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSNg8uj
+  name: Ziwei Liu
+  org_in_bitable: NTU
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/liuziwei7](https://x.com/liuziwei7)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSN9cY2
+  name: Ruohan Gao
+  org_in_bitable: UMD
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/ruohangao1](https://x.com/ruohangao1)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhVSNL3PB
+  name: Xiaochuang Han
+  org_in_bitable: UW
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/xiaochuanghan](https://x.com/xiaochuanghan)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhVSNO6DL
+  name: Yejin Choi
+  org_in_bitable: UW
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/yejinchoinka](https://x.com/yejinchoinka)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSNi4sS
+  name: Xin Wang
+  org_in_bitable: UCSC
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/xwang_lk](https://x.com/xwang_lk)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSNvrU0
+  name: Wei Xiong
+  org_in_bitable: UIUC
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/weixiong_1](https://x.com/weixiong_1)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhVSNie6h
+  name: Lifan Yuan
+  org_in_bitable: UIUC
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/lifan__yuan](https://x.com/lifan__yuan)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhVSNFRE6
+  name: Zhuoran Yang
+  org_in_bitable: Yale
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/zhuoran_yang](https://x.com/zhuoran_yang)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhVSNo2fR
+  name: Lu Mi
+  org_in_bitable: GT
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/lumi871](https://x.com/lumi871)'
+  tier: P1
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 (非顶级)
+- record_id: recvhHhVSNEjdR
+  name: Xuezhe Ma
+  org_in_bitable: USC
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/maxma1987](https://x.com/maxma1987)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSNxjhc
+  name: Seohong Park
+  org_in_bitable: UC Berkeley
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/seohong_park](https://x.com/seohong_park)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhVSNXdcB
+  name: Zhiyuan Li
+  org_in_bitable: TTIC
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/zhiyuanli_](https://x.com/zhiyuanli_)'
+  tier: P1
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=一般 (非顶级)
+- record_id: recvhHhVSNx2rv
+  name: William Merrill
+  org_in_bitable: TTIC
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/lambdaviking](https://x.com/lambdaviking)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhVSNpxRc
+  name: Rulin Shao
+  org_in_bitable: UW NLP
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/RulinShao](https://x.com/RulinShao)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhVSN4okq
+  name: AI Safety Papers
+  org_in_bitable: AI安全研究
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/safe_paper](https://x.com/safe_paper)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSNyz5N
+  name: Lennart Heim
+  org_in_bitable: RAND Corporation
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/ohlennart](https://x.com/ohlennart)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhVSNjxPZ
+  name: Zhengfu He
+  org_in_bitable: SII
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/ZhengfuHe](https://x.com/ZhengfuHe)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhVSN5V7g
+  name: Junxian He
+  org_in_bitable: HKUST
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/junxian_he](https://x.com/junxian_he)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhVSNbKr2
+  name: Kai Zhang
+  org_in_bitable: OSU
+  category: 学界
+  active: ''
+  twitter: '[https://x.com/DrogoKhal4](https://x.com/DrogoKhal4)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvhHhVSNcwCq
+  name: Geoffrey Hinton
+  org_in_bitable: 多伦多大学
+  category: 学界
+  active: 不活跃
+  twitter: '[https://x.com/geoffreyhinton](https://x.com/geoffreyhinton)'
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=不活跃)
+- record_id: recvhHhVSNB4oT
+  name: Linus
+  org_in_bitable: Anthropic
+  category: 其他
+  active: 非常
+  twitter: '[https://x.com/thesephist](https://x.com/thesephist)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 活跃=非常
+- record_id: recvhHhVSNqmpT
+  name: Hacker News Bot
+  org_in_bitable: Hacker News
+  category: 其他
+  active: ''
+  twitter: '[https://x.com/newsycombinator](https://x.com/newsycombinator)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSNmegk
+  name: Lightcone Podcast
+  org_in_bitable: 播客
+  category: 其他
+  active: ''
+  twitter: '[https://x.com/LightconePod](https://x.com/LightconePod)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSN2XLC
+  name: zed
+  org_in_bitable: 独立研究员
+  category: 其他
+  active: ''
+  twitter: '[https://x.com/zmkzmkz](https://x.com/zmkzmkz)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSNrsLU
+  name: George Mack
+  org_in_bitable: 作家
+  category: 其他
+  active: ''
+  twitter: '[https://x.com/george__mack](https://x.com/george__mack)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSNXhSn
+  name: Tiago Forte
+  org_in_bitable: 生产力专家
+  category: 其他
+  active: ''
+  twitter: '[https://x.com/fortelabs](https://x.com/fortelabs)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSNQ2DW
+  name: Joe Hudson
+  org_in_bitable: 高管教练
+  category: 其他
+  active: ''
+  twitter: '[https://x.com/FU_joehudson](https://x.com/FU_joehudson)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSNDnLW
+  name: AGI House
+  org_in_bitable: AGI House
+  category: 其他
+  active: 非常
+  twitter: '[https://x.com/agihouse_org](https://x.com/agihouse_org)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recvhHhVSNXBm6
+  name: TechCrunch
+  org_in_bitable: TechCrunch
+  category: 其他
+  active: 非常
+  twitter: '[https://x.com/TechCrunch](https://x.com/TechCrunch)'
+  tier: P1
+  entity_type: media
+  source_authority: media
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSNYXPr
+  name: Carlos E. Perez
+  org_in_bitable: Intuition Machine
+  category: 其他
+  active: 非常
+  twitter: '[https://x.com/IntuitMachine](https://x.com/IntuitMachine)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSNupto
+  name: Interconnects
+  org_in_bitable: 独立媒体
+  category: 其他
+  active: 一般
+  twitter: '[https://x.com/interconnectsai](https://x.com/interconnectsai)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSNI5js
+  name: Dwarkesh Patel
+  org_in_bitable: 独立播客
+  category: 其他
+  active: 非常
+  twitter: '[https://x.com/dwarkesh_sp](https://x.com/dwarkesh_sp)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: recvhHhVSNoim2
+  name: Shawn Wang
+  org_in_bitable: 独立开发者
+  category: 其他
+  active: 非常
+  twitter: '[https://x.com/swyx](https://x.com/swyx)'
+  tier: P1
+  entity_type: person
+  source_authority: third_party
+  notes: 'R1: 媒体/独立账号降 P1'
+- record_id: manual_polymarket
+  name: Polymarket Money
+  org_in_bitable: ''
+  category: 其他
+  active: 非常
+  twitter: 'https://x.com/PolymarketMoney'
+  tier: P0
+  entity_type: person
+  source_authority: third_party
+  notes: '聚合/预测市场账号，source_tier=aggregator'
+- record_id: recviP0gG2y55F
+  name: OpenAI Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2jJ4d
+  name: Anthropic Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2R1bL
+  name: Google DeepMind Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2WgLS
+  name: Meta AI Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2Vgkw
+  name: Microsoft Research
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recviP0gG2wFh9
+  name: NVIDIA Research
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG20giL
+  name: Apple ML Research
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2KiZI
+  name: xAI Corp
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2GTh9
+  name: Mistral AI
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recviP0gG20tl9
+  name: DeepSeek AI
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2bA9G
+  name: Stanford University
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2YjWv
+  name: MIT CSAIL
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2Wgux
+  name: CMU
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2M04A
+  name: UC Berkeley
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2Hl57
+  name: Princeton University
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2dmcd
+  name: Tsinghua University
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2wynS
+  name: Peking University
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2FUyc
+  name: Shanghai AI Lab
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviP0gG2c5Uf
+  name: 上海创智学院
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYqvIs
+  name: Hugging Face Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYBuYC
+  name: Cohere Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYVBXO
+  name: Adept Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYtRA7
+  name: Inflection AI
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYyLul
+  name: Sierra AI
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 'R3/R4: 公司官方账号 P0+'
+- record_id: recviZVhhYIvLg
+  name: AI21 Labs
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYmTvF
+  name: Google Research
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYlEvX
+  name: Microsoft Research Asia
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYP3uX
+  name: 智谱 AI
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhY25bS
+  name: 阿里达摩院
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYsolY
+  name: 阿里云
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYMv2c
+  name: 字节跳动
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYACjX
+  name: 月之暗面
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYXkTV
+  name: JHU
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYAmHI
+  name: Cornell University
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYuV7H
+  name: UPenn
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYuyOf
+  name: Caltech
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYyB97
+  name: Oxford
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYHxEY
+  name: Cambridge
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYTTDy
+  name: ETH Zurich
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYU3wr
+  name: NTU Singapore
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhY01nY
+  name: NUS
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYe4r7
+  name: Cohere Labs
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYp0YK
+  name: Mila
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYFL7p
+  name: 复旦大学
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhY5fdO
+  name: 上海交大
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYMmZW
+  name: 浙江大学
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYR2iB
+  name: 中科院 AI
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYqXyr
+  name: 港中文
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recviZVhhYa9UB
+  name: 港科大
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLPh5z
+  name: 华为
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLhEOL
+  name: Meta Research Broad
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLPh6i
+  name: Apple Research Broad
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLuzAK
+  name: UIUC
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLVyGU
+  name: MBZUAI
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLfI8u
+  name: Rice University
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLgVBb
+  name: NYU
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLBXaE
+  name: UCLA
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLlTCP
+  name: UCSB
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLCsvN
+  name: UMass Amherst
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLcJ0P
+  name: Georgia Tech
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvL2JfQ
+  name: KAIST
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLvw0v
+  name: Toronto / Vector
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLsMlp
+  name: 港城大
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLETra
+  name: UToken-USC
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLPKIR
+  name: UWashington
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLfL8r
+  name: UWaterloo
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLYNJ7
+  name: EPFL
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLFGNZ
+  name: Sakana AI
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLoRp5
+  name: Replit Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLyD03
+  name: Mistral AI Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvL94bY
+  name: Cohere AI
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLyvzv
+  name: Tencent
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLKBhK
+  name: 百度
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLWK4w
+  name: 小米
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16wvLF71G
+  name: 华盛顿大学西雅图
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0AYpy
+  name: 华为
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0ldCB
+  name: Meta Research Broad
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0KhaP
+  name: Apple Research Broad
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0yWff
+  name: UIUC
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0kk2U
+  name: MBZUAI
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba039cP
+  name: Rice University
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0uhyP
+  name: NYU
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0cAUW
+  name: UCLA
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0Y4xx
+  name: UCSB
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba06g9k
+  name: UMass Amherst
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba05vnd
+  name: Georgia Tech
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0w2RM
+  name: KAIST
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0VI8q
+  name: Toronto / Vector
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba09rAc
+  name: 港城大
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0WqS6
+  name: UToken-USC
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0WWq7
+  name: UWashington
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0Srp1
+  name: UWaterloo
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0oI9O
+  name: EPFL
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba06QTx
+  name: Sakana AI
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0p91Z
+  name: Replit Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0SO3l
+  name: Mistral AI Org
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0Rshf
+  name: Cohere AI
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0uShs
+  name: Tencent
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0DinG
+  name: 百度
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0SJT0
+  name: 小米
+  org_in_bitable: ''
+  category: 业界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: employee
+  notes: 默认 P2 (活跃=空)
+- record_id: recvj16Ba0jyOz
+  name: 华盛顿大学西雅图
+  org_in_bitable: ''
+  category: 学界
+  active: ''
+  twitter: null
+  tier: P2
+  entity_type: person
+  source_authority: third_party
+  notes: 默认 P2 (活跃=空)
+- record_id: sync_alibaba_qwen
+  name: Qwen (官方)
+  org_in_bitable: Alibaba
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/Alibaba_Qwen](https://x.com/Alibaba_Qwen)'
+  tier: P0+
+  entity_type: company
+  source_authority: official
+  notes: 从多维表格同步补充
+- record_id: sync_chrmanning
+  name: Christopher Manning
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/chrmanning](https://x.com/chrmanning)'
+  tier: P0+
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_markchen90
+  name: Mark Chen
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/markchen90](https://x.com/markchen90)'
+  tier: P0+
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_miramurati
+  name: Mira Murati
+  org_in_bitable: 创业公司
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/miramurati](https://x.com/miramurati)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_mustafasuleyman
+  name: Mustafa Suleyman
+  org_in_bitable: Microsoft
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/mustafasuleyman](https://x.com/mustafasuleyman)'
+  tier: P0+
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_nandodf
+  name: Nando de Freitas
+  org_in_bitable: Microsoft
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/NandoDF](https://x.com/NandoDF)'
+  tier: P0+
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_noamshazeer
+  name: Noam Shazeer
+  org_in_bitable: Google
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/NoamShazeer](https://x.com/NoamShazeer)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_oriolvinyalsml
+  name: Oriol Vinyals
+  org_in_bitable: Google DeepMind
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/OriolVinyalsML](https://x.com/OriolVinyalsML)'
+  tier: P0+
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_quocleix
+  name: Quoc V. Le
+  org_in_bitable: Google DeepMind
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/quocleix](https://x.com/quocleix)'
+  tier: P0+
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_richardssutton
+  name: Richard Sutton
+  org_in_bitable: Alberta
+  category: 学界
+  active: 一般
+  twitter: '[https://x.com/RichardSSutton](https://x.com/RichardSSutton)'
+  tier: P0+
+  entity_type: person
+  source_authority: independent
+  notes: 从多维表格同步补充
+- record_id: sync_shanelegg
+  name: Shane Legg
+  org_in_bitable: Google DeepMind
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/ShaneLegg](https://x.com/ShaneLegg)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_tqchenml
+  name: Tianqi Chen
+  org_in_bitable: CMU
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/tqchenml](https://x.com/tqchenml)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_woj_zaremba
+  name: Wojciech Zaremba
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/woj_zaremba](https://x.com/woj_zaremba)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_edchi
+  name: Yi Tay
+  org_in_bitable: Reka AI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/edchi](https://x.com/edchi)'
+  tier: P0+
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_chrisgpotts
+  name: Christopher Potts
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/ChrisGPotts](https://x.com/ChrisGPotts)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_guillaumelample
+  name: Guillaume Lample
+  org_in_bitable: Mistral AI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/GuillaumeLample](https://x.com/GuillaumeLample)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_hwchase17
+  name: Harrison Chase
+  org_in_bitable: LangChain
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/hwchase17](https://x.com/hwchase17)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_jackclarksf
+  name: Jack Clark
+  org_in_bitable: Anthropic
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/jackclarkSF](https://x.com/jackclarkSF)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_jacobsteinhardt
+  name: Jacob Steinhardt
+  org_in_bitable: UCB
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/JacobSteinhardt](https://x.com/JacobSteinhardt)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_james_y_zou
+  name: James Zou
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/james_y_zou](https://x.com/james_y_zou)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_jeffclune
+  name: Jeff Clune
+  org_in_bitable: UBC
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/jeffclune](https://x.com/jeffclune)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_jefrankle
+  name: Jonathan Frankle
+  org_in_bitable: Databricks
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/jefrankle](https://x.com/jefrankle)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_jeremyphoward
+  name: Jeremy Howard
+  org_in_bitable: fast.ai
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/jeremyphoward](https://x.com/jeremyphoward)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_jiajunwu_cs
+  name: Jiajun Wu
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/jiajunwu_cs](https://x.com/jiajunwu_cs)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_jiayq
+  name: 贾扬清 Yangqing Jia
+  org_in_bitable: Lepton AI
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/jiayq](https://x.com/jiayq)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_jluan
+  name: David Luan
+  org_in_bitable: Adept
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/jluan](https://x.com/jluan)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_justinlin610
+  name: Junyang Lin
+  org_in_bitable: Alibaba
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/JustinLin610](https://x.com/JustinLin610)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_kchonyc
+  name: Kyunghyun Cho
+  org_in_bitable: NYU
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/kchonyc](https://x.com/kchonyc)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_martin_casado
+  name: Martin Casado
+  org_in_bitable: a16z
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/martin_casado](https://x.com/martin_casado)'
+  tier: P0
+  entity_type: person
+  source_authority: independent
+  notes: 从多维表格同步补充
+- record_id: sync_matei_zaharia
+  name: Matei Zaharia
+  org_in_bitable: Databricks
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/matei_zaharia](https://x.com/matei_zaharia)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_model_mechanic
+  name: Aditya Ramesh
+  org_in_bitable: OpenAI
+  category: 业界
+  active: 一般
+  twitter: '[https://x.com/model_mechanic](https://x.com/model_mechanic)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_random_walker
+  name: Arvind Narayanan
+  org_in_bitable: Princeton
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/random_walker](https://x.com/random_walker)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_richardsocher
+  name: Richard Socher
+  org_in_bitable: you.com
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/RichardSocher](https://x.com/RichardSocher)'
+  tier: P0
+  entity_type: person
+  source_authority: founder
+  notes: 从多维表格同步补充
+- record_id: sync_shaneguml
+  name: Shixiang Shane Gu
+  org_in_bitable: Google DeepMind
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/shaneguML](https://x.com/shaneguML)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_sirbayes
+  name: Kevin Murphy
+  org_in_bitable: Google DeepMind
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/sirbayes](https://x.com/sirbayes)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_songyoupeng
+  name: Songyou Peng
+  org_in_bitable: ETH Zurich
+  category: 业界
+  active: 非常
+  twitter: '[https://x.com/songyoupeng](https://x.com/songyoupeng)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_tatsu_hashimoto
+  name: Tatsunori Hashimoto
+  org_in_bitable: Stanford
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/tatsu_hashimoto](https://x.com/tatsu_hashimoto)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
+- record_id: sync_yukez
+  name: Yuke Zhu
+  org_in_bitable: UT Austin
+  category: 学界
+  active: 非常
+  twitter: '[https://x.com/yukez](https://x.com/yukez)'
+  tier: P0
+  entity_type: person
+  source_authority: employee
+  notes: 从多维表格同步补充
