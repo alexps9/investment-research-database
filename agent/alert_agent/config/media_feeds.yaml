@@ -1,0 +1,142 @@
+# Media RSS feeds — 财经/科技媒体源，用于补足官方源覆盖不到的「媒体先发」新闻
+# （融资、监管、商业合作等，首发地常是媒体而非实验室官方账号）
+#
+# 与 rss_feeds.yaml 的区别：这里是第三方媒体（二手信息），抓回后由分类器降级处理；
+# 全站混杂的源（如 36氪）用 keywords 字段做标题/摘要过滤去噪。
+#
+# `trust: high` —— 信任的优质源，命中 alert 后**绕过 pending 直接推送**（不需人工审）。
+# 只给信噪比高、误报少的 AI 垂直媒体（如 TechCrunch AI）。未标的 media 源仍走 pending。
+#
+# 验证一个源：curl -A "Mozilla/5.0" -L <url> | grep -c "<item"
+
+feeds:
+  # ---- 英文科技媒体（AI 垂直频道，无需关键词过滤）----
+  - name: TechCrunch AI
+    url: https://techcrunch.com/category/artificial-intelligence/feed/
+    category: media
+    trust: high
+
+  - name: Ars Technica AI
+    url: https://arstechnica.com/ai/feed/
+    category: media
+
+  - name: VentureBeat AI
+    url: https://venturebeat.com/category/ai/feed/
+    category: media
+
+  # ---- 中文媒体（全站综合源，必须用 keywords 过滤 + 分类器「终极判断标准」二次把关）----
+  # 国产 AI（Kimi/阿里/智谱/DeepSeek 等）的融资、发布、人事，首发地几乎都是中文媒体，
+  # 缺中文源会导致白天大量国产 AI 大事漏报（如月之暗面 20 亿融资、阿里 Token Foundry）。
+  # keywords 只保留「公司/模型/资本动作」类强信号词，刻意不含「政策/战略/发展」等口号词；
+  # 综合站的政策口号噪音，再由 classifier 的「终极判断标准」在分类层二次拦截。
+  - name: IT之家
+    url: https://www.ithome.com/rss/
+    category: media
+    max_entries: 60
+    keywords: &cn_ai_keywords
+      # 国际大厂 / 实验室
+      - OpenAI
+      - Anthropic
+      - Claude
+      - GPT
+      - Gemini
+      - Llama
+      - Grok
+      - Mistral
+      # 国产大厂（公司名本身就是强信号——其 AI 动作首发常只带公司名）
+      - 阿里
+      - 腾讯
+      - 字节
+      - 百度
+      - 华为
+      - 小米
+      - 微信
+      - 美团
+      # 模型 / 产品名
+      - 大模型
+      - 通义
+      - 千问
+      - Qwen
+      - 月之暗面
+      - Kimi
+      - 智谱
+      - GLM
+      - DeepSeek
+      - MiniMax
+      - 文心
+      - 豆包
+      - 混元
+      - MiMo
+      - 盘古
+      # 硬件 / 算力
+      - 英伟达
+      - NVIDIA
+      - 黄仁勋
+      - 算力
+      - 芯片
+      - TPU
+      - GPU
+      - HBM
+      - 昇腾
+      # 能力 / 形态
+      - 人工智能
+      - 智能体
+      - Agent
+      - 具身
+      - 机器人
+      - 自动驾驶
+      # 资本动作
+      - 融资
+      - 估值
+      - 收购
+      - 上市
+      - IPO
+
+  - name: 36氪快讯
+    url: https://36kr.com/feed-newsflash
+    category: media
+    max_entries: 50
+    keywords: *cn_ai_keywords
+
+  # 量子位 —— 国内 AI 垂直媒体（类比英文的 TechCrunch AI），信噪比高，无需关键词过滤。
+  # 走第三方 rsshub 镜像（官方/官方 rsshub 均不可用）；镜像有失效风险，
+  # 若失效可换其他 rsshub 实例（rsshub.app / rsshub.rssforever.com / 自建）。
+  - name: 量子位
+    url: https://rsshub.rssforever.com/qbitai/category/资讯
+    category: media
+    max_entries: 15
+
+  # ---- 中文深度/产业源 ----
+  - name: 宝玉
+    url: https://baoyu.io/feed.xml
+    category: media
+
+  - name: 雷锋网AI
+    url: https://rsshub.rssforever.com/leiphone/category/ai
+    category: media
+    max_entries: 15
+
+  - name: 晚点LatePost
+    url: https://rsshub.rssforever.com/latepost
+    category: media
+    max_entries: 10
+    keywords: *cn_ai_keywords
+
+  # ---- 聚合/社区源（高密度、工程师/投资人视角）----
+  - name: Techmeme
+    url: https://www.techmeme.com/feed.xml
+    category: media
+
+  - name: Hacker News AI
+    url: https://hnrss.org/newest?q=AI
+    category: media
+    max_entries: 20
+
+# 暂不接（2026-06 验证）：
+#   极客公园/虎嗅(连接超时)、品玩(405)、财联社(返回空)、机器之心(503/空)。
+#   钛媒体/cnBeta/少数派可连但综合站、AI 噪音大，IT之家+36氪已覆盖综合面，暂不加。
+#   待这些源找到稳定 AI 垂直镜像再补（见 spec.md 迭代 B）。
+#   Gwern — RSS exists but last entry is 2021, feed stopped updating.
+#   TLDR AI — RSS returns 0 entries (may require different URL).
+#   The Information — paywall, no public RSS.
+

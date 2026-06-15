@@ -1,0 +1,6 @@
+# Alert-agent extras — install on top of agent/requirements.txt
+# (which provides autogen-agentchat, autogen-ext[openai], httpx, python-dotenv).
+requests>=2.31
+PyYAML>=6.0
+feedparser>=6.0      # RSS / media feed parsing (fetcher.py)
+jieba>=0.42          # better Chinese tokenisation for skills.signal_triage (optional)

@@ -63,13 +63,57 @@ Next.js 14 app router. Pages are consolidated (do NOT recreate the old split pag
 ## Agent / tools / skills layout
 
 - `tools/` — one **package per functional domain** (`sources`, `signals`,
-  `entities`, `search`, `funding`, `daily`, `dashboard`) over a shared
-  `tools/_client.py`. `tools/__init__.py` exposes `READONLY_TOOLS`, `WRITE_TOOLS`,
-  `ALL_TOOLS`.
+  `entities`, `search`, `funding`, `daily`, `dashboard`, `notify`, `websearch`)
+  over a shared `tools/_client.py`. `tools/__init__.py` exposes `READONLY_TOOLS`,
+  `WRITE_TOOLS`, `ALL_TOOLS`. `notify` (Feishu push) and `websearch` (free DDG
+  search + primary-source lookup) are dependency-light tools used by the alert
+  agent.
 - `skills/` — one **directory per skill**, named by function; `skills/__init__.py`
-  exposes `SKILLS`.
-- `agent/` — one **directory per agent** (e.g. `agent/data_agent/`), each exposing
-  a `build_<agent>()` factory; `agent/team.py` assembles the team.
+  exposes `SKILLS`. `signal_triage` is a deterministic skill (tier/engagement
+  scoring, cross-language triangulation, cluster-dedup; jieba optional).
+- `agent/` — one **directory per agent**, each exposing a `build_<agent>()`
+  factory; `agent/team.py` assembles the chat team.
+  - `agent/data_agent/` — KB read/write/analysis specialist (group-chat).
+  - `agent/alert_agent/` — real-time AI-signal triage. Refactored from a former
+    standalone `alert/` pipeline: deterministic fetch (`fetcher.py`) + triage
+    (`skills.signal_triage`) + prefilter (`headline/`), then an AutoGen agent does
+    judge → summary → cross-verify → push (`tools.notify`) → persist
+    (`tools.signals.create_signal`). Driven per-signal by
+    `agent/alert_agent/pipeline.py` (not a round-robin chat participant).
+    - `agent/alert_agent/headline/` — **vendored** HH-Research v8.0
+      `HeadlineClassifier` (the prefilter brain), extracted from
+      jingruzhao103-bit/HH-Research `daily-digest/src/hh_research`
+      (`headline_classifier.py` + `canonical_entity.py` + a zero-dependency
+      `Signal` dataclass). Self-contained & offline — no external package on
+      PYTHONPATH. It scores a signal on 5 dims and tests 8 strong constraints
+      using the P0+/P0 names in `config/p0_whitelist.yml`.
+
+### Lesson: refactoring a standalone pipeline into the agent system
+
+When merging external pipeline code (the `add-alert-agent` branch), split it by
+responsibility instead of copying wholesale:
+- **side-effecting atoms** (push, web search, KB write) → `tools/` (async, never
+  raise, return `{"ok"|"error": ...}`).
+- **deterministic, tuned logic** (scoring, clustering, dedup) → `skills/` (keep it
+  pure & cheap; make heavy deps like jieba optional with a fallback).
+- **LLM reasoning** (judge/summarise/review prompts) → the agent's
+  `system_message`, driven by the shared `agent/config.get_model_client()`
+  (DeepSeek) — drop provider-specific calls (the old code used AWS Bedrock).
+- **source-specific plumbing & config** (feed fetchers, sqlite dedup, whitelists)
+  → stays inside the agent package as infrastructure.
+- **upstream deps that were "optional/degrade gracefully"** (here the
+  `HeadlineClassifier` prefilter) → **vendor** them in (e.g.
+  `agent/alert_agent/headline/`) so the feature actually works out of the box;
+  trim heavy deps (pydantic `Signal` → dataclass) and rewire relative imports.
+
+### Lesson: Windows file encoding
+
+This repo runs on Windows (cp936 default). **Always pass `encoding="utf-8"` to
+`open()`** when reading files with Chinese content (YAML configs, whitelists,
+prompts). Without it, `open()` uses the locale codec and raises
+`UnicodeDecodeError`; if that's swallowed by a broad `except`, configs silently
+load empty (the alert whitelist did exactly this → prefilter degraded to all
+"borderline"). The alert `fetcher.py`/`prefilter.py` reads are now explicit UTF-8.
 
 ## Data flow examples
 

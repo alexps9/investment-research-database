@@ -1,0 +1,21 @@
+{
+  "poll_interval_min": 15,
+  "freshness_hours": 2,
+  "media_freshness_hours": 6,
+  "pending_all": false,
+  "p0_accounts": [
+    "71621zz",
+    "karpathy",
+    "_akhaliq",
+    "DrJimFan",
+    "swyx",
+    "sama"
+  ],
+  "p0_companies": [
+    "OpenAI",
+    "Anthropic",
+    "Google DeepMind",
+    "Figure AI",
+    "Physical Intelligence"
+  ]
+}

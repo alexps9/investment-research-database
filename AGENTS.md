@@ -19,9 +19,9 @@ multi-agent system all talk to it over `/api/*`.
 backend/      FastAPI app — the ONLY component that touches the database
 frontend/     Next.js 14 app (deployed on Vercel) — merged Data Hub + Explore pages
 mcp_server/   MCP (Model Context Protocol) wrapper over the backend REST API
-agent/        AutoGen 0.7 multi-agent system — one dir per agent (agent/data_agent/)
-tools/        Atomic KB tools — one package per domain (sources/signals/entities/…)
-skills/       Composed workflows — one dir per skill, built on tools/
+agent/        AutoGen 0.7 multi-agent system — one dir per agent (data_agent/, alert_agent/)
+tools/        Atomic KB tools — one package per domain (sources/signals/…/notify/websearch)
+skills/       Composed workflows — one dir per skill (…/signal_triage), built on tools/
 memory/       Project docs (overview / architecture / data model / api / deploy)
 *.sql         Supabase manual migrations
 ```
@@ -47,7 +47,13 @@ directory per agent (named by agent), each exposing a `build_<name>()` factory.
    returning human-readable output and lives in its own dir (e.g.
    `skills/daily_brief/`). Register new tools in `tools/__init__.py`
    (`READONLY_TOOLS`/`WRITE_TOOLS`) and new skills in `skills/__init__.py` (`SKILLS`).
-   Add a new agent as `agent/<name>/` and wire it into `agent/team.py`.
+   Add a new agent as `agent/<name>/` and wire it into `agent/team.py`. Tools are
+   async, must never raise (return `{"ok"|"error": ...}`), and side-effecting ones
+   (e.g. `tools/notify`) go in `WRITE_TOOLS`. When integrating an external pipeline,
+   split it: side-effecting atoms → `tools/`, deterministic tuned logic → `skills/`,
+   LLM prompts → the agent `system_message` (use the shared DeepSeek model client,
+   not a provider-specific SDK), source-specific plumbing → the agent package. See
+   `agent/alert_agent/` (refactored from a standalone Bedrock pipeline) as the model.
 6. **Don't commit secrets.** Use env vars / `.env` (gitignored). Examples live in
    `*.env.example`. Never hardcode API keys or tokens.
 

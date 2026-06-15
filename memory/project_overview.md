@@ -39,9 +39,9 @@ investment/financing tracker on top.
 backend/      FastAPI app (routers, models, schemas, repositories, services, alembic)
 frontend/     Next.js app (app router, components, lib) — merged Data Hub + Explore
 mcp_server/   MCP wrapper over the backend REST API
-agent/        AutoGen multi-agent system; one dir per agent (agent/data_agent/)
-tools/        Atomic KB tools; one package per domain (sources/signals/entities/…)
-skills/       Composed workflows; one dir per skill, built on tools/
+agent/        AutoGen multi-agent system; one dir per agent (data_agent/, alert_agent/)
+tools/        Atomic KB tools; one package per domain (sources/signals/…/notify/websearch)
+skills/       Composed workflows; one dir per skill (…/signal_triage), built on tools/
 memory/       This documentation set (for humans + code agents)
 migration_*.sql, set_embedding_dim.sql   Supabase manual DB migrations
 ```

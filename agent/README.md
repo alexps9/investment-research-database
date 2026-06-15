@@ -2,20 +2,31 @@
 
 AutoGen-based **multi-agent system** for the HH-Research knowledge base.
 
-It currently ships one specialist — the **Data Agent** — which reads, writes and
-analyses the KB (sources, signals, entities, funding, daily digests) through the
-atomic [`tools/`](../tools) and composed [`skills/`](../skills). The team is built
-so additional specialists can be added later.
+It ships two specialists:
+
+- **Data Agent** (`data_agent/`) — reads, writes and analyses the KB (sources,
+  signals, entities, funding, daily digests) through the atomic [`tools/`](../tools)
+  and composed [`skills/`](../skills). It's the round-robin chat participant.
+- **Alert Agent** (`alert_agent/`) — real-time AI-industry signal triage. It judges
+  fetched signals (Twitter/RSS/media), writes a one-line Chinese summary,
+  cross-verifies the primary source, pushes worthy alerts to Feishu, and persists
+  them to the KB. It's **pipeline-driven** (processed per-signal), not a chat
+  participant — see [`alert_agent/README.md`](alert_agent/README.md).
 
 Each agent lives in **its own directory** under `agent/` (named after the agent):
 
 ```
 agent/
   config.py            # OpenAI-compatible model client (DeepSeek by default)
-  team.py              # build_team(): RoundRobinGroupChat of specialists
-  main.py              # CLI entrypoint
+  team.py              # build_team() + build_alert_agent()
+  main.py              # CLI entrypoint (chat team)
   data_agent/          # the Data Agent (tools + skills + system prompt)
     __init__.py
+  alert_agent/         # the Alert Agent + its fetch/triage/prefilter pipeline
+    __init__.py        #   build_alert_agent() + prompts
+    pipeline.py        #   fetch → triage → agent judge → push/persist
+    headline/          #   vendored HH-Research v8.0 HeadlineClassifier (prefilter brain)
+    fetcher.py store.py prefilter.py approve.py config/
 ```
 
 ## Architecture
@@ -46,6 +57,10 @@ python -m agent.main "Audit source data quality and list the worst offenders"
 
 # Interactive
 python -m agent.main
+
+# Alert pipeline (real-time signal triage → Feishu + KB)
+pip install -r agent/alert_agent/requirements.txt
+python -m agent.alert_agent.pipeline --limit 5
 ```
 
 Example tasks:

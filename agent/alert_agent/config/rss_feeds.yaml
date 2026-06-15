@@ -1,0 +1,102 @@
+# RSS feeds for company / lab official channels.
+# Used by src/hh_research/collectors/rss_collector.py.
+#
+# Each entry:
+#   - name: display name (used as author_name in signals)
+#   - url: feed URL
+#   - category: "company" | "university" | "other"
+#   - track: optional default track for items from this feed (overridden by extractor)
+#
+# To add a feed: verify it returns 200 with RSS/Atom content via:
+#   curl -A "Mozilla/5.0" -L <url>
+# Then add an entry below.
+
+feeds:
+  # ---- Companies ----
+  - name: OpenAI
+    url: https://openai.com/news/rss.xml
+    category: company
+
+  - name: Google DeepMind
+    url: https://deepmind.google/blog/rss.xml
+    category: company
+
+  - name: Google Research
+    url: https://research.google/blog/rss/
+    category: company
+
+  - name: Meta Engineering
+    url: https://engineering.fb.com/feed/
+    category: company
+
+  - name: Microsoft Research
+    url: https://www.microsoft.com/en-us/research/feed/
+    category: company
+
+  - name: NVIDIA Blog
+    url: https://blogs.nvidia.com/feed/
+    category: company
+
+  - name: Apple ML Research
+    url: https://machinelearning.apple.com/rss.xml
+    category: company
+
+  - name: Together AI
+    url: https://www.together.ai/blog/rss.xml
+    category: company
+
+  - name: Sakana AI
+    url: https://sakana.ai/feed.xml
+    category: company
+
+  # ---- Universities & Labs ----
+  - name: Berkeley BAIR
+    url: https://bair.berkeley.edu/blog/feed.xml
+    category: university
+
+  - name: Stanford AI Lab
+    url: https://ai.stanford.edu/blog/feed.xml
+    category: university
+
+  - name: MIT News (AI topic)
+    url: https://news.mit.edu/rss/topic/artificial-intelligence2
+    category: university
+
+  - name: CMU ML Blog
+    url: https://blog.ml.cmu.edu/feed/
+    category: university
+
+  - name: Princeton NLP
+    url: https://princeton-nlp.github.io/feed.xml
+    category: university
+
+  # ---- Expert Blogs (low frequency, high signal) ----
+  - name: Simon Willison
+    url: https://simonwillison.net/atom/entries/
+    category: other
+
+  - name: Sebastian Raschka
+    url: https://magazine.sebastianraschka.com/feed
+    category: other
+
+  - name: Dwarkesh Patel
+    url: https://www.dwarkeshpatel.com/feed
+    category: other
+
+  - name: Stratechery
+    url: https://stratechery.com/feed/
+    category: other
+
+  - name: Hugging Face
+    url: https://huggingface.co/blog/feed.xml
+    category: company
+
+# Notes (feeds confirmed unavailable as of 2026-04, skip):
+#   - Anthropic — no public RSS (confirmed 2026-06)
+#   - Mistral, xAI, Reka — no RSS
+#   - MIT CSAIL News — 404
+#   - Meta AI Research blog — only Engineering subset works
+#   - HuggingFace Papers — 401 (auth required)
+#   - Gwern — RSS exists but last entry is 2021
+#   - TLDR AI — RSS returns 0 entries
+#   - The Information — paywall, no public RSS
