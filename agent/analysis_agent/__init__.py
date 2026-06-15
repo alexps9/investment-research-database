@@ -18,10 +18,10 @@ class SignalAnalysisResult(BaseModel):
     limitations: Optional[str] = None
     topic_tags: list[str] = Field(default_factory=list)
     entities: list[str] = Field(default_factory=list, description="Named entities mentioned")
-    importance_score: float = Field(ge=0, le=1)
-    novelty_score: float = Field(ge=0, le=1)
-    relevance_score: float = Field(ge=0, le=1)
-    confidence_score: float = Field(ge=0, le=1)
+    importance_score: float = Field(description="0-1 importance")
+    novelty_score: float = Field(description="0-1 novelty")
+    relevance_score: float = Field(description="0-1 relevance")
+    confidence_score: float = Field(description="0-1 confidence")
     reading_priority: str = Field(description="high | medium | low")
 
 

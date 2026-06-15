@@ -28,7 +28,7 @@ class ExtractedRelation(BaseModel):
     subject_name: str
     relation_type: str
     object_name: str
-    confidence: float = Field(ge=0, le=1, default=0.8)
+    confidence: float = Field(default=0.8, description="0-1 confidence")
 
 
 class EntityExtractionResult(BaseModel):
