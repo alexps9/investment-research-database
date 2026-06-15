@@ -35,6 +35,7 @@ alert/
 ├── verifier.py          交叉验证原始来源
 ├── sender.py            飞书推送
 ├── store.py             SQLite 去重 + 审计
+├── kb_sync.py           写信号到共享知识库
 ├── approve.py           命令行：人工审核 pending
 ├── config/
 │   ├── config.json      运行参数（轮询间隔、时间窗口）
@@ -99,6 +100,32 @@ python main.py
 | `FEISHU_APP_ID` | 飞书机器人 |
 | `FEISHU_APP_SECRET` | 飞书机器人密钥 |
 | `FEISHU_RECEIVE_ID` | 推送目标群 chat_id |
+
+## 共享知识库对接（kb_sync）
+
+Alert 判别完的信号会自动写入共享知识库（`POST /api/signals`）。
+
+**写入字段映射：**
+
+| alert 产出 | API 字段 | 说明 |
+|-----------|---------|------|
+| `summary` | `title` | 一句话中文摘要 |
+| `tweet.url` | `url` | 原始链接（唯一键） |
+| `event_type` | `signal_type` | 中文8类 → 英文映射（model_release/paper/news/tweet/benchmark/other） |
+| `tweet.text` | `abstract` | 原文前 1000 字 |
+| 发布时间 | `published_at` | ISO-8601 |
+| `alert_level` | `status` | important → "processed"；medium → "collected" |
+| `alert_level` | `importance` | ⚠️ 待后端适配 |
+| `confidence` | `confidence` | confirmed/reported/rumored ⚠️ 待后端适配 |
+| `reason` | `reason` | 判别理由 ⚠️ 待后端适配 |
+
+> ⚠️ `importance`、`confidence`、`reason` 三个字段目前后端 API 不接受（属于 `signal_analysis` 表）。
+> Alert 已在请求体中发送这些字段，等后端加写入接口后即可落库。
+
+**环境变量：**
+- `KB_API_BASE_URL`：后端地址（默认 HF Space 托管地址）
+
+**失败不阻塞：** 写入共享库失败时只打日志，飞书推送和本地存储不受影响。
 
 ## 可选依赖
 

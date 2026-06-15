@@ -21,6 +21,7 @@ from reviewer import review_alert
 from verifier import cross_verify
 from prefilter import prefilter
 from fetcher import P0PLUS_COMPANY_HANDLES
+from kb_sync import sync_signal
 
 ALERT_DIR = os.path.dirname(os.path.abspath(__file__))
 PENDING_DIR = os.path.join(ALERT_DIR, "pending")
@@ -218,8 +219,7 @@ def run():
         if force_pending or is_media:
             _save_pending(tweet, result, message)
             print(f"    → Pending (needs approval)")
-            # 存真实 message（非空）：pending = 已排队待送达用户，应参与后续判重，
-            # 避免同一事件被多个媒体源各报一次、在 pending 里堆重复。
+            sync_signal(tweet, result)
             store.mark_sent(tweet["tweet_id"], tweet["username"], result.get("event_type", ""), result.get("priority", ""), message, summary, tweet.get("tier", ""))
             continue
 
@@ -227,6 +227,8 @@ def run():
         if ok:
             print(f"    → Sent!")
             sent_count += 1
+
+        sync_signal(tweet, result)
 
         store.mark_sent(
             tweet["tweet_id"],
