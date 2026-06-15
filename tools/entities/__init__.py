@@ -53,4 +53,82 @@ async def add_entity_relation(
     return await request("POST", f"/entities/{subject_entity_id}/relations", json=body)
 
 
-__all__ = ["list_entities", "get_entity", "get_entity_wiki", "add_entity_relation"]
+async def create_entity(
+    name: str,
+    entity_type: str,
+    canonical_name: Optional[str] = None,
+    description: Optional[str] = None,
+    homepage_url: Optional[str] = None,
+    metadata: Optional[dict] = None,
+) -> dict:
+    """Create a knowledge-graph entity (POST /api/entities)."""
+    body = clean({
+        "name": name,
+        "canonical_name": canonical_name or name,
+        "entity_type": entity_type,
+        "description": description,
+        "homepage_url": homepage_url,
+        "metadata": metadata or {},
+    })
+    return await request("POST", "/entities", json=body)
+
+
+async def add_entity_alias(
+    entity_id: str,
+    alias: str,
+    alias_type: str = "other",
+) -> dict:
+    """Add an alias to an entity."""
+    body = clean({"alias": alias, "alias_type": alias_type})
+    return await request("POST", f"/entities/{entity_id}/aliases", json=body)
+
+
+async def get_graph_relations(limit: int = 500) -> Any:
+    """Return all graph edges for visualisation / inspection."""
+    return await request("GET", "/graph/relations", params={"limit": limit})
+
+
+async def find_entity_by_name(
+    name: str,
+    entity_type: Optional[str] = None,
+    limit: int = 5,
+) -> dict:
+    """Search entities by name and return the best match (if any).
+
+    Returns ``{"match": entity_dict | None, "candidates": [...]}``.
+    """
+    results = await list_entities(entity_type=entity_type, q=name, limit=limit)
+    if isinstance(results, dict):
+        candidates = results.get("items", results.get("results", []))
+    elif isinstance(results, list):
+        candidates = results
+    else:
+        candidates = []
+
+    if not candidates:
+        return {"match": None, "candidates": []}
+
+    needle = name.strip().lower()
+    for ent in candidates:
+        if ent.get("name", "").strip().lower() == needle:
+            return {"match": ent, "candidates": candidates}
+        if ent.get("canonical_name", "").strip().lower() == needle:
+            return {"match": ent, "candidates": candidates}
+        for alias in ent.get("aliases", []):
+            alias_text = alias.get("alias", "") if isinstance(alias, dict) else str(alias)
+            if alias_text.strip().lower() == needle:
+                return {"match": ent, "candidates": candidates}
+
+    return {"match": candidates[0] if len(candidates) == 1 else None, "candidates": candidates}
+
+
+__all__ = [
+    "list_entities",
+    "get_entity",
+    "get_entity_wiki",
+    "add_entity_relation",
+    "create_entity",
+    "add_entity_alias",
+    "get_graph_relations",
+    "find_entity_by_name",
+]

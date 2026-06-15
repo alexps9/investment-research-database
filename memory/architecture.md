@@ -14,9 +14,9 @@
                                             │ asyncpg
 ┌──────────────┐   tools/ (http)            ▼
 │ agent/       │ ──────────────►   ┌─────────────────────┐
-│ (AutoGen)    │   /api/*          │ PostgreSQL+pgvector │
-└──────────────┘                   │   (Supabase)        │
-                                   └─────────────────────┘
+│ (LangGraph)  │   /api/*          │ PostgreSQL+pgvector │
+│ :9000 /qa    │                   │   (Supabase)        │
+└──────────────┘                   └─────────────────────┘
               external LLM/embeddings: DeepSeek (chat) · SiliconFlow bge-m3 (embed)
 ```
 
@@ -83,23 +83,15 @@ Next.js 14 app router. Pages are consolidated (do NOT recreate the old split pag
     Self-contained & offline. It scores a signal on 5 dims and tests 8 strong
     constraints using the P0+/P0 names in a `p0_whitelist.yml`. **Shared by both**
     the alert prefilter and `skills.headline_selection`.
-- `agent/` — one **directory per agent**, each exposing a `build_<agent>()`
-  factory; `agent/team.py` assembles the chat team.
-  - `agent/data_agent/` — KB read/write/analysis specialist (group-chat).
-  - `agent/alert_agent/` — real-time AI-signal triage. Refactored from a former
-    standalone `alert/` pipeline: deterministic fetch (`fetcher.py`) + triage
-    (`skills.signal_triage`) + prefilter (`prefilter.py`, on `skills.headline`),
-    then an AutoGen agent does judge → summary → cross-verify → push
-    (`tools.notify`) → persist (`tools.signals.create_signal`). Driven per-signal
-    by `agent/alert_agent/pipeline.py` (not a round-robin chat participant).
-  - `agent/digest_agent/` — the HH Research Daily writer. Refactored from the
-    standalone `digest` subsystem (`add-digest-agent` branch). `pipeline.py`
-    deterministically buckets the day's KB signals into the four payload arrays
-    (`HEADLINE_CANDIDATES` / `CAPITAL_SIGNALS` / `FRONTIER_RESEARCH_SIGNALS` /
-    `INDUSTRY_APPLICATION_SIGNALS`), ranks headline candidates via
-    `skills.headline_selection`, then an AutoGen agent curates + writes a ≤15-card
-    Feishu-XML 精选日报 (v7.0 spec ported from the digest's `daily_digest.md`) and
-    optionally publishes it via `tools.notify.send_feishu`. Also pipeline-driven.
+- `agent/` — LangGraph multi-agent pipeline; one **directory per agent**:
+  - `ingestion_agent/` — fetch Twitter/RSS → `create_signal` (status=collected).
+  - `analysis_agent/` — LLM structured analysis → `add_signal_analysis` + processed.
+  - `entity_agent/` — NER/relations → `create_entity` / `link_signal_entity` / reindex.
+  - `alert_agent/` — important analyzed signals → Feishu push (prefilter + store dedup).
+  - `digest_agent/` — daily Feishu-XML brief from analyzed signals + funding.
+  - `data_agent/` — **read-only** ReAct Q&A via HTTP `POST /qa`.
+  - Orchestration: `graph.py` (Ingestion→Analysis→Entity+Alert), `run.py` (cron CLI),
+    `service.py` (FastAPI on :9000). LLM via `llm.py` → LiteLLM gateway (Bedrock Claude).
 
 ### Lesson: refactoring a standalone pipeline into the agent system
 

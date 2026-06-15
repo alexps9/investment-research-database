@@ -1,61 +1,59 @@
-"""Data agent — operates on the knowledge base (read + write + analyse).
-
-The first specialist in the multi-agent system. It is given the atomic KB tools
-and the composed skills, plus a system prompt that teaches it the data model and
-safe-operation rules.
-
-Each agent lives in its own directory under ``agent/`` (e.g. ``agent/data_agent``).
-"""
+"""Data agent — read-only Q&A over the knowledge base (LangGraph ReAct)."""
 from __future__ import annotations
 
-from autogen_agentchat.agents import AssistantAgent
+from langchain_core.tools import StructuredTool
+from langgraph.prebuilt import create_react_agent
 
-from skills import SKILLS
-from tools import READONLY_TOOLS, WRITE_TOOLS
+from agent.llm import get_chat_model
+from skills.rag_answer import answer_with_sources
+from tools import READONLY_TOOLS
 
 DATA_AGENT_SYSTEM_MESSAGE = """\
-You are the **Data Agent** for the HH-Research AI-intelligence knowledge base.
+你是 HH-Research 的 **Data Agent（只读）**。
 
-You can read and modify the database ONLY through the provided tools (the FastAPI
-backend is the single source of truth — never assume direct DB access).
-
-Domain model (key objects):
-- organization: companies / labs / universities.
-- source: a person/org/feed/repo we track. Has tier (P0+/P1/P2/P3), sector,
-  activity_status, importance/reliability scores.
-- signal: an evidence item (paper, tweet, blog, news, model_release, ...). Unique
-  by url; may have an analysis (tldr, importance_score, reading_priority).
-- entity + entity_relation: the knowledge graph (person/org/model/method/...).
-- funding_event: investment/financing records (round, amount_usd in $M, sector).
-- daily_digest: the auto-generated "Daily Boost" briefing.
-
-Operating rules:
-1. Prefer read tools (list_/get_/search_/semantic_search) to understand state
-   before writing.
-2. For semantic questions use `semantic_search`; for natural-language Q&A use
-   `ask` (RAG). For exact lookups use `search_knowledge` or list_/get_ tools.
-3. Before any create/update/delete, briefly state what you will change and why.
-   Never delete in bulk without explicit confirmation in the task.
-4. Tools return either data or a dict like {"error": "..."} — inspect errors and
-   report them clearly instead of retrying blindly.
-5. Be concise. When the task is fully done, end your final message with the word
-   TERMINATE.
+你只能查询知识库，**不能**创建、修改或删除任何数据。
+使用提供的工具回答投研问题；优先 semantic_search / ask 做语义检索与 RAG。
+回答要简洁、有据，引用来源 URL 或实体名。
 """
 
 
-def build_data_agent(model_client) -> AssistantAgent:
-    """Create the data agent with all KB tools + skills attached."""
-    tools = [*READONLY_TOOLS, *WRITE_TOOLS, *SKILLS]
-    return AssistantAgent(
-        name="data_agent",
-        description="Reads, writes and analyses the knowledge-base data (sources, "
-                    "signals, entities, funding, digests) via backend tools.",
-        model_client=model_client,
-        tools=tools,
-        system_message=DATA_AGENT_SYSTEM_MESSAGE,
-        reflect_on_tool_use=True,
-        model_client_stream=False,
+def _build_readonly_tools():
+    tools = []
+    for fn in READONLY_TOOLS:
+        tools.append(
+            StructuredTool.from_function(
+                coroutine=fn,
+                name=fn.__name__,
+                description=(fn.__doc__ or fn.__name__)[:800],
+            )
+        )
+    tools.append(
+        StructuredTool.from_function(
+            coroutine=answer_with_sources,
+            name="answer_with_sources",
+            description=(answer_with_sources.__doc__ or "")[:800],
+        )
     )
+    return tools
 
 
-__all__ = ["build_data_agent", "DATA_AGENT_SYSTEM_MESSAGE"]
+def build_data_agent():
+    """Create a read-only ReAct agent for Q&A."""
+    llm = get_chat_model(temperature=0.2)
+    tools = _build_readonly_tools()
+    return create_react_agent(llm, tools, state_modifier=DATA_AGENT_SYSTEM_MESSAGE)
+
+
+async def ask_data_agent(question: str) -> str:
+    """Run a single Q&A turn and return the final answer text."""
+    agent = build_data_agent()
+    result = await agent.ainvoke({"messages": [("user", question)]})
+    messages = result.get("messages", [])
+    if not messages:
+        return ""
+    last = messages[-1]
+    content = getattr(last, "content", None) or (last.get("content") if isinstance(last, dict) else None)
+    return content or str(last)
+
+
+__all__ = ["build_data_agent", "ask_data_agent", "DATA_AGENT_SYSTEM_MESSAGE"]

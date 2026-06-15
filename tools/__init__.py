@@ -25,9 +25,11 @@ from tools.sources import (
 )
 from tools.signals import (
     list_signals, get_signal, create_signal, update_signal, delete_signal,
+    add_signal_analysis, link_signal_entity, set_signal_status,
 )
 from tools.entities import (
     list_entities, get_entity, get_entity_wiki, add_entity_relation,
+    create_entity, add_entity_alias, get_graph_relations, find_entity_by_name,
 )
 from tools.search import ai_status, semantic_search, ask, reindex_embeddings
 from tools.funding import (
@@ -43,7 +45,7 @@ READONLY_TOOLS = [
     dashboard_stats, search_knowledge,
     list_sources, get_source,
     list_signals, get_signal,
-    list_entities, get_entity, get_entity_wiki,
+    list_entities, get_entity, get_entity_wiki, get_graph_relations, find_entity_by_name,
     ai_status, semantic_search, ask,
     list_funding, get_funding, funding_trends,
     get_daily_digest, list_daily_digests,
@@ -54,7 +56,8 @@ READONLY_TOOLS = [
 WRITE_TOOLS = [
     create_source, update_source, delete_source,
     create_signal, update_signal, delete_signal,
-    add_entity_relation, reindex_embeddings,
+    add_signal_analysis, link_signal_entity, set_signal_status,
+    create_entity, add_entity_alias, add_entity_relation, reindex_embeddings,
     create_funding, update_funding, delete_funding,
     generate_daily_digest,
     send_feishu,
@@ -67,7 +70,9 @@ __all__ = [
     "dashboard_stats", "search_knowledge",
     "list_sources", "get_source", "create_source", "update_source", "delete_source",
     "list_signals", "get_signal", "create_signal", "update_signal", "delete_signal",
+    "add_signal_analysis", "link_signal_entity", "set_signal_status",
     "list_entities", "get_entity", "get_entity_wiki", "add_entity_relation",
+    "create_entity", "add_entity_alias", "get_graph_relations", "find_entity_by_name",
     "ai_status", "semantic_search", "ask", "reindex_embeddings",
     "list_funding", "get_funding", "funding_trends",
     "create_funding", "update_funding", "delete_funding",

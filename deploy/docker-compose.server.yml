@@ -96,12 +96,18 @@ services:
     env_file:
       - .env
     environment:
-      # Talk to the backend + gateway over the compose network (overrides .env).
       KB_API_BASE_URL: http://backend:8000
       LLM_BASE_URL: http://litellm:4000/v1
+    ports:
+      - "9000:9000"
     depends_on:
       backend:
         condition: service_started
       litellm:
         condition: service_started
-    command: ["tail", "-f", "/dev/null"]
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:9000/health').status==200 else 1)\""]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s

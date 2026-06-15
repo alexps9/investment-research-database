@@ -8,14 +8,14 @@ box). The database stays on **Supabase** and the frontend stays on **Vercel**.
                               Docker host (server, CN)
    ┌────────────────────────────────────────────────────────────────────┐
    │  backend :8000 ─┐                                                    │
-   │  agent (idle) ──┼─► litellm :4000 ─► proxy :8118 ─► SS node (US) ─► AWS Bedrock (Claude)
+   │  agent :9000 ───┼─► litellm :4000 ─► proxy :8118 ─► SS node (US) ─► AWS Bedrock (Claude)
    │                 │      (OpenAI API)    (gost, HTTP)   overseas        Anthropic geo-OK
    │  backend :8000 ─┴─► Supabase (DATABASE_URL, TLS)                      │
    │  backend embeddings ─► SiliconFlow (bge-m3, reachable from CN)        │
    │  mcp :8765 ─► http://backend:8000                                     │
    └────────────────────────────────────────────────────────────────────┘
         ▲                                   frontend → Vercel (unchanged)
-   open :8000 / :8765 in the Tencent security group
+   open :8000 / :8765 / :9000 in the Tencent security group
 ```
 
 **Why the proxy:** AWS Bedrock geo-blocks mainland-China IPs for Anthropic Claude.
@@ -69,16 +69,31 @@ curl http://<server-ip>:8000/api/dashboard/stats
 
 ## Run the agent / pipelines
 
+The agent container runs **uvicorn** on `:9000` (Q&A + manual triggers).
+
 ```bash
 cd ~/hh-research
-docker compose -f deploy/docker-compose.server.yml exec agent python -m agent.main "Audit source data quality"
-docker compose -f deploy/docker-compose.server.yml exec agent python -m agent.digest_agent.pipeline
-docker compose -f deploy/docker-compose.server.yml exec agent python -m agent.alert_agent.pipeline --no-twitter
+# Q&A (read-only Data Agent)
+curl -X POST http://localhost:9000/qa -H 'Content-Type: application/json' \
+  -d '{"question":"Summarise recent funding in AI infra"}'
+
+# Manual pipeline trigger
+curl -X POST http://localhost:9000/trigger/pipeline
+
+# CLI (cron-friendly)
+docker compose -f deploy/docker-compose.server.yml exec agent python -m agent.run pipeline
+docker compose -f deploy/docker-compose.server.yml exec agent python -m agent.run digest --publish
+docker compose -f deploy/docker-compose.server.yml exec agent python -m agent.run alert
 ```
 
-Schedule the pipelines with cron on the host, e.g. a daily digest at 09:00:
+Schedule with cron on the host:
+
 ```cron
-0 9 * * * cd ~/hh-research && docker compose -f deploy/docker-compose.server.yml exec -T agent python -m agent.digest_agent.pipeline >> ~/digest.log 2>&1
+# Full intelligence pipeline every 2 hours
+0 */2 * * * cd ~/hh-research && docker compose -f deploy/docker-compose.server.yml exec -T agent python -m agent.run pipeline >> ~/pipeline.log 2>&1
+
+# Daily digest at 09:00 UTC+8 (adjust TZ as needed)
+0 9 * * * cd ~/hh-research && docker compose -f deploy/docker-compose.server.yml exec -T agent python -m agent.run digest --publish >> ~/digest.log 2>&1
 ```
 
 ## Update / redeploy

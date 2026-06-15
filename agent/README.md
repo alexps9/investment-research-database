@@ -1,98 +1,89 @@
 # agent/
 
-AutoGen-based **multi-agent system** for the HH-Research knowledge base.
+LangGraph-based **multi-agent system** for the HH-Research knowledge base.
 
-It ships three specialists:
+## Six agents
 
-- **Data Agent** (`data_agent/`) — reads, writes and analyses the KB (sources,
-  signals, entities, funding, daily digests) through the atomic [`tools/`](../tools)
-  and composed [`skills/`](../skills). It's the round-robin chat participant.
-- **Alert Agent** (`alert_agent/`) — real-time AI-industry signal triage. It judges
-  fetched signals (Twitter/RSS/media), writes a one-line Chinese summary,
-  cross-verifies the primary source, pushes worthy alerts to Feishu, and persists
-  them to the KB. It's **pipeline-driven** (processed per-signal), not a chat
-  participant — see [`alert_agent/README.md`](alert_agent/README.md).
-- **Digest Agent** (`digest_agent/`) — the HH Research Daily writer. It buckets the
-  day's KB signals into headline / capital / frontier / industry arrays, ranks
-  headline candidates with `skills.headline_selection`, then curates + writes a
-  ≤15-card Feishu-XML 精选日报 and can publish it. Also **pipeline-driven** — see
-  [`digest_agent/README.md`](digest_agent/README.md).
-
-Each agent lives in **its own directory** under `agent/` (named after the agent):
-
-```
-agent/
-  config.py            # OpenAI-compatible model client (DeepSeek by default)
-  team.py              # build_team() + build_alert_agent() + build_digest_agent()
-  main.py              # CLI entrypoint (chat team)
-  data_agent/          # the Data Agent (tools + skills + system prompt)
-    __init__.py
-  alert_agent/         # the Alert Agent + its fetch/triage/prefilter pipeline
-    __init__.py        #   build_alert_agent() + prompts
-    pipeline.py        #   fetch → triage → prefilter → agent judge → push/persist
-    fetcher.py store.py prefilter.py approve.py config/
-  digest_agent/        # the Digest Agent (daily brief writer)
-    __init__.py        #   build_digest_agent() + DIGEST_AGENT_SYSTEM_MESSAGE
-    pipeline.py        #   bucket KB signals → rank headlines → agent writes → push
-
-# The v8.0 HeadlineClassifier + HeadlineSelector are vendored in the shared
-# skills/headline package (used by the alert prefilter AND digest headline ranking).
-```
+| Agent | Role | Trigger |
+|-------|------|---------|
+| **Ingestion** (`ingestion_agent/`) | Fetch Twitter/RSS/media → create signals | cron / `agent.run ingest` |
+| **Analysis** (`analysis_agent/`) | Signal → structured intelligence (LLM) | cron / `agent.run analyze` |
+| **Entity** (`entity_agent/`) | Analysis → entities + relations + reindex | cron / `agent.run entity` |
+| **Alert** (`alert_agent/`) | Important analyzed signals → Feishu push | cron / `agent.run alert` |
+| **Digest** (`digest_agent/`) | Daily brief (Feishu-XML) from analyzed signals | cron daily / `agent.run digest` |
+| **Data** (`data_agent/`) | Read-only Q&A over KB (RAG) | HTTP `POST /qa` |
 
 ## Architecture
 
 ```
-            ┌────────────── agent/ (AutoGen team) ──────────────┐
- task ───►  │  data_agent  ── tools/ + skills/  ──► HTTP /api/* │
-            └───────────────────────────────────────────────────┘
-                                                       │
-                                          FastAPI backend ──► PostgreSQL
+cron / HTTP trigger
+       │
+       ▼
+┌──────────────── LangGraph intelligence graph ────────────────┐
+│  ingest → analyze → entity (KG)                              │
+│              └────→ alert (Feishu push)                      │
+└──────────────────────────────────────────────────────────────┘
+       │
+       ▼
+  FastAPI backend ──► Supabase + pgvector
+
+┌──────────── agent.service :9000 ────────────┐
+│  POST /qa          Data Agent (read-only)   │
+│  POST /trigger/*   manual pipeline stages    │
+└─────────────────────────────────────────────┘
 ```
 
-The agent never touches the database directly — it only calls backend endpoints,
-keeping PostgreSQL as the single source of truth.
+```
+agent/
+  llm.py               ChatOpenAI → LiteLLM gateway (Bedrock Claude)
+  state.py             PipelineState TypedDict
+  graph.py             build_intelligence_graph() + build_digest_graph()
+  run.py               CLI for cron (pipeline / ingest / analyze / …)
+  service.py           FastAPI (Q&A + triggers)
+  ingestion_agent/
+  analysis_agent/
+  entity_agent/
+  alert_agent/         node.py + fetcher/prefilter/store (legacy plumbing)
+  digest_agent/        node.py + DIGEST_AGENT_SYSTEM_MESSAGE
+  data_agent/          read-only ReAct agent
+```
 
 ## Setup
 
 ```bash
 pip install -r agent/requirements.txt
-cp agent/.env.example agent/.env   # then fill in LLM_API_KEY and KB_API_BASE_URL
+cp agent/.env.example agent/.env   # LLM_API_KEY, KB_API_BASE_URL, FEISHU_WEBHOOK_URL
 ```
 
-## Run (from the repo root)
+## Run (from repo root)
 
 ```bash
-# One-shot task
-python -m agent.main "Audit source data quality and list the worst offenders"
+# Full pipeline (ingest → analyze → entity + alert)
+python -m agent.run pipeline
 
-# Interactive
-python -m agent.main
+# Individual stages
+python -m agent.run ingest --no-twitter
+python -m agent.run analyze --limit 10
+python -m agent.run entity
+python -m agent.run alert
+python -m agent.run digest --date 2026-06-15 --publish
 
-# Alert pipeline (real-time signal triage → Feishu + KB)
-pip install -r agent/alert_agent/requirements.txt
-python -m agent.alert_agent.pipeline --limit 5
-
-# Digest pipeline (curate the day's signals → HH Research Daily XML)
-pip install -r agent/digest_agent/requirements.txt
-python -m agent.digest_agent.pipeline --date 2026-06-15
+# HTTP service (Q&A + manual triggers)
+python -m agent.service
+curl -X POST http://localhost:9000/qa -H 'Content-Type: application/json' \
+  -d '{"question":"最近有哪些重要的模型发布？"}'
+curl -X POST http://localhost:9000/trigger/pipeline
 ```
 
-Example tasks:
-- "Generate today's daily brief covering the last 7 days."
-- "Find potential duplicate signals and propose which to archive."
-- "Summarise the funding landscape by sector."
-- "Search semantically for researchers working on embodied AI."
+## Cron (server)
 
-## Extending the team
-
-Create a new specialist in its own directory `agent/<agent_name>/` with an
-`__init__.py` exposing a `build_<agent_name>()` factory, then build it in
-`team.py`'s `build_team()` and append it to `participants`. For role-based routing
-consider switching `RoundRobinGroupChat` to `SelectorGroupChat` (AutoGen 0.7).
+```cron
+0 */2 * * * cd ~/hh-research && docker compose -f deploy/docker-compose.server.yml exec -T agent python -m agent.run pipeline >> ~/pipeline.log 2>&1
+0 9 * * * cd ~/hh-research && docker compose -f deploy/docker-compose.server.yml exec -T agent python -m agent.run digest --publish >> ~/digest.log 2>&1
+```
 
 ## Safety
 
-Mutating tools (`create_*`, `update_*`, `delete_*`) are exposed to the Data Agent.
-The system prompt requires it to state intended changes first and forbids bulk
-deletes without explicit confirmation. For production, gate `WRITE_TOOLS` behind a
-human-approval step.
+- **Data Agent** exposes only `READONLY_TOOLS` — no create/update/delete.
+- Alert/Digest/Ingestion/Analysis/Entity use write tools gated by pipeline logic.
+- Feishu push uses outbound webhook only (`FEISHU_WEBHOOK_URL`); inbound bot Q&A is a future phase.

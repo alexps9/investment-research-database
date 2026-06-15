@@ -10,7 +10,7 @@ HH-Research is an **AI research-intelligence knowledge base**: it tracks signal
 sources, ingests signals (papers/tweets/releases/news), builds a knowledge graph
 of entities & relations, and adds semantic search, RAG Q&A, a daily digest, and a
 funding tracker. A FastAPI backend over PostgreSQL (Supabase + pgvector) is the
-single source of truth; a Next.js frontend, an MCP server, and an AutoGen
+single source of truth; a Next.js frontend, an MCP server, and a LangGraph
 multi-agent system all talk to it over `/api/*`.
 
 ## Repo layout
@@ -19,7 +19,7 @@ multi-agent system all talk to it over `/api/*`.
 backend/      FastAPI app — the ONLY component that touches the database
 frontend/     Next.js 14 app (deployed on Vercel) — merged Data Hub + Explore pages
 mcp_server/   MCP (Model Context Protocol) wrapper over the backend REST API
-agent/        AutoGen 0.7 multi-agent system — one dir per agent (data_agent/, alert_agent/, digest_agent/)
+agent/        LangGraph multi-agent system — ingestion/analysis/entity/alert/digest/data
 tools/        Atomic KB tools — one package per domain (sources/signals/…/notify/websearch)
 skills/       Composed workflows — one dir per skill (…/signal_triage, headline_selection); skills/headline/ is a shared vendored support pkg
 memory/       Project docs (overview / architecture / data model / api / deploy)
@@ -47,18 +47,16 @@ directory per agent (named by agent), each exposing a `build_<name>()` factory.
    returning human-readable output and lives in its own dir (e.g.
    `skills/daily_brief/`). Register new tools in `tools/__init__.py`
    (`READONLY_TOOLS`/`WRITE_TOOLS`) and new skills in `skills/__init__.py` (`SKILLS`).
-   Add a new agent as `agent/<name>/` and wire it into `agent/team.py`. Tools are
+   Add a new agent as `agent/<name>/` and wire it into `agent/graph.py`. Tools are
    async, must never raise (return `{"ok"|"error": ...}`), and side-effecting ones
-   (e.g. `tools/notify`) go in `WRITE_TOOLS`. When integrating an external pipeline,
-   split it: side-effecting atoms → `tools/`, deterministic tuned logic → `skills/`,
-   LLM prompts → the agent `system_message` (use the shared DeepSeek model client,
-   not a provider-specific SDK), source-specific plumbing → the agent package. See
-   `agent/alert_agent/` and `agent/digest_agent/` (refactored from standalone
-   pipelines) as the models. **Anything shared by >1 agent (vendored classifiers,
-   lookups, schemas) goes in a neutral support package under `skills/` or `tools/`
-   — never inside one agent's dir** (skills/tools must not import from `agent/*`);
-   e.g. `skills/headline/` (the v8.0 HeadlineClassifier+Selector) is shared by the
-   alert prefilter and `skills/headline_selection`.
+   (e.g. `tools/notify`) go in `WRITE_TOOLS`. LangGraph pipeline:
+   **Ingestion → Analysis → (Entity + Alert)**; **Digest** runs daily on analyzed
+   signals; **Data Agent** is read-only Q&A via HTTP `/qa`. When integrating an
+   external pipeline, split it: side-effecting atoms → `tools/`, deterministic tuned
+   logic → `skills/`, LLM prompts → agent node modules, source-specific plumbing →
+   the agent package. See `agent/ingestion_agent/`, `agent/analysis_agent/`,
+   `agent/entity_agent/`, `agent/alert_agent/`, `agent/digest_agent/`,
+   `agent/data_agent/` as the models.
 6. **Don't commit secrets.** Use env vars / `.env` (gitignored). Examples live in
    `*.env.example`. Never hardcode API keys or tokens.
 
@@ -78,7 +76,9 @@ MCP_TRANSPORT=streamable-http python server.py
 
 # Multi-agent (from repo root)
 pip install -r agent/requirements.txt
-python -m agent.main "Audit source data quality"
+python -m agent.run pipeline              # full LangGraph pipeline
+python -m agent.service                   # HTTP Q&A on :9000
+curl -X POST http://localhost:9000/qa -H 'Content-Type: application/json' -d '{"question":"..."}'
 ```
 
 ## Conventions

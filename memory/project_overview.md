@@ -27,7 +27,7 @@ investment/financing tracker on top.
 | Backend API | `backend/` | FastAPI, SQLAlchemy async, Alembic | Hugging Face Space (Docker) |
 | Frontend | `frontend/` | Next.js 14, React 18, Tailwind | Vercel |
 | MCP server | `mcp_server/` | `mcp` SDK, streamable-http | Hugging Face Space (Docker) |
-| Multi-agent | `agent/` | AutoGen 0.7 | run locally / any host |
+| Multi-agent | `agent/` | LangGraph + LangChain | Tencent Cloud Docker :9000 |
 | Database | (Supabase) | PostgreSQL 16 + pgvector | Supabase |
 
 > Frontend is live at https://investment-research-database.vercel.app/ (Vercel
@@ -39,7 +39,7 @@ investment/financing tracker on top.
 backend/      FastAPI app (routers, models, schemas, repositories, services, alembic)
 frontend/     Next.js app (app router, components, lib) — merged Data Hub + Explore
 mcp_server/   MCP wrapper over the backend REST API
-agent/        AutoGen multi-agent system; one dir per agent (data_agent/, alert_agent/, digest_agent/)
+agent/        LangGraph multi-agent: ingestion/analysis/entity/alert/digest/data + graph/run/service
 tools/        Atomic KB tools; one package per domain (sources/signals/…/notify/websearch)
 skills/       Composed workflows; one dir per skill (…/signal_triage, headline_selection); skills/headline/ shared vendored support pkg
 memory/       This documentation set (for humans + code agents)
