@@ -1,0 +1,290 @@
+# HH Research Daily · v8.0 头条强约束筛选规则
+#
+# 设计原则（详见 docs/superpowers/plans/2026-05-28-v8-headline-strong-constraints.md）:
+#   - 每天最多 1-2 条信号通过强约束 → 自动进头条
+#   - 不通过强约束的信号 → 边缘 case 候选 → G0 评论 + 用户 final list
+#   - 强约束 = 两阶段判定 (deterministic prefilter + LLM-assisted labels)
+#   - 共同前置: 信号源 entity_tier ∈ {P0_plus, P0}
+#   - 共同合并: 同日同公司多条 → 取最强一条 (canonical_event_key 匹配)
+#   - 跨日共振: 已是前日强约束头条的事件，再次出现不计为新条目
+#
+# Generator: 手动编写 (基于 Plan v3 §3.2)
+# Version: v8.0
+# Last updated: 2026-05-28
+
+version: "v8.0"
+updated: 2026-05-28
+
+# ============================================================
+# Global tier 定义 (typed entity dimensions · review P2-5 修正)
+# ============================================================
+entity_tiers:
+  - P0_plus  # 顶级实验室官方账号 / C-level / Chief Scientist / Co-founder
+  - P0       # 顶级实验室员工 / 知名 PI / P0 公司
+  - P1       # 次级 + 部分媒体
+  - P2       # 默认 / 长尾
+
+entity_types:
+  - company
+  - person
+  - lab
+  - university
+  - media
+  - investor
+  - benchmark_org
+
+source_authorities:
+  - official    # 公司/lab 官方账号
+  - founder     # 公司创始人 / Co-founder
+  - employee    # 员工个人账号
+  - third_party # 第三方分析师 / 转述
+  - media       # 媒体
+  - unknown
+
+# 核心顶级实验室白名单 (用于 ① / ③ / ⑤ / ⑥ / ⑦)
+top_tier_labs:
+  - OpenAI
+  - Anthropic
+  - Google
+  - Google DeepMind
+  - Meta
+  - Microsoft
+  - xAI
+  - Apple
+  - NVIDIA
+  - Alphabet
+  - DeepSeek
+  - Mistral AI
+
+# 顶级第三方榜单 (用于 ⑤)
+top_tier_leaderboards:
+  - Chatbot Arena
+  - SWE-Bench
+  - GAIA
+  - ARC-AGI
+  - HumanEval+
+
+# 顶级 venue (用于 ②)
+top_tier_venues:
+  - ICLR
+  - ICML
+  - NeurIPS
+  - Nature
+  - Science
+
+# 核心顶级 20 人 (用于 ④) - LLM 判断时参考
+core_top_20_persons:
+  # OpenAI
+  - Sam Altman
+  - Greg Brockman
+  - Mira Murati
+  - Andrej Karpathy
+  # Anthropic
+  - Dario Amodei
+  - Daniela Amodei
+  - Chris Olah
+  # Google / GDM
+  - Demis Hassabis
+  - Jeff Dean
+  - Noam Shazeer
+  - Sundar Pichai
+  # Meta
+  - Yann LeCun
+  - Mark Zuckerberg
+  # xAI
+  - Elon Musk
+  # 硬件
+  - Jensen Huang
+  - Lisa Su
+  # 学派 / 创业
+  - Geoffrey Hinton
+  - Yoshua Bengio
+  - Fei-Fei Li
+  - Ilya Sutskever
+
+# ============================================================
+# 8 条强约束规则
+# ============================================================
+rules:
+
+  # ─────────────────────────────────────────────────
+  - rule_id: "①_model_product_release"
+    label: "模型/产品发布"
+    deterministic_checks:
+      source_authority: official
+      entity_type: company
+      entity_tier: P0_plus  # 顶级实验室公司官方
+      has_concrete_number: true
+        # ≥1 cross-benchmark SOTA OR speed/cost ≥2× improvement
+    llm_assisted_labels:
+      type:
+        any_of:
+          - major_version_bump       # X → X+1（不算 X.5 minor）
+          - first_new_product_category  # 公司首次进入新品类
+    merge_rule: same_day_same_company_take_strongest
+
+  # ─────────────────────────────────────────────────
+  - rule_id: "②_research_breakthrough"
+    label: "技术研究突破"
+    deterministic_checks:
+      entity_tier_in: [P0_plus, P0]
+      entity_type_in: [lab, person, university]
+      evidence:
+        one_of:
+          - top_tier_venue          # ICLR / ICML / NeurIPS / Nature / Science
+          - p0_kol_resonance_count_gte: 2  # ≥2 P0 KOL 独立共振
+    llm_assisted_labels:
+      paradigm_level: true
+        # 动摇默认假设 OR 解决长期开放问题 OR 首次跨架构验证
+
+  # ─────────────────────────────────────────────────
+  - rule_id: "③_hardware_infra_breakthrough"
+    label: "硬件/Infra 突破"
+    deterministic_checks:
+      source_authority: official  # 不是分析师/媒体
+      entity_tier: P0_plus
+      entity_type: company  # 顶级硬件厂商
+    llm_assisted_labels:
+      any_of:
+        - new_industry_metric      # 新 scaling law / 新衡量标准
+        - absolute_number_record   # ≥行业前次 1 个数量级
+        - bypass_external_constraint  # 出口管制 / 物理瓶颈
+    cross_day_resonance: enhance_only_not_new_item
+
+  # ─────────────────────────────────────────────────
+  - rule_id: "④_executive_commentary"
+    label: "大佬评论/观点"
+    deterministic_checks:
+      entity_type: person
+      source: core_top_20_persons  # 见 §global
+    llm_assisted_labels:
+      content_type:
+        one_of:
+          - announce_unreleased            # 预告未发布产品
+          - major_strategy_shift           # 公开战略转向
+          - first_response_to_major_event  # 对重大事件首次回应
+      exclude:
+        - repeated_opinion
+        - product_promotion
+        - personal_philosophy
+
+  # ─────────────────────────────────────────────────
+  - rule_id: "⑤_benchmark_leaderboard"
+    label: "评测/榜单"
+    deterministic_checks:
+      leaderboard: top_tier_third_party  # 见 §global
+      model_entity_tier: P0_plus  # 模型属于 P0+ 公司
+    llm_assisted_labels:
+      movement:
+        one_of:
+          - first_top_3       # 模型首次进入 Top-3
+          - jump_gte_15pp     # 跃迁 ≥15 个百分点
+    merge_rule: same_day_same_model_merge
+
+  # ─────────────────────────────────────────────────
+  - rule_id: "⑥_demo_showcase"
+    label: "Demo/演示"
+    deterministic_checks:
+      source_authority: official
+      entity_tier: P0_plus
+      entity_type: company
+    llm_assisted_labels:
+      first_in_industry: true   # 整个行业首次（不是该公司首次）
+      evidence: verifiable_video_continuous_recording
+
+  # ─────────────────────────────────────────────────
+  - rule_id: "⑦_business_action_between_companies"
+    label: "公司间商业动作"
+    deterministic_checks:
+      parties_count_gte: 2
+      parties_all_entity_tier: P0_plus
+        # ≥2 个 P0+ 公司 (合作 / 收购 / 起诉 / 重大融资 / 算力供应链)
+    llm_assisted_labels:
+      nature:
+        one_of:
+          - real_money
+          - strategy_shift
+      exclude:
+        - partnership_pr  # 形式上的 partnership 公关稿
+
+  # ─────────────────────────────────────────────────
+  - rule_id: "⑧_top_personnel_move"
+    label: "顶级人员变动"
+    deterministic_checks:
+      entity_type: person
+      entity_tier: P0_plus
+        # C-level / Chief Scientist / 知名 PI
+    llm_assisted_labels:
+      action:
+        all_of:
+          - leave_p0_company  # 离开原 P0 公司
+          - one_of:
+              - join_new_p0_company   # 加入新 P0 公司
+              - found_new_lab          # 创立新 lab (即使初期未在 P0 白名单)
+      source: official_public  # 不是 rumor
+
+# ============================================================
+# 5 维重要性判定 (m1-m5) - 用于边缘 case 排序
+# ============================================================
+importance_dimensions:
+  m1_actionability:
+    label: "投研可操作性"
+    desc: "能否立即看公司 / 改 thesis"
+    score_range: [0, 3]
+  m2_entity_tier:
+    label: "实体级别"
+    desc: "涉及公司/人物在白名单等级"
+    score_range: [0, 3]
+  m3_magnitude:
+    label: "数字震撼度"
+    desc: "含具体大数字、首次纪录、SOTA 跃迁"
+    score_range: [0, 3]
+  m4_cross_signal_consensus:
+    label: "跨信号共识"
+    desc: "同事件被 ≥2 独立信号源提到"
+    score_range: [0, 3]
+  m5_paradigm_shift:
+    label: "范式动摇"
+    desc: "动摇行业既有假设"
+    score_range: [0, 3]
+
+# 边缘 case 排序公式
+edge_case_ranking:
+  formula: "m1 + m2 + m3 + m4 + m5"
+  threshold_to_qualify: 2  # 总分 ≥2 才进边缘 case 候选
+
+# ============================================================
+# Canonical entity extraction (review P2-4)
+# ============================================================
+canonical_entity:
+  required_fields:
+    - primary_org           # canonical 公司名 (lowercase, e.g. "openai")
+    - primary_person        # canonical 人名 (None if 公司动作)
+    - canonical_event_key   # 事件 cluster key (e.g. "gemini-3.5-flash-release")
+  normalizer_examples:
+    - input: "OpenAI Developers"
+      primary_org: openai
+    - input: "Sam Altman"
+      primary_org: openai
+      primary_person: sam-altman
+    - input: "Greg Brockman"
+      primary_org: openai
+      primary_person: greg-brockman
+    - input: "GoogleAI"
+      primary_org: google
+    - input: "Google Deepmind"
+      primary_org: google-deepmind  # 与 google 区分 (子公司语义)
+
+# ============================================================
+# Quality gate 分级 (Q22=C · review P0-3)
+# ============================================================
+quality_gates:
+  preview_stage:
+    structural_blocking_action: skip_publish_to_g0  # 不推 G0，等用户 fix
+    content_blocking_action: publish_with_warning_banner  # 推 G0 with banner
+  regen_stage:
+    structural_blocking_action: fallback_to_preview
+    content_blocking_action: publish_with_warning_banner
+  final_stage:
+    structural_blocking_action: g0_only_and_notify_user
+    content_blocking_action: publish_with_warning_banner

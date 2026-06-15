@@ -1,0 +1,229 @@
+<title>HH Research Daily · 2026-05-20</title>
+
+<h2>今日 TL;DR</h2>
+<ul>
+  <li>【认知模型】<b>Andrej Karpathy</b> 宣布加入 <b>Anthropic pre-training 团队</b>，离开教育赛道回归前沿 LLM R&D——顶级人才从 OpenAI 系向 Anthropic 的又一次关键流动。（<a href="https://anchor.placeholder/headline_1">↗</a>）</li>
+  <li>【认知模型】<b>Alibaba Cloud</b> 预告 <b>Qwen3.7</b> 系列即将发布，Qwen3.7-Max-Preview 登陆 Chatbot Arena <b>Text 赛道全球第 6</b>，持续缩小与闭源顶级模型差距。（<a href="https://anchor.placeholder/headline_2">↗</a>）</li>
+  <li>【多模态智能】<b>Alibaba Cloud</b> Qwen3.7-Plus-Preview 在 <b>Vision Arena 排名升至全球第 5</b>，多模态视觉能力进入国际第一梯队。（<a href="https://anchor.placeholder/headline_3">↗</a>）</li>
+  <li>【世界模型】<b>NVIDIA</b> 发布 <b>LongLive-2.0</b>，基于 NVFP4 量化的并行推理基础设施，专攻长视频生成的显存与效率瓶颈。（<a href="https://anchor.placeholder/headline_4">↗</a>）</li>
+</ul>
+
+<hr/>
+
+<h2>内容导览</h2>
+<p><a href="https://anchor.placeholder/section_认知模型">认知模型</a> · <a href="https://anchor.placeholder/section_多模态智能">多模态智能</a> · <a href="https://anchor.placeholder/section_世界模型">世界模型</a> · <a href="https://anchor.placeholder/section_行业应用">行业应用</a></p>
+
+<hr/>
+
+<h2>头条</h2>
+
+<p>{anchor:headline_1}</p>
+<h3>Andrej Karpathy 加入 Anthropic Pre-training 团队</h3>
+<ul>
+  <li><b>来源</b>：<a href="https://x.com/karpathy/status/2056753169888334312">Karpathy 本人推文</a> · <a href="https://x.com/TechCrunch/status/2056763614611362102">TechCrunch 报道</a></li>
+  <li><b>信号源</b>：Andrej Karpathy @ Anthropic · TechCrunch</li>
+</ul>
+<callout emoji="🧠">
+  <p><b>Our Insights</b></p>
+  <p>共识认知：Karpathy 是 AI 领域最具公众影响力的研究者之一（OpenAI 联合创始人、Tesla Autopilot 前负责人、AI 教育顶流），其去向历来被视为行业风向标。此次明确加入 Anthropic pre-training 团队而非 alignment/safety 方向，表明 Anthropic 正在加码基础模型预训练能力建设，而不仅仅是"安全叙事"。对竞争格局的影响：Anthropic 在 Claude 系列模型的 pre-training 实力上一直被认为弱于 OpenAI 和 Google DeepMind（团队规模小、GPU 资源相对有限），Karpathy 的加入是补足这一短板的标志性事件。对于已投或正在看 Anthropic 生态（API 下游应用、fine-tuning 工具链）的标的，基础模型能力上限的提升意味着生态价值天花板在抬高。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>重新评估 Anthropic 下一代 Claude 模型的预训练质量预期——Karpathy 的加入可能加速其在 code、reasoning 方向的追赶节奏，关注 Q3-Q4 模型发布节点</li>
+    <li>排查已接触的 Anthropic 生态创业团队（Claude API 深度绑定型），其技术依赖的基础模型上限假设需要上调</li>
+    <li>关注 OpenAI 侧是否出现进一步人才流失信号——Karpathy 离开后 OpenAI 早期核心团队已基本清空</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>Andrej Karpathy 通过个人推文宣布正式加入 Anthropic，将参与前沿 LLM 预训练研究工作，同时表示将继续推进其个人 AI 教育项目。TechCrunch 同步确认该消息，明确其岗位为 pre-training 团队。</p>
+
+<hr/>
+
+<p>{anchor:headline_2}</p>
+<h3>Qwen3.7-Max-Preview 登陆 Chatbot Arena，Text 赛道全球第 6</h3>
+<ul>
+  <li><b>来源</b>：<a href="https://x.com/alibaba_cloud/status/2056571213812838457">Alibaba Cloud 官方推文</a></li>
+  <li><b>信号源</b>：Alibaba Cloud 官方</li>
+</ul>
+<callout emoji="🎯">
+  <p><b>Our Insights</b></p>
+  <p>共识认知：Qwen 系列是国产开源/半开源大模型中国际化程度最高的，Qwen2/2.5 已在多项 benchmark 上接近 GPT-4 级别。此次 Qwen3.7-Max-Preview 直接上 Arena（真人盲评），拿到 Text 赛道全球第 6，是模型能力从"刷分"走向"真实对抗"的重要验证。投研意涵：对于依赖闭源 API（OpenAI/Anthropic）的 AI 应用创业公司，Qwen 系列每一次 Arena 排名上升都在压缩闭源模型的定价权——如果 Qwen3.7 正式版保持这一水平且开源/低价开放 API，ToB 场景的 inference 成本结构将进一步松动，对标的议价能力产生影响。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>追踪 Qwen3.7 正式发布时间及开源/API 定价策略——若延续 Qwen2.5 的低价策略，需重新评估已投 LLM 中间层公司的毛利假设</li>
+    <li>约聊正在用 Qwen 系列做 vertical fine-tuning 的团队，评估其对 Qwen3.7 base model 的升级预期</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>Alibaba Cloud 宣布 Qwen3.7-Max-Preview 已上线 Chatbot Arena 评测平台进行真人盲测，在 Text 赛道获得全球第 6 名，正式版 Qwen3.7 系列即将发布。</p>
+
+<hr/>
+
+<p>{anchor:headline_3}</p>
+<h3>Qwen3.7-Plus-Preview Vision Arena 排名升至全球第 5</h3>
+<ul>
+  <li><b>来源</b>：<a href="https://x.com/alibaba_cloud/status/2056570869548478592">Alibaba Cloud 官方推文</a></li>
+  <li><b>信号源</b>：Alibaba Cloud 官方</li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b></p>
+  <p>Qwen3.7-Plus-Preview 在 Vision Arena（多模态视觉盲评）拿到全球第 5，这是中国系模型在视觉多模态赛道首次进入国际前 5。相较于 Text 赛道的追赶，Vision 方向的突破更值得关注——多模态是 agent 落地（文档理解、GUI 操控、实体识别）的刚需能力。对于正在构建多模态 agent 产品的创业团队，开源级别的视觉模型能力逼近 GPT-4V/Claude Vision 意味着自部署方案的可行性门槛在快速降低，降低了对闭源 API 的强依赖。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>跟进 Qwen3.7 Vision 模型的开源计划和 license 条款——如果允许商用，多模态 agent 赛道的自建模型路线将更可行</li>
+    <li>排查 portfolio 中依赖 GPT-4V API 的标的，评估切换至 Qwen Vision 的成本节约空间和性能可接受度</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>Alibaba Cloud 预告 Qwen3.7 系列即将正式发布，其中 Qwen3.7-Plus-Preview 已登陆 Arena 平台进行视觉多模态盲评，Vision 榜单排名升至全球第 5。</p>
+
+<hr/>
+
+<p>{anchor:headline_4}</p>
+<h3>NVIDIA 发布 LongLive-2.0：NVFP4 量化并行推理架构，专攻长视频生成</h3>
+<ul>
+  <li><b>来源</b>：<a href="https://x.com/_akhaliq/status/2056763911462891825">AK 转发 NVIDIA</a></li>
+  <li><b>信号源</b>：NVIDIA · AK @ X</li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b></p>
+  <p>共识认知：长视频生成（分钟级以上）目前面临两个核心瓶颈——显存占用随帧数线性增长、单卡推理速度极慢。NVIDIA 通过 LongLive-2.0 提出系统级解决方案：NVFP4 量化将模型精度压缩至 4bit 浮点、并行推理架构允许跨卡分帧计算。这不是模型层面的创新，而是推理基础设施层的工程突破。投研意涵：对于 Runway、Pika、Kling 等视频生成公司，推理成本是其毛利的核心制约。NVIDIA 提供原生量化并行方案意味着这些公司的 inference cost per minute 有望下降一个台阶，但同时也意味着视频生成的"硬件门槛"进一步被 NVIDIA 垄断——非 NVIDIA 芯片方案（AMD MI300、自研 ASIC）在视频推理场景的追赶难度加大。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>向已接触的视频生成创业团队确认其是否计划适配 LongLive-2.0，评估对其 unit economics 的实际影响</li>
+    <li>关注 NVIDIA 是否将 LongLive-2.0 集成进 TensorRT-LLM 或 NIM 产品线——若是，则是 NVIDIA inference 平台锁定视频赛道的又一步</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>NVIDIA 发布 LongLive-2.0，一套基于 NVFP4 精度量化的并行推理基础设施，专为长视频生成任务设计，目标是解决长时序视频推理中显存占用大、效率低的工程瓶颈。</p>
+
+<hr/>
+
+<h2>一、前沿研究</h2>
+
+<p>{anchor:section_认知模型}</p>
+<h3>认知模型 (Cognitive Models)</h3>
+
+<h4>Agent 安全评估应基于执行轨迹而非最终输出</h4>
+<ul>
+  <li><b>来源</b>：<a href="https://x.com/xwang_lk/status/2056751738078585344">Xin Wang 推文</a> · <a href="https://x.com/xwang_lk/status/2056531396488007994">HarnessAudit 介绍</a></li>
+  <li><b>信号源</b>：UCSB Xin Wang · UC Berkeley · Wisconsin-Madison · Stanford · Microsoft Research</li>
+</ul>
+<callout emoji="🎯">
+  <p><b>Our Insights</b></p>
+  <p>当前 agent 评估生态（SWE-bench、WebArena 等）只看"任务完成了没有"，忽略了执行过程中的安全行为——agent 是否越权访问文件、是否跨组件泄露敏感上下文。HarnessAudit 在 210 个任务 / 10 种 harness 配置下测试，最高安全得分仅 0.32，说明现有 agent 框架的安全治理极度薄弱。投研意涵：对于正在部署 multi-agent 架构的企业级 AI 公司（coding agent、客服 agent、内部流程 agent），harness 层的安全审计将成为必要基础设施。这是一个尚未被充分服务的市场空白——现有 agent 框架（LangChain、CrewAI、AutoGen）几乎没有内置的执行轨迹安全审计能力。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>关注 agent safety/governance 方向的早期创业团队，特别是做执行轨迹审计、权限边界管理的标的</li>
+    <li>对已投 agentic 产品公司确认其 harness 层是否有上下文隔离机制——若无，企业客户采购时可能遭遇安全合规阻力</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>UCSB NLP 联合多机构发布 HarnessAudit 评估框架，从边界合规、执行保真度与系统稳定性三个维度审计 AI agent 的安全行为，覆盖 210 个任务、8 个领域、10 种 harness 配置，发现当前最优 agent 的安全得分仅为 0.32。</p>
+<p><b>Researcher Mapping</b></p>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr>
+      <th background-color="light-gray"><p><b>姓名（角色）</b></p></th>
+      <th background-color="light-gray"><p><b>现状</b></p></th>
+      <th background-color="light-gray"><p><b>GitHub</b></p></th>
+      <th background-color="light-gray"><p><b>邮箱</b></p></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td vertical-align="top"><p>占位 — 待 author lookup pipeline 补充</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p>—</p></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<p>{anchor:section_多模态智能}</p>
+<h3>多模态智能 (Multimodal Intelligence)</h3>
+
+<h4>OpenAI 推进 AI 内容溯源：Content Credentials + SynthID 验证工具</h4>
+<ul>
+  <li><b>来源</b>：<a href="https://openai.com/index/advancing-content-provenance">OpenAI 官方博客</a></li>
+  <li><b>信号源</b>：OpenAI 官方博客</li>
+</ul>
+<callout emoji="✨">
+  <p><b>Our Insights</b></p>
+  <p>随着 AI 生成图片/视频质量逼近真实媒体，内容溯源从"可选"变为"必选"基础设施。OpenAI 同时整合 Content Credentials（C2PA 联盟标准，Adobe/Microsoft 主导）和 SynthID（Google DeepMind 水印方案），并发布验证工具，这意味着两大主流溯源标准正在走向事实统一。投研意涵：对于 AI 生成内容赛道（图片、视频、音频生成公司），合规溯源能力将成为 B2B 交付的准入条件，尤其在媒体、广告、法律场景。目前专做 content authenticity infra 的创业公司（如 Truepic、Numbers Protocol）可能迎来需求拐点。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>关注 content provenance / AI watermark 方向是否有新一轮融资动态——OpenAI 官方推动将加速企业端采购意愿</li>
+    <li>对已投的 AI 生成内容公司确认其是否已集成 C2PA 或 SynthID 标准——若未集成，提醒其提前布局</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>OpenAI 宣布推进 AI 内容溯源能力，采用 Content Credentials（C2PA 标准）和 SynthID 双重技术路线，为 AI 生成的图片、视频等媒体内容嵌入可验证的来源信息，并发布公开验证工具帮助用户识别 AI 生成内容。</p>
+
+<hr/>
+
+<p>{anchor:section_世界模型}</p>
+<h3>世界模型 (World Model)</h3>
+
+<h4>Unitree G1 实现语音指令驱动的实时动作生成</h4>
+<ul>
+  <li><b>来源</b>：<a href="https://x.com/UnitreeRobotics/status/2056674074735354265">Unitree 官方推文</a></li>
+  <li><b>信号源</b>：Unitree 官方 @ Unitree Robotics</li>
+</ul>
+<callout emoji="🤖">
+  <p><b>Our Insights</b></p>
+  <p>此前人形机器人的动作执行主要依赖预设动作库或 teleoperation，Unitree G1 展示的"语音指令即时生成任意动作"是从 replay 到 generation 的质变——机器人不再需要预先学习每个具体动作，而是根据语义指令实时规划肢体运动。当然视频中仍有延迟和平滑度问题，距离商业可用有差距。投研意涵：Unitree 作为国内人形机器人硬件第一梯队，其软件能力的进展直接影响整个人形机器人生态的"可编程性"——如果语音到动作的端到端生成成熟，下游应用开发者的集成门槛将大幅下降。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>跟踪 Unitree 是否开放该动作生成模型的 API 或 SDK——若开放，人形机器人应用层创业的可行性窗口将打开</li>
+    <li>对比 Figure、1X、Tesla Optimus 在语音/语言到动作的端到端能力上的进展，评估 Unitree 的相对位置</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>Unitree Robotics 展示 G1 人形机器人通过语音指令实时生成任意肢体动作的能力，AI 自主规划运动轨迹，单次录制含现场音频，无需预设动作脚本。</p>
+
+<hr/>
+
+<h2>二、行业应用</h2>
+
+<p>{anchor:section_行业应用}</p>
+<h3>认知模型 (产品 / 集成 / Agentic 商业化)</h3>
+
+<h4>Perplexity Computer 企业案例：12 周节省 120 工时，会议减少 90%</h4>
+<ul>
+  <li><b>来源</b>：<a href="https://x.com/perplexity_ai/status/2056749555346235704">Perplexity 官方推文</a></li>
+  <li><b>信号源</b>：Perplexity 官方</li>
+</ul>
+<callout emoji="💼">
+  <p><b>Our Insights</b></p>
+  <p>Perplexity Computer（类 computer-use agent 产品）发布首个公开客户案例，Rho 公司通过其自动检查 Slack、Notion、Jira、Figma 等多工具状态，12 周节省 120 工时、会议时间减少 90%。数字本身有营销色彩，但方向清晰：跨 SaaS 工具的状态聚合 + 自动化巡检是 agent 产品化落地的第一批可量化场景。对于 agent infra 赛道（工具集成层、MCP 协议相关标的），这类案例验证了市场需求真实存在。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>向正在做企业 agent/workflow automation 的被投公司了解其是否有类似量化案例——没有的话需要加速 GTM 节奏</li>
+  </ul>
+</callout>
+
+<hr/>
+
+<h2>折叠区</h2>
+<ul>
+  <li>Alibaba Cloud: Apache RocketMQ 5.x LiteTopic 毫秒级 AI 推理流量治理（<a href="https://x.com/alibaba_cloud/status/2056655220713676822">链接</a>）</li>
+  <li>Alibaba Cloud: QoderWork Design Desk 自然语言转 React 代码画布（<a href="https://x.com/alibaba_cloud/status/2056581373301788747">链接</a>）</li>
+  <li>Garry Tan: just-in-time 个人软件 / dynamic skills 概念分享（<a href="https://x.com/garrytan/status/2056711154224034125">链接</a>）</li>
+  <li>Aaron Levie: 企业 agent 核心挑战是上下文数据策略（<a href="https://x.com/levie/status/2056574979236409521">链接</a>）</li>
+  <li>Balaji: 当前 AI agents 并非真正自主，仍依赖人类持续验证（<a href="https://x.com/balajis/status/2056677657715286132">链接</a>）</li>
+  <li>Rohan Paul: Membrane 为 AI agents 提供统一 100K+ API 接入层（<a href="https://x.com/rohanpaul_ai/status/2056728566780547168">链接</a>）</li>
+  <li>Rohan Paul: Radar 融合摄像头+RFID 构建零售实时感知层（<a href="https://x.com/rohanpaul_ai/status/2056740672443666736">链接</a>）</li>
+  <li>Rohan Paul: Voice AI 隐私挑战，Typeless 零云端留存方案（<a href="https://x.com/rohanpaul_ai/status/2056761717045289471">链接</a>）</li>
+  <li>TechCrunch: Status AI 获 $17M 融资，社交媒体转互动娱乐（<a href="https://x.com/TechCrunch/status/2056737451964850490">链接</a>）</li>
+  <li>TechCrunch: Stilta 获 a16z+YC 领投 $10.5M，专利资产发现管理（<a href="https://x.com/TechCrunch/status/2056707022545142147">链接</a>）</li>
+  <li>TechCrunch: 太阳能预计 2035 年主导能源，但 AI 数据中心维持化石燃料需求（<a href="https://x.com/TechCrunch/status/2056676392524562750">链接</a>）</li>
+  <li>dex: Agent 开发建议——用确定性控制流代替 prompt 实现逻辑控制（<a href="https://x.com/dexhorthy/status/2056731033475936486">链接</a>）</li>
+</ul>
+
+<hr/>
+
+<p><em>本日报由 HH Research Pipeline 自动生成，由 Claude 抽取和撰写，以原文为准。</em></p>
+<p><em>处理信号 48 条 · 头条 4 条 · 高价值 8 条</em></p>

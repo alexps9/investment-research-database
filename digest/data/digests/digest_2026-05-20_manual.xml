@@ -1,0 +1,517 @@
+<title>HH Research Daily · 2026-05-20</title>
+
+<h2>今日 TL;DR</h2>
+<ul>
+  <li>【世界模型】<b>MIT Song Han 团队</b> 发布 LongLive-2.0，长视频生成全流程切到 <b>NVFP4 低精度并行</b>——训练加速 <b>2.15×</b>、推理加速 <b>1.84×</b>，对依赖视频生成 inference 成本的 agentic 创业团队是直接利好。（<a href="https://anchor.placeholder/headline_1">↗</a>）</li>
+  <li>【多模态智能】<b>Waterloo Wenhu Chen</b> 提 Starve to Perceive：把 VLM 视觉 token 预算"饿瘦"逼出真正主动感知，无需改架构 / 加 reward，多 benchmark 平均 <b>+5%</b>。（<a href="https://anchor.placeholder/headline_2">↗</a>）</li>
+  <li>【ai4s】<b>NTU Ziwei Liu</b> 综述 AI 辅助科研全流程，端到端论文生成成本压到 <b>$15</b>，但顶会录用门槛尚未达到——"更多自动化 ≠ 更少错误"。（<a href="https://anchor.placeholder/headline_3">↗</a>）</li>
+  <li>【认知模型】<b>Andrej Karpathy 加入 Anthropic</b>，前 OpenAI 联创 / 前 Tesla AI 主管回归前沿 LLM R&D——人才流动信号最强。（<a href="https://anchor.placeholder/headline_4">↗</a>）</li>
+  <li>【AI infra】<b>Anthropic 收购 Stainless API</b>，将 SDK 生成与 MCP server 平台内部化，关键基础设施供应商被 vertical-integrate。（<a href="https://anchor.placeholder/headline_5">↗</a>）</li>
+</ul>
+
+<hr/>
+
+<h2>内容导览</h2>
+<p><a href="https://anchor.placeholder/section_多模态智能">多模态智能</a> · <a href="https://anchor.placeholder/section_世界模型">世界模型</a> · <a href="https://anchor.placeholder/section_ai4s">ai4s</a> · <a href="https://anchor.placeholder/section_行业应用">行业应用</a></p>
+
+<hr/>
+
+<h2>头条</h2>
+
+<p>{anchor:headline_1}</p>
+<h3>Song Han 团队把长视频生成从训练到推理全部切到 NVFP4，训推 2× 起步</h3>
+<ul>
+  <li><b>论文</b>：<a href="http://arxiv.org/abs/2605.18739v1">LongLive-2.0: An NVFP4 Parallel Infrastructure for Long Video Generation</a></li>
+  <li><b>信号源</b>：<b>MIT Song Han</b></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b></p>
+  <p>共识中长视频生成的卡点是显存与推理延迟，业界普遍走 Self-Forcing + ODE 初始化 + DMD 蒸馏的多阶段路线。LongLive-2.0 直接绕开整条蒸馏链：把 diffusion 模型 fine-tune 成 AR 多镜头交互模型，配合 Balanced SP 序列并行训练 + NVFP4 W4A4 量化（含 KV cache）+ 异步流式 VAE 解码，训练加速 2.15×、推理加速 1.84×、Blackwell GPU 上 5B 模型跑到 45.7 FPS。这把长视频生成的训推成本曲线整体下移一个台阶——对依赖 video generation inference 的 agentic 视频应用（短剧自动化 / AI 互动叙事 / 数字人长内容）是结构性成本利好；对仍在 Self-Forcing 复杂蒸馏路径上的初创团队，技术栈选型可能要重新评估。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>约谈做 AI 视频 infra / 长视频生成 startup（如 Pika / Higgsfield / 国内同类），明确他们对 NVFP4 + Blackwell 的复现意愿与时间窗口</li>
+    <li>跟踪 Blackwell 在国内的供货节奏，反推该路线在国产 GPU 上的可移植性（NVFP4 当前是 Blackwell 独占）</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>LongLive-2.0 是首个基于 NVFP4 的长视频生成训练与推理全流程并行基础设施，支持 AR diffusion 模型，训练 2.15×、推理 1.84× 加速，配合 W4A4 量化 KV cache 与异步流式 VAE 解码，5B 模型 45.7 FPS。</p>
+<p><b>方法与结果</b></p>
+<ul>
+  <li><b>方法框架</b>：训练侧 Balanced SP 把 clean-history 与 noisy-target chunk 分配到各 SP rank，结合 NVFP4；推理侧 W4A4 NVFP4（含 KV cache）+ 异步流式 VAE 解码</li>
+  <li><b>技术细节</b>：teacher-forcing mask 实现 SP 跨 rank 无缝衔接（避免通信瓶颈），KV cache 量化降低 SP 通信量</li>
+  <li><b>主结果</b>：训练加速最高 2.15×、显存下降；推理加速最高 1.84×</li>
+  <li><b>关键结果点</b>：5B 模型 benchmark 达 45.7 FPS，首个 NVFP4 长视频生成系统</li>
+</ul>
+<p><b>Researcher Mapping</b></p>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr>
+      <th background-color="light-gray"><p><b>姓名（角色）</b></p></th>
+      <th background-color="light-gray"><p><b>现状</b></p></th>
+      <th background-color="light-gray"><p><b>GitHub</b></p></th>
+      <th background-color="light-gray"><p><b>邮箱</b></p></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td vertical-align="top"><p>占位 — 待 author lookup pipeline 补充</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p>—</p></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<p>{anchor:headline_2}</p>
+<h3>Waterloo Wenhu Chen 用"饿瘦视觉带宽"逼 VLM 学会真正主动感知</h3>
+<ul>
+  <li><b>论文</b>：<a href="http://arxiv.org/abs/2605.18603v1">Starve to Perceive: Taming Lazy Perception in VLMs with Constrained Visual Bandwidth</a></li>
+  <li><b>信号源</b>：<b>Waterloo Wenhu Chen</b></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b></p>
+  <p>共识中给 VLM 加 zoom / crop / pan 这些视觉工具是为了让它"主动感知"——但实测发现模型其实没真正用上这些工具的输出，全局视图 + 语言先验已经够应付中等精度任务，所谓的 active perception 训出来都是表面动作。Starve to Perceive 的反直觉解法：与其加 reward / 改架构，不如直接限死每次观测的 token 预算，让模型"看不全"被迫多步搜索。无需任何辅助 loss 或架构改动，多 benchmark 平均提升 5%，可无缝挂到任何 post-training pipeline。这是个对推理时 visual reasoning agent 训练范式的根本性挑战——意味着此前一大批"看似在做 active perception"的工作，可能只是在学 zoom/crop 的表面动作。对做 VLM 推理时优化、做 vision agent 的团队是直接信号。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>问已投 VLM-agent 团队（含 GUI agent / computer use 方向）：他们的 active perception 训练是否真正用 token bandwidth constraint、还是 superficial 工具学习</li>
+    <li>跟踪 Wenhu Chen 团队（前 GoogleResearch / Waterloo）的下一篇——这个 idea 拓展到 video VLM / GUI agent 会怎么样</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>提出 Starve to Perceive 训练范式，作为 post-training 即插即用模块，对每次视觉观测施加严格 token 预算上限，迫使 VLM 多步主动感知。无需 reward shaping 或架构改动，多 benchmark 平均相对提升 5%。</p>
+<p><b>方法与结果</b></p>
+<ul>
+  <li><b>方法框架</b>：constrained visual bandwidth 作为 post-training 即插即用模块，对每次观测限 token 预算</li>
+  <li><b>技术细节</b>：单次全局视图不足以完成任务，强制模型用 zoom/crop/pan 多步操作主动定位关键信息</li>
+  <li><b>主结果</b>：多 benchmark 平均相对提升 5%，验证 lazy perception 现象客观存在</li>
+  <li><b>关键结果点</b>：无需辅助 loss / reward shaping / 架构改动，可无缝嵌入现有 post-training</li>
+</ul>
+<p><b>Researcher Mapping</b></p>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr>
+      <th background-color="light-gray"><p><b>姓名（角色）</b></p></th>
+      <th background-color="light-gray"><p><b>现状</b></p></th>
+      <th background-color="light-gray"><p><b>GitHub</b></p></th>
+      <th background-color="light-gray"><p><b>邮箱</b></p></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td vertical-align="top"><p>占位 — 待 author lookup pipeline 补充</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p>—</p></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<p>{anchor:headline_3}</p>
+<h3>NTU Ziwei Liu 综述 AI 辅助科研全流程：$15 论文 vs. 顶会录用，差在哪</h3>
+<ul>
+  <li><b>论文</b>：<a href="http://arxiv.org/abs/2605.18661v1">AI for Auto-Research: Roadmap & User Guide</a></li>
+  <li><b>信号源</b>：<b>NTU Ziwei Liu</b></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>Our Insights</b></p>
+  <p>共识里 AI for Research 经常分两派——一派认为 LLM 可以全自动写论文（成本极低），另一派认为 AI 不可能取代真正的研究判断。本综述拆开来看：截至 2026 年 4 月，端到端全自动论文生成成本已压到 $15/篇，但仍未稳定达到顶会录用线；AI 在检索增强、工具辅助、结构化任务上可靠，但在新颖 idea 生成、研究级实验执行、科学判断上存在系统性缺陷。最反共识的观察：自动化程度越高，反而越容易掩盖（而非消除）失败模式，因此最可信的部署范式是"人机协作"而非"端到端自主"。这意味着 AI for Research 赛道短期的商业化机会更多在"科研 copilot"（vertical agent），而非"科研全自动化"——后者的技术风险与监管风险都被低估了。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>对 AI scientist / Sakana / 同类全自动论文生成 startup 重新校准技术成熟度判断——本文综述明确这条线还没跨过顶会门槛</li>
+    <li>关注 vertical scientific copilot（biotech / materials / drug discovery 等）赛道，按本文"四阶段（Creation / Writing / Validation / Dissemination）"框架反查现有标的覆盖情况</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>综述将 AI 辅助科研流程划分 Creation / Writing / Validation / Dissemination 四阶段，覆盖截至 2026 年 4 月的进展，提供 taxonomy + benchmark suite + 工具清单 + 实践 playbook，归纳跨阶段设计原则。</p>
+<p><b>方法与结果</b></p>
+<ul>
+  <li><b>方法框架</b>：四阶段认识论模型 + 跨阶段评估每个环节的 AI 可靠边界与自主局限</li>
+  <li><b>主结果</b>：全流程自动化论文生成成本已低至 $15，但端到端系统未达顶会录用稳定标准</li>
+  <li><b>关键结果点</b>：结构化/检索任务可靠，但新颖 idea / 科学判断仍脆弱；更高自动化可能掩盖而非消除失败模式</li>
+</ul>
+<p><b>Researcher Mapping</b></p>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr>
+      <th background-color="light-gray"><p><b>姓名（角色）</b></p></th>
+      <th background-color="light-gray"><p><b>现状</b></p></th>
+      <th background-color="light-gray"><p><b>GitHub</b></p></th>
+      <th background-color="light-gray"><p><b>邮箱</b></p></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td vertical-align="top"><p>占位 — 待 author lookup pipeline 补充</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p>—</p></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<p>{anchor:headline_4}</p>
+<h3>Andrej Karpathy 加入 Anthropic：前 OpenAI 联创回归前沿 LLM R&D</h3>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/karpathy/status/2056753169888334312">Personal update: I've joined Anthropic.</a></li>
+  <li><b>信号源</b>：Andrej Karpathy（个人公告）</li>
+</ul>
+<callout emoji="💼">
+  <p><b>Our Insights</b></p>
+  <p>共识中 Anthropic 与 OpenAI 的人才竞争一直是 vibe 信号——这次 Karpathy 加盟是迄今最强的实证。他的履历直接定义了一代 AI 工程师（Stanford CS231n、特斯拉 AI 主管、OpenAI 联创），且他自己强调"未来几年前沿 LLM 是特别 formative 的时期"，意味着他判断这是个值得 all-in 的窗口期。对 Anthropic 而言，这一方面强化了他们前沿 LLM 研究的人才阵容（与 GDM、xAI、OpenAI 的人才差距进一步收窄），另一方面 Karpathy 个人品牌带来的工程师吸引力可能引发后续连锁招聘。对 AI 投资判断：Anthropic 估值溢价的"团队豪华度"维度被进一步抬升，加重其作为 OpenAI 主要替代者的地位。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>跟踪 Karpathy 在 Anthropic 的第一篇技术博客 / 第一次公开 talk，作为对其团队定位的更精准信号</li>
+    <li>对依赖"OpenAI 独占技术领先性"的 thesis 做对冲——Anthropic 团队豪华度已可一较高下</li>
+  </ul>
+</callout>
+<p><b>信号内容</b></p>
+<p>Andrej Karpathy 个人 X 账号发推宣布加入 Anthropic，回归前沿 LLM R&D。他同时表示将继续推进 AI 教育工作（Eureka Labs 等）。</p>
+
+<hr/>
+
+<p>{anchor:headline_5}</p>
+<h3>Anthropic 收购 Stainless API：SDK 与 MCP server 平台内化</h3>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/AnthropicAI/status/2056419620643541012">Anthropic is acquiring @stainlessapi</a></li>
+  <li><b>信号源</b>：Anthropic 官方</li>
+</ul>
+<callout emoji="💼">
+  <p><b>Our Insights</b></p>
+  <p>共识中 SDK 生成（自动从 OpenAPI 规范产出 Python/JS/Go 多语言 SDK）和 MCP server（Model Context Protocol）这两块都不是 Anthropic 自己最深的护城河，长期外包给 Stainless API。这次收购把这块基础设施 vertical-integrate——意味着 Anthropic 越来越认真把"开发者平台"作为一个独立战略支柱（对标 OpenAI 的 dev 生态）。对 AI 应用层 startup 来说：未来 Anthropic SDK / Claude API / MCP 集成体验会快速迭代，但同时对 Stainless 的其他客户（如其他 AI 厂商也用它做 SDK 生成）形成压力，是否会出现 SDK 生成赛道再洗牌值得跟踪。MCP 协议本身的标准化进程也可能受益于 Anthropic 直接掌握工具链。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>梳理 Stainless API 的现有非 Anthropic 客户名单，判断这次收购对 SDK 生成赛道的连锁影响</li>
+    <li>跟踪 MCP 在 6-12 个月内是否成为事实标准——Anthropic 直接掌控工具链会加速这一进程</li>
+  </ul>
+</callout>
+<p><b>信号内容</b></p>
+<p>Anthropic 宣布收购 SDK 与 MCP server 平台 Stainless API。Stainless 自 Anthropic API 早期起便为其所有 SDK 提供底层支持，本次收购将该能力内部化。</p>
+
+<hr/>
+
+<h2>一、前沿研究</h2>
+
+<p>{anchor:section_多模态智能}</p>
+<h3>多模态智能 (Multimodal Intelligence)</h3>
+
+<h4>UIUC Wei Xiong 团队：Aurora 用 tool-using VLM agent 补齐视频编辑的"翻译层"</h4>
+<ul>
+  <li><b>论文</b>：<a href="http://arxiv.org/abs/2605.18748v1">Aurora: Unified Video Editing with a Tool-Using Agent</a></li>
+  <li><b>信号源</b>：<b>UIUC Wei Xiong</b></li>
+</ul>
+<callout emoji="✨">
+  <p><b>Our Insights</b></p>
+  <p>共识中视频编辑模型已收敛到 unified conditioning 路线，但模型对 conditioning channel 的要求（结构化文本 + 参考图 + 空间定位）与用户的自然语言模糊指令之间始终存在 gap。Aurora 的解法是在视频生成模型前加一层 tool-augmented VLM agent，专门负责把用户的不规范请求翻译成结构化编辑计划——并提出 AgentEdit-Bench 专门评估"信息不完整条件下"的 agent-assisted 编辑。亮点：训练好的 VLM agent 可迁移到 frozen 视频编辑模型，无需重训。对做 AI 视频工具 / 自动化短视频创作的应用层是直接架构范本——agentic 层从模型主体里解耦出来。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>问视频生成应用层标的（含国内 AI 短视频工具）：是否在用 agent-on-top 架构补齐 UX gap</li>
+    <li>跟踪 AgentEdit-Bench 是否成为 agent-assisted video editing 的事实评测标准</li>
+  </ul>
+</callout>
+<p><b>摘要</b></p>
+<p>Aurora 提出 agentic 视频编辑框架：tool-augmented VLM agent 将模糊用户请求转化为结构化编辑计划，再传入 unified video diffusion transformer 执行替换 / 移除 / 风格迁移 / reference-driven 插入等任务。</p>
+<p><b>方法与结果</b></p>
+<ul>
+  <li><b>方法框架</b>：tool-augmented VLM agent + unified video diffusion transformer 解耦设计</li>
+  <li><b>技术细节</b>：VLM agent 用监督数据 + preference pairs 训练；推理时调用外部工具补全缺失视觉信息</li>
+  <li><b>主结果</b>：在 AgentEdit-Bench + 2 个已有视频编辑 benchmark 上优于纯指令 baseline</li>
+  <li><b>关键结果点</b>：VLM agent 可迁移到兼容的 frozen 视频编辑模型，无需重训</li>
+</ul>
+<p><b>Researcher Mapping</b></p>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr><th background-color="light-gray"><p><b>姓名（角色）</b></p></th><th background-color="light-gray"><p><b>现状</b></p></th><th background-color="light-gray"><p><b>GitHub</b></p></th><th background-color="light-gray"><p><b>邮箱</b></p></th></tr>
+  </thead>
+  <tbody>
+    <tr><td vertical-align="top"><p>占位 — 待 author lookup pipeline 补充</p></td><td vertical-align="top"><p>—</p></td><td vertical-align="top"><p>—</p></td><td vertical-align="top"><p>—</p></td></tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<p>{anchor:section_世界模型}</p>
+<h3>世界模型 (World Model)</h3>
+
+<h4>Microsoft Yi Zhang 团队：Robo-Cortex 让具身 agent "脑补 + 复盘 = 自进化"</h4>
+<ul>
+  <li><b>论文</b>：<a href="http://arxiv.org/abs/2605.18729v1">Robo-Cortex: A Self-Evolving Embodied Agent via Dual-Grain Cognitive Memory and Autonomous Knowledge Induction</a></li>
+  <li><b>信号源</b>：<b>Microsoft Yi Zhang</b></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>Our Insights</b></p>
+  <p>共识中具身导航 agent 在未知环境普遍存在"经验失忆"——每个 episode 都从零开始，无法把之前的成功 / 失败抽象为可迁移规则。Robo-Cortex 把人类的"反思-归纳"模式工程化：短期反射记忆 SRM 实时记录进展、长期原则记忆 LPM 抽象历史轨迹，再用 Imagine-then-Verify 让 world model 与 VLM 互为验证。在未知环境的启发式迁移场景下 SPL 提升 +15.30%，对最强先验方法也有 +4.16%。这条思路对正在做 embodied agent 的 startup（含 Skild AI、1X、Physical Intelligence 等）的训练范式有借鉴价值——memory-augmented 而非纯 RL/IL 是另一条值得跟的路径。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>问具身 AI 标的：他们的训练框架是否在做 memory-augmented self-evolution、还是仍纯靠 IL/RL</li>
+  </ul>
+</callout>
+<p><b>方法与结果</b></p>
+<ul>
+  <li><b>方法框架</b>：AKI（Autonomous Knowledge Induction）+ 双粒度认知记忆（SRM 短期 + LPM 长期）+ Imagine-then-Verify 循环</li>
+  <li><b>主结果</b>：IGNav / AR / AEQA 三 benchmark 持续超基线；未知环境启发式迁移 SPL 最高 +15.30%</li>
+  <li><b>关键结果点</b>：相比最强先验方法 SPL 仍 +4.16%</li>
+</ul>
+<p><b>Researcher Mapping</b></p>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr><th background-color="light-gray"><p><b>姓名（角色）</b></p></th><th background-color="light-gray"><p><b>现状</b></p></th><th background-color="light-gray"><p><b>GitHub</b></p></th><th background-color="light-gray"><p><b>邮箱</b></p></th></tr>
+  </thead>
+  <tbody>
+    <tr><td vertical-align="top"><p>占位 — 待 author lookup pipeline 补充</p></td><td vertical-align="top"><p>—</p></td><td vertical-align="top"><p>—</p></td><td vertical-align="top"><p>—</p></td></tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<h4>Stanford Manling Li 团队：ESI-Bench 把空间智能从"被动看"重新定义为"主动行动"</h4>
+<ul>
+  <li><b>论文</b>：<a href="http://arxiv.org/abs/2605.18746v1">ESI-Bench: Towards Embodied Spatial Intelligence that Closes the Perception-Action Loop</a></li>
+  <li><b>信号源</b>：<b>Stanford Manling Li</b> · Northwestern 等</li>
+</ul>
+<callout emoji="🤖">
+  <p><b>Our Insights</b></p>
+  <p>共识中空间智能评测大多还是被动多视角看图 + VQA。ESI-Bench 把范式改成"主动探索的感知-行动闭环"，结论很反直觉：当前 MLLM 的瓶颈不是感知能力弱，而是"行动盲"——错误行动 → 劣质观测 → 级联推理错误。更扎心的两个发现：①不完善的 3D 表示比 2D baseline 更有害（会扭曲空间关系）；②模型相比人类缺乏元认知，证据质量无论好坏都以高置信度过早判断。这对正在做 spatial intelligence / 3D-aware agent 的 startup（含具身 AI、AR/VR Agent）是结构性纠偏信号——盲目堆 3D 模块前先看 MLLM 行动规划能力是否到位。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>跟踪 ESI-Bench 是否成为空间智能赛道的事实评测标准；约谈一线 spatial AI 团队对该 benchmark 的成绩自评</li>
+  </ul>
+</callout>
+<p><b>方法与结果</b></p>
+<ul>
+  <li><b>方法框架</b>：OmniGibson 仿真平台 + Spelke 核心知识系统（物体/空间/因果/数量）+ 10 大类 29 子类任务</li>
+  <li><b>主结果</b>：主动探索显著优于被动多视角，agent 自发涌现空间策略</li>
+  <li><b>关键结果点</b>：行动盲是主要失败模式；不完善 3D 表示反而比 2D baseline 更有害</li>
+</ul>
+<p><b>Researcher Mapping</b></p>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr><th background-color="light-gray"><p><b>姓名（角色）</b></p></th><th background-color="light-gray"><p><b>现状</b></p></th><th background-color="light-gray"><p><b>GitHub</b></p></th><th background-color="light-gray"><p><b>邮箱</b></p></th></tr>
+  </thead>
+  <tbody>
+    <tr><td vertical-align="top"><p>占位 — 待 author lookup pipeline 补充</p></td><td vertical-align="top"><p>—</p></td><td vertical-align="top"><p>—</p></td><td vertical-align="top"><p>—</p></td></tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<h4>Tsinghua Hang Zhao 团队：Dexora 开源首个双臂双手高 DoF 灵巧操控 VLA</h4>
+<ul>
+  <li><b>论文</b>：<a href="http://arxiv.org/abs/2605.18722v1">Dexora: Open-source VLA for High-DoF Bimanual Dexterity</a></li>
+  <li><b>信号源</b>：<b>Tsinghua Hang Zhao</b></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>Our Insights</b></p>
+  <p>共识中 VLA 模型在 single-arm 或简单 gripper 场景已较成熟，但双臂 + 灵巧手（高 DoF）这块开源标的几乎空白。Dexora 把数据采集流程拆成"外骨骼背包采粗粒度手臂运动 + Apple Vision Pro 无标记追踪手指细动作"两路，再用 offline discriminator 给 diffusion-transformer 训练做质量加权——这等于给数据集加了"信誉评分"过滤噪声演示。灵巧任务成功率 66.7% vs baseline 51.7%，基础任务达 90%。对国内做 humanoid / dexterous manipulation 的团队（Unitree / 银河通用 / 智元 / Galbot）是直接可复用的训练框架范本，尤其 offline discriminator 加权这个细节。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>跟踪 Dexora 在国内 humanoid 团队的复现/采用情况；该论文开源代码 + 数据后会立刻形成对标基准</li>
+  </ul>
+</callout>
+<p><b>方法与结果</b></p>
+<ul>
+  <li><b>方法框架</b>：混合遥操作（外骨骼 + Apple Vision Pro 手部追踪）+ MuJoCo 数字孪生 + diffusion-transformer 策略</li>
+  <li><b>技术细节</b>：offline discriminator 对每条演示 clip 打分，作为权重注入 diffusion-transformer 训练目标</li>
+  <li><b>主结果</b>：灵巧任务成功率 66.7% vs baseline 51.7%；基础任务达 90%</li>
+  <li><b>关键结果点</b>：10 万条模拟轨迹（6.5M 帧）+ 1 万条真实遥操作（2.92M 帧）大规模训练语料</li>
+</ul>
+<p><b>Researcher Mapping</b></p>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr><th background-color="light-gray"><p><b>姓名（角色）</b></p></th><th background-color="light-gray"><p><b>现状</b></p></th><th background-color="light-gray"><p><b>GitHub</b></p></th><th background-color="light-gray"><p><b>邮箱</b></p></th></tr>
+  </thead>
+  <tbody>
+    <tr><td vertical-align="top"><p>占位 — 待 author lookup pipeline 补充</p></td><td vertical-align="top"><p>—</p></td><td vertical-align="top"><p>—</p></td><td vertical-align="top"><p>—</p></td></tr>
+  </tbody>
+</table>
+
+<hr/>
+
+<p>{anchor:section_ai4s}</p>
+<h3>ai4s (AI for Science)</h3>
+
+<p><em>（"AI for Auto-Research"综述详见上方头条 #3）</em></p>
+
+<hr/>
+
+<h2>二、行业应用</h2>
+
+<p>{anchor:section_行业应用}</p>
+
+<h3>认知模型 (Cognitive Models · 产品 / 集成 / Agentic 商业化)</h3>
+
+<h4>Alibaba Cloud Qwen3.7-Max-Preview 登陆 Chatbot Arena · 文本第 6</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/alibaba_cloud/status/2056571213812838457">Qwen3.7 Preview lands on Arena</a></li>
+  <li><b>信号源</b>：Alibaba Cloud 官方</li>
+</ul>
+<callout emoji="🎯">
+  <p><b>Our Insights</b></p>
+  <p>Qwen3.7 系列正式发布前的预热信号，Arena 文本榜第 6 表明 Alibaba 持续追赶 GPT/Claude/Gemini 第一梯队。结合下方多模态版 Qwen3.7-Plus 升至 Vision 榜第 5，Alibaba 走"文本 + 视觉"双线追赶的节奏明确。对国内 AI 应用层而言，Qwen 系列保持高频迭代意味着开源 / 自托管路径仍持续可用。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Qwen3.7-Max-Preview 登陆 Chatbot Arena，文本赛道排名全球第 6；正式版 Qwen3.7 系列即将发布。</p>
+
+<hr/>
+
+<h4>OpenAI Codex /goal：让 Codex 持续工作于一个长任务直到完成</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/gdb/status/2056430780809892252">how to use /goal in codex</a></li>
+  <li><b>信号源</b>：Greg Brockman @ OpenAI</li>
+</ul>
+<callout emoji="🎯">
+  <p><b>Our Insights</b></p>
+  <p>Codex /goal 把 LLM agent 从"单轮对话"转为"长时持续目标"。这是 agent 产品从 demo 跨向 production 的关键能力之一——OpenAI 把它放在 ChatGPT 应用层而非 API 层，意味着把 agentic 工作流的 UX 主战场放在自有产品入口。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Greg Brockman 介绍 OpenAI Codex 的 /goal 功能，可让 Codex 持续追踪并执行某个目标直至完成。同期 Codex 在 ChatGPT 手机 app 上线 Mac 远程构建能力，二者组合形成"移动端发起 + 长任务追踪 + Mac 后台执行"的 agentic 工作流闭环。</p>
+
+<hr/>
+
+<h4>Alibaba Cloud Design Desk: 自然语言 → 可运行 React/Vite 代码</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/alibaba_cloud/status/2056581373301788747">Design Desk by QoderWork</a></li>
+  <li><b>信号源</b>：Alibaba Cloud · QoderWork</li>
+</ul>
+<callout emoji="💼">
+  <p><b>Our Insights</b></p>
+  <p>QoderWork 旗下 Design Desk 试图把 UI 设计与前端开发统一在 AI 无限画布上，对标 Cursor / v0.dev / Lovable 等"自然语言生成应用"赛道。国内目前最直接竞品是字节 Trae 与百度 Comate，这条赛道的核心壁垒已转向用户分发 + 平台生态而非模型能力本身。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Alibaba Cloud 推广 QoderWork 旗下 Design Desk，一款将自然语言转化为可运行 React + Vite 代码的 AI 无限画布工作区。</p>
+
+<hr/>
+
+<h3>多模态智能 (Multimodal · 产品)</h3>
+
+<h4>Alibaba Cloud Qwen3.7-Plus-Preview · Vision Arena 第 5</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/alibaba_cloud/status/2056570869548478592">Qwen3.7-Plus-Preview</a></li>
+  <li><b>信号源</b>：Alibaba Cloud 官方</li>
+</ul>
+<p><b>信号内容</b></p>
+<p>Qwen3.7-Plus-Preview 登陆 Arena，Vision 榜单排名全球第 5；视觉能力相比上一代有显著提升。配合 Qwen3.7-Max 文本第 6 共同预告系列正式发布。</p>
+
+<hr/>
+
+<h3>世界模型 (Robotics / Embodied · 商业化)</h3>
+
+<h4>Unitree G1: 语音驱动实时任意动作生成</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/UnitreeRobotics/status/2056674074735354265">Voice-driven, real-time arbitrary action generation</a></li>
+  <li><b>信号源</b>：Unitree 官方</li>
+</ul>
+<callout emoji="🤖">
+  <p><b>Our Insights</b></p>
+  <p>从预设脚本到 LLM 实时生成动作的范式跨越——Unitree 在国产人形机器人里最早把 LLM-as-controller 路径商品化展示出来。仍有延迟与动作平滑度问题，但 demo 价值大于技术价值，是 G1 商业化阶段的 GTM 物料。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Unitree G1 通过语音指令实时生成肢体动作，AI 自主驱动，单次录制，含现场音频。</p>
+
+<hr/>
+
+<h4>Boston Dynamics Atlas: 仿真训练数百万小时后搬运 50 磅迷你冰箱</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/TheHumanoidHub/status/2056411129837195531">Atlas hauling a 50 lb mini-fridge</a></li>
+  <li><b>信号源</b>：The Humanoid Hub @ X · Boston Dynamics</li>
+</ul>
+<callout emoji="🤖">
+  <p><b>Our Insights</b></p>
+  <p>Atlas 强调 sim-to-real 训练 + 全身协调（不只是末端执行器抓握），与 Figure 等竞品的"端到端 VLA"路线形成对比——Boston Dynamics 保留经典控制 + 大规模 sim 的混合范式。对 humanoid 投资判断：技术路线尚未收敛，sim-to-real 优势在搬运 / 重负载场景仍显著。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Boston Dynamics Atlas 在仿真训练数百万小时后，成功搬运 50 磅（约 22.7 kg）迷你冰箱；策略强调全身协调而非末端抓握。Atlas 自重 90 kg 并可后空翻。</p>
+
+<hr/>
+
+<h4>Figure AI F.03: 直播第 6 天，累计完成 17,444 件包裹分拣</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/adcock_brett/status/2056420115701448915">Figure livestream is back for day 6</a></li>
+  <li><b>信号源</b>：Brett Adcock @ Figure AI</li>
+</ul>
+<p><b>信号内容</b></p>
+<p>Figure AI 人形机器人 F.03 在仓储物流场景下完成连续作业，累计分拣 17,444 件包裹。属于 GTM 直播运营性质的能力展示。</p>
+
+<hr/>
+
+<h3>AI infra (基础设施产品)</h3>
+
+<h4>NVIDIA OpenShell v0.0.43: 双向 TTY + OIDC + mTLS + sandbox DNS 隔离</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/NVIDIAAI/status/2056412084947366030">OpenShell v0.0.43</a></li>
+  <li><b>信号源</b>：NVIDIA AI 官方</li>
+</ul>
+<p><b>信号内容</b></p>
+<p>OpenShell 是 NVIDIA AI 的基础设施工具，本次更新聚焦认证安全（OIDC/mTLS）、终端流式（bidirectional TTY）和沙箱隔离（去 DNS 防数据泄露），属常规迭代。</p>
+
+<hr/>
+
+<h4>OpenAI Codex Desktop: Mac 远程连接 + 手机端接管</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/OpenAIDevs/status/2056442456800141424">Codex desktop remote connection</a></li>
+  <li><b>信号源</b>：OpenAI Developers 官方</li>
+</ul>
+<p><b>信号内容</b></p>
+<p>OpenAI Codex 桌面 app 新增远程连接，让 Mac 充当后台计算节点，用户可在 ChatGPT mobile app 接管 Mac 上的 Codex 任务。与 /goal 长任务能力结合构成移动端 agentic 工作流闭环。</p>
+
+<hr/>
+
+<h4>Alibaba RocketMQ 5.x LiteTopic: AI 推理流量的毫秒级治理</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/alibaba_cloud/status/2056655220713676822">RocketMQ 5.x LiteTopic</a></li>
+  <li><b>信号源</b>：Alibaba Cloud 官方</li>
+</ul>
+<p><b>信号内容</b></p>
+<p>Apache RocketMQ 5.x 引入 LiteTopic 特性，针对 AI 推理任务的长时性与不确定性提供毫秒级细粒度流量控制，弥补传统 MQ 限流粒度不足。</p>
+
+<hr/>
+
+<h3>ai4s (应用)</h3>
+
+<h4>OpenAI × Altara Tech: 多模态 R&D 工作流案例</h4>
+<ul>
+  <li><b>原文</b>：<a href="https://x.com/OpenAIDevs/status/2056489138799681900">Altara Tech using OpenAI</a></li>
+  <li><b>信号源</b>：OpenAI Developers 官方</li>
+</ul>
+<p><b>信号内容</b></p>
+<p>OpenAI 推介合作伙伴 Altara Tech，展示 OpenAI 模型在科研场景下处理多模态、多步骤 R&D workflow 的应用，属 AI for Science 工具落地案例。</p>
+
+<hr/>
+
+<h2>折叠区</h2>
+<ul>
+  <li><b>MS Research Focus</b>：云效率 / agentic 成本优化 / 3D 远程医疗随机试验 / 非洲包容性 AI（<a href="https://x.com/MSFTResearch/status/2056407227615814091">链接</a>）</li>
+  <li><b>Perplexity × Rho</b>：客户成功案例，Computer 自动跨工具协调，12 周省 120 工时（<a href="https://x.com/perplexity_ai/status/2056749555346235704">链接</a>）</li>
+  <li><b>Garry Tan</b>：dynamic skills / just-in-time personal AI 个人观点（<a href="https://x.com/garrytan/status/2056711154224034125">链接</a>）</li>
+  <li><b>Sam Altman</b>：称 ChatGPT 最新更新效果显著，无技术细节（<a href="https://x.com/sama/status/2056435834333934051">链接</a>）</li>
+  <li><b>NVIDIA "New model loading"</b>：仅一句预告，无内容（<a href="https://x.com/NVIDIAAI/status/2056728451898564883">链接</a>）</li>
+  <li><b>NVIDIA × Dell</b>：致谢 Dell 邀请，无技术内容（<a href="https://x.com/NVIDIAAI/status/2056452261308694528">链接</a>）</li>
+  <li><b>Greg Brockman Codex 手机端</b>：保持 Mac 唤醒手机端编码（<a href="https://x.com/gdb/status/2056448588754903316">链接</a>）</li>
+  <li><b>OpenAI Devs 链接推</b>：仅一个 URL（<a href="https://x.com/OpenAIDevs/status/2056442469114687858">链接</a>）</li>
+  <li><b>Hieu Pham</b>："in parallel 🚀🎉" 庆祝（<a href="https://x.com/hyhieu226/status/2056406417389879331">链接</a>）</li>
+  <li><b>Google DeepMind</b>：Google I/O 预热（<a href="https://x.com/GoogleDeepMind/status/2056475403926028455">链接</a>）</li>
+  <li><b>Steven Sinofsky</b>：转发 Mythos/CVE 评论文章（<a href="https://x.com/stevesi/status/2056746116041904152">链接</a>）</li>
+  <li><b>Scale AI</b>："The future runs on proof" 营销（<a href="https://x.com/scale_AI/status/2056404615642632214">链接</a>）</li>
+  <li><b>Sierra AI</b>：仅一个 URL（<a href="https://x.com/SierraPlatform/status/2056756704113746286">链接</a>）</li>
+  <li><b>Lewis Tunstall</b>：训练 vs evals 时间分布个人感悟（<a href="https://x.com/_lewtun/status/2056495315901899127">链接</a>）</li>
+  <li><b>Alibaba × AI Film Festival Monaco</b>：冠名赞助 2026/6/9-10 摩纳哥（<a href="https://x.com/alibaba_cloud/status/2056595491626856836">链接</a>）</li>
+  <li><b>Alibaba Cloud Singapore</b>：参展 ATxEnterprise，展 Happy Horse / Qoder / TiDB 等（<a href="https://x.com/alibaba_cloud/status/2056567109925347546">链接</a>）</li>
+  <li><b>The Humanoid Hub × Atlas 重量</b>：90 kg + 可后空翻趣味分享（<a href="https://x.com/TheHumanoidHub/status/2056412974278201643">链接</a>）</li>
+</ul>
+
+<hr/>
+
+<p><em>本日报由 HH Research Pipeline + Claude 协作生成（本期因 Bedrock 限流由 Claude 直写代替自动 LLM 调用），以原文为准。</em></p>
+<p><em>处理信号 37 条 · 头条 5 条 · 前沿研究 7 篇 arxiv · 行业应用 13 条 · 折叠 17 条</em></p>

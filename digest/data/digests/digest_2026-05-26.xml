@@ -1,0 +1,399 @@
+<title>HH Research Daily · 2026-05-26 · 主线 v5</title>
+
+<h2>今日 TL;DR</h2>
+<ul>
+<li>【AI infra】<b>华为</b>在 IEEE ISCAS 发布 Tau Scaling Law + LogicFolding 架构,以压缩信号传输路径替代先进光刻,目标 <b>1.4nm</b> 级密度,下代麒麟芯片首次验证。<b>制裁下中国算力自主路线出现结构性新变量。</b>(<a href="https://my.feishu.cn/wiki/HFhawyp4cik3Mek3JZQcvP0tnQc#share-AKrgdXef9ofP1UxyG6rcjVXOnLe">↗</a>)</li>
+<li>【世界模型】<b>宇树</b>发布 WVLA 2.0 演示:会议室清洁场景中单次录制完成多任务全自主操作,全程承受强外部干扰未中断。<b>具身智能鲁棒性瓶颈首次在连续执行层面出现量级突破。</b>(<a href="https://my.feishu.cn/wiki/HFhawyp4cik3Mek3JZQcvP0tnQc#share-LVm7dggNCoEkTmxl6A9cLwzCnvg">↗</a>)</li>
+<li>【基础模型】<b>xAI</b>向全体 SuperGrok 及 X Premium+ 用户开放 Grok Build Beta,内置 Plan Mode、并行子智能体与 CLI 集成,直接与 Cursor、Claude Code 正面竞争。<b>AI 编程助手赛道格局进一步被压缩。</b>(<a href="https://my.feishu.cn/wiki/HFhawyp4cik3Mek3JZQcvP0tnQc#share-WGVOdFZLUo5zVNx0aNuco6sPn1c">↗</a>)</li>
+<li>【基础模型】<b>Anthropic</b>联创 Chris Olah 受邀梵蒂冈教皇通谕活动发言,披露可解释性团队在模型内部持续发现类情感状态与类自省机制,与人类神经科学存在镜像映射。<b>顶级实验室首次在最高宗教政治舞台公开坦承对模型内部的不确定性。</b>(<a href="https://my.feishu.cn/wiki/HFhawyp4cik3Mek3JZQcvP0tnQc#share-W4YpdKtWEoCNqexQXaYcRSzSnbf">↗</a>)</li>
+</ul>
+
+<hr/>
+
+<h2>内容导览</h2>
+
+<p><b>头条 (4)</b> · 跨源 LLM 二次审核 + 同主题合并选出</p>
+<ul>
+  <li>头条 1 · 【AI infra】华为 Tau Scaling Law + LogicFolding</li>
+  <li>头条 2 · 【世界模型】宇树 WVLA 2.0 鲁棒性演示</li>
+  <li>头条 3 · 【基础模型】xAI Grok Build Beta 全面开放</li>
+  <li>头条 4 · 【基础模型】Anthropic Chris Olah 梵蒂冈演讲</li>
+</ul>
+
+<p><b>一、前沿研究 (3 篇 arxiv 论文)</b></p>
+<ul>
+  <li><a href="https://my.feishu.cn/wiki/HFhawyp4cik3Mek3JZQcvP0tnQc#share-JySUdjpcLouLCGxWzEtcGGrWnve">多模态智能</a> · EvalVerse 电影级视频生成评测框架 (Songlin Yang · Anyi Rao)</li>
+  <li><a href="https://my.feishu.cn/wiki/HFhawyp4cik3Mek3JZQcvP0tnQc#share-Jf8Adq7dVoQSqzxWDDKcpZLEn0b">世界模型</a> · Fast-dDrive Block-Diffusion VLA 自动驾驶 (MIT Song Han)</li>
+  <li><a href="https://my.feishu.cn/wiki/HFhawyp4cik3Mek3JZQcvP0tnQc#share-KzYGdzd1ZoNUf6xlpmycw2Ltnof">ai4s</a> · AutoResearch AI 驱动科研自动化综述 (Northwestern Manling Li · Microsoft Jianfeng Gao)</li>
+</ul>
+
+<p><b>二、行业应用</b> · 当日 X 推文/官方动态(已去重头条信号)</p>
+<ul>
+  <li><a href="https://my.feishu.cn/wiki/HFhawyp4cik3Mek3JZQcvP0tnQc#share-YIZpdo7Zdo303txkyEjc8iXDnMd">基础模型 (产品 / Agentic)</a></li>
+  <li><a href="https://my.feishu.cn/wiki/HFhawyp4cik3Mek3JZQcvP0tnQc#share-Z09qdyD3cogrLux4tI2cdskEnkc">世界模型 (Robotics / 商业化)</a></li>
+  <li><a href="https://my.feishu.cn/wiki/HFhawyp4cik3Mek3JZQcvP0tnQc#share-X6yPdqoI8o6OOLxEXUBcuVq0n3d">AI infra (基础设施产品)</a></li>
+</ul>
+
+
+<hr/>
+
+<h2>头条</h2>
+
+<p>{anchor:headline_1}</p>
+<h3>华为在美国制裁压力下提出 Tau Scaling Law 芯片设计新路径，以缩短信号延迟替代传统晶体管缩小，声称可在不依赖顶级光刻设备情况下实现 1.4nm 级</h3>
+<ul>
+<li><b>信号源</b>:Rohan Paul @ 独立研究者（转述 Huawei IEEE ISCAS 发布）</li>
+<li><b>链接</b>:<a href="https://x.com/rohanpaul_ai/status/2058807460572606946">https://x.com/rohanpaul_ai/status/2058807460572606946</a></li>
+</ul>
+<callout emoji="🎯">
+  <p><b>Our Insights</b></p>
+  <p>行业默认认知是：先进制程 = 更小晶体管 = 依赖 <b>EUV(极紫外光刻)</b> + <b>TSMC</b>。因此制裁 = 锁死中国先进算力供应链。这一逻辑在 <b>华为</b> 于 <b>IEEE ISCAS</b> 发布 <b>Tau Scaling Law(τ 缩放定律)</b> + <b>LogicFolding(逻辑折叠架构)</b> 后，出现了第一个需要认真对待的反例信号。其核心机制不是缩小几何尺寸，而是压缩信号传播延迟（τ），通过三维布线折叠让等效互连路径缩短，声称可在 <b>SMIC</b> 现有 N+2 节点（约 <b>7nm</b> 等效制程）上逼近 <b>1.4nm 级别</b>密度指标。下一代 <b>Kirin</b> 手机芯片将是首个量产验证节点。</p>
+  <p>需强调：目前仅为会议论文，独立第三方尚未复现，良率与实际 PPA(功耗-性能-面积) 数据缺失。但关键认知<b>重估</b>在于：若部分验证成立，「制裁 = 算力天花板锁死」的线性假设将不再成立——中国本土芯片路线存在绕过光刻瓶颈的架构级替代路径，制裁的实际效力曲线可能比市场预期更快衰减。</p>
+  <p>投研意涵直接指向两类标的判断：其一，押注「制裁长期有效 → 中国 AI 算力持续短缺 → GPU 替代/国产算力溢价」逻辑的标的（含某几家 <b>NPU</b> 芯片公司）需要引入「架构绕行」的风险折扣；其二，专注 <b>3D IC(三维集成电路)</b> 封装、先进互连 EDA(电子设计自动化) 工具链的公司，若 τ Scaling 方向被更多厂商跟进，其市场空间将被<b>打开</b>——尤其是国内已布局 chiplet 与 3D 封装的 fabless 及封测标的。华为自身 HiSilicon 路线的技术可信度，也将影响外界对 <b>Ascend</b> 系列后续迭代的预期定价。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>联系熟悉 VLSI 物理设计的技术顾问，在 Kirin 新品发布前（预计 <b>2025Q4</b>）对 τ Scaling 的 PPA 声明做独立可行性评估，形成内部技术备忘</li>
+    <li>梳理现有及 pipeline 中押注「制裁长效」逻辑的算力标的，标注其核心假设对「架构绕行成立」情景的敏感度，评估是否需要调整概率权重</li>
+  </ul>
+</callout>
+<h5>事件要点</h5>
+<ul>
+<li><b>摘要</b>:华为在美国制裁压力下提出 Tau Scaling Law 芯片设计新路径，以缩短信号延迟替代传统晶体管缩小，声称可在不依赖顶级光刻设备情况下实现 1.4nm 级别密度</li>
+<li><b>认知提取</b>:华为提出以"缩短信号延迟时间常数 τ"替代"缩小晶体管尺寸"作为芯片性能提升的新主轴，即 Tau Scaling Law（Her's Law），并配套提出 LogicFolding 电路布局技术，通过将相关逻辑模块折叠靠近来减少关键导线长度、降低寄生电容与电阻。这在某种程度上类似于与其优化交通工具速度，不如直接缩短路程距离。</li>
+<li><b>涉及机构</b>:Huawei · HiSilicon · TSMC · Intel · IEEE ISCAS</li>
+<li><b>涉及人物</b>:He Tingbo</li>
+<li><b>涉及模型 / 产品</b>:Tau Scaling Law · Her's Law · LogicFolding</li>
+</ul>
+
+<hr/>
+
+<p>{anchor:headline_2}</p>
+<h3>Unitree 发布 WVLA 2.0 模型演示视频：机器人在会议室完成多任务自主清洁，单次录制，具备强外部干扰抵抗能力</h3>
+<ul>
+<li><b>信号源</b>:Unitree 官方 @ Unitree Robotics</li>
+<li><b>链接</b>:<a href="https://x.com/UnitreeRobotics/status/2058809948650484130">https://x.com/UnitreeRobotics/status/2058809948650484130</a></li>
+</ul>
+<callout emoji="🎯">
+  <p><b>Our Insights</b></p>
+  <p>主流观点认为具身智能 VLA（视觉-语言-动作）模型在真实非结构化场景中仍需大量人工干预，离商用部署有 2-3 年距离。<b>Unitree</b> 发布的 <b>WVLA 2.0</b> 视频打破了这一节奏预期：在会议室清洁场景中，单次录制完成多任务序列，期间承受强外部干扰（人为推拉、物体位移）后仍自主恢复执行——这是此前演示视频普遍回避的测试条件。</p>
+  <p>关键数字不是准确率，而是测试设计本身：<b>单次录制（single take）+ 多任务 + 强干扰同时成立</b>，三个维度同时过关意味着模型具备了一定的闭环恢复能力，而非脚本式顺序执行。此前业内对 VLA 鲁棒性的共识卡点是"任一扰动即需重置"，WVLA 2.0 的演示将这一卡点向后推移。</p>
+  <p>认知改变在于：具身智能的商用瓶颈可能不再是"能否完成任务"，而快速迁移至"单次部署能覆盖多少任务品类"和"异常恢复成本"——这将<b>重估</b>机器人软件层（任务调度、异常处理中间件）相对于硬件本体的价值比。</p>
+  <p>投研意涵：一是 <b>Unitree</b> 此举对同类硬件厂商（宇树竞品及 Figure、1X 等）的压力在于，鲁棒性 demo 门槛已被拉高，融资叙事中"实验室成功"将更难说服投资人；二是利好具身场景数据闭环公司——WVLA 2.0 的恢复能力背后必然依赖大量真实扰动场景数据，专注工业/商业清洁场景数据采集与标注的标的值得重新审视其护城河；三是商业清洁（酒店、办公室）作为首批落地场景的节奏窗口可能比预期提前 6-12 个月打开。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>联系 Unitree 技术团队或国内具身智能研究者，核实 WVLA 2.0 鲁棒性的实现路径是仿真数据增强还是真实场景大规模采集，以判断数据壁垒归属方向。</li>
+    <li>梳理商业清洁赛道已有标的（白普智能、云迹科技等）的产品路线图，评估其是否具备接入第三方 VLA 模型的软件接口，筛选潜在受益标的。</li>
+  </ul>
+</callout>
+<h5>事件要点</h5>
+<ul>
+<li><b>摘要</b>:Unitree 发布 WVLA 2.0 模型演示视频：机器人在会议室完成多任务自主清洁，单次录制，具备强外部干扰抵抗能力</li>
+<li><b>认知提取</b>:Unitree 展示其 WVLA 2.0 模型在真实会议室场景中执行多任务自主清洁操作，视频为单次连续录制，机器人在受到强外部干扰的情况下仍能保持自主运行。这类演示体现了 VLA（Vision-Language-Action）模型在具身智能任务中的鲁棒性进展。</li>
+<li><b>涉及机构</b>:Unitree</li>
+<li><b>涉及模型 / 产品</b>:WVLA 2.0</li>
+</ul>
+
+<hr/>
+
+<p>{anchor:headline_3}</p>
+<h3>xAI 推出 Grok Build Beta，面向 SuperGrok 和 X Premium+ 用户开放，支持 Plan Mode、图像/视频生成（Imagi</h3>
+<ul>
+<li><b>信号源</b>:xAI 官方</li>
+<li><b>链接</b>:<a href="https://x.com/xai/status/2058973760708091907">https://x.com/xai/status/2058973760708091907</a></li>
+</ul>
+<callout emoji="🎯">
+  <p><b>Our Insights</b></p>
+  <p>市场默认 xAI 是 Grok 聊天模型公司，与 <b>Anthropic</b>、<b>OpenAI</b> 在对话层竞争。<b>Grok Build</b> Beta 向全体 <b>SuperGrok</b> 和 <b>X Premium+</b> 用户开放，将 xAI 的触角直接延伸至终端侧 agentic coding 赛道——这里原本是 <b>Cursor</b>、<b>Claude Code</b> 和 <b>Windsurf</b> 的主场。核心机制是 Plan Mode（规划审批）+ 并行子 agent 架构，用户用自然语言下达指令，Grok 先生成可审批的步骤计划，再由子 agent 并行执行，降低 agentic loop 的失控风险。</p>
+  <p>关键认知改变：agentic coding 的<b>卡点</b>正从"谁的模型最强"转向"谁的分发渠道最宽"。Grok Build 绑定 X Premium+ 订阅用户，意味着它不需要开发者主动安装 IDE 插件，而是随 X 平台的用户基数自然触达。这与 Cursor 依赖付费 IDE 订阅、Claude Code 依赖 API 开发者的路径根本不同——分发逻辑<b>被压缩</b>为"已有社交平台会员"。</p>
+  <p>投研意涵：一是对 <b>Cursor</b>（估值约 <b>$90 亿</b>）的重估压力真实存在——当 frontier lab 自带海量用户直接下场，纯 IDE wrapper 的护城河需重新审视；二是"平台内嵌 agentic coding"这一模式若跑通，利好具备封闭生态（自有用户+自有模型+自有端侧入口）的垂直整合型标的，而纯渠道型 coding 工具的独立性空间收窄；三是 CLI-first 的 agent 形态暗示 xAI 在押注开发者工作流的基础设施层，值得对照 <b>Anthropic</b> Claude Code 的 MCP(模型上下文协议) 生态进展做横向比较。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>拆解 Grok Build 的 Plan Mode + 并行子 agent 架构与 Claude Code 的执行模式差异，判断 xAI 是否具备足够的 agent 可靠性来支撑复杂任务，而非仅限于 demo 级应用</li>
+    <li>核查 X Premium+ 的当前付费用户规模，估算 Grok Build 的潜在 Day-1 用户池，与 Cursor 披露的 <b>~50 万</b>付费用户对比，评估分发优势是否足以对 ARR(年度经常性收入) 构成实质冲击</li>
+  </ul>
+</callout>
+<h5>事件要点</h5>
+<ul>
+<li><b>摘要</b>:xAI 推出 Grok Build Beta，面向 SuperGrok 和 X Premium+ 用户开放，支持 Plan Mode、图像/视频生成（Imagine）及 CLI 自动化编排</li>
+<li><b>认知提取</b>:Grok Build 是 xAI 推出的一站式 AI 构建平台，集成了规划模式、多模态生成（图像/视频）和 CLI 自动化能力，允许用户通过 orchestrator 搭建复杂工作流。这在某种程度上类似于把 AI 助手从"对话工具"升级为"可编程的自动化代理平台"。</li>
+<li><b>涉及机构</b>:xAI</li>
+<li><b>涉及模型 / 产品</b>:Grok Build</li>
+</ul>
+
+<hr/>
+
+<p>{anchor:headline_4}</p>
+<h3>Anthropic 联合创始人 Chris Olah 在梵蒂冈发表演讲，披露 interpretability 团队在 AI 模型内部发现类似喜悦、恐惧、悲伤等</h3>
+<ul>
+<li><b>信号源</b>:Rohan Paul @ X（转述 Chris Olah @ Anthropic 梵蒂冈演讲）</li>
+<li><b>链接</b>:<a href="https://x.com/rohanpaul_ai/status/2058991698383085922">https://x.com/rohanpaul_ai/status/2058991698383085922</a></li>
+</ul>
+<callout emoji="🎯">
+  <p><b>Our Insights</b></p>
+  <p>市场对 AI 安全的主流叙事停留在"规则对齐"层面——即通过 RLHF(基于人类反馈的强化学习)等方法让模型行为符合预期。这一框架隐含一个前提：模型内部状态是可观测、可干预的。</p>
+  <p><b>Anthropic</b> 可解释性(interpretability)团队的最新发现正在动摇这个前提。<b>Chris Olah</b> 在梵蒂冈公开承认，研究人员在模型内部发现了与人类神经科学结构"镜像"的特征，以及疑似内省(introspection)与类情感状态的表征——连构建者自己都无法完整解释其来源。他明确将当前 AI 比作"从人类语言中生长出来的系统"，而非工程设计的产物，这意味着行为可控性的上限本身存在根本不确定性。</p>
+  <p>关键认知改变：AI 安全不只是"训练后对齐"问题，而正在演变为"训练中生长"的机制问题。这将<b>护城河</b>从"谁有最多 RLHF 数据"转向"谁能真正读懂模型内部发生了什么"——可解释性研究从辅助工具升格为核心能力。</p>
+  <p>投研意涵：第一，以 <b>Anthropic</b>、<b>DeepMind</b> 机制可解释性方向为代表的基础研究能力，短期内难以被纯应用层公司复制，其估值逻辑中的"安全溢价"有更强叙事支撑。第二，独立的 AI 可解释性与审计工具赛道(如 <b>Latent Space</b> 类初创、模型行为监控平台)将迎来监管驱动的需求窗口——欧盟 AI Act 落地节点与此类发现叠加，采购决策周期可能压缩。第三，若"类情感状态"叙事持续发酵，AI 伦理合规服务标的的定价权将被重估。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>梳理当前 portfolio 中基础模型公司的可解释性研究投入比例，判断其安全叙事是否有技术实质支撑，还是停留在 PR 层面</li>
+    <li>扫描独立 mechanistic interpretability(机制可解释性)工具链初创，重点看是否有团队在做跨模型架构的通用探针(probing)工具，评估其在监管合规场景的商业化路径</li>
+  </ul>
+</callout>
+<h5>事件要点</h5>
+<ul>
+<li><b>摘要</b>:Anthropic 联合创始人 Chris Olah 在梵蒂冈发表演讲，披露 interpretability 团队在 AI 模型内部发现类似喜悦、恐惧、悲伤等情绪的内部状态，并坦承对其含义存在不确定性</li>
+<li><b>认知提取</b>:Chris Olah 在梵蒂冈公开表示，Anthropic 的 interpretability 研究团队在模型内部发现了"神秘且令人不安"的结构——包括功能上类似人类情感状态的内部表征，且这些结构与神经科学发现存在镜像关系。他同时指出，当前 AI 更像是从人类语言"生长"出来的存在，而非被工程设计，这意味着连构建者自己也无法完全理解它们。</li>
+<li><b>涉及机构</b>:Anthropic · Vatican</li>
+<li><b>涉及人物</b>:Chris Olah</li>
+</ul>
+
+<hr/>
+
+
+<h2>一、前沿研究</h2>
+
+<p>{anchor:section_前沿_多模态智能}</p>
+<h3>多模态智能 (Multimodal Intelligence)</h3>
+<h4>EvalVerse：将电影专业美学系统化注入 VLM，构建电影级视频生成评测框架</h4>
+<ul>
+  <li><b>论文</b>：<a href="https://arxiv.org/abs/2605.23271">EvalVerse: A Comprehensive Evaluation Framework for Professional Cinematic Video Generation</a></li>
+  <li><b>信号源</b>：<b>Songlin Yang</b>（共一） · Anyi Rao（通讯）</li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b></p>
+  <p>视频生成 benchmark 长期停留在"prompt 指令遵循"维度——模型能不能生成对应画面。这是一个够用但远不够的评估框架，因为真正决定商业价值的是"电影级质量"：构图、节奏、表演、镜头语言。EvalVerse 的突破是把专业影视人士的主观审美判断结构化，再通过 expert-calibrated fine-tuning（专家校准微调）注入 VLM（视觉语言模型），使评测系统具备 Chain-of-Thought（链式推理）推理输出评分理由的能力。</p>
+  <p>这件事的格局意义在于：凭借"专业影视知识结构化 + 大规模标注 + VLM 微调"这套路径，EvalVerse 实际上是在为视频生成领域建立 reward model 基础设施。对<b>视频生成创业公司</b>（Runway、Pika、国内的即梦、可灵等）而言，这类评测框架一旦被采纳为行业标准，将倒逼它们在 cinematic quality 维度上公开对标——而非仅比拼 FID 或用户评分。<b>拥有专业影视数据标注资源的公司</b>护城河将因此增厚。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>追踪 EvalVerse 是否开放 benchmark 数据集及评测排行榜——若开放，可作为视频生成赛道横向对比的客观锚点，用于尽调已接触标的。</li>
+    <li>评估国内视频生成标的（可灵、即梦等）在 cinematic goodness 维度的真实能力，判断其产品定位是否支撑"电影级"叙事。</li>
+  </ul>
+</callout>
+<h5>摘要</h5>
+<p>EvalVerse 提出面向专业电影级视频生成的评测框架，核心创新是把专业影视人士的主观审美判断系统化数字化：先按前期制作/拍摄/后期三阶段构建电影专业分类体系，再通过大规模人工专家标注建立校准数据集，最后以 expert-calibrated fine-tuning 将这些信号注入 VLM，使评测模型在输出评分时同步输出 Chain-of-Thought 推理过程。评测范围覆盖多镜头序列与音视频整合等复杂场景，显著超越现有 benchmark 的单镜头 prompt-following 局限。</p>
+<h5>方法与结果</h5>
+<ul>
+  <li><b>方法框架</b>：三层架构——知识组织层（电影专业分类体系）/ 数据层（专家标注校准数据集）/ 模型层（expert-calibrated fine-tuning 注入 VLM）。</li>
+  <li><b>技术细节</b>：VLM 评测时输出 Chain-of-Thought 推理过程而非直接打分，同时保持与传统"rightness"指标的兼容性，提升可解释性与可信度。</li>
+  <li><b>主结果</b>：构建覆盖前期/拍摄/后期全流程的评测分类体系，填补传统 benchmark 忽视的 cinematic quality 维度。</li>
+  <li><b>关键结果点</b>：评测范围拓展至多镜头序列与音视频整合，为视频生成领域 reward model 和 evaluator agent 提供基础评测基础设施。</li>
+</ul>
+<h5>Researcher Mapping</h5>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr>
+      <th background-color="light-gray"><p><b>姓名（角色）</b></p></th>
+      <th background-color="light-gray"><p><b>现状</b></p></th>
+      <th background-color="light-gray"><p><b>GitHub</b></p></th>
+      <th background-color="light-gray"><p><b>邮箱 / 主页</b></p></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td vertical-align="top"><p><b>Songlin Yang</b>（共一·白名单）</p></td>
+      <td vertical-align="top"><p>— · —</p></td>
+      <td vertical-align="top"><p><a href="https://github.com/sustcsonglin">@sustcsonglin</a></p></td>
+      <td vertical-align="top"><p><a href="https://sustcsonglin.github.io/">主页</a></p></td>
+    </tr>
+    <tr>
+      <td vertical-align="top"><p>Anyi Rao（通讯）</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p><a href="https://github.com/anyirao">@anyirao</a></p></td>
+      <td vertical-align="top"><p>—</p></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>{anchor:section_前沿_世界模型}</p>
+<h3>世界模型 (World Model)</h3>
+<h4>Fast-dDrive：Block-Diffusion VLA 自动驾驶规划，nuScenes L2 误差 0.32m，推理吞吐提升 12×</h4>
+<ul>
+  <li><b>论文</b>：<a href="https://arxiv.org/abs/2605.23163">Fast-dDrive: Block-Diffusion VLA for Efficient and Accurate Autonomous Driving</a></li>
+  <li><b>信号源</b>：<b>MIT Song Han</b>（合作） · Kewei Zhang（共一） · Jie Jin Wang（共一）</li>
+</ul>
+<callout emoji="🤖">
+  <p><b>Our Insights</b></p>
+  <p>AR（自回归）模型的 KV cache（键值缓存）效率和 diffusion 模型的双向精炼能力此前被认为是互斥的——两套架构各有优势但难以融合。Fast-dDrive 凭借 block-diffusion 架构解决了这个卡点：语义单元内部做双向 diffusion 精炼，单元之间保持严格因果顺序，从而同时复用 KV cache 优势并规避全序列 diffusion 的"逻辑泄漏"。</p>
+  <p>影响落在两条线：(1) <b>自动驾驶端到端栈公司</b>（Wayve、Waabi 以及国内的文远知行、元戎启行等）的 VLA 路线可行性进一步获验证——nuScenes L2 误差 <b>0.32m</b> 叠加 <b>12×</b> 吞吐提升，意味着高精度 VLA 的车端实时部署障碍正在系统性降低；(2) 依赖传统模块化感知-规划-控制架构的供应商差异化空间被压缩，端到端路径的估值叙事将持续强化。MIT Song Han 团队与 SGLang 的深度整合也表明，<b>推理优化框架</b>已成为 VLA 落地的关键使能层。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>跟进 Fast-dDrive 是否有车企或 Tier-1 合作方参与，若有商业化意向，可作为 Song Han 团队下一个产业化节点追踪。</li>
+    <li>对已接触的自动驾驶端到端标的，评估其推理部署栈是否已集成 SGLang 类优化框架——未集成的在成本侧将面临显著劣势。</li>
+  </ul>
+</callout>
+<h5>摘要</h5>
+<p>Fast-dDrive 提出 block-diffusion VLA（视觉-语言-动作）框架用于自动驾驶端到端规划，将输出序列切分为语义单元，单元内部进行双向 diffusion 精炼、单元之间保持严格因果顺序，结合 Scaffold Speculative Decoding 和基于单一共享前缀 KV cache fork 多路径采样的低开销 test-time scaling，在 nuScenes 上平均 L2 误差降至 0.32m（基线提升 22%），结合 SGLang 后推理吞吐相比 AR baseline 提升 12×，在 WOD-E2E 测试集上达到 diffusion VLA SOTA 精度。</p>
+<h5>方法与结果</h5>
+<ul>
+  <li><b>方法框架</b>：block-diffusion 架构——结构性 token 冻结为 section scaffold，单元内双向 diffusion 精炼 + 单元间严格因果序；section-aware 训练策略针对安全关键规划场景优化。</li>
+  <li><b>技术细节</b>：Scaffold Speculative Decoding 利用冻结结构 token 作为草稿骨架减少 diffusion 步数；多路径轨迹采样（N rollouts）共享同一前缀 KV cache，以接近边际成本获得方差压缩效果。</li>
+  <li><b>主结果</b>：WOD-E2E 测试集 SOTA ADE@3s 和 ADE@5s，diffusion-based VLA 中最高 RFS；nuScenes 平均 L2 误差 0.32m，提升 22%。</li>
+  <li><b>关键结果点</b>：结合 SGLang 集成后推理吞吐相比 AR baseline 提升 12×，大幅缩短高容量 VLA 向车端实时部署的距离。</li>
+</ul>
+<h5>Researcher Mapping</h5>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr>
+      <th background-color="light-gray"><p><b>姓名（角色）</b></p></th>
+      <th background-color="light-gray"><p><b>现状</b></p></th>
+      <th background-color="light-gray"><p><b>GitHub</b></p></th>
+      <th background-color="light-gray"><p><b>邮箱 / 主页</b></p></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td vertical-align="top"><p>Kewei Zhang（共一）</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p><a href="https://github.com/jeffzhkw">@jeffzhkw</a></p></td>
+      <td vertical-align="top"><p><a href="https://xiwen1.github.io/">主页</a></p></td>
+    </tr>
+    <tr>
+      <td vertical-align="top"><p>Jie Jin Wang（共一）</p></td>
+      <td vertical-align="top"><p>— · —（导师 Nikos Tsagarakis）</p></td>
+      <td vertical-align="top"><p><a href="https://github.com/vangjin">@vangjin</a></p></td>
+      <td vertical-align="top"><p><a href="https://jaywang724.github.io/">主页</a></p></td>
+    </tr>
+    <tr>
+      <td vertical-align="top"><p><b>Song Han</b>（合作·白名单）</p></td>
+      <td vertical-align="top"><p>Boston University · AP at MIT</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p>—</p></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>{anchor:section_前沿_ai4s}</p>
+<h3>ai4s (AI for Science)</h3>
+<h4>AutoResearch：AI 驱动科研自动化全链路综述，提出 Vibe Research 谱系与五维评估体系</h4>
+<ul>
+  <li><b>论文</b>：<a href="https://arxiv.org/abs/2605.23204">AutoResearch: A Survey on AI-Driven Scientific Research Automation</a></li>
+  <li><b>信号源</b>：<b>Northwestern Manling Li</b> · <b>Microsoft Jianfeng Gao</b></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>Our Insights</b></p>
+  <p>过去两年 AI 科研工具的讨论基本停留在"某个环节比人快多少"——文献综述、代码生成、实验设计各自孤立。这篇综述的核心贡献是把视角从单点工具拉升到全链路工作流：AutoResearch 谱系将人工主导（Vibe Research）到 AI 自主科研之间的连续空间系统化，并用 novelty / validity / impact / reliability / provenance 五维指标框架评估各类系统。</p>
+  <p>影响在两条线上：(1) <b>AI 科研自动化平台</b>（如 Sakana AI Scientist、FutureHouse 等）的估值叙事将从"提速"转向"全流程闭环能力"，评估维度会向 provenance 追溯和跨域鲁棒性收紧；(2) 综述明确指出 AI 在具身实验、伦理审查、机构问责场景仍无法独立运作——这意味着"全自动 AI 科学家"作为短期投资叙事存在高估风险，<b>混合人机协作（Vibe Research 区间）的工具型公司</b>在近 2-3 年更有落地可能。</p>
+  <p><b>Potential To-dos</b></p>
+  <ul>
+    <li>排查已接触的 AI 科研自动化标的，评估其产品能力是否覆盖完整五大工作流条件（尤其 provenance tracking 和 feedback/validation 环节），能力碎片化的标的需下调估值预期。</li>
+    <li>关注 Manling Li 团队后续是否配套发布 AutoResearch benchmark——若发布，将成为赛道标准化评估的重要节点，提前跟进。</li>
+  </ul>
+</callout>
+<h5>摘要</h5>
+<p>综述论文以 AutoResearch 为核心框架，系统梳理 AI 驱动科研自动化的全链路进展，覆盖文献挖掘与研究 grounding、假设生成与规划、实验与工具使用、反馈验证与评审、报告与知识传播五大工作流条件。论文引入 Vibe Research 概念，特指基于 prompt 辅助与人工验证的人机协作区间，与更高自主度的 AI 主导模式相区分，并构建 novelty / validity / impact / reliability / provenance 五维评估体系，指出当前 AI 在结构化可执行领域更可信，在具身或需机构问责场景仍有明显局限。</p>
+<h5>方法与结果</h5>
+<ul>
+  <li><b>方法框架</b>：综述形式构建 AutoResearch 分析框架，按五大工作流条件系统梳理现有 AI 科学家系统、混合主动协作框架、benchmark、领域部署及开源基础设施。</li>
+  <li><b>技术细节</b>：引入 Vibe Research 概念，通过控制权、证据链、执行、验证、问责五维度分析各系统如何在工作流中重新分配人机责任。</li>
+  <li><b>主结果</b>：提出 AutoResearch 谱系，涵盖从 Vibe Research（人工主导）到 AI 完全主导的全范围。</li>
+  <li><b>关键结果点</b>：综述揭示当前 AI 科研自动化系统碎片化严重，在证据保存、可重复性、跨领域鲁棒性方面存在共性短板；AI 自主性在具身或伦理场景仍难以独立运作。</li>
+</ul>
+<h5>Researcher Mapping</h5>
+<table>
+  <colgroup><col width="180"/><col/><col width="130"/><col width="180"/></colgroup>
+  <thead>
+    <tr>
+      <th background-color="light-gray"><p><b>姓名（角色）</b></p></th>
+      <th background-color="light-gray"><p><b>现状</b></p></th>
+      <th background-color="light-gray"><p><b>GitHub</b></p></th>
+      <th background-color="light-gray"><p><b>邮箱 / 主页</b></p></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td vertical-align="top"><p><b>Manling Li</b>（合作·白名单）</p></td>
+      <td vertical-align="top"><p>— · —</p></td>
+      <td vertical-align="top"><p><a href="https://github.com/limanling">@limanling</a></p></td>
+      <td vertical-align="top"><p><a href="https://limanling.github.io/">主页</a></p></td>
+    </tr>
+    <tr>
+      <td vertical-align="top"><p><b>Jianfeng Gao</b>（资深合作·白名单）</p></td>
+      <td vertical-align="top"><p>— · —</p></td>
+      <td vertical-align="top"><p>—</p></td>
+      <td vertical-align="top"><p><a href="https://www.microsoft.com/en-us/research/people/jfgao/">主页</a></p></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<hr/>
+
+<h2>二、行业应用</h2>
+
+<p>{anchor:section_应用_基础模型}</p>
+<h3>基础模型 (产品 / 集成 / Agentic 商业化)</h3>
+
+<h4>xAI Grok Build Beta 开放：Plan Mode + 并行 sub-agents + CLI 编排</h4>
+<p><em>头条已收录此信号，详见上方头条卡片。</em></p>
+
+<h4>Google 论文：LLM 应通过元认知（Metacognition）实现"忠实不确定性"</h4>
+<ul>
+  <li><b>信号源</b>：<b>Rohan Paul</b>（转述 Google 论文）</li>
+  <li><b>原文</b>：<a href="https://x.com/rohanpaul_ai/status/2059040056976032121">x.com/rohanpaul_ai/status/2059040056976032121</a></li>
+</ul>
+<callout emoji="🎯">
+  <p><b>Our Insights</b></p>
+  <p><b>Google</b> 将 hallucination（幻觉）问题重新定义为"过度自信"而非"知识缺失"——模型目标应是区分"我知道"与"我在猜测"，而非追求完美准确率。"utility tax"概念点出了产品设计的真实困境：消除错误答案必须拒绝大量正确答案，导致商业产品偏向自信。</p>
+  <p>这一框架若被采纳为 agentic 系统设计标准，将直接影响<b>AI agent 可靠性评估</b>的标准体系，对投研团队评估 agent 标的护城河的方法论也需相应更新。</p>
+</callout>
+<p>Google 论文提出 metacognition（元认知）框架，将 hallucination 本质定义为过度自信而非知识不足，目标应转向 faithful uncertainty（忠实不确定性）——模型语言输出须与内部置信度对齐。论文引入"utility tax"概念解释模型为何倾向于自信，并指出在 agentic 场景下，不确定性应作为触发验证或停止行动的决策信号。</p>
+
+<h4>Nexus 多智能体时间序列预测：分工架构在住房和股票预测上超越 TimesFM-2.5</h4>
+<ul>
+  <li><b>信号源</b>：<b>Carlos E. Perez</b> @ IntuitMachine</li>
+  <li><b>原文</b>：<a href="https://x.com/IntuitMachine/status/2058861142026457316">x.com/IntuitMachine/status/2058861142026457316</a></li>
+</ul>
+<callout emoji="💡">
+  <p><b>Our Insights</b></p>
+  <p>Nexus 的核心是"分工代替堆量"：把历史上下文构建、宏观预测、微观预测、校准融合拆给 4 个专用 agent，通过 6-fold 回测筛选校准规则。在 post-cutoff 零样本测试中，住房预测（Zillow）MAPE 提升 <b>12.8%</b>、股票预测提升 <b>15.3%</b>，优于 TimesFM-2.5。</p>
+  <p>对<b>金融 AI 工具标的</b>（量化、风控、资产配置 AI）而言，multi-agent 分工架构在时间序列预测场景的有效性获得进一步验证——但需注意该结果来自独立博主转述，尚需原始论文复现确认。</p>
+</callout>
+<p>Nexus 将时间序列预测拆分为 4 个专用 agent（历史上下文构建 → 宏观/微观并行预测 → 校准融合），通过 6-fold 回测筛选校准规则（≥5% 准确率提升阈值），在 Zillow 住房预测上 MAPE 提升 12.8%、股票预测提升 15.3%，优于 TimesFM-2.5；post-cutoff 零样本测试，跨评判者推理质量一致性得分 0.87。</p>
+
+<hr/>
+
+<p>{anchor:section_应用_世界模型}</p>
+<h3>世界模型 (Robotics / Embodied · 商业化)</h3>
+
+<h4>Unitree WVLA 2.0：真实会议室多任务自主清洁演示</h4>
+<p><em>头条已收录此信号，详见上方头条卡片。</em></p>
+
+<h4>X Square Robot 家用机器人进入真实家庭测试，底层运行 WALL-B 世界模型</h4>
+<ul>
+  <li><b>信号源</b>：<b>Rohan Paul</b>（独立评论者）</li>
+  <li><b>原文</b>：<a href="https://x.com/rohanpaul_ai/status/2058930922435838343">x.com/rohanpaul_ai/status/2058930922435838343</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>Our Insights</b></p>
+  <p>X Square Robot 将演示场景从舞台推进到真实家庭环境，依托 WALL-B 世界模型处理家居高不确定性。从"实验室演示"到"真实家庭测试"是机器人商业化最关键的跨越节点，但当前信息来自独立评论者转述，需关注 X Square Robot 的官方披露确认。</p>
+  <p>对<b>家用服务机器人赛道</b>（Figure AI、1X、国内的追觅科技等）而言，世界模型在开放家庭场景的鲁棒性验证正逐步从少数头部玩家扩散，赛道竞争窗口正在提速收窄。</p>
+</callout>
+<p>X Square Robot 将下一代家用机器人推向真实家庭场景测试，底层运行 WALL-B 世界模型，融合视觉、语言、触觉、动作与物理预测能力，处理家居环境（整理杂物、避让宠物、适应动态障碍）等高不确定性任务。</p>
+
+<hr/>
+
+<p>{anchor:section_应用_AI_infra}</p>
+<h3>AI infra (基础设施产品)</h3>
+
+<h4>NVIDIA DGX Spark + MiniMax M2.7：两台桌面设备本地并发运行 16 个 AI agent</h4>
+<ul>
+  <li><b>信号源</b>：<b>NVIDIA AI</b> 官方</li>
+  <li><b>原文</b>：<a href="https://x.com/NVIDIAAI/status/2058921531481510074">x.com/NVIDIAAI/status/2058921531481510074</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b></p>
+  <p><b>NVIDIA</b> 展示两台 DGX Spark 以 NVFP4（4-bit 量化）格式运行 MiniMax M2.7，实现 16 个 AI agent 并发本地推理——这是把服务器级 multi-agent 负载压缩进桌面设备的关键验证。</p>
+  <p>对<b>企业本地部署 AI 基础设施标的</b>而言，DGX Spark 的 multi-agent 能力验证正在为"本地化部署替代云端 API"叙事提供硬件背书，对依赖云端 inference-as-a-service 的初创公司是潜在竞争压力。</p>
+</callout>
+<p>NVIDIA 官方展示在两台 DGX Spark 上以 NVFP4 量化格式运行 MiniMax M2.7，实现 16 个 AI agent 并发本地推理，验证桌面级设备处理服务器级 multi-agent 工作负载的可行性。</p>
+
+<hr/>
+
+
+
+<hr/>
+
+<p><em>本日报 v2 由 HH Research Pipeline 重写 · LLM 二次审核选 4 头条 · 双模式 TLDR · Sonnet 头条 Insights · 去重头条已收录信号</em></p>

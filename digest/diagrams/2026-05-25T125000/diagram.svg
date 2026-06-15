@@ -1,0 +1,285 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 2150" width="1600" height="2150">
+  <!-- Background -->
+  <rect x="0" y="0" width="1600" height="2150" fill="#FAFBFC"/>
+
+  <!-- ==================== TITLE BAND ==================== -->
+  <rect x="40" y="30" width="1520" height="100" fill="#1F2A44" rx="8"/>
+  <text x="800" y="80" text-anchor="middle" font-family="Noto Sans SC" font-size="34" font-weight="700" fill="#FFFFFF">HH Research Daily — Pipeline Architecture</text>
+  <text x="800" y="110" text-anchor="middle" font-family="Noto Sans SC" font-size="16" fill="#A8B3CC">snapshot 2026-05-25 · 4 sources · 6 launchd jobs · 3 broadcast channels · G0/G1 订阅分组</text>
+
+  <!-- ==================== SECTION 1: SCHEDULERS ==================== -->
+  <text x="60" y="175" font-family="Noto Sans SC" font-size="20" font-weight="700" fill="#1F2A44">① 调度器 launchd (TZ=Asia/Shanghai)</text>
+
+  <!-- Main pipeline @ 08:30 -->
+  <rect x="60" y="195" width="350" height="100" fill="#E3EBF5" stroke="#3B5278" stroke-width="2" rx="6"/>
+  <rect x="60" y="195" width="350" height="28" fill="#3B5278" rx="6"/>
+  <text x="75" y="215" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">08:30 BJT  主线 daily pipeline</text>
+  <text x="75" y="245" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">com.hh-research.daily-pipeline-main</text>
+  <text x="75" y="265" font-family="Noto Sans SC" font-size="12" fill="#5C6878">窗口 = BJT 昨 08:30 → 今 08:30</text>
+  <text x="75" y="282" font-family="Noto Sans SC" font-size="12" fill="#5C6878">dedup = dedup_main.sqlite</text>
+
+  <!-- Main broadcast @ 12:00 -->
+  <rect x="430" y="195" width="350" height="100" fill="#E3EBF5" stroke="#3B5278" stroke-width="2" rx="6"/>
+  <rect x="430" y="195" width="350" height="28" fill="#3B5278" rx="6"/>
+  <text x="445" y="215" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">12:00 BJT   主线 broadcast</text>
+  <text x="445" y="245" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">com.hh-research.broadcast-main</text>
+  <text x="445" y="265" font-family="Noto Sans SC" font-size="12" fill="#5C6878">读 state file → 3 渠道</text>
+  <text x="445" y="282" font-family="Noto Sans SC" font-size="12" fill="#5C6878">CARD_TITLE 含 "· 主线" 后缀</text>
+
+  <!-- Subscribe listener -->
+  <rect x="800" y="195" width="350" height="100" fill="#ECEDEF" stroke="#5C6470" stroke-width="2" rx="6"/>
+  <rect x="800" y="195" width="350" height="28" fill="#5C6470" rx="6"/>
+  <text x="815" y="215" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">常驻 RunAtLoad+KeepAlive</text>
+  <text x="815" y="245" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">com.hh-research.subscribe-listener</text>
+  <text x="815" y="265" font-family="Noto Sans SC" font-size="12" fill="#5C6878">监听 im.message.receive_v1</text>
+  <text x="815" y="282" font-family="Noto Sans SC" font-size="12" fill="#5C6878">关键词 订阅/取消/状态</text>
+
+  <!-- Health check -->
+  <rect x="1170" y="195" width="380" height="100" fill="#ECEDEF" stroke="#5C6470" stroke-width="2" rx="6"/>
+  <rect x="1170" y="195" width="380" height="28" fill="#5C6470" rx="6"/>
+  <text x="1185" y="215" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">00:30 BJT   health-check (支线)</text>
+  <text x="1185" y="245" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">com.hh-research.health-check</text>
+  <text x="1185" y="265" font-family="Noto Sans SC" font-size="12" fill="#5C6878">+ 支线 daily-pipeline @00:00 / broadcast @09:30</text>
+  <text x="1185" y="282" font-family="Noto Sans SC" font-size="12" fill="#9B5B25">计划 5.30 退役</text>
+
+  <!-- Arrow scheduler ->sources -->
+  <polyline points="235,295 235,335" stroke="#3B5278" stroke-width="2" fill="none"/>
+  <polygon points="230,335 240,335 235,348" fill="#3B5278"/>
+
+  <!-- ==================== SECTION 2: SOURCES ==================== -->
+  <text x="60" y="380" font-family="Noto Sans SC" font-size="20" font-weight="700" fill="#1F2A44">② Step 2: 数据采集 (4 sources, 并行)</text>
+
+  <!-- arxiv -->
+  <rect x="60" y="400" width="350" height="130" fill="#D6F0E0" stroke="#2D8E4F" stroke-width="2" rx="6"/>
+  <rect x="60" y="400" width="350" height="28" fill="#2D8E4F" rx="6"/>
+  <text x="75" y="420" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">arXiv Collector</text>
+  <text x="75" y="448" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">mode = category (fast backfill)</text>
+  <text x="75" y="468" font-family="Noto Sans SC" font-size="12" fill="#5C6878">7 类目: cs.AI/LG/CL/CV/RO/MA + stat.ML</text>
+  <text x="75" y="488" font-family="Noto Sans SC" font-size="12" fill="#5C6878">查 /list/&lt;cat&gt;/pastweek + 本地过滤白名单</text>
+  <text x="75" y="508" font-family="Noto Sans SC" font-size="12" fill="#B83333">EDT date +1day = UTC 真 announce 时刻</text>
+  <text x="75" y="524" font-family="Noto Sans SC" font-size="11" fill="#B83333">8:30 主线时点偶发漏抓 Fri announcement</text>
+
+  <!-- X -->
+  <rect x="430" y="400" width="350" height="130" fill="#D6F0E0" stroke="#2D8E4F" stroke-width="2" rx="6"/>
+  <rect x="430" y="400" width="350" height="28" fill="#2D8E4F" rx="6"/>
+  <text x="445" y="420" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">X Collector</text>
+  <text x="445" y="448" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">socialdata.tools per-user lookup</text>
+  <text x="445" y="468" font-family="Noto Sans SC" font-size="12" fill="#5C6878">246 个 X handle (白名单)</text>
+  <text x="445" y="488" font-family="Noto Sans SC" font-size="12" fill="#5C6878">--x-max-pages 4 · 60s timeout/user</text>
+  <text x="445" y="508" font-family="Noto Sans SC" font-size="12" fill="#5C6878">~13 min/run (250 用户)</text>
+
+  <!-- OpenAlex -->
+  <rect x="800" y="400" width="350" height="130" fill="#D6F0E0" stroke="#2D8E4F" stroke-width="2" rx="6"/>
+  <rect x="800" y="400" width="350" height="28" fill="#2D8E4F" rx="6"/>
+  <text x="815" y="420" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">OpenAlex Collector</text>
+  <text x="815" y="448" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">24 verified authors (openalex_url)</text>
+  <text x="815" y="468" font-family="Noto Sans SC" font-size="12" fill="#5C6878">tenacity retry · ~10s/run</text>
+  <text x="815" y="488" font-family="Noto Sans SC" font-size="12" fill="#5C6878">补 arxiv 路径缺失的论文</text>
+
+  <!-- RSS -->
+  <rect x="1170" y="400" width="380" height="130" fill="#D6F0E0" stroke="#2D8E4F" stroke-width="2" rx="6"/>
+  <rect x="1170" y="400" width="380" height="28" fill="#2D8E4F" rx="6"/>
+  <text x="1185" y="420" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">RSS Collector</text>
+  <text x="1185" y="448" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">14 公司/实验室官方 feed</text>
+  <text x="1185" y="468" font-family="Noto Sans SC" font-size="12" fill="#5C6878">config/rss_feeds.yaml</text>
+  <text x="1185" y="488" font-family="Noto Sans SC" font-size="12" fill="#5C6878">tenacity 重试 3 次 · ~30s/run</text>
+
+  <!-- Convergence arrows from sources -->
+  <polyline points="235,530 235,560 800,560 800,590" stroke="#2D8E4F" stroke-width="2" fill="none"/>
+  <polyline points="605,530 605,560" stroke="#2D8E4F" stroke-width="2" fill="none"/>
+  <polyline points="975,530 975,560" stroke="#2D8E4F" stroke-width="2" fill="none"/>
+  <polyline points="1360,530 1360,560 800,560" stroke="#2D8E4F" stroke-width="2" fill="none"/>
+  <polygon points="793,585 807,585 800,600" fill="#2D8E4F"/>
+
+  <!-- ==================== SECTION 3: DEDUP ==================== -->
+  <text x="60" y="640" font-family="Noto Sans SC" font-size="20" font-weight="700" fill="#1F2A44">③ Step 3: SQLite 去重</text>
+  <rect x="400" y="615" width="800" height="60" fill="#FCEFCD" stroke="#C9982A" stroke-width="2" rx="6"/>
+  <text x="800" y="640" text-anchor="middle" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#1F2A44">data/dedup_main.sqlite</text>
+  <text x="800" y="660" text-anchor="middle" font-family="Noto Sans SC" font-size="12" fill="#5C6878">按 source_id 去重 · 主线/支线独立 db · 幂等</text>
+
+  <!-- Arrow dedup ->extractor -->
+  <polyline points="800,675 800,705" stroke="#1F2A44" stroke-width="2" fill="none"/>
+  <polygon points="793,705 807,705 800,718" fill="#1F2A44"/>
+
+  <!-- ==================== SECTION 4: EXTRACTOR ==================== -->
+  <text x="60" y="755" font-family="Noto Sans SC" font-size="20" font-weight="700" fill="#1F2A44">④ Step 4: Signal Extractor</text>
+  <rect x="400" y="725" width="800" height="100" fill="#E8DCFE" stroke="#6E3FB8" stroke-width="2" rx="6"/>
+  <rect x="400" y="725" width="800" height="28" fill="#6E3FB8" rx="6"/>
+  <text x="800" y="745" text-anchor="middle" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">Claude Sonnet 4.6 via Bedrock (us-east-1)</text>
+  <text x="800" y="778" text-anchor="middle" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">tool_use schema (HH 5-track) · prompt caching · ThreadPool 10 workers</text>
+  <text x="800" y="798" text-anchor="middle" font-family="Noto Sans SC" font-size="12" fill="#5C6878">输出 Signal{ source, source_id, author, novelty, headline_priority, category, summary_zh ... }</text>
+  <text x="800" y="816" text-anchor="middle" font-family="Noto Sans SC" font-size="12" fill="#5C6878">~10 min @ 200 篇 (vs 串行 95 min)</text>
+
+  <!-- Arrow extractor ->storage -->
+  <polyline points="800,825 800,855" stroke="#1F2A44" stroke-width="2" fill="none"/>
+  <polygon points="793,855 807,855 800,868" fill="#1F2A44"/>
+
+  <!-- ==================== SECTION 5: BITABLE STORAGE ==================== -->
+  <text x="60" y="905" font-family="Noto Sans SC" font-size="20" font-weight="700" fill="#1F2A44">⑤ Step 5: 持久化</text>
+  <rect x="400" y="875" width="800" height="60" fill="#FCEFCD" stroke="#C9982A" stroke-width="2" rx="6"/>
+  <text x="800" y="900" text-anchor="middle" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#1F2A44">Bitable signals 表 (tbllGsqhy4swhzkz)</text>
+  <text x="800" y="920" text-anchor="middle" font-family="Noto Sans SC" font-size="12" fill="#5C6878">每条信号 1 行 · 含 extract_json (完整 Signal pydantic)</text>
+
+  <!-- Arrow storage ->enrichment -->
+  <polyline points="800,935 800,965" stroke="#1F2A44" stroke-width="2" fill="none"/>
+  <polygon points="793,965 807,965 800,978" fill="#1F2A44"/>
+
+  <!-- ==================== SECTION 6: RM V4 ==================== -->
+  <text x="60" y="1015" font-family="Noto Sans SC" font-size="20" font-weight="700" fill="#1F2A44">⑥ Step 5.5: 作者富化 (Researcher Mapping V4)</text>
+  <rect x="400" y="985" width="800" height="100" fill="#FBE0E8" stroke="#B2386F" stroke-width="2" rx="6"/>
+  <rect x="400" y="985" width="800" height="28" fill="#B2386F" rx="6"/>
+  <text x="800" y="1005" text-anchor="middle" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">enrich_paper_coauthors_v4 · 双源 + 审查 agent</text>
+  <text x="800" y="1035" text-anchor="middle" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">arxiv HTML + OpenAlex · verify_agent 拒绝错配 · parallel_workers=4</text>
+  <text x="800" y="1055" text-anchor="middle" font-family="Noto Sans SC" font-size="12" fill="#5C6878">填充 Signal.coauthors (姓名/角色/现状/GitHub/邮箱)</text>
+  <text x="800" y="1073" text-anchor="middle" font-family="Noto Sans SC" font-size="12" fill="#5C6878">仅对白名单 arxiv (author_record_id ≠ null) 触发</text>
+
+  <!-- Arrow enrichment ->writer -->
+  <polyline points="800,1085 800,1115" stroke="#1F2A44" stroke-width="2" fill="none"/>
+  <polygon points="793,1115 807,1115 800,1128" fill="#1F2A44"/>
+
+  <!-- ==================== SECTION 7: DAILY WRITER ==================== -->
+  <text x="60" y="1165" font-family="Noto Sans SC" font-size="20" font-weight="700" fill="#1F2A44">⑦ Step 6: 日报生成 (Daily Writer)</text>
+  <rect x="400" y="1135" width="800" height="130" fill="#E8DCFE" stroke="#6E3FB8" stroke-width="2" rx="6"/>
+  <rect x="400" y="1135" width="800" height="28" fill="#6E3FB8" rx="6"/>
+  <text x="800" y="1155" text-anchor="middle" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">DailyWriter · Claude Sonnet 4.6 · MAX_TOKENS=64K</text>
+  <text x="800" y="1188" text-anchor="middle" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">v5 双桶: FRONTIER_CAP=40 (arxiv/OpenAlex/X 引用论文) · INDUSTRY_CAP=50 (其他 X / RSS)</text>
+  <text x="800" y="1208" text-anchor="middle" font-family="Noto Sans SC" font-size="13" fill="#1F2A44">头条配额 HEADLINE_QUOTA = 3 frontier + 2 industry (max 5)</text>
+  <text x="800" y="1230" text-anchor="middle" font-family="Noto Sans SC" font-size="12" fill="#5C6878">输出 XML 模板 (TL;DR / 内容导览 / 头条 / 前沿研究 / 行业应用 / 折叠区)</text>
+  <text x="800" y="1248" text-anchor="middle" font-family="Noto Sans SC" font-size="12" fill="#B83333">LLM 偶发输出思考前缀 → publisher 误判为 markdown 模式</text>
+
+  <!-- Arrow writer ->publish -->
+  <polyline points="800,1265 800,1295" stroke="#1F2A44" stroke-width="2" fill="none"/>
+  <polygon points="793,1295 807,1295 800,1308" fill="#1F2A44"/>
+
+  <!-- ==================== SECTION 8: PUBLISHING ==================== -->
+  <text x="60" y="1345" font-family="Noto Sans SC" font-size="20" font-weight="700" fill="#1F2A44">⑧ Publishing (顺序执行)</text>
+
+  <rect x="60" y="1315" width="350" height="120" fill="#D5EEF7" stroke="#2D8AB0" stroke-width="2" rx="6"/>
+  <rect x="60" y="1315" width="350" height="28" fill="#2D8AB0" rx="6"/>
+  <text x="75" y="1335" font-family="Noto Sans SC" font-size="13" font-weight="700" fill="#FFFFFF">publish_digest</text>
+  <text x="75" y="1363" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">lark_doc_publisher.py</text>
+  <text x="75" y="1382" font-family="Noto Sans SC" font-size="11" fill="#5C6878">创建 wiki node + 写 doc 内容</text>
+  <text x="75" y="1400" font-family="Noto Sans SC" font-size="11" fill="#5C6878">自动检测 XML / markdown 模式</text>
+  <text x="75" y="1417" font-family="Noto Sans SC" font-size="11" fill="#5C6878">剥 ```xml fence</text>
+
+  <rect x="430" y="1315" width="350" height="120" fill="#D5EEF7" stroke="#2D8AB0" stroke-width="2" rx="6"/>
+  <rect x="430" y="1315" width="350" height="28" fill="#2D8AB0" rx="6"/>
+  <text x="445" y="1335" font-family="Noto Sans SC" font-size="13" font-weight="700" fill="#FFFFFF">insert_signal_images</text>
+  <text x="445" y="1363" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">image_extractor.py</text>
+  <text x="445" y="1382" font-family="Noto Sans SC" font-size="11" fill="#5C6878">ar5iv 抓首图 (论文 ≥ 7 天)</text>
+  <text x="445" y="1400" font-family="Noto Sans SC" font-size="11" fill="#5C6878">PyMuPDF PDF fallback (条件触发)</text>
+  <text x="445" y="1417" font-family="Noto Sans SC" font-size="11" fill="#B83333">&lt; 7 天论文常 0 张</text>
+
+  <rect x="800" y="1315" width="350" height="120" fill="#D5EEF7" stroke="#2D8AB0" stroke-width="2" rx="6"/>
+  <rect x="800" y="1315" width="350" height="28" fill="#2D8AB0" rx="6"/>
+  <text x="815" y="1335" font-family="Noto Sans SC" font-size="13" font-weight="700" fill="#FFFFFF">inject_anchors_inplace</text>
+  <text x="815" y="1363" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">publish_with_anchors.py</text>
+  <text x="815" y="1382" font-family="Noto Sans SC" font-size="11" fill="#5C6878">marker 改写为真 anchor_id</text>
+  <text x="815" y="1400" font-family="Noto Sans SC" font-size="11" fill="#5C6878">URL = wiki/&lt;node&gt;#share-&lt;anchor&gt;</text>
+  <text x="815" y="1417" font-family="Noto Sans SC" font-size="11" fill="#B83333">{anchor:xx} 被飞书 parser 吃掉</text>
+
+  <rect x="1170" y="1315" width="380" height="120" fill="#D5EEF7" stroke="#2D8AB0" stroke-width="2" rx="6"/>
+  <rect x="1170" y="1315" width="380" height="28" fill="#2D8AB0" rx="6"/>
+  <text x="1185" y="1335" font-family="Noto Sans SC" font-size="13" font-weight="700" fill="#FFFFFF">notify_digest_ready + ops_metrics</text>
+  <text x="1185" y="1363" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">个人飞书 IM ping + Bitable 写</text>
+  <text x="1185" y="1382" font-family="Noto Sans SC" font-size="11" fill="#5C6878">summary 写 ops_metrics 表</text>
+  <text x="1185" y="1400" font-family="Noto Sans SC" font-size="11" fill="#5C6878">含成本/耗时/各源数</text>
+  <text x="1185" y="1417" font-family="Noto Sans SC" font-size="11" fill="#5C6878">写 state file last_digest_main.json</text>
+
+  <!-- Arrows publish ->state -->
+  <polyline points="800,1435 800,1465" stroke="#1F2A44" stroke-width="2" fill="none"/>
+  <polygon points="793,1465 807,1465 800,1478" fill="#1F2A44"/>
+
+  <!-- ==================== SECTION 9: STATE FILE ==================== -->
+  <rect x="400" y="1475" width="800" height="60" fill="#FCEFCD" stroke="#C9982A" stroke-width="2" rx="6"/>
+  <text x="800" y="1500" text-anchor="middle" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#1F2A44">data/state/last_digest_main.json</text>
+  <text x="800" y="1520" text-anchor="middle" font-family="Noto Sans SC" font-size="12" fill="#5C6878">{ date, url, status, digest_local_path, line } · 12:00 broadcast 读此</text>
+
+  <!-- Arrow state ->broadcast -->
+  <polyline points="800,1535 800,1570" stroke="#C56C2C" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  <text x="850" y="1558" font-family="Noto Sans SC" font-size="12" fill="#C56C2C">等待 12:00 cron 触发</text>
+  <polygon points="793,1570 807,1570 800,1583" fill="#C56C2C"/>
+
+  <!-- ==================== SECTION 10: BROADCAST ==================== -->
+  <text x="60" y="1620" font-family="Noto Sans SC" font-size="20" font-weight="700" fill="#1F2A44">⑨ 广播 (12:00 BJT)</text>
+
+  <!-- 飞书企业群 -->
+  <rect x="60" y="1590" width="490" height="160" fill="#FCE5D0" stroke="#C56C2C" stroke-width="2" rx="6"/>
+  <rect x="60" y="1590" width="490" height="28" fill="#C56C2C" rx="6"/>
+  <text x="75" y="1610" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">飞书企业群 webhook</text>
+  <text x="75" y="1640" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">send_digest_to_enterprise.py</text>
+  <text x="75" y="1660" font-family="Noto Sans SC" font-size="11" fill="#5C6878">interactive 卡片 · HMAC-SHA256 签名</text>
+  <text x="75" y="1678" font-family="Noto Sans SC" font-size="11" fill="#5C6878">HH_LARK_ENTERPRISE_WEBHOOK_URL</text>
+  <text x="75" y="1700" font-family="Noto Sans SC" font-size="12" fill="#2D8E4F">业务群 1 个 · 必推</text>
+  <text x="75" y="1718" font-family="Noto Sans SC" font-size="11" fill="#5C6878">5.25 主线 ec=0 </text>
+
+  <!-- 飞书 1-on-1 bot -->
+  <rect x="570" y="1590" width="490" height="160" fill="#FCE5D0" stroke="#C56C2C" stroke-width="2" rx="6"/>
+  <rect x="570" y="1590" width="490" height="28" fill="#C56C2C" rx="6"/>
+  <text x="585" y="1610" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">飞书 1-on-1 bot (HRes' aha moment)</text>
+  <text x="585" y="1640" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">send_digest_to_feishu_bot.py --group [G0|G1]</text>
+  <text x="585" y="1660" font-family="Noto Sans SC" font-size="11" fill="#5C6878">收件人: CLI &gt; Bitable subscribers &gt; .env</text>
+  <text x="585" y="1678" font-family="Noto Sans SC" font-size="11" fill="#5C6878">retry 1 次 Bitable (5.25 新增)</text>
+  <text x="585" y="1700" font-family="Noto Sans SC" font-size="12" fill="#2D8E4F">G0=4 + G1=26 active · 30 人</text>
+  <text x="585" y="1718" font-family="Noto Sans SC" font-size="11" fill="#5C6878">5.25 G1 已全推 </text>
+
+  <!-- HLink -->
+  <rect x="1080" y="1590" width="470" height="160" fill="#FCE5D0" stroke="#C56C2C" stroke-width="2" rx="6"/>
+  <rect x="1080" y="1590" width="470" height="28" fill="#C56C2C" rx="6"/>
+  <text x="1095" y="1610" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#FFFFFF">HLink 1-on-1 (HCMLink 高瓴有数)</text>
+  <text x="1095" y="1640" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">send_digest_to_hlink.py --group [G0|G1]</text>
+  <text x="1095" y="1660" font-family="Noto Sans SC" font-size="11" fill="#5C6878">env H_LINK_RECIPIENT_OPENIDS_G0/_G1</text>
+  <text x="1095" y="1678" font-family="Noto Sans SC" font-size="11" fill="#5C6878">msgtype=link · send_single 新接口 (5.22)</text>
+  <text x="1095" y="1700" font-family="Noto Sans SC" font-size="12" fill="#2D8E4F">G0=4 sent ec=0</text>
+  <text x="1095" y="1718" font-family="Noto Sans SC" font-size="11" fill="#B83333">G1=24 not in app scope (待管理员开放)</text>
+
+  <!-- ==================== SECTION 11: SUBSCRIBE BYPASS ==================== -->
+  <text x="60" y="1810" font-family="Noto Sans SC" font-size="20" font-weight="700" fill="#1F2A44">⑩ 订阅旁路 (subscribe-listener 常驻)</text>
+
+  <rect x="60" y="1780" width="640" height="130" fill="#ECEDEF" stroke="#5C6470" stroke-width="2" rx="6"/>
+  <rect x="60" y="1780" width="640" height="28" fill="#5C6470" rx="6"/>
+  <text x="75" y="1800" font-family="Noto Sans SC" font-size="13" font-weight="700" fill="#FFFFFF">subscribe_listener.py</text>
+  <text x="75" y="1828" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">lark-cli event consume im.message.receive_v1 (NDJSON 流)</text>
+  <text x="75" y="1848" font-family="Noto Sans SC" font-size="11" fill="#5C6878">profile 拆分: personal (Bitable 读写) + hres-bot (IM 回复)</text>
+  <text x="75" y="1866" font-family="Noto Sans SC" font-size="11" fill="#5C6878">关键词: 订阅 / 取消订阅 / 状态 → 命中即写表</text>
+  <text x="75" y="1888" font-family="Noto Sans SC" font-size="11" fill="#5C6878">admin 也可直接在 Bitable 加行 (name + email + status + group)</text>
+
+  <polyline points="700,1845 760,1845" stroke="#5C6470" stroke-width="2" fill="none"/>
+  <polygon points="760,1840 760,1850 773,1845" fill="#5C6470"/>
+
+  <rect x="780" y="1780" width="770" height="130" fill="#FCEFCD" stroke="#C9982A" stroke-width="2" rx="6"/>
+  <rect x="780" y="1780" width="770" height="28" fill="#C9982A" rx="6"/>
+  <text x="795" y="1800" font-family="Noto Sans SC" font-size="13" font-weight="700" fill="#FFFFFF">Bitable subscribers (tbl4kcz0Gr5yIXpn) — 5.25 新增 group 字段</text>
+  <text x="795" y="1828" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">字段: open_id · name · email · status · group · subscribed_at · note</text>
+  <text x="795" y="1850" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">G0 = 4 (Haolin / Tian / Kai / Angela) · 11:00 早预览候选 (待建 cron)</text>
+  <text x="795" y="1870" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">G1 = 26 (新增团队成员 + 2 个 @2zetta) · 12:00 主线接收</text>
+  <text x="795" y="1890" font-family="Noto Sans SC" font-size="11" fill="#5C6878">优先 open_id, fallback email (飞书 API auto-infer)</text>
+
+  <!-- ==================== LEGEND ==================== -->
+  <rect x="60" y="1955" width="1490" height="170" fill="#FFFFFF" stroke="#D3D7E0" stroke-width="2" rx="6"/>
+  <text x="80" y="1980" font-family="Noto Sans SC" font-size="14" font-weight="700" fill="#1F2A44">图例 · 关键数据</text>
+
+  <rect x="80" y="1995" width="20" height="14" fill="#E3EBF5" stroke="#3B5278"/>
+  <text x="108" y="2006" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">调度器 launchd</text>
+  <rect x="240" y="1995" width="20" height="14" fill="#D6F0E0" stroke="#2D8E4F"/>
+  <text x="268" y="2006" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">数据源采集</text>
+  <rect x="380" y="1995" width="20" height="14" fill="#FCEFCD" stroke="#C9982A"/>
+  <text x="408" y="2006" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">持久化 (Bitable / SQLite)</text>
+  <rect x="600" y="1995" width="20" height="14" fill="#E8DCFE" stroke="#6E3FB8"/>
+  <text x="628" y="2006" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">LLM (Sonnet 4.6 via Bedrock)</text>
+  <rect x="850" y="1995" width="20" height="14" fill="#FBE0E8" stroke="#B2386F"/>
+  <text x="878" y="2006" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">作者富化 RM V4</text>
+  <rect x="1030" y="1995" width="20" height="14" fill="#D5EEF7" stroke="#2D8AB0"/>
+  <text x="1058" y="2006" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">发布到飞书</text>
+  <rect x="1180" y="1995" width="20" height="14" fill="#FCE5D0" stroke="#C56C2C"/>
+  <text x="1208" y="2006" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">广播渠道</text>
+  <rect x="1330" y="1995" width="20" height="14" fill="#ECEDEF" stroke="#5C6470"/>
+  <text x="1358" y="2006" font-family="Noto Sans SC" font-size="12" fill="#1F2A44">订阅 / 旁路</text>
+
+  <text x="80" y="2040" font-family="Noto Sans SC" font-size="12" fill="#1F2A44"><tspan font-weight="700">已知卡点 (周一会议讨论):</tspan></text>
+  <text x="80" y="2058" font-family="Noto Sans SC" font-size="11" fill="#B83333">C1 arxiv 8:30 窗口边界 (Fri announcement 漏抓) · C2 anchor marker 被飞书 XML parser 吃掉 · C3 LLM 思考前缀污染 markdown</text>
+  <text x="80" y="2076" font-family="Noto Sans SC" font-size="11" fill="#B83333">C4 图片 PDF fallback 没自动触发 · C5 HLink G1 不在 app scope · C7 publisher XML/markdown 检测脆弱</text>
+
+  <text x="80" y="2105" font-family="Noto Sans SC" font-size="11" fill="#5C6878"><tspan font-weight="700">关键资源</tspan>: Bitable base UdwrbpCMoasCs3snCvbcKgbsnfc · whitelist 347 · signals 持续累积 · ops_metrics 每跑写一行 · subscribers 30 active</text>
+
+</svg>

@@ -1,0 +1,1060 @@
+<title>HH Research Daily · 2026-05-08</title>
+
+<h2>今日 TL;DR</h2>
+<p>语音 agent 赛道迎来密集发布日：OpenAI 推出搭载 GPT-5 级推理能力的 GPT-Realtime-2 及配套翻译/转录模型，xAI 同日发布面向企业客服的 Grok Voice Think Fast 1.0，实时语音接口正式进入"边听边推理"时代。</p>
+<hr/>
+<h2>头条</h2>
+<h4>OpenAI 发布 GPT-Realtime-2：GPT-5 级推理能力进入实时语音通道</h4>
+<ul>
+<li><b>信号源</b>：OpenAI 官方</li>
+<li><b>链接</b>：<a href="https://x.com/OpenAI/status/2052438194625593804">GPT-Realtime-2 announcement</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：GPT-Realtime-2 将 GPT-5 级别的推理能力引入实时语音通道，使语音 agent 不再局限于简单问答，而是能够在对话过程中动态推理、解决复杂问题。这在某种程度上类似于给电话另一端换上了一个能边听边深度思考的专家，而非仅会复读脚本的客服。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 在 Realtime API 中同步推出三款语音模型：GPT-Realtime-2 作为生产级语音 agent 支持推理与 action 执行；GPT-Realtime-Translate 支持 70+ 输入语言实时翻译至 13 种输出语言；GPT-Realtime-Whisper 提供流式实时转录能力。三者共同构建下一代实时语音接口的完整感知-理解-行动链路。</p>
+<p><b>产品定位</b></p>
+<p>面向开发者的实时语音 API 能力组合，将语音 agent 从单纯转写/回复升级为能在对话过程中实时推理、多语言翻译和高速转录的协作者。</p>
+<p>[[FIGURE:x:2052438194625593804]]</p>
+<hr/>
+<h4>xAI 发布 Grok Voice Think Fast 1.0：面向企业客服的语音 agent</h4>
+<ul>
+<li><b>信号源</b>：xAI 官方 @ xAI</li>
+<li><b>链接</b>：<a href="https://x.com/xai/status/2052529102280880234">Grok Voice Think Fast 1.0 announcement</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：xAI 推出专为企业客服场景设计的语音 agent 模型，核心卖点是在噪声环境下的鲁棒性与高并发 tool call 能力——这在某种程度上类似于为客服中心打造一个能在嘈杂工厂车间正常通话的电话机器人，而非实验室里的语音助手。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Grok Voice Think Fast 1.0 面向客户支持场景，支持复杂多步骤工作流与高频 tool call，并针对嘈杂环境进行了专项优化，定位为企业级语音 agent 解决方案。</p>
+<p><b>产品定位</b></p>
+<p>企业客服场景专用语音 agent，强调噪声鲁棒性与 agentic 工作流执行能力，与 OpenAI 通用语音 API 形成差异化竞争。</p>
+<p>[[FIGURE:x:2052529102280880234]]</p>
+
+<hr/>
+<h2>一、前沿研究 (Research Frontier)</h2>
+<h3>认知模型 (Cognitive Models)</h3>
+
+<h4>ScaleLogic：RL 训练计算量与 LLM 推理深度的幂律关系——逻辑表达力比训练量更关键</h4>
+<ul>
+<li><b>信号源</b>：Georgia Tech</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06638v1">ScaleLogic: Scaling Logic Reasoning in Large Language Models with Reinforcement Learning</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：研究揭示 RL 训练 LLM 时，"训练什么"（逻辑表达力）比"训练多少"更关键——这类似于语言学习中学习复杂语法结构比大量重复简单句子更能提升综合语言能力。同时，训练计算量与推理深度之间的幂律关系为 RL 训练 scaling 提供了量化框架。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Georgia Tech 提出 ScaleLogic 框架，系统研究 RL 训练难度与 LLM 长链推理能力的关系。通过构建具有两个正交难度轴（推理深度与逻辑表达力）的合成逻辑推理任务，发现训练计算量与推理深度之间存在严格幂律关系（R²&gt;0.99），且逻辑表达力越强的训练设置在数学和通用推理 benchmark 上迁移效果越好、计算效率越高，说明训练数据的结构质量对 LLM 推理能力提升至关重要。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：ScaleLogic 是一个合成逻辑推理框架，提供两个正交难度轴的独立控制：推理深度（proof planning horizon）和逻辑表达力（从简单 if-then 到含 conjunction/disjunction/negation/universal quantification 的一阶逻辑）。通过系统性地在不同难度组合下进行 RL 训练，衡量计算量与性能的关系。</li>
+<li><b>技术细节</b>：框架生成可控的逻辑推理任务，逻辑表达力从仅含蕴含（implication-only）逐步扩展到含"与/或/非/全称量词"的一阶逻辑。这类似于用积木搭建不同复杂程度的迷宫，来测试 LLM 在 RL 训练下解迷宫能力的 scaling 规律；训练后在数学和通用推理 benchmark 上评估迁移效果。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>RL 训练计算量 T 与推理深度 D 满足幂律 T &prop; D^&gamma;（R²&gt;0.99），幂律指数 &gamma; 随逻辑表达力单调增长，从 1.04 到 2.60</li>
+<li>在数学和通用推理 benchmark 上，高表达力训练设置最高带来 +10.66 分收益，且迁移效率更高</li>
+<li>课程式训练（curriculum-based training）显著提升 scaling 效率，幂律关系在多种 RL 方法上均成立</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：RL 训练计算量与推理深度之间存在严格幂律关系，且逻辑表达力越强的训练设置在下游 benchmark 上迁移效果越好、计算效率越高，说明训练数据的质量/结构对 LLM 推理能力提升至关重要。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06638v1]]</p>
+
+<hr/>
+
+<h4>CogCAPTCHA30：用认知过程特征而非输出结果区分人类与 AI Agent</h4>
+<ul>
+<li><b>信号源</b>：Princeton University</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06524v1">CogCAPTCHA30: A Cognitive Task Benchmark for Distinguishing Humans from AI Agents</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：该研究挑战图灵测试"以输出判断智能"的范式，转而用认知科学视角评估行为生成过程——这在某种程度上类似于不光看学生的答案是否正确，而是观察他们解题的思维路径是否像人类。即使 AI 和人类的最终答案完全相同，行为过程特征依然能高度准确地暴露出差异。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Princeton 提出 CogCAPTCHA30 认知任务测试集，包含 30 项认知任务，通过提取过程级特征（如反应时间分布、错误模式、决策轨迹等）训练分类器区分人类与 AI agent。在输出匹配条件下（即人机任务得分相同时），分类器 AUC 均值达 0.88，显著优于仅用性能指标的方法，揭示 process specification 是机器模仿人类认知的关键瓶颈。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：研究构建了 CogCAPTCHA30 测试集（30 个认知任务），从每个任务中提取过程级特征（如反应时间分布、错误模式、决策轨迹等），训练分类器区分人类与机器。对比对象包括：off-the-shelf frontier agents（Claude Sonnet 4.5、GPT-5、Gemini 2.5 Pro）、Centaur（基于 1070 万人类决策微调的语言模型）、以及两种任务特定微调方案——行为级监督微调（A-SFT）和过程级监督微调（P-SFT）。</li>
+<li><b>技术细节</b>：P-SFT 直接以过程特征为优化目标，而非仅模仿动作序列，这类似于训练演员不只背台词，而是复现角色的心理状态和思维节奏。实验在输出匹配条件下测试过程特征的判别力，从而排除性能差异的干扰。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>CogCAPTCHA30 包含 30 项认知任务，过程级特征分类器在输出匹配条件下 AUC 均值达 0.88，显著优于仅用性能指标的方法</li>
+<li>在人类决策数据上广泛微调的 Centaur 模型比 Claude Sonnet 4.5、GPT-5、Gemini 2.5 Pro 等前沿 agent 具有更接近人类的任务过程</li>
+<li>过程级监督微调（P-SFT）可进一步提升行为模仿效果，但跨任务迁移时优势下降，暴露出 process specification 的泛化瓶颈</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06524v1]]</p>
+
+<hr/>
+
+<h4>UniPool：全局共享 Expert Pool 取代逐层独立 MoE，参数量压缩至 41.6%-66.7%</h4>
+<ul>
+<li><b>信号源</b>：arXiv 论文</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06665v1">UniPool: Unified Expert Pool for Mixture-of-Experts</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：传统 MoE 架构每层独立拥有 expert 集合，导致 expert 参数随深度线性增长；UniPool 打破这一惯例，将所有层的 expert 统一放入一个共享池，各层路由器独立寻址——这在某种程度上类似于把各楼层独立的仓库合并成一个中央物流中心，按需调配而非重复囤货。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>UniPool 提出将 MoE 架构中各层独立的 expert 集合替换为全局共享 expert pool，配合 pool-level 辅助损失和 NormRouter，在 LLaMA 架构 182M-978M 五个参数规模、30B tokens 训练下持续优于 vanilla MoE 基线。Reduced-pool 变体仅使用原 expert 参数量的 41.6%-66.7% 即能匹配或超越逐层 MoE 表现，证明 expert 参数可随深度亚线性增长。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：UniPool 以单一全局 expert pool 取代各 transformer 层独立的 expert 集合，各层保留独立的 per-layer router 访问同一 pool。为保证共享池下的稳定均衡训练，引入 pool-level auxiliary loss 在整个 pool 范围内平衡 expert 利用率，并采用 NormRouter 实现稀疏且尺度稳定的路由。</li>
+<li><b>技术细节</b>：NormRouter 在路由前对 token 表示做归一化，使得不同层的 token 在进入同一 expert pool 时具有可比的尺度；pool-level auxiliary loss 替代传统的 per-layer load balancing loss，从全局视角惩罚 expert 利用率的不均衡——这在某种程度上类似于用全公司级别的 KPI 代替各部门独立的绩效考核。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>Routing probe 发现：将深层 MoE 的 learned top-k router 替换为 uniform random routing，下游准确率仅下降 1.0-1.6 个百分点，揭示逐层 expert 分配存在冗余</li>
+<li>UniPool 在 182M-978M 5 个规模、30B tokens 训练下，validation loss 较 vanilla MoE 最多降低 0.0386</li>
+<li>Reduced-pool UniPool 仅使用原 vanilla MoE expert 参数量的 41.6%-66.7%，却能匹配或超越逐层 MoE 的表现，expert 参数可随深度亚线性增长</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在 LLaMA 架构 5 个参数规模上，UniPool 一致性地降低 validation loss 和 perplexity；参数预算压缩至 41.6%-66.7% 的 reduced-pool 变体仍能匹配甚至超越 vanilla MoE，证明全局共享设计使 expert 参数随深度亚线性增长成为可能。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06665v1]]</p>
+
+<hr/>
+
+<h4>SIRA：将多轮探索式 RAG 检索压缩为单次 Corpus-Discriminative 检索动作</h4>
+<ul>
+<li><b>信号源</b>：arXiv 论文</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06647v1">SIRA: SuperIntelligent Retrieval Agent</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：SIRA 的核心思路是让 LLM 像领域专家一样"提前预判"文档和查询中可能缺失的关键词，并用语料统计过滤无效扩展词，将原本需要多轮的 RAG 检索压缩成一次精准的 BM25 查询——这在某种程度上类似于把新手反复试探数据库的过程，换成专家一次命中要害。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>SIRA 提出将多轮探索式检索压缩为单次 corpus-discriminative 检索动作。通过文档侧 LLM 离线词汇扩充、查询侧 LLM evidence vocabulary 预测、以及 document-frequency 统计过滤三阶段协同，在 10 个 BEIR benchmark 上单轮 BM25 扩展检索显著超越 dense retriever 及多轮 agentic baseline，同时保持无需训练、可解释、推理高效的特性。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：SIRA 分两侧处理：文档侧，LLM 离线为每篇文档补全缺失的检索词汇（vocabulary enrichment）；查询侧，LLM 预测查询中被省略的 evidence vocabulary。再通过 document-frequency 统计工具调用，过滤掉不存在于语料、过于常见或无区分度的候选词；最终将扩展词与原始查询合并，发起单次加权 BM25 检索。</li>
+<li><b>技术细节</b>：词汇过滤阶段类似"术语准入"机制：只保留在语料中出现频率适中、能将目标文档与混淆文档区分开的词汇——这在某种程度上类似于搜索引擎的 IDF 加权，但由 LLM 生成候选、统计工具做最终裁决，兼顾语义联想与词频判别力。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>单轮 BM25 扩展检索在 10 个 BEIR benchmark 上显著超越多轮 agentic baseline，延迟大幅降低</li>
+<li>离线文档端 LLM 词汇扩充 + 在线查询端词汇预测 + document-frequency 统计过滤，三阶段协同提升检索区分度</li>
+<li>方法无需训练（training-free），可解释性强，计算成本低于 dense retriever + 多轮搜索方案</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：SIRA 在 10 个 BEIR 检索基准及下游 QA 任务上均显著优于 dense retriever 和 state-of-the-art 多轮 agentic 方法，同时保持可解释性、无需训练且推理高效。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06647v1]]</p>
+
+<hr/>
+
+<h4>StraTA：显式轨迹级策略抽象增强 Agent RL，在 SciWorld 超越前沿闭源模型</h4>
+<ul>
+<li><b>信号源</b>：清华大学唐杰团队</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06642v1">StraTA: Strategy-Augmented Training for Agentic Reinforcement Learning</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：StraTA 的核心思路是在 Agent 执行长时序任务前，先从初始状态采样一个紧凑的"策略摘要"，后续动作以该策略为条件执行——这在某种程度上类似于人类在行动前先拟好大纲再逐步填充细节，既改善了探索效率，也让奖励能更清晰地归因到正确的决策节点。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>清华大学唐杰团队提出 StraTA 框架，通过显式轨迹级策略抽象增强 Agent RL。框架在执行前从初始任务状态采样紧凑策略，后续动作以策略为条件生成，并使用分层 GRPO-style rollout 联合优化策略生成与动作执行。在三个 interactive agent benchmark 上均超越强基线，ALFWorld 达到 93.1%、WebShop 达到 84.2% 成功率，SciWorld 以 63.5% 超越前沿闭源模型。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：StraTA 框架分三步：(1) 从初始任务状态采样一个紧凑策略（compact strategy）；(2) 后续所有动作以该策略为条件生成；(3) 使用分层 GRPO-style rollout 联合优化策略生成与动作执行，并引入 diverse strategy rollout 与 critical self-judgment 进一步提升探索多样性与信用归因质量。</li>
+<li><b>技术细节</b>：在 rollout 阶段，StraTA 对同一任务采样多条不同策略，形成策略多样性池，使模型能够探索更宽泛的行为空间；critical self-judgment 则让模型对自身执行结果进行批判性反思，辅助长轨迹中的奖励信号传播——这在某种程度上类似于棋手在复盘时既记录开局思路，又对关键失误逐步追溯。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>引入轨迹级显式策略抽象，采用分层 GRPO-style rollout，联合训练策略生成与动作执行</li>
+<li>在 ALFWorld 达到 93.1% 成功率，WebShop 达到 84.2%，均超越强基线</li>
+<li>在 SciWorld 取得 63.5% 整体得分，优于前沿闭源模型</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：StraTA 在三个 interactive agent benchmark（ALFWorld / WebShop / SciWorld）上均超越强基线，尤其在 SciWorld 上以 63.5% 超越前沿闭源模型，验证了轨迹级策略抽象对 sample efficiency 和最终性能的双重提升。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06642v1]]</p>
+
+<hr/>
+
+<h4>Concept-Based Abductive and Contrastive Explanations：从像素归因升级为高层概念因果解释</h4>
+<ul>
+<li><b>信号源</b>：CMU（arXiv 论文）</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06640v1">Concept-Based Abductive and Contrastive Explanations</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：研究将"哪些像素导致了这个预测"的形式化归因方法升级为"哪些高层语义概念导致了这个预测"，通过 concept erasure 建立因果关联，并支持跨图像集合的行为级解释——这在某种程度上类似于把法庭证词从"某块区域的颜色值"升级为"这只猫的耳朵形状"。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>CMU 提出 concept-based abductive and contrastive explanations 框架，将形式化归因解释与高层概念结合，通过 concept erasure 建立概念与模型预测之间的因果关系，枚举所有满足条件的最小 abductive（充分）和 contrastive（反事实）概念解释集，并支持对图像集合上用户指定行为进行聚合解释，突破单概念、单图像的表达限制。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：框架以 concept erasure 为核心因果测试手段：通过擦除特定概念表示并观察模型输出变化来判断概念的因果相关性；在此基础上设计一族算法枚举所有满足条件的最小 abductive（充分）和 contrastive（反事实）概念解释集；最后通过聚合多张图像的解释来描述模型在某类共同行为上的整体倾向。</li>
+<li><b>技术细节</b>：Concept erasure 操作将目标概念的激活投影到该概念方向的正交补空间，从而"抹去"该概念的信息；在此基础上的枚举算法类似于 SAT 问题的 MUS（最小不可满足子集）求解，逐步剔除冗余概念直至找到最小充分集或最小对比集。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 concept-based abductive/contrastive explanations，枚举最小因果相关概念集合，突破单概念表达限制</li>
+<li>引入 concept erasure 机制建立概念与模型预测之间的因果关系，避免相关性误判</li>
+<li>方法支持对图像集合上的用户指定行为进行聚合解释，不局限于单张图像预测</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在多个视觉模型和数据集上验证，所提方法能够生成因果性强、用户友好的高层概念解释，并有效识别模型在特定行为模式下依赖的关键概念组合。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06640v1]]</p>
+<h3>多模态智能 (Multimodal Intelligence)</h3>
+
+<h4>BAMI：无需训练的 GUI Grounding 偏差缓解框架</h4>
+<ul>
+<li><b>信号源</b>：arxiv:2605.06664v1</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06664v1">BAMI: Training-Free Bias Attribution and Mitigation for GUI Grounding</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：研究者发现 GUI grounding 模型在复杂界面上失败的两大根源：高分辨率带来的定位精度偏差和界面元素相似导致的歧义偏差，并设计了一套无需重新训练模型就能缓解这两类偏差的推理时操作流程——这在某种程度上类似于给视力模糊的人先加一层放大镜再缩小决策范围，而不是重新训练眼睛。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出无需训练的 GUI grounding 偏差缓解框架 BAMI，通过 Masked Prediction Distribution（MPD）归因方法识别精度偏差与歧义偏差，并以 coarse-to-fine focus 和 candidate selection 两种操作加以缓解。应用于 TianXi-Action-7B 后，在 ScreenSpot-Pro benchmark 上准确率从 51.9% 提升至 57.8%（+5.9pp），展示了推理时干预策略在复杂 GUI 场景中的有效性。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：BAMI 是一个 training-free 的推理时干预框架，包含两个核心操作：① coarse-to-fine focus：先定位粗粒度区域再精细化，以缓解高分辨率带来的精度偏差；② candidate selection：在多个候选元素间消歧，以缓解界面元素高度相似导致的歧义偏差。偏差来源通过所提出的 MPD 归因方法自动识别。</li>
+<li><b>技术细节</b>：MPD 通过对输入图像局部区域进行 mask 并观察模型预测分布的变化，定位对最终 grounding 结果影响最大的区域，从而归因出精度偏差与歧义偏差的位置——这在某种程度上类似于给模型做"遮眼测试"来找出它到底在看哪里、又被什么干扰了。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 MPD（Masked Prediction Distribution）归因方法，识别出高分辨率精度偏差与复杂界面歧义偏差为 GUI grounding 主要错误来源</li>
+<li>提出 BAMI 框架，通过 coarse-to-fine focus 和 candidate selection 两步操作在无训练条件下缓解上述偏差</li>
+<li>应用于 TianXi-Action-7B 后，ScreenSpot-Pro benchmark 准确率从 51.9% 提升至 57.8%（+5.9pp）</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：BAMI 在 ScreenSpot-Pro benchmark 上对多种 GUI grounding 模型均带来显著准确率提升，消融实验验证了方法在不同参数配置下的稳定性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06664v1]]</p>
+
+<h4>DINORANKCLIP：融合 DINOv3 局部特征与高阶排序损失的对比预训练改进</h4>
+<ul>
+<li><b>信号源</b>：arxiv:2605.06592v1</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06592v1">DINORANKCLIP: Injecting DINOv3 and High-Order Plackett-Luce Ranking into CLIP</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：DINORANKCLIP 从两个维度同时修补 CLIP 的结构性弱点：用 DINOv3 的局部特征注入补偿全局池化丢失的细粒度信息，用高阶 Plackett-Luce 排序损失代替仅关注配对的 InfoNCE——这在某种程度上类似于既给比赛加入"名次排序"规则，又给选手配上更精细的感知镜头。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 DINORANKCLIP，将冻结的 DINOv3 教师注入 CLIP 对比预训练框架，同时引入高阶 Plackett-Luce ranking loss，解决 CLIP 全局池化导致的细粒度感知瓶颈与对称 InfoNCE 忽略排序信息两大缺陷。在单节点 8×H100、72 小时内完成训练，细粒度与 OOD 评测上一致超越 CLIP、CyCLIP、ALIP 和 RANKCLIP。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：DINORANKCLIP 由三个部分组成：(1) 冻结 DINOv3 教师 + 双分支轻量学生，通过蒸馏将局部视觉特征注入 CLIP 的视觉编码器；(2) 多尺度融合模块，内含 channel-spatial attention、self-attention refiner 和 conflict-aware gate，确保跨模态对齐不被破坏；(3) 高阶 Plackett-Luce ranking loss，在经典 listwise 排序基础上引入 pairwise 和 tuple-wise 转移项，使 CLIP 和 RANKCLIP 成为零阶与一阶特例。</li>
+<li><b>技术细节</b>：高阶 Plackett-Luce 模型将每个位置的效用分数扩展为：标量基础效用 + 注意力加权的所有前序位置两两交互项 + 元组级高阶交互项，阶数 R 控制交互复杂度。conflict-aware gate 类似一个"仲裁器"，当 DINOv3 局部特征与 CLIP 全局语义发生冲突时自适应调节权重，防止信息注入破坏文本-图像对齐。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>引入冻结 DINOv3 教师通过双分支轻量学生 + 多尺度融合模块注入视觉局部结构信息，保持跨模态对齐至一阶</li>
+<li>提出高阶 Plackett-Luce ranking 模型，加入逐位 utility 的注意力参数化二元和元组转移项，最优阶数 R*=3</li>
+<li>在单节点 8×H100、72 小时内完成训练，细粒度与 OOD 评测上一致超越 CLIP、CyCLIP、ALIP 和 RANKCLIP</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06592v1]]</p>
+
+<h4>Sparkle：解耦引导的视频背景替换数据生成 Pipeline 与评测基准</h4>
+<ul>
+<li><b>信号源</b>：ShowLab</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06535v1">Sparkle: A Decoupled Guidance Data Generation Pipeline for Video Background Replacement</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：现有视频编辑数据集缺乏高质量背景替换样本，导致模型生成的背景静态不自然。Sparkle 通过将前景与背景引导信号解耦生成、并施加严格质量过滤，从根本上解决了数据合成中背景指导不精确的问题——这在某种程度上类似于拍电影时把演员绿幕拍摄与背景场景制作彻底分离，再精准合成。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>ShowLab 提出 Sparkle，一个针对视频背景替换任务的解耦引导数据生成 pipeline 与约 140K 视频对数据集，并配套发布 Sparkle-Bench 评测基准。通过将前景与背景条件信号解耦、独立生成再融合，保证了背景的时序动态性与前景交互的自然性，在 OpenVE-Bench 和 Sparkle-Bench 上显著优于所有现有 baseline 包括 Kiwi-Edit 等 SOTA。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：Sparkle pipeline 将视频背景替换分解为前景引导与背景引导两条独立支路，分别生成对应的条件信号，并通过严格的质量过滤器筛除低质样本，最终合成时保证前背景交互的时序一致性。</li>
+<li><b>技术细节</b>：与以往将前景和背景混合建模的方式不同，Sparkle 的解耦设计让模型在合成阶段能接收到精确的背景语义指导，从而避免生成静态或不自然的背景。这在某种程度上类似于给视频编辑 AI 单独配备一位"背景导演"，而不是让同一个人同时监督演员和布景。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出解耦前景/背景引导的数据合成 pipeline，严格质量过滤后构建约 140K 视频对数据集 Sparkle，覆盖 5 类常见背景替换主题</li>
+<li>发布 Sparkle-Bench，是目前规模最大的专为视频背景替换设计的评测基准</li>
+<li>在 OpenVE-Bench 和 Sparkle-Bench 上，Sparkle 训练的模型显著优于所有现有 baseline，包括 Kiwi-Edit 等 SOTA</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在 OpenVE-Bench 和 Sparkle-Bench 两个基准上，基于 Sparkle 数据集训练的模型在背景替换质量和时序一致性方面均大幅领先现有所有 baseline。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06535v1]]</p>
+
+<h4>Relit-LiVE：联合预测 Environment Map 的无位姿视频重光照 Diffusion 框架</h4>
+<ul>
+<li><b>信号源</b>：arxiv:2605.06658v1</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06658v1">Relit-LiVE: Joint Relit Video and Environment Map Generation via Diffusion</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：现有视频重光照方法依赖 intrinsic decomposition，但分解误差会导致外观失真和时序抖动。Relit-LiVE 的核心思路是直接将原始参考图引入渲染流程（绕过不可靠的分解结果），并在单次 diffusion 过程中同时预测 relit 视频与每帧 environment map，二者相互约束以强化几何-光照对齐——这在某种程度上类似于同时画出一幅场景和对应的光源分布图，让两者互相校正而非独立估算。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Relit-LiVE 提出联合生成 relit 视频与 per-frame environment map 的 diffusion 框架，无需已知相机位姿即可实现物理一致、时序稳定的视频重光照。框架放弃传统 intrinsic decomposition 路线，直接将原始参考图作为条件注入 diffusion 过程，并通过 environment video prediction 范式让 relit 帧与光照贴图在同一去噪轨迹中相互约束。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：Relit-LiVE 以大规模视频 diffusion 模型为基础，放弃传统 intrinsic decomposition 路线，转而将原始参考图作为条件直接注入 diffusion 过程，同时采用 environment video prediction 范式：在单次去噪过程中共同生成 relit 视频帧与对应每帧 environment map，形成几何-光照对齐的强约束，整个框架不依赖已知相机位姿。</li>
+<li><b>技术细节</b>：Environment video prediction 将每帧的环境光贴图视为与视频帧对齐的额外输出通道，在同一 diffusion denoising 轨迹中一并预测。这在某种程度上类似于在渲染一张照片的同时顺便画出当时的灯光分布图，两者共享同一套特征表示，从而天然保证视角变化与动态光照下的时序一致性。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 environment video prediction 公式，单次 diffusion 联合生成 relit 视频与 per-frame environment map，强化几何-光照一致性</li>
+<li>引入 raw reference images 直接注入渲染流程，弥补 intrinsic decomposition 丢失或损坏的场景细节，减少外观失真</li>
+<li>在合成与真实世界 benchmark 上超越当前最优视频重光照及神经渲染方法，并支持 material editing、object insertion 等下游应用</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：Relit-LiVE 在合成与真实视频 benchmark 上一致性能优于现有 SOTA 视频重光照及神经渲染方法，并可扩展至场景级渲染、材质编辑、物体插入和流式视频重光照等多种下游任务。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06658v1]]</p>
+
+<h4>MedHorizon：面向真实临床长视频的稀疏证据检索与多跳推理 Benchmark</h4>
+<ul>
+<li><b>信号源</b>：arxiv:2605.06537v1</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06537v1">MedHorizon: A Long-Video Benchmark for Clinical Understanding with Sparse Evidence Retrieval</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：MedHorizon 将"先检索后推理"这一医疗视频理解的核心难题纳入评测，填补了现有 benchmark 依赖预定位片段的盲区。证据帧占比仅 0.166%，迫使模型在极度冗余的解剖视图中精准定位关键信息——这在某种程度上类似于从几百小时的手术直播录像里，找到那几帧真正决定诊断的画面，再综合推理得出结论。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>MedHorizon 提出面向真实临床场景的长视频医疗理解 benchmark，包含 759 小时完整手术视频和 1,253 道多跳推理题。最强模型准确率仅 41.1%，证据帧平均占比 0.166%，揭示当前 MLLM 在稀疏证据检索与临床推理方面的严重不足，增加采样帧数并不能可靠提升性能。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：MedHorizon 从真实临床环境收集 759 小时完整手术操作视频，构建 1,253 道基于证据定位的多选题，每题附有稀疏时间戳标注的 evidence frames。benchmark 同时评估 sparse evidence retrieval（稀疏证据检索）和 multi-hop clinical reasoning（多跳临床推理），覆盖通用域、医疗域和长视频域三类 MLLM。</li>
+<li><b>技术细节</b>：与已有 benchmark 的核心区别在于"in-the-wild"设计：视频未经预分割或预定位，模型必须自行在嘈杂、高度重复的程序流中搜索证据，再整合全局上下文作出推断。证据帧平均占比 0.166% 意味着每 600 帧才有约 1 帧关键帧，类似于在整场手术直播中只靠极少数决定性画面得出诊断。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>最强模型在 1,253 道多跳临床推理题上准确率仅 41.1%，远低于实际临床应用需求</li>
+<li>证据帧极度稀疏，平均占比仅 0.166%，现有模型在冗余程序流中存在明显 attention drift</li>
+<li>增加采样帧数并不能可靠提升性能，证据检索与临床解读是主要瓶颈而非帧覆盖率</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：所有评测模型中最佳准确率仅 41.1%，通用采样策略仅能部分平衡局部细节与全局覆盖，表明当前 MLLM 距离鲁棒的全流程医疗视频理解仍有较大差距。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06537v1]]</p>
+
+<h4>FreeSpec：基于奇异谱分解的 Training-Free 长视频生成框架</h4>
+<ul>
+<li><b>信号源</b>：arxiv:2605.06509v1</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06509v1">FreeSpec: Training-Free Long Video Generation via Singular Spectral Decomposition</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：当视频扩散模型将 self-attention 窗口扩展至长序列时，频谱能量会集中在少数低秩奇异方向，导致细节和运动信息被压制。FreeSpec 借助 SVD 把全局低秩分量（保结构）和局部高秩分量（保细节与动态）解耦后再融合，这在某种程度上类似于音频均衡器——把低频和高频分别调好再混音，而非强行用一个固定规则划分频段。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>FreeSpec 提出基于奇异谱分解的 training-free 长视频生成框架，通过 SVD 分离 global/local 特征并进行频谱级融合，缓解长视频中的内容漂移与动态模糊问题。核心发现是扩大 self-attention 窗口会导致 spectral concentration 现象——频谱能量集中于低秩奇异方向，压制高频空间细节与运动变化。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：FreeSpec 在 training-free 设定下，对视频扩散模型的 self-attention 特征进行奇异值分解（SVD），将 global branch 提供的低秩奇异向量作为跨帧结构一致性的频谱锚点，将 local branch 提供的高秩分量作为空间细节和时序动态的重建基，两者在奇异谱层面加权融合，替代以往按通道或空间位置硬划分的 appearance/motion 分离规则。</li>
+<li><b>技术细节</b>：具体而言，对每个 attention 层的特征矩阵做截断 SVD，保留前 k 个奇异值对应的全局低秩子空间（来自 global branch），再用 local branch 的完整奇异谱补充高秩残差；两者的奇异值按比例混合重组成新的特征矩阵，输入后续注意力计算。这在某种程度上类似于图像压缩中先用低秩近似恢复轮廓，再叠加高频残差恢复纹理。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>发现扩大 self-attention 窗口会导致频谱能量集中于低秩奇异方向（spectral concentration），压制高频空间细节与运动变化</li>
+<li>提出 FreeSpec：用 SVD 将 global branch 作为低秩频谱引导，local branch 作为高秩重建基，实现频谱级融合，无需预定义特征划分规则</li>
+<li>在 Wan2.1 和 LTX-Video 上验证，长视频时序动态保持显著优于基线，同时维持视觉质量与时序一致性</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06509v1]]</p>
+<h3>世界模型 (World Model)</h3>
+<h4>OA-WAM：用可寻址对象 Slot 分解世界动作模型，机器人操控鲁棒性大幅提升</h4>
+<ul>
+<li><b>信号源</b>：清华大学</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06481v1">OA-WAM: Object-Addressable World Action Models</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：现有 World Action Model 将未来场景编码为全局图像或 latent，导致动作解码器无法精确定位特定对象。OA-WAM 为每个对象分配一个持久 address 向量，将"指向哪个对象"与"该对象当前状态"解耦——这类似于操作系统用固定句柄（handle）指向动态内存，无论内容如何变化，指针始终有效。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>OA-WAM 将世界动作模型的场景表示从整体图像分解为可寻址的 N+1 slot 对象状态，每个 slot 包含持久 address 向量与时变 content 向量，实现稳定的对象身份绑定。该方法在 LIBERO 基准达到 97.8% 成功率、SimplerEnv 达到 79.3%，在几何扰动条件下显著超越现有方法，展示了对象级状态分解对机器人操控鲁棒性的关键作用。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：OA-WAM 将每帧场景分解为 N+1 个 slot 状态，每个 slot 包含持久 address 向量和时变 content 向量，与 text、image、proprioception、past-action tokens 在 block-causal 序列中融合。World head 预测下一帧 slot 状态，flow-matching action head 在同一次前向传播中解码 16 步连续动作 chunk。Addressability 通过跨 slot 注意力仅路由 address-only keys 实现，并在每个 transformer 层重置 address slice，将"作用于哪个对象"与"该对象当前状态"分离。</li>
+<li><b>技术细节</b>：关键设计是在每个 transformer 层重置 address slice：无论 content 如何随时间变化，address 向量保持稳定，cross-slot attention 只通过 address 寻址而非 content。这类似于数据库中用主键（primary key）检索记录——即使记录内容更新，主键不变，查询始终命中正确行。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>将场景分解为 N+1 个 slot（1 个机器人 slot + N 个对象 slot），每个 slot 含持久 address 向量与时变 content 向量，实现稳定的对象身份绑定</li>
+<li>在 LIBERO 基准达到 97.8%、SimplerEnv 达到 79.3%，在 LIBERO-Plus 几何扰动轴上达到 state-of-the-art</li>
+<li>因果 slot 干预测试中 swap-binding cosine 为 0.87，远高于整体 baseline 的最高 0.09，证明 addressability 的有效性</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06481v1]]</p>
+<hr/>
+<h4>ActCam：Zero-Shot 联合控制角色动作与相机轨迹的视频生成方法</h4>
+<ul>
+<li><b>信号源</b>：University of Oxford</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06667v1">ActCam: Zero-Shot Joint Action and Camera Control for Video Generation</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：ActCam 通过对预训练 image-to-video diffusion model 施加几何一致的姿态与深度条件，并采用两阶段 conditioning schedule（早期去噪用 pose+depth 约束场景结构，后期仅用 pose 细化细节），在不额外训练的情况下实现角色运动迁移与相机参数逐帧控制。这在某种程度上类似于导演在后期用分层遮罩同时调整演员走位与镜头运动，而不必重拍。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Oxford 提出 ActCam，一种 zero-shot 视频生成方法，可同时控制角色动作和相机轨迹，无需任何额外训练即实现联合运动与摄影控制。该方法以插件式兼容任意支持 depth/pose 条件的预训练 image-to-video diffusion 模型，在多样化角色运动和大视角变化场景下均展现出优异性能。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：ActCam 以任意预训练 image-to-video diffusion model 为基座，接受场景深度和角色姿态作为条件输入。给定包含运动角色的源视频和目标相机运动参数（内参+外参），ActCam 生成跨帧几何一致的姿态和深度条件，然后在单次采样过程中执行两阶段 conditioning schedule：前期 denoising steps 同时使用 pose 和 sparse depth 约束全局场景结构，后期丢弃 depth 仅保留 pose guidance 以精化高频细节。</li>
+<li><b>技术细节</b>：两阶段调度的核心思路是：depth 信息在去噪早期提供强约束以对齐相机视角，但若全程保留会过度约束生成质量；通过在中期"丢弃"depth 条件，模型得以在已建立的几何框架内自由生成纹理细节。这类似于先用脚手架固定建筑骨架，再拆除脚手架完成精装修。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出两阶段 conditioning schedule：早期去噪施加 pose+sparse depth 约束场景结构，后期仅保留 pose guidance 细化高频细节</li>
+<li>ActCam 在多个 benchmark 上相机轨迹吻合度与运动保真度均优于仅 pose 控制及其他 pose+camera 方法</li>
+<li>方法为 zero-shot，无需额外训练，可插件式兼容任意支持 depth/pose 条件的预训练 image-to-video diffusion 模型</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：ActCam 在多样化角色运动和大视角变化场景下的 benchmark 测评中，相机吻合度与运动保真度均领先对比方法，且在人类评估中也获得更高偏好，尤其在大视角变化条件下优势显著。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06667v1]]</p>
+<hr/>
+<h4>GA3T：真实场景空地异构机器人协同感知多模态数据集</h4>
+<ul>
+<li><b>信号源</b>：全球学术机构（空地异构机器人协同感知方向）</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06478v1">GA3T: A Real-World Dataset for Air-Ground Heterogeneous Robot Cooperative Perception</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：该数据集填补了异构空地机器人协同感知领域缺乏真实多模态数据的空白，通过地面 UGV（Husky）与空中 UAV（Autel EVO II）的互补视角，支持跨视角感知与地形可通行性研究——这在某种程度上类似于同时提供了"俯瞰地图"和"地面第一视角"的组合，让机器人团队能更完整地理解复杂地形。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>GA3T 是一个真实场景下的空地异构机器人协同感知数据集，涵盖 LiDAR、立体相机、热红外等多模态传感器，包含超 13,000 帧同步数据及超 8,000 张人工标注图像，聚焦非结构化地形（森林、碎石路、泥地、雪地、草地）的 traversability 估计，为跨视角场景理解提供了目前少有的真实世界基准。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：数据采集平台由 Clearpath Husky UGV（配备 3D LiDAR、立体相机、IMU、GPS）和 Autel EVO II UAV（配备 RGB 相机、热红外传感器、GPS）组成，两者提供互补的地面与航空视角数据，并通过时间同步实现跨模态对齐。标注采用 SAM 3 零样本分割和人工标注双轨并行。</li>
+<li><b>技术细节</b>：数据集在早春季节采集，稀疏树冠为 UAV 提供了透视地面的特殊条件，使得遮挡感知的协同感知成为可能。多模态传感融合涵盖 LiDAR 点云、立体深度图、RGB 图像和热红外图像，为跨模态地形理解提供丰富信号。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>收集 4 个不同非结构化环境（森林、碎石路、泥地、雪地、草地）的超 13,000 帧同步多模态数据，总时长约 29 分钟</li>
+<li>数据集包含超 8,000 张人工标注图像及 SAM 3 零样本分割标注，支持 traversability 估计和跨视角感知研究</li>
+<li>早春稀疏树冠场景允许 UAV 透过树枝部分观测地面机器人，实现遮挡感知的协同感知研究</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：GA3T 数据集为空地异构机器人协同感知提供了目前少有的真实世界多模态基准，相比现有侧重 SLAM 或仿真驾驶的数据集，更专注于 traversability 估计与跨视角场景理解任务。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06478v1]]</p>
+<h3>AI infra</h3>
+<h4>EMO：文档边界约束下自然涌现模块化专家结构的 MoE 预训练架构</h4>
+<ul>
+<li><b>信号源</b>：UC Berkeley</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06663v1">EMO: Emergent Modularity in Mixture-of-Experts via Document-Boundary Constrained Pre-training</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：EMO 的核心思路是让同一文档的 token 强制共享同一专家池，不同文档可使用不同池，从而让 MoE 在预训练中自发形成语义级别（如数学、代码）的专家分组——这在某种程度上类似于图书馆按主题分区上架，读者只需去对应区域即可取到所需书目，而不必走遍整个馆藏。这使得推理时可以只加载特定领域的专家子集，无需运行完整模型。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>UC Berkeley 提出 EMO，一种在预训练阶段通过文档边界约束自然涌现模块化结构的 MoE 架构。EMO 无需人工定义领域先验，仅利用文档边界信号即可让专家自发分化为语义级领域专业化分组。在推理部署时，保留 25% 专家仅损失 1% 性能，支持按领域按需加载，大幅降低内存受限场景下的部署门槛。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：EMO 在预训练时引入文档级专家池约束：同一文档内所有 token 只能从一个共享专家池中选取专家，不同文档可使用不同池。这一约束无需人工定义领域先验，仅利用文档边界信号，即可在标准 MoE routing 过程中引导语义相关的 token 汇聚到同一组专家，从而涌现出模块化的专家分组结构。</li>
+<li><b>技术细节</b>：具体实现中，每个文档在预训练时被分配一个专家子集池，该文档内的所有 token 在 MoE routing 时只能选择池内专家，相当于给 router 加了一个文档粒度的 hard mask。这类似于让每支球队只能从己方候补席上换人——长期训练后每组候补席（专家池）会自然分化出各自的技能专长。推理时只需加载目标领域对应的专家子集，大幅降低显存需求。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>EMO 保留 25%（12.5%）专家时性能仅下降 1%（3%），而标准 MoE 在同等设置下出现严重性能崩溃</li>
+<li>专家子集在 EMO 中呈现语义级领域专业化（如数学、代码），对比标准 MoE 仅有低层句法级专业化</li>
+<li>预训练 1B-active / 14B-total 的 EMO 在 1T tokens 上作为完整模型可与标准 MoE 性能持平</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：EMO 在完整模型下性能与标准 MoE 持平，同时在仅激活 25% 专家时性能损失仅 1%，验证了模块化稀疏模型在内存受限场景下按需部署的可行性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06663v1]]</p>
+<hr/>
+<h4>CCL-Bench：基于执行 Trace 的 LLM 训练基础设施评测基准</h4>
+<ul>
+<li><b>信号源</b>：Cornell University</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06544v1">CCL-Bench: A Trace-Based Benchmark for LLM Training Infrastructure</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：CCL-Bench 通过保存完整执行 trace 而非仅汇报最终数字，让研究者能追溯"为何某配置更快"——这类似于给每场赛车比赛保留完整遥测数据，而非只记录名次。三个发现颠覆直觉：overlap 高不等于速度快、TPU 比 GPU 对带宽加倍更敏感、不同训练框架在同一硬件上差距可达 3x。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Cornell 提出 CCL-Bench，一个基于执行 trace 的 LLM 训练基础设施 benchmark。不同于以往仅发布汇总数字的评测方式，CCL-Bench 为每个 workload 保存完整执行 trace、YAML workload card 和启动脚本，覆盖硬件、互联带宽、并行策略和通信库等维度，能够揭示现有 summary-statistic 评测无法解释的配置性能差异。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：CCL-Bench 为每个 ML workload 贡献一个数据点，包含执行 trace、YAML workload card 和启动脚本三部分，并配套社区可扩展工具链，从 trace 中计算细粒度的 compute、memory 和 communication efficiency 指标。</li>
+<li><b>技术细节</b>：不同于以往 benchmark 仅发布汇总数字，CCL-Bench 记录可复用的执行证据，使得每条评测结论都有 trace 级别的支撑。工具链解析 trace 后可拆解出通信与计算的重叠度、内存带宽利用率等子指标，类似于把黑盒测速仪换成飞行数据记录仪。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>compute-communication overlap 更高可能与更长的训练步时并存，揭示低效并行化选择</li>
+<li>TPU 互联带宽翻倍对端到端步时的提升显著高于 GPU 同等操作（中小规模 workload）</li>
+<li>相同硬件上，最优调参的最佳框架与最差框架训练速度差距可达 3x</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：CCL-Bench 揭示了三类现有 summary benchmark 无法支持的重要结论，证明 trace-based 方法在诊断 LLM 训练基础设施瓶颈上的价值。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06544v1]]</p>
+<hr/>
+<h4>ROSE：将生产 Serving 集群闲置算力弹性复用于 Agentic RL Rollout</h4>
+<ul>
+<li><b>信号源</b>：arxiv:2605.06534v1</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06534v1">ROSE: Cooperative Elasticity for Agentic RL Rollout on Production Serving Clusters</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：Agentic RL 训练的 rollout 阶段存在严重的长尾分布问题，静态 GPU 配置难以适配。ROSE 将生产 serving 集群的空闲算力"借用"给 RL rollout，同时保证 serving SLO 不降级——这在某种程度上类似于用航班空余座位搭载临时乘客，只要不影响正常旅客登机即可。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>ROSE 系统通过"协作弹性"（cooperative elasticity）机制将生产 serving 集群的闲置 GPU 算力安全复用于 agentic RL 的 rollout 阶段，无需专用额外硬件即可实现端到端吞吐量提升 1.20–3.31x。系统在保障 serving SLO 的前提下，动态调度 rollout 任务在专用 GPU 和机会性 serving GPU 之间路由分发。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：ROSE 由三个组件构成：(1) SLO-safe co-serving executor，负责在 serving GPU 上安全共享计算与内存；(2) cross-cluster weight transfer engine，利用 weight shards 和模型稀疏性加速 RL trainer 与 serving 集群之间的权重同步；(3) elastic rollout scheduler，动态调度 rollout 任务在专用 rollout GPU 和机会性 serving GPU 之间路由分发。</li>
+<li><b>技术细节</b>：核心挑战在于 serving 流量具有突发性，直接共享 GPU 可能导致推理延迟抖动。ROSE 的 co-serving executor 通过监控 serving 负载动态决定是否将 serving GPU 的空闲算力让给 rollout，并在流量骤增时立即回收资源——类似于操作系统的进程优先级抢占调度。weight transfer engine 则只同步发生变化的参数分片，减少跨集群通信开销。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>ROSE 引入 cooperative elasticity，将 serving 集群剩余 GPU 资源安全复用于 agentic RL rollout，无需专用额外硬件</li>
+<li>SLO-safe co-serving executor 实现 GPU 内存与算力的高效共享，在流量突发时优先保障 serving SLO</li>
+<li>跨集群权重传输引擎利用 weight shards 与稀疏性加速模型参数同步，端到端吞吐提升 1.20–3.31x</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在多种模型规模和集群规模下，ROSE 相比当前最优的资源固定及弹性基线，平均端到端吞吐量提升 1.20–3.31x，验证了 cooperative elasticity 方案的有效性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06534v1]]</p>
+<hr/>
+<h4>基于 Wasserstein 分布鲁棒优化的 Learning to Optimize 框架</h4>
+<ul>
+<li><b>信号源</b>：arxiv:2605.06585v1</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06585v1">Wasserstein Distributionally Robust Learning to Optimize</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：该工作将经典 L2O（纯数据驱动）与 worst-case PEP（纯最坏情况设计）统一到同一框架下，通过 Wasserstein 鲁棒半径调节二者平衡——这在某种程度上类似于给机器学习算法配一个"保险系数"，既能从数据中学到高效步长，又能提供最坏情况性能保证。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>本文提出基于 Wasserstein distributionally robust optimization 的 learning to optimize（L2O）框架，通过最小化鲁棒版 performance estimation problem（PEP）来学习凸优化算法的超参数（如步长）。框架以 Wasserstein 球半径 ε 为唯一控制旋钮，在纯数据驱动的 L2O（ε→0）与纯 minimax 的 worst-case PEP（ε→∞）之间实现连续插值，兼顾样本外泛化能力与可证明最坏情况保证。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：框架将超参数学习问题表述为 Wasserstein 球上的 distributionally robust 优化问题；内层为一个 semidefinite program（SDP），对给定问题分布和算法参数给出性能上界；外层用 stochastic gradient descent 对鲁棒目标进行最小化，每步通过 SDP 的解析求导（differentiating through SDP）获得梯度。</li>
+<li><b>技术细节</b>：每次 SGD 迭代需要求解一个内层 SDP 并反向传播梯度，其中 Wasserstein 球的半径 ε 是唯一的鲁棒性控制旋钮——ε→0 时退化为标准 L2O，ε→∞ 时收敛到 PEP 的 minimax 解。这在某种程度上类似于正则化系数：调大 ε 相当于让模型在更大的分布偏移下仍保持可靠。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 Wasserstein distributionally robust PEP 框架，以鲁棒半径连续插值 L2O 与 worst-case PEP 两个极端</li>
+<li>证明所学算法的真实风险以高概率不超过样本内 L2O 最优值加上随样本量收缩的 slack，且不劣于 worst-case PEP 界</li>
+<li>在二次无约束优化、LASSO、线性规划基准上，样本外性能优于纯 worst-case 与纯 L2O 基线</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在二次优化、LASSO、LP 三类凸优化基准上，该框架学到的算法同时获得优于 vanilla L2O 的样本外泛化能力和可证明的最坏情况保证，验证了鲁棒框架的有效性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06585v1]]</p>
+<hr/>
+<h4>Lighthouse Attention：亚二次层次化注意力加速长上下文预训练</h4>
+<ul>
+<li><b>信号源</b>：arxiv:2605.06554v1</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06554v1">Lighthouse Attention: A Hierarchical Symmetric Selective Attention for Long-Context Pre-training</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：Lighthouse Attention 的核心思路是：在预训练绝大部分时间用一种"压缩-计算-解压"的层次化 attention 替代标准 SDPA 以节省算力，最后短暂切回 full attention 恢复模型质量——这类似于施工期间用脚手架支撑，完工前再拆除。其梯度无关的层次选择设计避免了自定义 backward kernel 的工程复杂度。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Lighthouse Attention 是一种仅在训练阶段使用的层次化对称选择注意力算法，通过对 Q/K/V 同步自适应序列压缩将 attention 矩阵规模从 O(n²) 降至 O(k²)（k 远小于 n），从而降低长上下文预训练的 SDPA 二次复杂度。训练结束前可无缝切回标准 full attention，最终得到的模型与标准预训练模型架构完全一致。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：Lighthouse Attention 在标准 SDPA 外层包裹一个层次化的前后处理模块：前处理对序列做自适应压缩（将长序列映射为短序列），在压缩空间内执行 SDPA，后处理再将结果解压回原始长度。整个选择过程梯度无关，不引入额外的 backward 计算负担。训练分两阶段：第一阶段用 Lighthouse Attention 完成绝大部分预训练，第二阶段切换回 full attention 做短暂恢复训练，最终得到标准 full attention 模型。</li>
+<li><b>技术细节</b>：压缩阶段将 Q/K/V 同时通过池化操作缩短序列，保持 causal mask 的左到右一致性；由于 Q 也被压缩，attention 矩阵规模从 O(n²) 降至 O(k²)（k 远小于 n），节省显存和计算。对称压缩（Q/K/V 同步处理）类似于在分辨率降低的缩略图上做匹配，而非仅压缩 K/V——这让并行化更高效，也避免了非对称设计引入的 causal 泄漏问题。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出亚二次层次化压缩/解压步骤，对 Query、Key、Value 同步池化，同时保持因果左到右顺序</li>
+<li>对称压缩策略显著提升并行度，且无需梯度回传的选择机制规避了复杂 backward kernel 实现</li>
+<li>两阶段训练（Lighthouse 预训练 + 短暂 full attention 恢复）在小规模 LLM 实验中实现更快总训练时间与更低最终 loss</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06554v1]]</p>
+<hr/>
+<h4>Token Superposition Training：多 Token 叠加预训练加速 LLM 收敛</h4>
+<ul>
+<li><b>信号源</b>：arxiv:2605.06546v1</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06546v1">Token Superposition Training: Accelerating LLM Pre-training via Multi-Hot Cross-Entropy</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：TST 的核心思想是在 pre-training 早期把多个 token 叠加成一个"超级 token"来学习，减少序列长度从而提升每单位 FLOPs 的数据吞吐量，最后再切换回标准训练恢复精度——这在某种程度上类似于先用略模糊的图像做初步训练、再用清晰图像精调的课程学习策略。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Token Superposition Training（TST）通过将多个连续 token 合并为"bag"并使用 multi-hot cross-entropy 目标训练，在不修改模型架构、优化器、分词器的前提下显著提升 LLM pre-training 效率。方法在 270M 至 10B A1B MoE 模型上广泛验证，10B 规模下预训练时间在等损失设置下最高缩短 2.5x。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：TST 是一种两阶段 drop-in 预训练方法：第一阶段（superposition phase）将多个连续 token 合并为一个 bag，使用 multi-hot cross-entropy（MCE）目标训练，以更短的有效序列长度获得更高数据吞吐；第二阶段（recovery phase）切换回标准 next-token prediction，使模型恢复正常 token 粒度表达能力。全程不修改并行策略、优化器、tokenizer、数据或模型架构，是即插即用的改进。</li>
+<li><b>技术细节</b>：Superposition 阶段中，若干相邻 token 被"叠加"为一个 bag 输入，模型需同时预测 bag 内所有 token，损失函数从单标签 cross-entropy 扩展为 multi-hot cross-entropy，使得每个 forward pass 涵盖更多信息——这在某种程度上类似于让模型一次读一段文字而非逐字阅读，加速了早期语义的学习；recovery 阶段再将 token 还原为正常粒度，消除因叠加带来的表示偏差。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>TST 分两阶段：superposition 阶段将多个连续 token 合并为 bag 并以 multi-hot cross-entropy 训练，recovery 阶段恢复标准训练</li>
+<li>在 270M、600M 参数规模广泛验证，并在 3B 和 10B A1B MoE 模型上通过验证，鲁棒性强</li>
+<li>在等损失设置下，10B A1B 规模预训练总时间最高减少 2.5x</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06546v1]]</p>
+<h3>ai4s (AI for Science)</h3>
+
+<h4>Kubo-热化对应：用短时线性响应谱精确预测量子多体系统长时热化行为</h4>
+<ul>
+<li><b>信号源</b>：清华大学</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06666v1">Kubo-Thermalization Correspondence</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：研究者证明了量子热化的长时稳态磁化与 Kubo 线性响应的短时光谱之间存在精确数学对应关系——这在某种程度上类似于通过对弹簧施以轻微扰动的短期震动特征，就能精准预测它最终的平衡位置，而无需等待系统真正弛豫到平衡态。该对应关系独立于系统-热浴耦合的微观细节，为强关联量子系统的热化动力学研究提供了全新实验路径。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>清华大学建立"Kubo-Thermalization Correspondence"（KTC），将量子多体系统的长时热化行为与短时线性响应谱精确关联。理论证明在弱驱动极限下，系统长时稳态响应可通过平衡态 Kubo 响应函数积分获得，从而将完整非平衡动力学追踪问题化约为平衡态线性响应测量。该对应关系与系统-热浴耦合的微观细节无关，即使稳态与初态差异显著时仍然成立。研究团队进一步通过超冷费米子实验平台定量验证了该理论预言。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：理论框架基于开放量子系统模型：将一个自旋耦合到热浴，利用 Kubo 线性响应理论推导出短时频谱与长时弱驱动下热化稳态磁化之间的精确映射关系。实验平台采用超冷费米气体，以两个内态的费米子模拟 spin-1/2 杂质并耦合到费米海热浴，系统性地测量了线性响应谱与热化稳态。</li>
+<li><b>技术细节</b>：在弱驱动极限下，系统的长时稳态响应可以通过平衡态的 Kubo 响应函数积分得到，从而将需要追踪完整非平衡动力学的热化问题化约为平衡态线性响应测量。这在某种程度上类似于利用系统的"传递函数"（频域特性）来预测其时域稳态行为，是控制论中频域-时域对应关系在量子多体物理中的精确类比。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>建立精确的 Kubo-Thermalization Correspondence，将长时热化稳态磁化与短时线性响应谱严格关联，对应关系与系统-热浴耦合微观细节无关</li>
+<li>即使稳态与初态差异显著、两个时间区制各自难以单独理论描述时，该对应关系依然成立</li>
+<li>使用超冷费米子（两内态耦合费米海）实现等效 spin-1/2 杂质系统，实验定量验证了该对应关系</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：实验与理论结果高度吻合，证明可以通过平衡态线性响应光谱测量直接推断强相互作用量子系统的热化动力学，提供了关于量子热化的一个罕见精确命题。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06666v1]]</p>
+
+<hr/>
+
+<h4>AI CFD Scientist：首个覆盖全流程的 LLM 驱动计算流体力学科学家 Agent</h4>
+<ul>
+<li><b>信号源</b>：全球学术界</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06607v1">AI CFD Scientist</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：该工作将 LLM agent 科研自动化闭环延伸至高保真物理仿真领域，核心创新是引入视觉-语言物理验证门控（vision-language physics-verification gate），通过审查流场渲染图像而非仅依赖 solver 日志来判断结果的物理合法性——这在某种程度上类似于给 AI 配备了一双"看懂流体图像"的眼睛来当物理校审员。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>AI CFD Scientist 是首个覆盖文献选题、仿真执行、视觉物理验证、源码修改到论文撰写全流程的开源 CFD AI 科学家 agent。系统基于 OpenFOAM 运行，以 GPT-4.5 为 backbone 驱动各 agent 模块，通过三条耦合路径（参数扫描、case-local C++ 编译、开放式假设搜索）自主发现湍流模型修正并降低预测误差。核心的视觉-语言验证门控在仿真后渲染流场图像，由 VLM 判断物理可信性，仅通过门控的结果被纳入后续分析。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：框架由三条耦合路径组成：（1）固定 solver 内的参数扫描；（2）针对新物理模型的 case-local C++ 库编译；（3）基于参考比较器的开放式假设搜索。所有路径均通过 Foam-Agent 运行于 OpenFOAM 之上，并以共享的 GPT-4.5 backbone 驱动各 agent 模块，整体覆盖文献选题、执行验证、代码修改和稿件撰写全流程。</li>
+<li><b>技术细节</b>：核心的视觉-语言验证门控在每次仿真完成后渲染流场图像，由 VLM 判断流场是否物理可信（如是否存在非物理振荡、发散等），只有通过门控的结果才被纳入后续分析或写入论文草稿。这在某种程度上类似于在流水线中插入一个"领域专家审图"环节，而非仅凭 solver 退出码来判断成功。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>AI CFD Scientist 自主发现 Spalart-Allmaras 湍流模型 runtime 修正，在周期丘陵 Re<sub>h</sub>=5600 条件下 lower-wall Cf RMSE 比 DNS 基准降低 7.89%</li>
+<li>视觉-语言物理验证门控在植入故障消融实验中检出 16 个静默失败中的 14 个，大幅优于仅依赖 solver 日志的方法</li>
+<li>同等 LLM 成本下，通用 AI 科学家基线 ARIS 和 DeepScientist 能执行部分 CFD 流程但缺乏领域有效性门控，无法将运行结果转化为可信科学主张</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06607v1]]</p>
+
+<hr/>
+
+<h4>NeuroAgent：LLM 多智能体自动化多模态神经影像预处理与分析框架</h4>
+<ul>
+<li><b>信号源</b>：全球学术界</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06584v1">NeuroAgent</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：NeuroAgent 将 LLM agent 引入神经影像学流程，让 AI 自动生成预处理代码、检测并恢复运行时错误，并通过自然语言交互完成下游统计分析——这在某种程度上类似于为神经影像研究者配备了一个能自主操作全套工具链的 AI 助手，显著降低了多模态流程编排的人工门槛。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>NeuroAgent 是一个 LLM 驱动的多智能体框架，自动化处理 sMRI、fMRI、dMRI 和 PET 等多模态神经影像数据的预处理与下游分析。系统采用层级架构，顶层 orchestrator agent 负责任务拆解与多模态流程调度，底层专项 agent 分别处理各模态预处理。核心 Generate-Execute-Validate 引擎支持自动代码生成、runtime 错误检测与自愈修复。在 ADNI 数据集 1,470 名受试者上的 Alzheimer's Disease 分类四模态融合 AUC 达 0.9518。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：NeuroAgent 采用层级多智能体架构，顶层 orchestrator agent 负责任务拆解与多模态流程调度，底层专项 agent 分别处理 sMRI、fMRI、dMRI、PET 各模态的预处理。核心执行引擎为 Generate-Execute-Validate 循环：agent 自动生成可执行预处理代码，运行后检测异常并触发错误恢复，最终通过完整性验证。</li>
+<li><b>技术细节</b>：在代码生成阶段，LLM backend（如 Qwen3.5-27B）根据自然语言指令生成特定工具链（如 FSL、FreeSurfer、SPM 等）的调用脚本；执行阶段若捕获到 runtime error，agent 自动分析错误日志并重新生成修正代码，形成自愈循环——这在某种程度上类似于让 AI 充当一个能自动 debug 的实验助手。下游分析支持通过自然语言查询触发统计建模和分类任务。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>层级多智能体架构 Generate-Execute-Validate 引擎中，最强 backend Qwen3.5-27B 端到端预处理步骤正确率达 84.8%，意图解析准确率最高达 100%</li>
+<li>在 ADNI 数据集 1,470 名受试者（CN=1000, AD=470）上，四模态融合分类 AUC 达 0.9518，超越所有单模态基线</li>
+<li>自动化错误恢复机制将人工干预限制在边缘案例，支持 Human-In-The-Loop 接口进行人工审查</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06584v1]]</p>
+
+<hr/>
+
+<h4>SpatialEpiBench：标准化时空传染病预测 Benchmark 揭示复杂空间模型不及 Last-Value 基线</h4>
+<ul>
+<li><b>信号源</b>：CMU</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06530v1">SpatialEpiBench</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：研究者系统测评了现有空间流行病预测模型，发现引入地理邻接信息和流行病学先验的复杂模型大多不如"直接用最新观测值"的简单基线——这在某种程度上类似于复杂的天气预报模型在短期预测上还不如"明天和今天一样"的朴素猜测。论文揭示了空间邻接信息在流行病预测中的实际价值远低于预期。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>CMU 提出 SpatialEpiBench，首个标准化时空传染病预测 benchmark，整合 11 个真实传染病数据集（涵盖多种病原体和地区），采用滚动评估窗口和 outbreak 专项指标模拟实时预测场景。系统性评测多种融合地理邻接结构的时空预测模型后发现，大多数空间感知模型在 1 天至 1 个月预测窗口内均输给 last-value baseline，尤其在疫情暴发阶段表现欠佳。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：SpatialEpiBench 整合 11 个真实传染病数据集（涵盖多种病原体和地区），采用标准化滚动时间窗口划分训练/测试集以模拟实时预测场景，并设计 outbreak-specific 评估指标。在此基础上，对多种融合地理邻接结构（adjacency-informed）和流行病学先验的时空预测模型进行系统性评测。</li>
+<li><b>技术细节</b>：评测框架避免了常见的简单顺序划分，改用滚动评估窗口；流行病先验（epidemic priors）用于将通用时序/图模型适配到流行病学领域。地理邻接矩阵作为图结构输入，但实验表明行政边界邻接关系与疾病真实传播路径之间存在明显偏差。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>构建含 11 个传染病数据集的 SpatialEpiBench，采用滚动评估和 outbreak 专项指标，更贴近实际公共卫生决策场景</li>
+<li>评估多种邻接感知空间预测模型，发现大多数方法在 1 天至 1 个月预测窗口内均输给 last-value baseline</li>
+<li>识别三类主要失效模式：疫情暴发预判差、稀疏噪声数据处理能力弱、地理邻接信息对流行病学空间建模实用性有限</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：大多数时空模型在多种疫情数据集的滚动评估中均未能超越 last-value baseline，尤其在疫情暴发阶段表现欠佳，表明现有方法在实际公共卫生场景中的可用性仍有显著差距。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06530v1]]</p>
+
+<hr/>
+
+<h4>可控 2D 切片导航：将 3D MRI 建模为视频-动作序列的自监督预训练框架</h4>
+<ul>
+<li><b>信号源</b>：北京大学</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06487v1">Controllable 2D Slice Navigation for 3D MRI Self-Supervised Pretraining</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：研究将 3D MRI 扫描重新解释为"可操控的 2D 切片导航游戏"：在连续位置、方向和尺度上渲染切片，形成类似视频游戏帧序列的动作-观测对，再用 latent dynamics model 预测动作后的特征演化——这在某种程度上类似于让模型扮演"操控手术镜头穿越人体"的视频游戏玩家，从而学到解剖结构的空间关系。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>北京大学提出基于可控 2D 切片导航任务的 3D MRI 自监督预训练框架。该方法将任意 3D MRI 体积在连续参数空间（空间坐标、法向量、尺度）上采样切片序列，相邻帧之间的参数差即为"动作"，构成 dense video-action pair 作为自监督信号。框架由 tokenizer 和 latent dynamics model 两个模块组成，通过 action-conditioned next-state prediction 学习解剖与空间表征。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：框架分为两个模块：一是 tokenizer，将每帧 2D 切片编码为 latent token；二是 latent dynamics model，接收动作轨迹（切片的位置、朝向、尺度变化）作为条件，预测下一帧的 latent 特征。预训练信号来自模型对"给定当前帧+动作 → 预测下一帧特征"的能力。</li>
+<li><b>技术细节</b>：将任意 3D MRI 体积在连续参数空间（空间坐标、法向量、尺度）上采样切片序列，相邻帧之间的参数差即为"动作"。模型以此构成 action-conditioned next-state prediction 任务，这在某种程度上类似于 world model 中的视频预测，但控制信号是几何变换而非手柄输入。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出将 3D MRI 体积渲染为连续 2D 切片序列，构成 dense video-action pair 作为自监督信号，区别于传统 masked patch reconstruction</li>
+<li>采用 tokenizer + latent dynamics model 的双模块架构，动作轨迹作为条件输入预测潜在特征演化</li>
+<li>在解剖与空间下游任务上，可控切片导航预训练优于静态体积 baseline、纯 tokenizer 预训练及无对齐动作的 dynamics 变体</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：可控 2D 切片导航预训练在代表性解剖与空间下游任务上提供了对静态体积方法互补的性能增益，验证了将 3D MRI 建模为 video-action 序列的可行性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06487v1]]</p>
+
+<hr/>
+
+<h4>基于发色团 3D 机制图的荧光蛋白量子产率预测：超越 ESM-C 和 SaProt</h4>
+<ul>
+<li><b>信号源</b>：全球学术界</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.06644v1">Chromophore-Centric 3D Mechanistic Graph for Fluorescent Protein Quantum Yield Prediction</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p><b>认知提取</b>：该方法将蛋白质 PDB 结构转化为以发色团三个区域（酚盐、桥接、咪唑啉酮）为中心的类型化 3D 残基图，利用物理接触通道信号传播生成可解释特征，而非依赖全局序列表示——这在某种程度上类似于不看整栋楼的蓝图，而是精确测量发光灯泡周围每个插座的电气连接方式。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>研究提出以荧光蛋白成熟发色团（CRO）为中心的 3D 机制图算法，通过 channel-signal-region 传播预测量子产率（QY）。方法将每个 PDB 结构转化为类型化 3D 残基图，注册至成熟发色团状态并分区为酚盐、桥接和咪唑啉酮三个区域，生成 121 个富集特征，移除身份捷径后保留 52 个非身份特征用于波段特异性 ExtraTrees 回归。在 531 蛋白基准测试中 R=0.772，优于 ESM-C（R=0.734）和 SaProt（R=0.731）。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：将每个 PDB 结构转化为类型化 3D 残基图，注册至成熟发色团（CRO）状态，将发色团分区为酚盐、桥接和咪唑啉酮三个区域，然后执行 channel-signal-region 传播生成 121 个富集特征；移除身份捷径后保留 52 个非身份特征，用于波段特异性 ExtraTrees 回归预测量子产率。</li>
+<li><b>技术细节</b>：每个特征编码一个接触通道（contact channel）、种子信号（seed signal）和目标 CRO 区域的组合，因此特征解释是内在的而非事后的（post hoc）——无需额外可解释性工具，特征本身即机制。这在某种程度上类似于把实验控制变量直接编码进输入，而不是训练后再去归因。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>在 531 蛋白随机交叉验证中达到 R=0.772，优于 Band mean（R=0.632）、ESM-C（R=0.734）和 SaProt（R=0.731）</li>
+<li>在远同源桶（&lt;50% 序列相似度）中优势最明显，R=0.697 vs 对比最优 0.633，泛化能力强</li>
+<li>52 个非身份特征可直接解释带特异性机制：GFP 类蛋白的芳香堆积与钳形不对称、红色蛋白的电荷/钳形平衡等</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在随机交叉验证和亮蛋白筛选（Bright P@5=0.704）任务中均排名第一，尤其在远同源蛋白泛化场景下优势显著，证明基于局部物理机制的特征工程优于全局蛋白语言模型表示。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.06644v1]]</p>
+
+<hr/>
+<h2>二、行业应用 (Industry Application)</h2>
+<h3>认知模型 (产品/集成/Agentic 商业化)</h3>
+
+<h4>OpenAI 推出 GPT-Realtime-2：具备推理能力的实时语音模型开放 API</h4>
+<ul>
+  <li><b>信号源</b>：Greg Brockman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/gdb/status/2052448850796011931">GPT-Realtime-2 reasoning model now available in the Realtime API</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：OpenAI 将具备推理能力的实时语音模型 GPT-Realtime-2 开放 API，开发者可直接基于它构建语音 agent——这在某种程度上类似于把一个能"边想边说"的大脑接入语音通话系统。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 通过 Realtime API 正式上线 GPT-Realtime-2 推理模型，开发者可直接调用该模型构建具备推理能力的 voice agent。相较于此前的实时语音模型，GPT-Realtime-2 在保持低延迟对话能力的同时，引入了推理链支持，使语音交互场景下的复杂任务处理成为可能。</p>
+<p><b>产品定位</b></p>
+<p>面向需要在语音通话、客服 agent、实时助手等场景中集成高质量推理能力的开发者，填补"实时语音 + 深度推理"同时兼顾的能力空白。</p>
+<p>[[FIGURE:x:2052448850796011931]]</p>
+
+<hr/>
+
+<h4>OpenAI 发布 GPT-5.5-Cyber：面向关键基础设施防御方的网络安全专项模型</h4>
+<ul>
+  <li><b>信号源</b>：Greg Brockman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/gdb/status/2052583338561683775">Introducing GPT-5.5-Cyber for critical infrastructure defenders</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：OpenAI 推出首个以网络安全防御为核心定位的专项模型 GPT-5.5-Cyber，针对关键基础设施保护提供能力支持——这在某种程度上类似于将通用 AI 能力定向"武装"给蓝队防御方使用，而非面向通用开发者开放。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>GPT-5.5-Cyber 目前处于限量预览阶段，定向向关键基础设施保护方开放，专注于网络安全防御应用场景。该模型是 OpenAI 在垂直领域专项化路线上的又一落子，继医疗、科研方向之后，将能力边界延伸至国家安全与基础设施防护。</p>
+<p><b>产品定位</b></p>
+<p>定位为"防御者专用"的网络安全 AI 工具，服务对象为关键基础设施的蓝队安全团队，强调特定领域能力与使用边界的双重约束。</p>
+<p>[[FIGURE:x:2052583338561683775]]</p>
+
+<hr/>
+
+<h4>OpenAI Codex 新增后台驱动 Chrome 标签页能力，支持浏览器自动化操作</h4>
+<ul>
+  <li><b>信号源</b>：Greg Brockman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/gdb/status/2052525058325647693">Codex can now drive Chrome tabs in the background</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：Codex 从代码生成工具扩展为可控制真实浏览器的 agent，能够在后台驱动 Chrome 完成网页交互任务——这在某种程度上类似于给 AI 配备了一双能在浏览器里自主操作的手。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI Codex 新增在后台驱动 Chrome 标签页的能力，支持浏览器自动化操作。此次更新使 Codex 的 agent 能力从纯代码生成层面延伸至真实 Web 环境交互，可在不干扰用户前台操作的前提下执行网页任务。</p>
+<p><b>产品定位</b></p>
+<p>将 Codex 的 agentic coding 能力与浏览器自动化打通，适用于需要与 Web 应用实时交互的开发测试、任务自动化等场景。</p>
+<p>[[FIGURE:x:2052525058325647693]]</p>
+
+<hr/>
+
+<h4>OpenAI Codex Chrome 插件上线：AI coding agent 延伸至浏览器开发环境</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI Developers 官方 @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2052481136971125158">Codex Chrome extension: test web apps, collect context across tabs, use DevTools in parallel</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：Codex 通过 Chrome 插件将 AI coding agent 能力延伸至浏览器端，使其能主动感知和操作 Web 开发环境——这在某种程度上类似于给程序员配了一个可以"直接看到网页"并操作 DevTools 的 AI 结对工程师。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 正式推出 Codex Chrome 插件，支持在浏览器内测试 Web 应用、跨标签页收集上下文信息、并行使用 DevTools，同时不干扰用户正常浏览操作。插件将 Codex 的 agentic 能力与浏览器开发工具链深度整合，覆盖从代码编写到实时调试的完整 Web 开发闭环。</p>
+<p><b>产品定位</b></p>
+<p>面向 Web 开发者的 AI 结对编程工具，通过 Chrome 插件形态嵌入开发者日常工作流，解决 AI coding agent 无法直接感知和操作浏览器真实环境的痛点。</p>
+<p>[[FIGURE:x:2052481136971125158]]</p>
+
+<hr/>
+
+<h4>GPT-Realtime-2 API 开放：开发者可基于推理级实时语音模型构建 voice agent</h4>
+<ul>
+  <li><b>信号源</b>：Greg Brockman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/gdb/status/2052448850796011931">GPT-Realtime-2 reasoning model now in the API for building voice agents</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：OpenAI 将具备推理能力的实时语音模型 GPT-Realtime-2 开放至 API，开发者可以此为基础构建 voice agent——这在某种程度上类似于把具备"思考能力"的大脑接入了实时对话的耳朵和嘴巴。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>GPT-Realtime-2 作为推理级实时语音模型正式通过 API 向开发者开放，支持构建具备复杂推理能力的 voice agent 应用。此次开放标志着 OpenAI Realtime API 从单纯的语音转录与合成能力升级至支持多步推理的对话智能体构建平台。</p>
+<p><b>产品定位</b></p>
+<p>为语音 agent 开发者提供兼具实时响应与深度推理能力的基础模型，适用于复杂客服、语音助手、实时问答等对推理质量要求较高的语音交互场景。</p>
+<p>[[FIGURE:x:2052448850796011931]]</p>
+
+<hr/>
+
+<h4>GPT-5.5-Cyber 限量预览：OpenAI 网络安全专项模型定向开放给基础设施防御者</h4>
+<ul>
+  <li><b>信号源</b>：Greg Brockman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/gdb/status/2052583338561683775">GPT-5.5-Cyber limited preview for critical infrastructure defenders</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：GPT-5.5-Cyber 是 OpenAI 针对网络安全防御场景推出的专项模型，定向向关键基础设施保护方开放，聚焦于"防御者"用途——这类似于为医疗专业人员定制的临床模型，强调特定领域的能力与使用边界的双重约束。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 发布 GPT-5.5-Cyber 限量预览版，专为关键基础设施的网络安全防御方设计，目前仅向符合资质的防御团队开放访问。该模型聚焦蓝队防御用途，是 OpenAI 在垂直安全领域专项化布局的重要信号，也体现了其在高敏感场景下对使用边界的主动管控。</p>
+<p><b>产品定位</b></p>
+<p>定位为关键基础设施安全防御方的专用 AI 工具，服务对象包括政府、能源、金融等领域的蓝队安全团队，通过限量预览方式控制访问范围与使用风险。</p>
+<p>[[FIGURE:x:2052583338561683775]]</p>
+Looking at the 6 signals, I can see they are actually 3 unique events (each duplicated once), from 3 distinct source_ids:
+
+- `x:2052440968763515223` — OpenAI Developers: Realtime API 三款新模型上线
+- `x:2052480998668206262` — Greg Brockman: voice-to-voice translation API 开放
+- `x:2052462271667028211` — Sam Altman: GPT-Realtime-2 发布
+
+The instruction says "exactly 6 cards in the order shown," so I will render all 6 in order, even though cards 4–6 are duplicates of 1–3 with slightly different summary/cognitive_takeaway text. I will faithfully render each as its own card using the data provided (using the cognitive_takeaway and summary from each respective signal object).
+
+```xml
+<h3>多模态 (生成/理解类产品)</h3>
+
+<h4>OpenAI Realtime API 上线三款专项模型：GPT-Realtime-2、GPT-Realtime-Translate 与 GPT-Realtime-Whisper</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI Developers 官方 @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2052440968763515223">OpenAI Developers on Realtime API new models</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：OpenAI 扩充 Realtime API 模型阵容，新增专项能力模型——实时翻译与实时语音识别均以独立模型形式提供，开发者可按需选用不同的实时语音处理能力，类似于将过去"一体式"实时语音系统拆分为功能专项的组件库。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 在 Realtime API 中正式上线三款新模型：GPT-Realtime-2、GPT-Realtime-Translate（实时翻译）和 GPT-Realtime-Whisper（实时语音识别），三款模型各司其职，分别覆盖实时对话、跨语言翻译与语音转写场景，开发者可通过 API 直接调用。</p>
+<p><b>产品定位</b></p>
+<p>面向需要实时语音交互能力的开发者，将原本集中于单一模型的实时语音处理能力拆解为三个功能专项组件，降低集成复杂度，提升按场景选型的灵活性。</p>
+<p>[[FIGURE:x:2052440968763515223]]</p>
+
+<hr/>
+
+<h4>OpenAI 通过 API 开放端到端实时 voice-to-voice 翻译能力</h4>
+<ul>
+  <li><b>信号源</b>：Greg Brockman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/gdb/status/2052480998668206262">Greg Brockman on real-time voice translation API</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：实时 voice-to-voice translation 意味着无需先将语音转文字再翻译再合成，而是端到端处理语音输入并直接输出目标语言语音，延迟和自然度都有望大幅提升。这在某种程度上类似于把传统三段式流水线压缩成一个统一的感知-生成系统。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 通过 API 开放实时语音到语音翻译功能，Greg Brockman 表示这是 OpenAI 创立以来一直期待落地的 AI 应用方向，开发者现可直接集成该能力构建跨语言实时语音应用。</p>
+<p><b>产品定位</b></p>
+<p>GPT-Realtime-Translate 以 API 形式面向开发者开放，定位于跨语言实时语音通信场景，解决传统 ASR-MT-TTS 三段式流水线带来的高延迟与自然度损失问题。</p>
+<p>[[FIGURE:x:2052480998668206262]]</p>
+
+<hr/>
+
+<h4>GPT-Realtime-2 正式上线 API，Sam Altman 称其为语音交互重大进步</h4>
+<ul>
+  <li><b>信号源</b>：Sam Altman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/sama/status/2052462271667028211">Sam Altman on GPT-Realtime-2 launch</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：GPT-Realtime-2 是 OpenAI 实时语音模型的新一代迭代，面向 API 开发者开放，主打高上下文量的语音输入场景——这在某种程度上类似于把人类在电话中倾倒大量信息的交互方式移植到 AI 系统。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 发布 GPT-Realtime-2 并开放 API，Sam Altman 称其为语音交互的重大进步，同时透露 ChatGPT 语音功能亦在同步改进中，新模型主打支持大量上下文输入的高质量语音交互场景。</p>
+<p><b>产品定位</b></p>
+<p>GPT-Realtime-2 定位为面向开发者的新一代实时语音对话模型，强化对高上下文量语音输入的处理能力，并与 ChatGPT 消费端语音功能形成联动改进。</p>
+<p>[[FIGURE:x:2052462271667028211]]</p>
+
+<hr/>
+
+<h4>OpenAI Realtime API 模块化扩展：三款专用实时模型覆盖对话、翻译与转写</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI Developers 官方 @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2052440968763515223">OpenAI Developers on Realtime API new models</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：OpenAI 将 Realtime API 能力进一步细化拆分，推出三个专用实时模型：通用对话增强版 GPT-Realtime-2、专司语言翻译的 GPT-Realtime-Translate，以及专注语音转写的 GPT-Realtime-Whisper，体现出对实时语音交互能力的模块化产品策略。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 在 Realtime API 中上线三款新模型：GPT-Realtime-2、GPT-Realtime-Translate 和 GPT-Realtime-Whisper，分别覆盖实时对话、实时翻译和实时语音识别场景，开发者可通过 API 按需调用各专项能力。</p>
+<p><b>产品定位</b></p>
+<p>三款模型共同构成 OpenAI 实时语音能力的模块化产品矩阵，开发者可根据具体应用场景选择对应组件集成，而非强制使用单一全能模型，体现出平台对开发者灵活性的重视。</p>
+<p>[[FIGURE:x:2052440968763515223]]</p>
+
+<hr/>
+
+<h4>OpenAI voice-to-voice 翻译 API 正式向开发者开放集成</h4>
+<ul>
+  <li><b>信号源</b>：Greg Brockman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/gdb/status/2052480998668206262">Greg Brockman on real-time voice translation API</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：实时 voice-to-voice translation 是将输入语音直接转换为另一种语言的语音输出，跳过中间文本环节，延迟更低、表达更自然。OpenAI 将该能力开放至 API，标志着该功能从内部演示走向大规模开发者可用状态。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 在 API 中推出实时语音对语音翻译（voice-to-voice translation）功能，供开发者直接集成构建应用，端到端语音翻译链路跳过文本中间环节，Greg Brockman 将其描述为 OpenAI 长期以来期待落地的核心 AI 应用方向之一。</p>
+<p><b>产品定位</b></p>
+<p>面向开发者的端到端实时语音翻译 API，定位于跨语言即时通信、多语言客服、国际会议等高实时性场景，以统一感知-生成系统替代传统三段式流水线。</p>
+<p>[[FIGURE:x:2052480998668206262]]</p>
+
+<hr/>
+
+<h4>GPT-Realtime-2 发布：支持大量上下文的新一代实时语音 API</h4>
+<ul>
+  <li><b>信号源</b>：Sam Altman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/sama/status/2052462271667028211">Sam Altman on GPT-Realtime-2 launch</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：GPT-Realtime-2 是 OpenAI 实时语音 API 的新一代版本，主要面向需要传递大量上下文的语音交互场景。这在某种程度上类似于从文字输入升级到"实时口述备忘录"——用户可以高效地用说话代替打字来传递复杂信息。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 发布 GPT-Realtime-2，通过 API 上线，Sam Altman 称其为语音交互能力的重大进展，并透露 ChatGPT 语音功能同步在改进中；新模型主打支持大量上下文输入的语音交互场景，适用于需要持续倾倒复杂信息的实时对话应用。</p>
+<p><b>产品定位</b></p>
+<p>GPT-Realtime-2 作为 Realtime API 体系中的通用对话升级版，重点强化高上下文量语音输入处理，与同期上线的 GPT-Realtime-Translate 和 GPT-Realtime-Whisper 共同构成 OpenAI 实时语音产品矩阵。</p>
+<p>[[FIGURE:x:2052462271667028211]]</p>
+```
+<h3>AI infra (推理框架/部署/硬件商业化)</h3>
+
+<h4>NVIDIA Dynamo 对 TokenSpeed 提供 day-0 后端支持，推理生态再扩展</h4>
+<ul>
+  <li><b>信号源</b>：NVIDIA AI 官方 @ NVIDIA</li>
+  <li><b>链接</b>：<a href="https://x.com/NVIDIAAI/status/2052424145821212925">NVIDIA Dynamo announces day-0 support for TokenSpeed backend</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：NVIDIA 的推理框架 Dynamo 在 TokenSpeed 发布首日即完成后端适配，用户无需额外配置即可将 TokenSpeed 作为 Dynamo 的推理后端直接使用，进一步扩展了 Dynamo 的后端生态覆盖范围。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>NVIDIA Dynamo 宣布对 TokenSpeed 推理后端提供 day-0 支持，两者实现开箱即用集成。这意味着 TokenSpeed 上线首日用户即可在 Dynamo 框架内直接调用其能力，无需等待额外适配周期，进一步巩固了 Dynamo 作为多后端统一推理调度层的定位。</p>
+<p><b>产品定位</b></p>
+<p>Dynamo 是 NVIDIA 推出的分布式推理框架，定位于统一调度多种推理后端；此次 day-0 集成 TokenSpeed，体现其持续扩展兼容后端生态、降低用户切换成本的策略。</p>
+<p>[[FIGURE:x:2052424145821212925]]</p>
+
+<hr/>
+
+<h4>Epoch AI 发布 AI Chip Components Explorer，可视化追踪算力供应链瓶颈</h4>
+<ul>
+  <li><b>信号源</b>：Epoch AI 官方 @ Epoch AI Research</li>
+  <li><b>链接</b>：<a href="https://x.com/EpochAIResearch/status/2052509552776761580">Epoch AI releases AI Chip Components Explorer</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：AI 芯片的产能瓶颈不只取决于芯片制造本身，而由 logic（逻辑芯片）、先进封装（packaging）、HBM memory 三大组件的协同供应共同决定——任何一环短缺都可能卡住整条生产链。Epoch AI 此工具在某种程度上类似于为 AI 算力供应链建立了一个实时体检仪表盘，将隐性瓶颈显性化。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Epoch AI 发布 AI Chip Components Explorer 探索工具，将 AI 芯片供应链拆解为 logic、packaging、memory 三大核心组件，并通过可视化界面追踪各环节的产能供给与实际消耗状况，用于识别前沿 AI 算力扩张过程中的供应链瓶颈节点。</p>
+<p><b>产品定位</b></p>
+<p>该工具面向研究人员与产业分析人士，提供结构化的 AI 芯片供应链现状视图，帮助用户判断当前算力扩张受制于哪一组件环节（如 HBM 产能、先进封装产线等）。</p>
+<p>[[FIGURE:x:2052509552776761580]]</p>
+<h3>ai4s (科研/医疗/材料类商业落地)</h3>
+
+<h4>微软研究院 Tyger 平台：将 MRI 云端重建时间从数周压缩至数小时</h4>
+<ul>
+  <li><b>信号源</b>：MSFTResearch @ Microsoft Research</li>
+  <li><b>链接</b>：<a href="https://x.com/MSFTResearch/status/2052420200666992994">Microsoft Research Tyger: Cloud-based MRI Processing Platform</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：Tyger 的核心思路是把 MRI 原始信号重建（raw signal reconstruction）这类计算密集型任务卸载到云端，解除本地算力瓶颈；这在某种程度上类似于把暗房冲洗底片的工作搬到自动化工厂，让摄影师当天就能拿到成片。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Microsoft Research 发布 Tyger 云端 MRI 处理平台，将原始信号重建为可读图像的端到端时间从原本的数天乃至数周大幅压缩至数小时。平台通过将计算密集型的 raw signal reconstruction 工作流迁移至弹性云算力，打破本地工作站的硬件瓶颈，显著缩短研究者从数据采集到可视化结果的等待周期。</p>
+<p><b>产品定位</b></p>
+<p>Tyger 定位为面向医学影像科研团队的云端 MRI 重建基础设施，解决传统本地化处理流水线中算力不足、批处理周期长的痛点，使大规模 MRI 数据集的快速迭代实验成为可能。</p>
+<p>[[FIGURE:x:2052420200666992994]]</p>
+
+<hr/>
+
+<h4>Tyger 云端 MRI 平台：弹性算力 offload 重构医学影像处理工作流</h4>
+<ul>
+  <li><b>信号源</b>：MSFTResearch @ Microsoft Research</li>
+  <li><b>链接</b>：<a href="https://x.com/MSFTResearch/status/2052420200666992994">Microsoft Research Tyger: Cloud MRI Reconstruction Workflow</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：Tyger 将计算密集的 MRI 重建流程迁移至云端，本质上是把传统本地化的医学影像处理工作流 offload 到弹性算力上——类似于把暗房冲胶卷的工序搬进全自动工厂，大幅缩短研究者从采集到可视化结果的等待周期。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Microsoft Research 推出 Tyger 平台，专注于将 MRI raw signal reconstruction 这一计算瓶颈环节迁移至云端弹性算力，处理时间从数天/数周压缩至数小时。平台覆盖从原始采集信号到最终可读影像的完整重建链路，支持医学影像领域的大规模数据处理需求。</p>
+<p><b>产品定位</b></p>
+<p>面向科研与临床前影像处理场景，Tyger 以云端弹性算力替代本地高性能工作站，解决 MRI 重建工作流中本地化部署成本高、处理周期长的结构性问题，提升影像数据从采集到分析的整体吞吐效率。</p>
+<p>[[FIGURE:x:2052420200666992994]]</p>
+
+<hr/>
+<h2>三、产业全景 (Industry Macro)</h2>
+<h3>主要玩家 (Players)</h3>
+<p><b>Anthropic 将 alignment 测试工具 Petri 捐赠给独立机构 Meridian Labs，联合发布重大更新</b> · <a href="https://x.com/AnthropicAI/status/2052494460966019137">Anthropic open-sources Petri alignment testing tool to Meridian Labs</a></p>
+<p>Anthropic 将内部研发的 alignment 自动化测试框架 Petri 移交给第三方机构 Meridian Labs 独立运营，并联合发布重大更新，提升测试的适应性、真实性与深度。此举使 Petri 脱离单一公司主导，转向社区驱动开发模式。</p>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p>Anthropic 将内部 alignment 评估工具交由独立第三方托管，类似于将内部安全测试标准移交给独立审计机构运营——有助于构建更中立的 AI 对齐评估生态，也是头部 AI 实验室在 AI safety 基础设施层面走向开放的具体案例。</p>
+</callout>
+<h3>监管政策 (Regulation)</h3>
+<p><b>Jensen Huang 在 Milken Institute 峰会上公开背书开源 AI 的安全战略价值</b> · <a href="https://x.com/NVIDIAAI/status/2052508776515641510">Jensen Huang: open-source AI is a key tool for US AI security at Milken Institute Global Conference</a></p>
+<p>NVIDIA CEO Jensen Huang 在 Milken Institute 全球峰会上表示，开源 AI 是美国 AI 安全的重要工具，更多开源模型意味着更多防御者参与、安全保护覆盖面更广。</p>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p>顶级 AI 硬件公司 CEO 在政策场合为开源路线进行战略背书，其核心逻辑类似 Linux 安全模型：开放代码扩大了漏洞发现与修补的参与者规模，这一论点正在成为开源 AI 阵营在监管博弈中的标准叙事。</p>
+</callout>
+
+<hr/>
+<h2>折叠区</h2>
+<ul>
+  <li>OpenAI Developers 官方 X 账号：OpenAI 发布 GPT-Realtime-2 语音应用开发 prompting 指南，涵盖推理力度调节、preamb（<a href="[https://x.com/OpenAIDevs/status/2052530378184032560](https://x.com/OpenAIDevs/status/2052530378184032560)">链接</a>）</li>
+  <li>OpenAI Developers 官方 @ OpenAI：OpenAI 发布 GPT-Realtime-2 语音应用开发 prompting 指南，涵盖 reasoning ef（<a href="[https://x.com/OpenAIDevs/status/2052530378184032560](https://x.com/OpenAIDevs/status/2052530378184032560)">链接</a>）</li>
+  <li>Jensen Huang：NVIDIA Jensen Huang 在 Milken Institute 全球会议上阐述开源 AI 对美国安全的战略（<a href="[https://x.com/NVIDIAAI/status/2052508776515641510](https://x.com/NVIDIAAI/status/2052508776515641510)">链接</a>）</li>
+  <li>NVIDIA AI 官方 @ NVIDIA（转发 Perplexity 团队技术分享）：Perplexity 团队分享使用 NVIDIA CUTLASS Python stack 优化模型推理的技术细节，NV（<a href="[https://x.com/NVIDIAAI/status/2052495856813981753](https://x.com/NVIDIAAI/status/2052495856813981753)">链接</a>）</li>
+  <li>NVIDIA AI 官方 @ NVIDIA：Perplexity 团队分享使用 NVIDIA CUTLASS Python stack 优化推理性能的技术细节（<a href="[https://x.com/NVIDIAAI/status/2052495856813981753](https://x.com/NVIDIAAI/status/2052495856813981753)">链接</a>）</li>
+  <li>NVIDIA AI 官方 @ NVIDIA × Harvey：NVIDIA AI 宣布与法律 AI 公司 Harvey 合作，为 agent 在真实工作流与长期任务上的表现构建法律领（<a href="[https://x.com/NVIDIAAI/status/2052469248975671524](https://x.com/NVIDIAAI/status/2052469248975671524)">链接</a>）</li>
+  <li>NVIDIA AI 官方 @ NVIDIA：NVIDIA AI 宣布与法律 AI 公司 Harvey 合作，共同推进法律领域 agent 长程任务 benchmar（<a href="[https://x.com/NVIDIAAI/status/2052469248975671524](https://x.com/NVIDIAAI/status/2052469248975671524)">链接</a>）</li>
+  <li>Anthropic 官方 @ Anthropic：Anthropic 将安全漏洞赏金计划公开至 HackerOne，允许任何人提交漏洞并获得奖励，此前该计划仅在安全研究社（<a href="[https://x.com/AnthropicAI/status/2052466175540629965](https://x.com/AnthropicAI/status/2052466175540629965)">链接</a>）</li>
+  <li>Anthropic 官方 @ Anthropic：Anthropic 将安全漏洞赏金计划（bug bounty）公开上线至 HackerOne 平台，此前已在安全研究社区（<a href="[https://x.com/AnthropicAI/status/2052466175540629965](https://x.com/AnthropicAI/status/2052466175540629965)">链接</a>）</li>
+  <li>Perplexity 官方 @ Perplexity：Perplexity 发布新版 Mac 应用，内置 Personal Computer 功能，旧版 Mac app 将在（<a href="[https://x.com/perplexity_ai/status/2052445452461863361](https://x.com/perplexity_ai/status/2052445452461863361)">链接</a>）</li>
+  <li>Perplexity 官方 @ Perplexity：Perplexity 发布新版 Mac 应用，引入 Personal Computer 功能，旧版 Mac app 将在（<a href="[https://x.com/perplexity_ai/status/2052445452461863361](https://x.com/perplexity_ai/status/2052445452461863361)">链接</a>）</li>
+  <li>UIUC @ arXiv：UIUC 提出利用两个领域自适应 parser 之间的一致性来简化第二语言（L2）韩语 Universal Depend（<a href="[http://arxiv.org/abs/2605.06625v1](http://arxiv.org/abs/2605.06625v1)">链接</a>）</li>
+  <li>Anthropic 官方 @ Anthropic：Anthropic 官方博客发文介绍 NLA（Natural Language Agents 或相关概念），具体内容需访（<a href="[https://x.com/AnthropicAI/status/2052435458580193726](https://x.com/AnthropicAI/status/2052435458580193726)">链接</a>）</li>
+  <li>NVIDIA AI 官方 @ NVIDIA：NVIDIA Dynamo 宣布对 TokenSpeed 后端提供 day-0 支持，两款推理框架实现开箱即用集成（<a href="[https://x.com/NVIDIAAI/status/2052424145821212925](https://x.com/NVIDIAAI/status/2052424145821212925)">链接</a>）</li>
+  <li>Andrew Ng：DeepLearning.AI 联合 CopilotKit 推出新课程，教授如何构建可动态生成自定义 UI（图表、表单、（<a href="[https://x.com/AndrewYNg/status/2052422157310083493](https://x.com/AndrewYNg/status/2052422157310083493)">链接</a>）</li>
+  <li>Andrew Ng：DeepLearning.AI 与 CopilotKit 合作推出新课程，教开发者构建能生成自定义 UI（图表、表单、白（<a href="[https://x.com/AndrewYNg/status/2052422157310083493](https://x.com/AndrewYNg/status/2052422157310083493)">链接</a>）</li>
+</ul>
+
+<hr/>
+<p><i>本日报由 HH Research Pipeline 自动生成，由 Claude 抽取和撰写，以原文为准。<br/>处理信号 173 条 · 头条 54 条 · 高价值 110 条</i></p>

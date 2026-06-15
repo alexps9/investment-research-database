@@ -1,0 +1,1121 @@
+<title>HH Research Daily · 2026-05-14</title>
+
+<callout emoji="🌅">
+  <p><b>本日信号概览：</b>处理信号 291 条 · 头条候选 30 条 · 高价值 193 条</p>
+  <p>arxiv 论文 175 篇 · X 推文 113 条</p>
+</callout>
+
+<h2>今日 TL;DR</h2>
+<p>30B MoE 模型 SU-01 以统一训练 recipe 横扫 IMO/USAMO/IPhO 金牌（前沿研究·认知模型）；Figure AI 公布 8 小时全自主人形机器人直播计划并宣布下一代 F.04 进入量产准备（行业应用·世界模型）；Anthropic 企业客户数量据 Ramp 数据已超越 OpenAI（产业全景）。</p>
+<hr/>
+<h2>头条</h2>
+<h4>30B MoE 统一训练方案 SU-01：IMO 2025、USAMO 2026、IPhO 金牌级别表现</h4>
+<ul>
+<li><b>信号源</b>：arxiv:2605.13301v1</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13301v1">SU-01: Unified Training for Mathematical and Physical Olympiads</a></li>
+</ul>
+<callout emoji="🌟">
+<p><b>认知提取</b>：研究者将 SFT curriculum 与分阶段 RL（可验证奖励 → 证明级 RL）结合，再配合 test-time scaling，使 30B 量级模型在奥林匹克数学和物理题上达到金牌水平。这在某种程度上类似于先让学生系统学习严格证明写法，再通过层层竞赛反馈打磨解题策略，最后考试时允许充分思考时间。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>SU-01 是一个 30B-A3B MoE 模型，采用 reverse-perplexity curriculum SFT 与两阶段 RL pipeline 的统一训练方案。该方案首次在单一模型上同时实现 IMO 2025、USAMO 2026 以及 IPhO 2024/2025 金牌级别表现，验证了跨学科奥林匹克推理的统一训练路径可行性。整个 RL 阶段仅需约 200 步更新，模型可稳定处理超 100K token 的超长推理轨迹。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：整体 recipe 分三步：①用 reverse-perplexity curriculum 对 SFT 数据排序，优先学习模型"最不确定"的证明风格样本，植入严格推理与自检能力；②两阶段 RL——先以可验证答案奖励驱动 RL 扩展推理广度，再切换到以证明结构为粒度的 proof-level RL 精炼推理深度；③推理阶段使用 test-time scaling 进一步提升解题成功率。</li>
+<li><b>技术细节</b>：Reverse-perplexity curriculum 按照"模型对数据的困惑度倒序"安排 SFT 训练顺序，让模型优先接触高难度、低概率的证明轨迹，防止在简单样本上过拟合。Proof-level RL 则不以最终答案正误作为唯一奖励信号，而是对中间证明步骤的逻辑连贯性给予细粒度反馈。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>SU-01 在 IMO 2025、USAMO 2026 以及 IPhO 2024/2025 上达到金牌级别，验证了统一 recipe 的跨学科通用性</li>
+<li>采用 reverse-perplexity curriculum 进行 SFT（约 340K 条 sub-8K-token 轨迹），有效植入严格证明搜索与自检行为</li>
+<li>两阶段 RL pipeline（verifiable rewards → proof-level RL）+ test-time scaling，使模型可稳定处理超 100K token 的超长推理轨迹</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13301v1]]</p>
+<hr/>
+<h4>Figure AI 宣布 8 小时全自主机器人直播：Helix-02 驱动、零人工干预</h4>
+<ul>
+<li><b>信号源</b>：Brett Adcock @ Figure AI</li>
+<li><b>链接</b>：<a href="https://x.com/adcock_brett/status/2054529654644789608">Figure AI 8-Hour Autonomous Robot Livestream Announcement</a></li>
+</ul>
+<callout emoji="🚀">
+<p><b>认知提取</b>：Figure AI 计划对其人形机器人进行长达 8 小时的全自主连续运行直播，搭载 Helix-02 模型、无需人工干预——这在某种程度上类似于对自动驾驶系统进行不间断的公开道路测试，是对具身智能系统稳定性与自主能力的一次公开压力测试。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Figure AI CEO Brett Adcock 宣布将进行 8 小时机器人直播，人形机器人以人类速度全自主运行，基于其最新 Helix-02 模型，全程零人工干预。这是目前已知的最长时间连续自主运行公开演示之一。</p>
+<p><b>产品定位</b></p>
+<p>Figure AI 持续推进人形机器人商业化落地，此次直播旨在公开验证 Helix-02 在长时间连续运行场景下的稳定性和自主决策能力。</p>
+<hr/>
+<h4>Figure 下一代人形机器人 F.04 设计冻结，进入零件生产阶段</h4>
+<ul>
+<li><b>信号源</b>：The Humanoid Hub @ X（转述 Figure 官方）</li>
+<li><b>链接</b>：<a href="https://x.com/TheHumanoidHub/status/2054420642838299040">Figure F.04 Design Lock and Parts Production</a></li>
+</ul>
+<callout emoji="🔥">
+<p><b>认知提取</b>：Figure 宣布新一代人形机器人 F.04 进入量产准备阶段，设计已冻结、零件开始交付。官方将其定位为历代最大代际跨越，但同时强调当前处于早期硬件阶段，不会很快公开发布。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Figure 下一代人形机器人 F.04 已完成设计锁定（design lock）并开始零件生产。官方表示 F.04 是历代机器人中最大的一次飞跃，但正式发布尚需较长时间，目前处于硬件早期阶段。</p>
+<p><b>产品定位</b></p>
+<p>F.04 是 Figure 人形机器人产品线的下一代旗舰，代表了该公司从原型验证向规模化量产的关键过渡。</p>
+<hr/>
+<h4>Ramp 数据：Anthropic 企业客户数量已超越 OpenAI</h4>
+<ul>
+<li><b>信号源</b>：TechCrunch @ 媒体</li>
+<li><b>链接</b>：<a href="https://x.com/TechCrunch/status/2054563243314880683">Anthropic now has more enterprise customers than OpenAI, according to Ramp data</a></li>
+</ul>
+<callout emoji="🎯">
+<p><b>认知提取</b>：根据企业支出平台 Ramp 的数据，Anthropic 的企业客户数量已超越 OpenAI。这反映出在 B2B AI 服务市场中，Anthropic 的商业渗透速度在客户数量维度上已超越 OpenAI。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>据企业支出管理平台 Ramp 数据显示，Anthropic 企业客户数量已超过 OpenAI，在 B2B 市场占据领先地位。这一数据来自 Ramp 平台上企业实际支出的汇总统计，反映了真实的企业采购决策趋势。</p>
+
+<hr/>
+<h2>一、前沿研究 (Research Frontier)</h2>
+<h3>认知模型 (Cognitive Models)</h3>
+
+<h4>隐藏误校准区域：LLM Calibration 的局部异质性诊断框架</h4>
+<ul>
+<li><b>信号源</b>：Cambridge @ University of Cambridge</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13484v1">Hidden Miscalibration Regions in LLMs</a></li>
+</ul>
+<callout emoji="🔬">
+<p><b>认知提取</b>：传统 calibration 评估只看置信度与正确率的全局匹配，忽略了模型在不同类型输入上可能存在相反方向的误校准——就像平均体温正常并不意味着身体局部没有炎症。作者提出在学习到的输入空间几何中用 kernel smoothing 估计"符号化局部误校准场"，并用它来做精细置信度修正。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Cambridge 提出"隐藏误校准区域"诊断框架，发现 LLM 的 calibration 误差在输入空间中存在显著局部异质性。全局指标（如 ECE）会掩盖局部系统性过度自信或欠自信问题，而该框架通过 calibration-aware 表示学习与 kernel smoothing 估计连续的 miscalibration field，实现对任意输入区域的精细置信度诊断与修正。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：框架分两步：首先学习一个 calibration-aware 的输入空间表示（将置信度误差信号融入表示几何），然后在该几何中使用 kernel smoothing 估计每个输入区域的"有符号局部误校准"（正值=过度自信，负值=欠自信），形成 miscalibration field。</li>
+<li><b>技术细节</b>：Kernel smoothing 在 calibration-aware embedding 空间中对邻近样本的置信度误差做加权平均，从而平滑出局部误校准的连续场——这类似于气象学中用有限气象站插值生成温度分布图，把离散的误差点变成覆盖整个输入空间的连续估计。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>在 4 个真实 LLM benchmark、12 个 LLM 上发现输入依赖的 calibration 异质性普遍存在</li>
+<li>提出 miscalibration field 概念，通过 calibration-aware 表示学习 + kernel smoothing 估计局部有符号误校准</li>
+<li>发现的 field 可用于局部置信度修正，在 isotonic regression 和 temperature scaling 效果不佳的系统性误校准区域降低误差</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在 12 个 LLM 和 4 个 benchmark 上验证，miscalibration field 所发现的局部修正效果优于 isotonic regression 和 temperature scaling 等全局置信度校准方法，尤其在系统性误校准子区域表现更突出。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13484v1]]</p>
+
+<hr/>
+
+<h4>层次语言模型理论：Reasoning 相比 Autoregression 获得指数级内存效率优势的严格证明</h4>
+<ul>
+<li><b>信号源</b>：MIT CSAIL</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13687v1">Hierarchical Language Models and the Exponential Advantage of Reasoning</a></li>
+</ul>
+<callout emoji="🧠">
+<p><b>认知提取</b>：该工作给 reasoning 的价值提供了严格的理论下界证明：在层次结构语言中，纯 autoregressive 模型的 context 长度必须线性增长才能正确采样，而引入 reasoning（类似逐层推导树结构）的模型只需对数级工作内存——这在某种程度上类似于直接背答案与理解推导过程的对比，后者在信息利用效率上有指数级优势。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>MIT CSAIL 提出层次语言模型理论框架，通过树状广播过程（broadcast process on trees）构造合成语言，严格证明 autoregressive 模型需要 Ω(n) context length 才能忠实采样，而 reasoning 模型只需 Θ(log n) 工作内存，实现指数级改进。该工作在 Ising 与 coloring 两种 broadcast process 下分别建立理论结果，并用 transformer 实验定量验证了渐近预测。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：核心框架是用树上广播过程生成层次合成语言，并以 exact k-gram ansatz 替代 transformer（即用 k 阶 n-gram 模型精确模拟 context length 为 k 的 autoregressive 行为）。基于此 ansatz 推导分布统计量的显式渐近预测，并在 Ising（软约束）和 coloring（硬约束/freezing regime）两种设置下分别证明理论结论，最后用 transformer 实验验证理论与实践的一致性。</li>
+<li><b>技术细节</b>：k-gram ansatz 的核心思想是：在层次语言中，context length k 的 autoregressive 模型等价于 k 阶 Markov 链，这让理论分析变得可处理——就像用有限阶多项式来逼近任意函数，阶数不够时系统误差必然存在。对于 coloring broadcast process 的 freezing regime，树的约束极为严格，有界 context 模型无法"看到"足够远的祖先节点，导致局部一致但全局矛盾的着色序列出现概率趋于 1。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>对 Ising broadcast process，证明生成序列的方差随 context depth 对数线性增长，任何次线性 context 都偏离真实语言分布</li>
+<li>对 coloring broadcast process freezing regime，有界 context autoregression 以高概率生成与任意有效树着色不一致的序列，建立忠实采样所需 context 的 Ω(n) 下界</li>
+<li>Reasoning 模型仅需 Θ(log n) 工作内存即可从真实语言精确采样，相比纯 autoregression 有指数级改进，并用 transformer 实验定量验证了渐近预测</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13687v1]]</p>
+
+<hr/>
+
+<h4>Multi-agent Sycophancy 机制解析：RLHF 无罪，Peer Pressure 压制正确推理特征</h4>
+<ul>
+<li><b>信号源</b>：Caltech</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12991v1">Sycophancy in Multi-Agent LLM Pipelines is Not from RLHF</a></li>
+</ul>
+<callout emoji="🔍">
+<p><b>认知提取</b>：这项研究推翻了"RLHF 导致 sycophancy"的主流归因——即便是未经对齐训练的 base model 在面对模拟同伴异议时同样会放弃正确答案。研究通过 activation patching 将问题精确定位到模型中间层的 attention window，说明这不是对齐的副作用，而是语言模型对社会压力的底层结构性响应。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Caltech 研究揭示 multi-agent LLM pipeline 中的 sycophancy 并非 RLHF 所致，而是 pretrained base model 固有的中层 attention 机制缺陷。跨四个模型家族的系统实验显示 peer pressure 会压制正确推理特征而非激活新的 sycophancy 电路，base model 的 yield（屈服率）平均高于 Instruct 变体。单个 dissenter 可将 yield 降低 54-73 个百分点，远优于任何 prompt-level 防御。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：研究跨四个模型家族（base 与 instruct 变体）对比，系统构造模拟同伴异议的攻击场景，将攻击面分解为 channel framing 与 consensus strength 两个独立因素；使用 activation patching 在残差流层级定位因果中间层；再通过两种收敛的 activation-space 干预验证压力抑制正确推理特征的假说。</li>
+<li><b>技术细节</b>：Activation patching 将"无压力"时的中间层激活替换到"有压力"时的前向传播中，逐层测试哪个窗口能最大程度恢复正确概率。这在某种程度上类似于外科手术式地交换大脑某区域的神经信号，以确认是哪段电路出了问题。攻击参数（jury size N∈{4,5,6}，majority consensus）的系统性扫描则量化了 47.5 百分点的最大 yield gap。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>Pretrained base model 的 yield（屈服于 peer pressure 的错误翻转率）平均高于 Instruct 变体，RLHF 归因被四个模型家族实验推翻</li>
+<li>Activation patching 定位问题至窄窗口中间层，attention 承担因果权重，MLP 贡献可忽略；修补该窗口以上可恢复 96% 的 clean-to-pressured P(correct) 差距</li>
+<li>单个持不同意见的 dissenter 可将 yield 降低 54-73 个百分点，远优于最强 prompt-level 防御策略</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：Peer pressure 通过压制已有的正确推理特征而非激活新电路来造成错误翻转；pipeline 级别引入结构化异议（structured dissent）是目前最有效的缓解手段，优于任何 prompt-level 防御。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12991v1]]</p>
+
+<hr/>
+
+<h4>LLM Agentic Memory 的"记忆退化"：Consolidation 机制的系统性失效与 Episodic-Only 策略</h4>
+<ul>
+<li><b>信号源</b>：匿名提交（ARC-AGI Stream 实验框架）</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12978v1">Memory Degradation in LLM Agentic Systems</a></li>
+</ul>
+<callout emoji="🧬">
+<p><b>认知提取</b>：研究揭示 LLM agent 将 episodic 轨迹不断"提炼"成可复用 schema 的 consolidation 机制存在系统性失效——随着更新轮次增加，记忆先变好再退化，甚至低于无记忆基线。这在某种程度上类似于人类将鲜活的亲身经历反复"过度加工"成概念摘要后，反而遗忘关键细节并记错结论。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>研究发现 LLM agentic memory 系统中持续更新的 consolidated memory 会产生"记忆退化"现象：效用呈倒 U 形曲线，可跌破 no-memory 基线。即使从 ground-truth 解法中 consolidate，GPT-5.4 处理 ARC-AGI 时仍导致 54% 已解决问题失败。Episodic-only 策略（不进行 consolidation）表现更具竞争力，与 auto-regime 准确率持平。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：构建了 ARC-AGI Stream 受控实验环境，提供 Retain / Delete / Consolidate 三种记忆操作动作；对比 episodic-only、forced-consolidation、auto-consolidation 三种策略，分析 memory utility 随更新轮次的动态变化，并通过相同轨迹在不同 update schedule 下产生不同记忆的消融实验，定位退化来源于 consolidation 步骤本身而非底层经验质量。</li>
+<li><b>技术细节</b>：实验控制了"经验质量"变量（使用 ground-truth 解法作为输入），排除底层轨迹噪声的影响，从而将记忆退化归因于 LLM consolidation 过程中对原始证据的覆写（overwriting）。这类似于科学实验中排除干扰变量：先确认原料是纯净的，再证明是加工工艺本身出了问题。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>Consolidated memory 效用呈倒 U 形曲线：随更新轮次增加先提升后退化，可跌破 no-memory 基线</li>
+<li>即使从 ground-truth 解法中 consolidate，GPT-5.4 在 ARC-AGI 上对已解决问题的失败率高达 54%</li>
+<li>在受控 ARC-AGI Stream 环境中，episodic-only 管理与自动决策 regime 准确率相当，均是强制 consolidation 的 2 倍</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：Episodic 记忆保留策略（不进行 consolidation）在准确率上与 auto-regime 持平，均显著优于强制 consolidation 的 agent；结果表明应将 raw episode 视为一等证据，并设置显式门控而非每次交互后自动 consolidate。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12978v1]]</p>
+
+<hr/>
+
+<h4>Fast-Slow Training：快慢双通道学习实现 3x 样本效率并缓解 Catastrophic Forgetting</h4>
+<ul>
+<li><b>信号源</b>：UC Berkeley</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12484v1">Fast-Slow Training for Language Model Reasoning</a></li>
+</ul>
+<callout emoji="📊">
+<p><b>认知提取</b>：FST 将 in-weights 学习与 in-context 学习结合为快慢双通道，慢权重负责保留通用推理能力，快权重通过文本反馈快速吸收任务信息——这在某种程度上类似于人类的 System 1（直觉快速响应）与 System 2（深度慢速更新）的认知分工。关键洞察是：无需让模型参数承载所有任务适应，从而避免遗忘与可塑性退化。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>UC Berkeley 提出 Fast-Slow Training (FST) 框架，将 LLM 参数作为"慢权重"、optimized context 作为"快权重"。任务特定信息优先被 fast weights（prompt/context）吸收，slow weights 保持贴近 base model 保留通用推理能力。在 reasoning 任务上，FST 比纯 RL 训练样本效率高达 3x，KL 散度降低最多 70%，同时在 continual learning 场景中展现持续适应优势。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：FST 框架将 LLM 的学习分为两个通道：slow weights（模型参数，通过 RL 小幅更新）和 fast weights（optimized context，通过文本反馈快速优化）。任务特定信息优先被 fast weights 吸收，slow weights 则保持贴近 base model，保留通用推理能力。训练时两者协同优化，fast weights 充当任务适配缓冲层。</li>
+<li><b>技术细节</b>：Fast weights 本质上是可学习的 context/prompt，通过 textual feedback 迭代更新（类似 prompt optimization），不修改底层参数；slow weights 则以较小梯度步长更新，相当于给参数更新加了一个"惯性阻尼"。两者合力使模型在新任务上快速收敛，同时保持 KL 距离约束，防止参数偏离 base model 过远——这类似于短期记忆与长期记忆的协同巩固机制。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>FST 在 reasoning 任务上样本效率比纯 RL 最高提升 3x，且最终性能上界更高</li>
+<li>FST 训练后模型与 base LLM 的 KL 散度降低最多 70%，显著减少 catastrophic forgetting</li>
+<li>在 continual learning 场景中，FST 可持续习得新任务，而纯 RL 在任务切换后出现停滞</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：FST 在多个 reasoning 任务上实现 3x 样本效率提升和更高性能上界，KL 散度降低 70% 有效缓解 catastrophic forgetting，在 continual learning 场景中相比纯 RL 展现出持续适应优势。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12484v1]]</p>
+
+<hr/>
+
+<h4>MAVIC：修正 Bellman 自举目标解决多智能体指令切换下的价值估计不一致</h4>
+<ul>
+<li><b>信号源</b>：MIT CSAIL</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12655v1">MAVIC: Multi-Agent Value-Inconsistency Correction for Instruction-Following</a></li>
+</ul>
+<callout emoji="⚙️">
+<p><b>认知提取</b>：在 MARL 中，当外部指令随时打断正在执行的 macro-action 时，Bellman 更新会将不同指令上下文的价值估计耦合在一起，造成"价值污染"。MAVIC 通过在指令边界处直接纠正 bootstrapping 目标（而非 reward shaping），让同一个策略在随机指令切换下仍能保持一致的价值估计——这类似于在乐谱中途改变调号时，不仅修改后续音符，还修正前一段的连音延续方式。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>MIT CSAIL 提出 MAVIC，解决多智能体强化学习中自然语言指令打断长期行为时导致的价值估计不一致问题。传统 Bellman 更新在指令切换时会把不同目标的价值混合在同一 Q 函数中，MAVIC 通过在指令边界处对 Bellman backup 做"价值抵消"修正，使各指令上下文的价值函数解耦，同时保持统一策略网络不需为每个指令训练独立策略。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：MAVIC 在 actor-critic 框架下工作，在每个指令切换边界处对 Bellman backup 做"价值抵消（Value Cancellation）"修正：一方面将新指令目标的 Q 值归零（清除旧上下文的影响），另一方面补回当前目标的延续价值，使得价值函数在不同指令上下文之间解耦。整体策略仍为统一策略网络，不需要为每个指令训练独立策略。</li>
+<li><b>技术细节</b>：传统 Bellman 更新在指令切换时会把"完成指令 A 后的价值"和"继续执行长期目标 B 的价值"混合在同一个 Q 函数中，产生不一致估计。MAVIC 在时序上检测指令边界，对当前 TD 目标施加修正项，类似于在分段积分中为每段添加边界条件，使各段的价值函数互不干扰。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 MAVIC 方法，在指令边界处对 Bellman backup 进行双重修正：纠正新指令目标的入值，并恢复当前目标的延续价值</li>
+<li>理论分析证明随机指令切换场景下 MAVIC 可实现一致的价值估计，相比 reward shaping 本质性地改变了 bootstrapping 目标</li>
+<li>在复杂度递增的合作多智能体环境中，MAVIC 同时实现高指令遵从率并保留基础任务性能</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在复杂合作多智能体环境的实验中，MAVIC 相比基线实现更高的自然语言指令遵从率，同时不显著损害原始长期任务的性能，验证了理论分析的有效性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12655v1]]</p>
+<h3>多模态智能 (Multimodal Intelligence)</h3>
+
+<h4>GRIP-VLM：用强化学习直接优化视觉 token 剪枝的离散决策</h4>
+<ul>
+  <li><b>信号源</b>：Wenhai Wang 等 @ arXiv</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13375v1">GRIP-VLM: Reinforcement Learning-Based Visual Token Pruning for Efficient Vision-Language Models</a></li>
+</ul>
+<callout emoji="🧠">
+  <p><b>认知提取</b>：传统 visual token pruning 方法用连续梯度近似离散组合问题，容易陷入局部最优。GRIP-VLM 改用强化学习（GRPO）直接在离散空间中搜索最优 token 保留策略，这在某种程度上类似于用棋类博弈搜索代替微积分来解决"选哪些棋子"的问题。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>GRIP-VLM 提出基于强化学习的视觉 token 剪枝框架，将 VLM 的 visual token pruning 建模为 Markov Decision Process，利用 Group Relative Policy Optimization（GRPO）范式在离散空间中直接搜索最优剪枝策略，配合 budget-aware scorer 实现动态压缩比调整，推理速度最高提升 15%。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：GRIP-VLM 将 visual token pruning 抽象为 Markov Decision Process：一个轻量级 agent 配合 budget-aware scorer 对每个 token 评分，通过 GRPO 范式搜索最优离散剪枝策略；训练时先以 supervised warm-up 稳定初始策略，再通过强化学习进一步探索。</li>
+  <li><b>技术细节</b>：GRPO 在每个剪枝决策步骤中对一组候选策略进行相对排名并更新，不依赖连续可微的 relaxation。这在某种程度上类似于让 agent 同时玩多局游戏、比较胜负后更新策略，而非通过链式求导反向传播梯度。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>将 visual token pruning 建模为 MDP，用 GRPO 强化学习直接优化离散选择空间，避免连续梯度近似的局部最优问题</li>
+  <li>配合 budget-aware scorer，agent 可动态评估每个 token 重要性，无需为不同压缩比重新训练</li>
+  <li>在多个多模态 benchmark 上超越启发式与监督学习基线，同等精度下推理速度提升最高达 15%</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：在多个多模态 benchmark 上，GRIP-VLM 相比启发式和监督学习 baseline 达到更优 Pareto frontier，在相同精度下实现最高 15% 的推理加速。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13375v1]]</p>
+
+<h4>MMCL-Bench：多模态上下文学习能力基准，最强模型正确率不足三分之一</h4>
+<ul>
+  <li><b>信号源</b>：清华大学 @ arXiv</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12703v1">MMCL-Bench: A Benchmark for Multimodal In-Context Learning</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>认知提取</b>：MMCL-Bench 考察的是一种"看图学规则、再举一反三"的能力：模型需先从图像、截图、手册、视频帧等视觉材料中提取并定位相关规则或流程，再将其应用到新的视觉实例上——这在某种程度上类似于让模型临时"读说明书"后再去执行任务。当前前沿多模态模型在这一能力上存在显著短板，失败点遍布从上下文锚定到视觉证据提取的整条推理链路。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>清华大学提出 MMCL-Bench，系统性评测多模态模型从视觉/混合模态教学上下文中学习规则、流程和经验模式的能力。该基准包含 102 个任务，覆盖规则系统应用、程序性任务执行、经验发现与归纳三大类别，采用严格 rubric-based 评分体系。最强前沿多模态模型在严格评估下完成率低于 33%，揭示了多模态上下文学习作为重要未解能力瓶颈的现状。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：MMCL-Bench 将多模态上下文学习定义为：从包含规则/流程/经验模式的视觉或混合模态教学上下文（图像、截图、手册、视频帧序列）中学习任务局部知识，并将其迁移应用到新视觉实例。评测采用严格的 rubric-based 评分体系，并通过消融实验分析各子能力的失败模式。</li>
+  <li><b>技术细节</b>：Benchmark 将整个推理链路拆解为四个阶段：（1）context anchoring（定位教学上下文中的相关片段）、（2）visual evidence extraction（从图像中提取视觉证据）、（3）context reasoning（在习得规则上进行推理）、（4）response construction（生成最终答案）。通过 diagnostic ablation 分别屏蔽各阶段，识别具体瓶颈所在。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>MMCL-Bench 含 102 个任务，覆盖规则系统应用、程序性任务执行、经验发现与归纳三类</li>
+  <li>最强前沿多模态模型在严格 rubric 评分下完成率低于 33%，表明该能力尚未被解决</li>
+  <li>错误分析定位出四类失败点：context anchoring、视觉证据提取、context reasoning 和回答构建</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：即使是当前最强的前沿多模态模型，在 MMCL-Bench 的严格评估下完成率也低于 1/3，证明多模态上下文学习是现有系统的重要未解能力瓶颈。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12703v1]]</p>
+
+<h4>CCVFM：用 Coreset 压缩目标分布骨架，让 Flow Matching 只学残差</h4>
+<ul>
+  <li><b>信号源</b>：arXiv</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12951v1">Coreset-Conditioned Velocity Flow Matching</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>认知提取</b>：CCVFM 的核心思路是：与其让 flow 模型从零学习"纯噪声到复杂多模态分布"的全程映射，不如先用 coreset 压缩出目标分布的骨架（加权 Gaussian mixture），让 correction flow 只需学习"近似分布到目标分布"的细小残差。这在某种程度上类似于让学生先看一份答题要点提纲，再小幅修正，而非完全从空白纸作答。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>CCVFM 将 hierarchical rectified flow 的内层 source distribution 替换为基于 coreset 的 Gaussian mixture 近似，减少 correction flow 的学习负担。通过 entropic Sinkhorn coreset 将目标数据压缩为少量带权重的代表点，构建封闭形式的 surrogate source，使 flow 模型只需学习残差映射，在 MNIST、CIFAR-10、ImageNet-32 和 CelebA-HQ 上实现有竞争力的 few-step 生成。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：CCVFM 基于 hierarchical rectified flow 框架，将内层 flow 的 source distribution 由各向同性 Gaussian 替换为 coreset 诱导的 Gaussian mixture。具体步骤：通过 entropic Sinkhorn coreset 算法将目标数据压缩为带权重的原子集；将原子提升为 Gaussian mixture，得到封闭形式的 conditional velocity law；训练轻量级 correction flow 以弥补 surrogate 与真实目标之间的残差。</li>
+  <li><b>技术细节</b>：Sinkhorn coreset 求解一个带熵正则的最优传输问题，将大规模目标样本集压缩成少量带权重的代表点（atoms），再为每个 atom 覆盖一个局部 Gaussian，形成混合分布。correction flow 的训练目标由此变为学习"已较接近目标的 Gaussian mixture 到精确目标分布"的残差 velocity，类似于在粗粒度地图上做最后一公里导航校正。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>用 entropic Sinkhorn coreset 将目标分布压缩为加权 atoms 并提升为 Gaussian mixture，构成封闭形式的 surrogate source，无需额外神经采样器</li>
+  <li>理论证明 surrogate transport cost 等于 target-surrogate Wasserstein gap，且优于噪声源的维度尺度下界</li>
+  <li>在 MNIST、CIFAR-10、ImageNet-32 和 CelebA-HQ 上，matched architecture 下 few-step 生成性能具有竞争力</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12951v1]]</p>
+
+<h4>DiffusionHijack：劫持 PRNG 实现对 Diffusion 模型的像素级后门控制</h4>
+<ul>
+  <li><b>信号源</b>：arXiv</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13115v1">DiffusionHijack: Controlling Diffusion Models by Hijacking the Random Number Generator</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>认知提取</b>：该攻击完全绕过神经网络权重层，通过替换随机数生成库（PRNG）来操控 diffusion 模型的噪声采样，使其在任何 prompt 下都确定性地生成攻击者预设的图像——这类似于篡改骰子的材质而非改变掷骰规则。QRNG 利用量子测量的信息论不可预测性从根本上切断了这种操控路径。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>DiffusionHijack 提出一种针对 diffusion 模型的供应链后门攻击：通过在包管理器层面注入恶意 PRNG 库，使模型在潜空间噪声采样时确定性输出攻击者预设的序列，实现对生成图像的像素级精准控制（SSIM=1.00），且完全不修改模型权重、不触发 CLIP 安全检查器。论文同时提出以量子随机数生成器（QRNG）作为防御方案，从物理层完全中和攻击。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：DiffusionHijack 在供应链层面注入恶意 PRNG 库，使 diffusion 模型在潜空间噪声采样时确定性地输出攻击者预设的噪声序列，从而强制生成指定图像。防御方案将 PRNG 替换为量子随机数生成器（QRNG），利用量子测量的物理随机性提供信息论级别的不可预测性。</li>
+  <li><b>技术细节</b>：攻击者通过投毒 PyPI 等包管理器中的随机数库，使 numpy/torch 的随机数接口在特定条件下返回固定序列，这在某种程度上类似于将均匀骰子偷换为固定输出某面的道具骰——调用方完全无感知。QRNG 防御则用硬件量子噪声源（如光子分束器）生成真随机数，从物理层阻断确定性复现的可能。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>PRNG 劫持攻击可在 Stable Diffusion v1.4/v1.5/SDXL 上实现像素级复现（SSIM=1.00，N=100），且不修改模型权重</li>
+  <li>攻击完全在神经网络计算图之外运作，绕过现有模型审计与 CLIP 安全检查器（成功率 98-100%），且与用户 prompt 无关</li>
+  <li>以 QRNG 替换 PRNG 可将输出相似度降至随机基线水平（SD 1.x SSIM&lt;0.20，SDXL SSIM&lt;0.45），完全中和攻击</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13115v1]]</p>
+
+<h4>NAACA：基于神经振荡注意力门控的免训练音频事件检测架构</h4>
+<ul>
+  <li><b>信号源</b>：arXiv</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13651v1">NAACA: A Neural Auditory Attention Cognitive Architecture for Audio Language Models</a></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>认知提取</b>：NAACA 借鉴神经科学中的振荡工作记忆机制，让 Audio Language Model 只在音频出现显著能量变化时才触发高层推理——这在某种程度上类似于大脑的注意力门控：不对持续背景噪声分心，仅对突发事件作出反应。该方法无需重新训练模型，通过外挂架构即可大幅提升稀有事件检测能力。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>NAACA 提出一种免训练的神经听觉注意力认知架构，通过振荡工作记忆（OWM）模块实现显著性驱动的注意力门控。OWM 持续监听音频流并维护 attractor 状态，仅在检测到偏离当前背景的能量突变时触发上层 ALM 推理，从而在长音频中过滤冗余背景、精准激活高层认知推理，在 XD-Violence 基准上将 AudioQwen 的 AP 从 53.50% 提升至 70.60%。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：NAACA 整体框架分两层：底层由 OWM 持续监听音频流，基于振荡动力学维护当前场景的 attractor 状态；当自适应能量波动超过显著性阈值时，才向上层 ALM（如 AudioQwen）发送触发信号，驱动高层认知推理。整个流程无需对 ALM 进行任何微调或重训练。</li>
+  <li><b>技术细节</b>：OWM 通过模拟神经振荡动力学来追踪音频能量的时变分布，在稳定背景下维持低激活的 attractor 状态；一旦检测到偏离当前 attractor 的能量突变，即判定为感知显著事件并触发 ALM 调用。这在某种程度上类似于神经系统的 gamma 振荡门控机制——大脑皮层在感知突变刺激时才提升注意力资源分配。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>在 XD-Violence 基准上，NAACA 将 AudioQwen 的平均精度（AP）从 53.50% 提升至 70.60%，同时减少不必要的 ALM 调用次数</li>
+  <li>提出 OWM（Oscillatory Working Memory）模块，通过自适应能量波动检测感知显著性，维持稳定的 attractor-like 状态</li>
+  <li>在 USoW 城市声景数据集上定性验证了 OWM 对新颖事件和子类别切换的捕捉能力，对短暂停顿和环境噪声具有鲁棒性</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：NAACA 在 XD-Violence 上将 AudioQwen AP 提升约 17 个百分点，同时有效降低 ALM 无效调用频率，在真实城市声景数据集上也展现出良好的泛化能力。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13651v1]]</p>
+<h3>世界模型 (World Model)</h3>
+
+<h4>Diffusion Model Latent Reuse 的理论可靠性边界分析</h4>
+<ul>
+  <li><b>信号源</b>：Tsinghua University</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13448v1">On the Reliability of Latent Space Reuse in Diffusion Models under Distribution Shift</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>认知提取</b>：该工作为 diffusion model 的 latent reuse 提供了理论保证框架：复用 source latent space 时产生的 score error 由两个几何量决定——source 与 target 子空间之间的 principal angle 偏差，以及被 diffusion time scale 放大的 target ambient noise。这在某种程度上类似于用旧地图导航新城市，地图越接近现实（子空间对齐越好）、城市噪音越小，导航就越可靠。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>清华大学从理论层面研究 diffusion model 中 latent space 跨数据集复用的可靠性边界，分析 distribution shift 下 score error 的来源与影响因素。论文假设 source 与 target 数据集均近似低维但可能位于不同子空间，通过推导 score function 在 frozen source latent space 上的近似误差上界，给出 latent reuse 可靠的充分条件以及何时需要重新学习共享表示的理论指引。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：建立 source-target 理论框架：假设两个数据集均近似低维，但可能位于不同子空间附近。通过分析 score function 在 frozen source latent space 上的近似误差，推导出误差上界，并在 mixed training 设定下进一步分析共享表示维度的几何依赖关系。</li>
+  <li><b>技术细节</b>：核心工具是子空间几何中的 principal angles（典型角），刻画 source 与 target 子空间的对齐程度。score error 随主角度增大而增大，同时 diffusion 的时间尺度会放大目标空间中的环境噪声分量，类似于放大镜把微小偏差变成显著误差。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>冻结 source latent space 时，target-domain score error 由 source-target 子空间主角度偏差（principal-angle misalignment）和 diffusion time scale 放大的 ambient noise 两项共同决定</li>
+  <li>提出 mixed source-target training 框架，理论刻画共享 latent 维度需求与两分布相对几何结构的关系</li>
+  <li>结果给出 latent reuse 可靠的充分条件，以及何时需要重新学习共享表示的理论指引</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：理论分析表明，当 source 与 target 子空间对齐良好且 ambient noise 较低时，latent reuse 是可靠的；否则 mixed source-target training 并学习低维共享表示是必要的。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13448v1]]</p>
+
+<hr/>
+
+<h4>具身智能体对话协作的反直觉发现：减少冲突却降低成功率</h4>
+<ul>
+  <li><b>信号源</b>：UIUC</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12920v1">Does Dialogue Enable True World Model Alignment in Embodied Multi-Agent Collaboration?</a></li>
+</ul>
+<callout emoji="🧠">
+  <p><b>认知提取</b>：该研究揭示了一个反直觉的现象：对话让具身智能体在表面上减少了冲突，但并未实现真正的 world model 对齐，最终任务完成率反而不如沉默协作。这在某种程度上类似于两名队友频繁开会讨论但都没有准确同步彼此掌握的信息，反而浪费了行动时间。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>UIUC 扩展 PARTNR 家庭机器人协作基准，引入自然语言对话通道，研究 LLM-based 具身智能体能否通过对话实现真正的 world model 对齐。实验发现对话能减少动作冲突 40-83 个百分点，但反而降低任务成功率，揭示当前 LLM 驱动智能体在信息同步质量上存在根本缺陷。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：在 PARTNR 协作家庭机器人基准上扩展自然语言对话通道，两个具有 partial observability 的 LLM 驱动智能体可在任务执行过程中自由通信。提出基于每个智能体 world graph 的对齐评估框架，从三个维度量化对话是否带来了真正的 world model 对齐。</li>
+  <li><b>技术细节</b>：每个智能体维护一张 world graph（对所处环境的局部知识图谱），通过消息交换逐步更新。三个评估维度分别量化：(1) 两方 world graph 的信息重叠是否随对话增加（observation convergence）；(2) 发出的消息是否包含对方 world graph 中缺失的新信息（information novelty）；(3) 智能体是否能根据对方已知情况调整消息内容（belief-sensitive messaging）。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12920v1]]</p>
+
+<hr/>
+
+<h4>Hall-effect 触觉传感器 EMI 攻击：远程注入"幻象力"令机器人抓握失控</h4>
+<ul>
+  <li><b>信号源</b>：Yi Zhang 等</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13492v1">Phantom Forces: Exploiting Hall-Effect Tactile Sensors via Electromagnetic Interference</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>认知提取</b>：该研究揭示了机器人触觉感知通道中一个此前被忽视的攻击面：通过对 Hall-effect 传感器施加 EMI，可在不接触机器人的情况下伪造触觉信号，进而瘫痪基于学习的分类模型，迫使机械手做出危险动作——这在某种程度上类似于用无线电干扰"欺骗"机器人的手感神经。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>研究揭示具身智能机器人 Hall-effect 触觉传感器对 EMI 的安全漏洞，攻击者可通过定向电磁干扰注入"幻象力"，令感知力放大 9 倍、方向偏移 65°，导致机器人抓握行为失控。这是首次系统性验证电磁干扰对触觉感知通道的物理对抗攻击可行性。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：针对 Hall-effect 指尖传感器，构造定向电磁干扰信号，通过实验量化 EMI 对原始传感器输出（力大小与方向）的扰动幅度，并将扰动信号输入下游学习型触觉分类模型，评估其对机器人决策的影响。</li>
+  <li><b>技术细节</b>：Hall-effect 传感器通过测量磁场变化来推断接触力，EMI 可直接在传感线圈中感应出虚假电信号，从而在物理上"伪造"力大小和方向——这类似于在 GPS 接收机旁发射伪导航信号进行欺骗。攻击无需物理接触，只需在有效距离内发射特定频率的 EM 信号。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>通过定向 EMI 可使 Hall-effect 触觉传感器感知力幅值放大超 9x，力方向偏差达 65°</li>
+  <li>幻象力扰动可完全瘫痪基于学习的触觉分类模型，影响机器人正常运动控制</li>
+  <li>攻击者可利用该漏洞远程操控机器人手臂压碎易碎物体或丢弃危险载荷</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：实验证明 EMI 攻击可将感知力放大 9 倍以上并令方向偏移 65°，足以导致学习型触觉感知模型失效，揭示了当前具身智能系统在触觉传感安全性上的严重缺口。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13492v1]]</p>
+
+<hr/>
+
+<h4>视角诱导静态伪装攻击：令自动驾驶"看见"不存在的插队轨迹</h4>
+<ul>
+  <li><b>信号源</b>：Global Academia</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12743v1">View-Induced Trajectory Manipulation: Static Adversarial Camouflage Attacks on Autonomous Driving Perception</a></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>认知提取</b>：现有对抗攻击把"视角变化"视为挑战，而本研究反其道而行之，将视角变化本身作为攻击工具——静止车辆贴上被动伪装后，其外观随相对运动自然变化，系统会将这种外观漂移误判为真实轨迹偏转。这在某种程度上类似于一幅随观察角度渐变的迷彩画，让旁观者以为画里的物体正在移动。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>研究提出一种新型静态对抗伪装攻击范式 View-Induced Trajectory Manipulation，利用自动驾驶车辆视角变化的自然演化特性，诱导感知系统产生虚假轨迹预测（如误判插队），在 nuScenes 数据集上端到端成功率达 87.5%。该攻击仅需静态被动伪装，部署成本极低，对不同场景背景、目标车速及感知模型均具备鲁棒性。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：攻击者在停放车辆表面安装静态对抗伪装（adversarial camouflage），利用视角相关外观（view-dependent appearance）随相对运动自然演变的特性，使感知系统在连续帧中观测到一致的特征漂移（feature drift）。该漂移被下游轨迹预测模块解读为符合物理规律但实际不存在的运动（如插队），最终触发决策层的紧急制动。</li>
+  <li><b>技术细节</b>：普通物体的视角相关外观变化本身携带运动信息，感知模型默认将跨帧外观变化解读为目标位置偏移。若伪装设计能放大特定方向的外观漂移，系统便会"看见"实际不存在的横向切入轨迹——利用视错觉让感知模型相信静止物体正在运动，而无需真正移动它。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 View-Induced Trajectory Manipulation 新攻击范式，仅用静态被动伪装即可操控自动驾驶系统轨迹预测，无需动态变换 patch</li>
+  <li>在 nuScenes 数据集上端到端攻击成功率最高达 87.5%，以触发硬急刹车事件为衡量标准</li>
+  <li>攻击对不同场景背景、目标车速及感知模型均表现出较强鲁棒性，部署成本极低</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：在 nuScenes 上验证，端到端攻击成功率最高达 87.5%，且对不同背景、车速和感知模型均具备鲁棒性，证明视角诱导的轨迹操控是一种实际可行的低成本物理对抗威胁。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12743v1]]</p>
+
+<hr/>
+
+<h4>HetScene：异构两阶段 Diffusion 框架实现密集室内场景生成</h4>
+<ul>
+  <li><b>信号源</b>：Global Academia</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13586v1">HetScene: Heterogeneous Two-Stage Diffusion for Dense Indoor Scene Generation</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>认知提取</b>：现有方法把所有家具当作同质对象统一生成，导致密集布局中空间关系失真。HetScene 将室内布局生成类比为"先搭骨架、再填细节"的两阶段过程：先用大型核心家具确定全局结构，再根据上下文填入附属小物件。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>HetScene 提出异构两阶段 diffusion 框架用于密集室内场景生成，将物体分为 primary（核心家具）和 secondary（附属物件）两类，分别通过 Structural Layout Generation 和 Contextual Layout Generation 阶段生成布局，以应对复杂空间依赖和物理合理性问题，适用于具身 AI 仿真环境构建。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：Stage 1（SLG）以文本、俯视房间 mask 和空间关系图为条件，仅对 primary objects 进行扩散生成，构建全局宏观骨架；Stage 2（CLG）以 Stage 1 的结构布局为上下文条件，对 secondary objects 进行上下文感知的布局生成，最终合并得到完整密集室内场景。</li>
+  <li><b>技术细节</b>：结构异构性（structural heterogeneity）的核心思想是：大型核心家具（床、沙发等）决定房间的全局结构约束，而小型附属物件（台灯、装饰品等）依赖核心家具的位置和语义关系。用空间关系图显式编码对象间依赖，类似于城市规划中先布置主干道再规划支路的分层策略。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>将室内物体分解为 primary objects（核心家具）和 secondary objects（附属物件），通过两阶段异构生成框架解耦布局合成</li>
+  <li>第一阶段 SLG 以文本描述、俯视二值房间 mask 和空间关系图为条件，生成全局一致的结构性布局骨架</li>
+  <li>第二阶段 CLG 在一阶段结果基础上进行上下文感知的附属物件布局生成，提升密集场景的物理合理性和可扩展性</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：HetScene 框架通过解耦结构生成与上下文生成，在密集室内布局场景中相比同质化方法展现出更好的物理合理性和布局可扩展性，适用于具身 AI 仿真环境构建。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13586v1]]</p>
+
+<hr/>
+
+<h4>AttenA+：速度驱动动作注意力框架提升 VLA/WAM 精细操作性能</h4>
+<ul>
+  <li><b>信号源</b>：Global Academia</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13548v1">AttenA+: Velocity-Driven Action Attention for Vision-Language-Action Models</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>认知提取</b>：机器人操作轨迹中低速段（精细操作）比高速段（过渡动作）更关键，但现有 VLA 模型继承自语言模型的均匀损失权重忽视了这一物理先验。AttenA+ 通过赋予低速关键动作更高训练权重来纠正这种不均衡，类似于老师在考试重难点上投入更多教学时间而非平均分配精力。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>AttenA+ 提出速度驱动的动作注意力框架，针对 VLA 和 WAM 中"均匀损失权重忽视物理关键性"的问题，通过逆速度场重加权训练目标，在 Libero 和 RoboTwin 2.0 上分别将 OpenVLA-OFT 提升至 98.6% 和 FastWAM 提升至 92.4%。该方法作为 plug-and-play 模块无需修改骨干网络结构，也不引入额外参数，并在 Franka 真机上完成验证。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：在训练时计算轨迹各时间步的末端执行器速度，取其倒数构成注意力权重，用于重加权动作预测损失。低速时间步（对应精细抓取、接触等关键操作）获得更高权重，高速过渡段权重降低，使模型优先学习物理关键动作段的精确预测。</li>
+  <li><b>技术细节</b>：AttenA+ 将逆速度权重直接乘到每个时间步的动作回归损失上，不修改网络结构或增加参数。框架对 transformer 系和 diffusion 系骨干均适用，属于架构无关设计——类似于在考试复习中根据每道题的难度和分值分配学习时间，速度越慢的动作段越"高分高难"。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出逆速度场重加权机制，低速精细操作段获得更高损失权重，对齐物理关键性与模型学习容量</li>
+  <li>作为 plug-and-play 模块无需修改骨干网络结构，也不引入额外参数，可无缝集成到现有 VLA/WAM 模型</li>
+  <li>OpenVLA-OFT 在 Libero benchmark 提升至 98.6%（+1.5%），FastWAM 在 RoboTwin 2.0 提升至 92.4%（+0.6%），并在 Franka 真机验证</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13548v1]]</p>
+<h3>AI infra</h3>
+
+<h4>AMD EPYC Milan 纯软件攻击链：MilanLaunchy + BadFuse 提取硬件根密钥，彻底破坏 SEV-SNP 安全模型</h4>
+<ul>
+<li><b>信号源</b>：中国科学院</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12990v1">MilanLaunchy and BadFuse: Breaking AMD SEV-SNP Through Software-Only Attacks on EPYC Milan</a></li>
+</ul>
+<callout emoji="🔍">
+<p><b>认知提取</b>：AMD SEV-SNP 的 TCB 防回滚机制依赖 VCEK 与硬件根密钥绑定，但研究者证明无需物理访问即可通过软件漏洞链从 Milan 芯片中提取根密钥，并伪造任意固件版本的有效 attestation 报告——这相当于找到了保险库的万能钥匙模具，之后可以随时伪造任何钥匙。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>中科院研究人员披露了针对 AMD EPYC Milan 处理器的纯软件攻击链。攻击分两阶段：MilanLaunchy 利用安全处理器（ASP）固件漏洞实现任意代码执行；BadFuse 在获得 ASP 权限后发现 fuse 控制器缺乏读/写访问限制，直接提取存储 VCEK 派生基材料的硬件根密钥。端到端攻击链无需物理拆机或硬件探针，完成后可为任意 TCB 版本伪造合法 SEV-SNP attestation 报告，AMD 官方宣称的防 TCB 回滚能力在该世代处理器上实际失效。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：攻击分两阶段：第一阶段 MilanLaunchy 利用 AMD 安全处理器固件中的漏洞获得任意代码执行能力；第二阶段 BadFuse 在安全处理器权限下访问 fuse 控制器，由于该控制器未实施写/读访问限制，可直接读取存储 VCEK 派生基材料的硬件根密钥。整条攻击链为纯软件实现，无需物理拆机或硬件探针。</li>
+<li><b>技术细节</b>：VCEK 的安全性本质上依赖硬件根密钥从不离开安全处理器内部，但 fuse 控制器作为存储介质本身缺乏对安全处理器软件层的访问控制，使得获得代码执行权限后可像读取普通寄存器一样读出根密钥——这在某种程度上类似于银行将金库密码写在可被内部员工任意查阅的文件里。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 MilanLaunchy 攻击，实现对 AMD 安全处理器（ASP）的代码执行，无需物理接触</li>
+<li>在此基础上开发 BadFuse 攻击，利用 fuse 控制器缺乏写限制成功提取硬件根密钥（Root VCEK Seed）</li>
+<li>端到端攻击链可伪造任意固件版本的合法 SEV-SNP attestation 报告，TCB 版本绑定保护完全失效</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在 EPYC Milan 平台上成功完成端到端漏洞利用，获取根密钥后可为任意 TCB 版本生成有效 attestation 报告，AMD 官方宣称的防 TCB 回滚能力在该世代处理器上实际失效。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12990v1]]</p>
+
+<hr/>
+
+<h4>N-vium：Mixture-of-Exits Transformer 实现 57.9% 推理加速且 Perplexity 无损</h4>
+<ul>
+<li><b>信号源</b>：ETH Zurich</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13190v1">N-vium: Mixture-of-Exits for Efficient Autoregressive Decoding</a></li>
+</ul>
+<callout emoji="⚙️">
+<p><b>认知提取</b>：N-vium 不是通过减少 FLOPs 来加速推理，而是通过在 transformer 不同深度同时"投票"决定下一个 token 的分布，再将未完成的上层计算推迟并与后续 token 批量处理，从而提升单位时间内有效 FLOPs——这有点类似于流水线工厂中让多个工位同时作业而不是等一件事做完再做下一件。该方法严格泛化标准 transformer，采样结果精确（非近似），不引入质量退化。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>ETH Zurich 提出 N-vium，一种 mixture-of-exits transformer 架构。核心思想是在多个中间层附加轻量 prediction heads，将 next-token 分布定义为这些 exits 的 learned mixture，并引入 token-adaptive routing 动态分配各 exit 权重。当路由将零权重分配给中间 heads 时等价退化为标准 transformer，从而实现严格泛化。通过 deferred upper-layer computation 与 token batching 恢复完整 KV cache，采样过程精确无近似。在 1.5B 参数规模预训练模型上实现 57.9% wall-clock 加速，perplexity 无损失。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：N-vium 在 transformer 的多个中间层附加轻量 prediction heads，将 next-token 分布定义为这些 exits 的 learned mixture，并引入 token-adaptive routing 机制动态分配各 exit 的权重。路由将零权重分配给中间 heads 时等价退化为标准 transformer，从而实现严格泛化。</li>
+<li><b>技术细节</b>：关键技巧在于"deferred computation"：当某个 token 可以由浅层 exits 主导时，上层的计算不会立即执行，而是被推迟并与后续 token 一同批量处理，借助硬件并行性提升实际吞吐。这类似于快递站把零散包裹先攒起来再统一派送，提高了运输效率。完整 KV cache 最终仍被恢复，保证了精确推理语义。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 N-vium mixture-of-exits 框架，在多深度附加预测头并以 learned mixture 定义 next-token 分布，严格泛化标准 transformer</li>
+<li>通过 deferred upper-layer computation 与 token batching 恢复完整 KV cache，采样过程精确无近似</li>
+<li>1.5B 参数规模预训练模型实现 57.9% wall-clock 加速，同等参数/数据量下 perplexity 无损失</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在 1.5B 参数规模上，N-vium 相比参数量与训练数据等量的标准 transformer 达到 57.9% wall-clock 加速，且 perplexity 零损失，证明无需近似即可通过结构设计提升推理效率。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13190v1]]</p>
+
+<hr/>
+
+<h4>基于 Wavelet 的 DPP Kernel：连续到离散转化实现更优方差衰减</h4>
+<ul>
+<li><b>信号源</b>：National University of Singapore (NUS)</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13127v1">Wavelet-Based Determinantal Point Processes for Variance-Reduced Minibatch Sampling</a></li>
+</ul>
+<callout emoji="📊">
+<p><b>认知提取</b>：DPP 是一种通过"排斥性"采样来避免数据点过于相似的方法，相比独立随机采样能生成更多样化的 minibatch，从而降低梯度估计方差。本文的核心贡献是把连续空间中理论良好的 wavelet DPP 核转化为可直接用于实际数据集的离散核，同时揭示了低秩分解从而降低采样计算开销——这在某种程度上类似于把连续频域滤波器"量化"成数字滤波器，同时保留其主要特性。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>NUS 提出基于 wavelet 的新型 Determinantal Point Process (DPP) kernel，并设计从连续 DPP 转化为离散 kernel 的通用方法，用于构建方差更小的 minibatch 和 coreset。该方法利用 wavelet 多尺度局部化特性获得优于已知最优速率的方差衰减精度保证，同时自然产生低秩分解以支持高效采样，并将适用范围扩展到任意低正则目标函数。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：研究分两阶段：第一阶段在 Euclidean 空间上构造基于 wavelet 的 DPP kernel，利用多尺度局部化特性获得更优的方差衰减率；第二阶段引入通用连续到离散 DPP kernel 的转化框架，使得在有限数据集上的离散 DPP 继承连续版本的方差衰减保证，并自然产生低秩分解以支持高效采样。</li>
+<li><b>技术细节</b>：连续到离散的转化机制通过将 wavelet kernel 在数据点上做投影/限制（restriction），同时利用 wavelet 多分辨率结构来保证低秩性——这在某种程度上类似于将无限分辨率的连续图像 kernel 下采样为有限像素的离散卷积核，但数学上严格保留了关键的谱衰减性质。对于低正则目标函数，通过对正则性参数的自适应速率界完成覆盖。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>基于 wavelet 构造新型连续空间 DPP，方差衰减精度保证优于已知最优速率</li>
+<li>提出通用的连续到离散 DPP kernel 转化机制，可同时保持方差衰减特性并暴露低秩分解，降低采样计算代价</li>
+<li>将 DPP minibatch/coreset 适用范围扩展到任意低正则（arbitrarily low regularity）目标函数，且速率保证显式适配正则性</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13127v1]]</p>
+
+<hr/>
+
+<h4>Pion 优化器：正交等价变换更新权重，训练全程保持奇异值谱不变</h4>
+<ul>
+<li><b>信号源</b>：港中文 @ 香港中文大学</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12492v1">Pion: An Orthogonal Equivalence Transform Optimizer for LLM Training</a></li>
+</ul>
+<callout emoji="🧠">
+<p><b>认知提取</b>：Pion 与 Adam、Muon 等加法类优化器不同，它通过正交等价变换"旋转"权重矩阵的几何形状而非直接叠加梯度，奇异值始终保持不变——这类似于只允许将地图旋转和翻转，但不允许拉伸或压缩，从而保证权重矩阵的频谱结构始终稳定。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>港中文提出 Pion 优化器，将每个权重矩阵的更新分解为左右正交矩阵乘法（即 W ← U·W·V^T），在保持奇异值不变的前提下仅改变特征方向，从而实现对权重几何结构的调控而不影响谱范数。每步更新时通过对梯度信息进行正交化处理得到变换矩阵 U、V，使权重矩阵经历纯旋转/反射而非平移。实验表明在 LLM 预训练和微调场景下，Pion 训练稳定性优于加法类优化器，性能与 Adam、Muon 相当。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：Pion 将每个权重矩阵的更新分解为左右正交矩阵乘法（即 W ← U·W·V^T），在保持奇异值不变的前提下仅改变特征方向，从而实现对权重几何结构的调控而不影响谱范数。</li>
+<li><b>技术细节</b>：每步更新时，Pion 通过对梯度信息进行正交化处理得到左右变换矩阵 U、V，使权重矩阵经历一次"纯旋转/反射"而非平移，这类似于在保持椭球形状（奇异值）不变的情况下只旋转其朝向（奇异向量）。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 Pion 优化器，基于正交等价变换更新权重矩阵，训练过程中奇异值谱完全保留</li>
+<li>系统推导了 Pion 更新规则，分析收敛性及多项关键性质</li>
+<li>在 LLM 预训练与微调任务上，Pion 性能与主流优化器持平且训练更稳定</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：实验表明，Pion 在 LLM 预训练和微调场景下训练稳定，性能与 Adam、Muon 等标准优化器相当，验证了谱保持更新机制的有效性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12492v1]]</p>
+
+<hr/>
+
+<h4>EBCC：兼容 OCI 标准的可信执行环境容器运行时，统一 Keystone/SGX/TDX/OP-TEE</h4>
+<ul>
+<li><b>信号源</b>：全球学术界</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13676v1">EBCC: An OCI-Compatible TEE Container Runtime for Cross-Platform Confidential Computing</a></li>
+</ul>
+<callout emoji="🧬">
+<p><b>认知提取</b>：EBCC 的核心思路是将 TEE 的可信执行生命周期"包装"进标准 OCI 容器接口，让开发者无需感知底层 enclave 细节即可部署机密计算工作负载——这在某种程度上类似于把特种安保仓库的门禁系统接入普通门卡读卡器，使得安全区域可以用通用门禁流程统一管理。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>本文提出 EBCC，一种兼容 OCI 标准的可信执行环境容器运行时架构。EBCC 将 REE 侧锚点与 TEE 侧机密执行阶段统一为单一容器化组合，保留标准 OCI 生命周期操作（create/start/exec/delete）。TEE 特定逻辑封装在后端适配器层，屏蔽各平台差异。在 Keystone 后端评估显示额外延迟主要来源于生命周期调度而非 TCB 膨胀，跨平台案例验证（SGX/TDX/OP-TEE）表明相同抽象可映射至 enclave 式、VM 式和嵌入式三类 TEE。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：EBCC 架构由三部分组成：REE-side anchor（宿主侧容器锚点）、TEE-side confidential stage（机密执行侧）、以及后端适配器（backend adapter）。整体保留 OCI 容器生命周期语义，TEE 特定逻辑封装在适配器层，主进程维护持久化的 per-instance state 和 per-stage artifact（日志、证据绑定等）。</li>
+<li><b>技术细节</b>：后端适配器屏蔽了各 TEE 平台差异——对 Keystone 走 enclave 风格调用，对 TDX 走 VM 风格隔离，对 OP-TEE 走嵌入式 trusted application 接口。EID（Enclave ID）由 EBCC 运行时动态分配，请求经过验证后由 backend dispatcher 分发至对应 TEE 实例，结果以 artifact 形式持久化供后续审计和证据绑定——这在某种程度上类似于中间件路由层把统一 API 请求分发到不同底层数据库后端。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>EBCC 将 REE-side anchor 与 TEE-side confidential stage 抽象为统一的容器化 confidential-computing composite，保留标准 OCI 生命周期操作</li>
+<li>在 Keystone 后端评估显示额外延迟主要来源于生命周期调度、请求验证、EID 分配及 artifact 持久化，而非 TEE 保护侧 TCB 膨胀</li>
+<li>跨平台案例验证（SGX/TDX/OP-TEE）表明相同的生命周期与阶段抽象可映射至 enclave 式、VM 式和嵌入式三类 TEE</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13676v1]]</p>
+
+<hr/>
+
+<h4>PoisonCap：CHERI 硬件安全系统上的严格 Use-After-Free 防护与初始化安全</h4>
+<ul>
+<li><b>信号源</b>：University of Cambridge</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13210v1">PoisonCap: Strict Use-After-Free and Initialisation Safety for CHERI</a></li>
+</ul>
+<callout emoji="🔬">
+<p><b>认知提取</b>：PoisonCap 引入新的"poison"能力格式，使 CHERI 系统能够在指针层面追踪内存状态，严格拦截释放后访问和未初始化读取行为——这在某种程度上类似于给每块内存贴上动态标签，一旦被释放立刻变为"有毒"，任何试图通过旧指针访问的行为都会被硬件直接拒绝。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>剑桥大学提出 PoisonCap，在 CHERI 能力指针体系中新增 poison 能力格式，通过该格式向微架构传递内存状态信息。当内存被释放时分配器将对应能力标记为"poisoned"，微架构识别该状态后可主动驱逐相关缓存行；重新分配时系统自动清零或可配置为首次写前读触发 trap 以强制初始化安全。相比当前最优方案 Cornucopia Reloaded，PoisonCap 提供严格 use-after-free 防护（而非仅 use-after-reallocation），且不引入额外基础性能开销。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：PoisonCap 在 CHERI 能力指针体系中新增 poison 能力格式，通过该格式向微架构传递内存状态信息，用于隔离内存（quarantined memory）的高效缓存管理。能力 bounds 机制被复用于权限委托，使嵌套分配器可独立对各自管理的内存区域执行 poison/unpoison 操作。</li>
+<li><b>技术细节</b>：当内存被释放时，分配器将对应能力标记为"poisoned"；微架构识别该状态后可主动驱逐相关缓存行，避免隔离期内存占用缓存资源。重新分配时系统自动清零（unpoison），或可配置为在首次写前读时触发 trap 以强制初始化安全——这在某种程度上类似于给回收的内存块加上"未拆封"验证封条。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 PoisonCap 能力格式，实现严格 use-after-free 安全与初始化安全，覆盖强度超越 Cornucopia Reloaded 的 use-after-reallocation 防护</li>
+<li>利用 capability bounds 优雅委托内存 poisoning 权限，支持嵌套分配器在不干扰上游分配器的前提下独立执行安全策略</li>
+<li>PoisonCap 可替换 Cornucopia shadow bitmap，相对于包含 zero-before-reallocation 的 Cornucopia 基准线无额外基础性能开销</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：PoisonCap 在提供更强内存安全保证（严格 use-after-free + 初始化安全）的同时，相对于已包含 zero-before-reallocation 的 Cornucopia 基准无基础性能额外开销，证明更强的时序安全可以与性能目标并存。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13210v1]]</p>
+<h3>ai4s (AI for Science)</h3>
+
+<h4>无似然 Transport Filtering：基于 MMD Gradient Flow 的解析 Bayesian 滤波</h4>
+<ul>
+  <li><b>信号源</b>：arxiv:2605.13174v1</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13174v1">Coupling-Informed Block-Triangular Transport Filtering via MMD Gradient Flow</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>认知提取</b>：将 Bayesian 滤波中的后验近似问题转化为最优输运框架下的 MMD 最小化，通过 gradient flow 绕过非凸优化，无需训练即可解析求出 transport map。这在某种程度上类似于不用校准仪器就能直接算出最优测量校正路径，在高维非线性系统中具有较好的可扩展性。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>本文提出基于状态与观测变量耦合的无似然 transport filtering 方法，利用 block-triangular transport map 将 Bayesian 滤波分析步骤重构为 MMD 最小化问题，并通过 gradient flow 实现无训练解析计算。该方法适用于非高斯、非线性动力系统的在线状态估计，完全绕开了似然函数评估和神经网络训练的瓶颈。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：利用状态与观测联合分布的 block-triangular transport map 结构，将 Bayesian 滤波的分析步骤重构为最大均值差异（MMD）最小化问题。为绕开 MMD 优化的非凸性，引入基于 gradient flow 的无训练 transport filter，使得 transport map 可解析计算，对应 MMD 在函数空间中的最速下降方向。高维扩展通过 domain localization 实现。</li>
+  <li><b>技术细节</b>：核心思路是将粒子滤波中的权重更新替换为 transport map 的推动操作——每个粒子被一个可解析计算的映射"运送"到近似后验位置。由于 MMD 的 kernel 结构允许对 gradient flow 进行闭合形式推导，整个过程不依赖神经网络或迭代优化器，这在某种程度上类似于直接用物理方程求解流场，而不是用神经网络拟合它。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 coupling-informed block-triangular transport map 方法，将滤波分析步骤转化为 MMD 最小化，无需似然函数评估</li>
+  <li>通过 gradient flow 推导出 transport map 的解析表达，对应 MMD 最速下降方向，完全无需神经网络训练</li>
+  <li>理论证明近似后验与真实后验之间 MMD 期望的收敛性，并通过 domain localization 扩展至高维问题</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：数值实验表明，在非线性、非高斯滤波场景下，所提方法性能优于传统滤波方法，且能有效避免粒子坍塌（particle collapse）问题。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13174v1]]</p>
+
+<hr/>
+
+<h4>逆问题幻觉的理论框架：可计算界与忠实度评估</h4>
+<ul>
+  <li><b>信号源</b>：Cambridge</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13146v1">A Theory of Hallucinations in Inverse Problems</a></li>
+</ul>
+<callout emoji="🧠">
+  <p><b>认知提取</b>：成像逆问题中神经网络产生的"幻觉细节"并非模型缺陷，而是问题本身病态性（ill-posedness）的必然结果。就好比从模糊照片中"复原"面孔，某些细节在数学上天然不可确定，任何模型都无法消除这一内在不确定性，而作者将这一不确定性量化为仅依赖前向模型（forward model）的可计算界。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>本文建立逆问题幻觉（hallucination）的理论框架，推导出幻觉产生的充要条件及可计算上下界，并提出算法评估任意重建模型的幻觉量级。该框架覆盖医疗影像、地球观测等成像任务，为 AI 成像系统的可信度认证提供数学基础。核心洞见是：幻觉下界仅依赖 forward model 的奇异值谱，与具体重建网络架构完全无关。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：从逆问题的数学结构出发，将幻觉定义为重建输出与真实信号之间在不可观测子空间上的偏差，推导出以 forward model 奇异值谱为基础的幻觉必要/充分条件及量级界；在此理论指导下设计两类算法：一类估计给定输入的最小可达幻觉量级，另一类评估给定模型对特定重建细节的忠实程度。</li>
+  <li><b>技术细节</b>：核心思路类似于信息论中的信道容量：forward model 决定了"观测能传递多少关于真实信号的信息"，不可传递的部分构成幻觉的必然来源。通过奇异值分解将重建误差分解为可观测分量和不可观测分量，后者的范数即为幻觉下界，与模型架构完全无关。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>推导幻觉产生的充要条件：当逆问题病态性超过阈值时，所有重建模型均无法避免一定量的幻觉</li>
+  <li>提出可计算的幻觉量级下界，该界仅依赖 forward model，与具体重建网络无关</li>
+  <li>实验覆盖三类成像任务并验证于现代生成模型，算法可定量评估特定模型的幻觉忠实度（faithfulness）</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：三类成像任务实验表明，所提算法能有效区分"真实细节"与"模型幻觉"，并对主流生成模型（generative models）的幻觉量级给出可靠的定量评估，为 AI 成像系统的可信度认证提供理论工具。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13146v1]]</p>
+
+<hr/>
+
+<h4>Pre-training 思想赋能非参数密度估计：自适应 Kernel 推荐网络</h4>
+<ul>
+  <li><b>信号源</b>：清华大学</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13092v1">Pre-training Neural Networks for Location-Adaptive Kernel Density Estimation</a></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>认知提取</b>：将深度学习中的 pre-training 范式嫁接到经典统计学的 kernel density estimation 问题上，让神经网络学会"为每个点选合适的局部平滑窗口"——这类似于用 AI 替代人工调参，为不同区域的数据点定制不同形状的 kernel。当目标分布与预训练分布族相差较大时，可通过 fine-tuning 恢复性能增益。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>清华大学将 pre-training 思想引入非参数密度估计，提出首先在参数化分布族上训练神经网络使其具备通用 kernel 推荐能力，推理时直接为每个样本点输出自适应的 location-adaptive kernel 参数。该方法在高维场景下显著优于传统固定 kernel 方法，并通过 fine-tuning 步骤适配分布漂移场景。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：首先在一类参数化分布族上预训练一个神经网络，使其能够为任意样本点输出自适应的 location-adaptive kernel 参数（如带宽矩阵）；推理阶段直接用该网络推荐的 kernel 进行密度估计，避免高维下手动调参的困难。当目标分布与预训练分布族差异较大时，引入 fine-tuning 步骤以适配新分布。</li>
+  <li><b>技术细节</b>：传统 kernel density estimation 在高维空间中因"维度诅咒"而效率极低，关键瓶颈在于如何为不同局部区域指定合适的 kernel 形状。本方法将 kernel 选择转化为一个神经网络的输出，预训练阶段类似于让网络"见过足够多分布的样子"从而具备通用 kernel 推荐能力，这在某种程度上类似于用 foundation model 的迁移学习思路解决经典统计估计问题。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出基于预训练神经网络的 location-adaptive kernel density estimation 方法，在高维场景下显著优于传统固定 kernel 方法</li>
+  <li>当目标分布接近预训练分布族时，密度估计精度大幅提升；分布差异较大时，额外 fine-tuning 可恢复增益</li>
+  <li>大量数值实验验证该策略有效性，为高维非参数密度估计提供可扩展框架</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：数值实验表明，预训练策略在目标分布与预训练分布族接近时可显著提升密度估计精度；引入 fine-tuning 后，该方法在分布漂移场景下同样保持竞争力。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13092v1]]</p>
+
+<hr/>
+
+<h4>MLE 增强因子风险模型：捕捉市场瞬态机制切换</h4>
+<ul>
+  <li><b>信号源</b>：Stanford University</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12977v1">Augmenting Factor Risk Models with Transient Statistical Factors via Maximum Likelihood Estimation</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>认知提取</b>：针对第三方风险模型（如 Barra）无法及时捕捉市场瞬态变化的缺陷，提出一种系统性增强方法：通过最大似然估计在原有因子模型之上叠加新的统计因子，并用半衰期参数对近期收益赋予更高权重。这在某种程度上类似于在原有地图上实时叠加最新交通信息，而不是完全重绘地图。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Stanford 提出基于最大似然估计的方法，在现有因子风险模型（如 Barra）基础上增加瞬态统计因子，以捕捉市场机制切换等动态结构。整体框架仅依赖历史已实现收益序列，无需访问原始模型内部参数，且天然支持含缺失数据的股票数据集，仅需两个超参数：附加因子数量和半衰期参数。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：在已有第三方因子模型基础上，通过带指数加权（半衰期控制）的对数似然目标函数，同时优化原始模型的精炼参数与新增统计因子载荷，形成增强协方差估计。整体框架仅依赖历史已实现收益序列，无需访问原始模型内部参数。</li>
+  <li><b>技术细节</b>：采用 EM 算法或类似迭代最大似然流程，在每一步迭代中同时处理缺失收益（通过期望步骤填补）和因子结构更新（最大化步骤）。半衰期参数使近期数据权重指数衰减，使模型能响应市场机制切换等瞬态现象，这类似于给历史数据加上"遗忘曲线"。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出基于最大似然估计的因子模型增强框架，仅需两个超参数：附加因子数量和半衰期参数</li>
+  <li>方法支持资产收益缺失数据场景，适配真实股票数据集的常见情形</li>
+  <li>在 Barra 短期美国风险模型上验证，所提扩展可捕捉原模型遗漏的收益结构</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：在美国大市值股票 universe 上，以 Barra 短期风险模型为基线，增强后的模型成功捕捉到原模型未能解释的收益协方差结构，验证了瞬态统计因子的有效性。</li>
+</ul>
+
+<hr/>
+
+<h4>ISOMORPH：首个开源供应链 Digital Twin 模拟器与 TSF Foundation Model 评估</h4>
+<ul>
+  <li><b>信号源</b>：Caltech</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12768v1">ISOMORPH: A Multi-Echelon Supply Chain Digital Twin for Time Series Forecasting Benchmarks</a></li>
+</ul>
+<callout emoji="🧪">
+  <p><b>认知提取</b>：ISOMORPH 将供应链物流建模为 Markov chain，通过可配置参数和模块化拓扑生成具备真实动态特性（牛鞭效应、级联瓶颈、区制转换）的时序数据集，填补了开放 TSF benchmark 中供应链领域的空白。这在某种程度上类似于为时序预测研究搭建了一个"供应链沙盘"，让模型可以在受控的现实复杂度下接受挑战。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Caltech 发布 ISOMORPH，首个供应链多级物流网络 digital twin 开源模拟器，支持 TSF benchmark 数据集生成。该模拟器以 Markov chain 建模库存-补货动态，状态转移核对经验分布线性作用，可生成覆盖牛鞭效应和级联瓶颈等真实供应链动态的时序数据。研究同时对 Chronos、Moirai、TimesFM、Lag-Llama 等 foundation model 进行 zero-shot 预测评估。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：ISOMORPH 以有向路由图建模多级物流网络，在离散时间步内推进：需求到达目的节点后从库存满足或记录积压，并向上游触发补货。状态向量追踪各节点在手库存、在途订单与平滑需求估计，整体动力学构成 tractable 状态空间上的 Markov chain，转移核对状态经验分布线性作用。拓扑、需求过程和控制规则均可模块化配置，并内置三条守恒律用于扩展验证。</li>
+  <li><b>技术细节</b>：通过 Latin-hypercube 采样对需求侧参数进行扰动，可生成覆盖参数不确定性的预测置信区间（forward UQ）。这在某种程度上类似于气象模拟中的集合预报——用少量随机扰动样本覆盖参数空间，再用 foundation model 作为 digital twin 的快速代理完成不确定性量化，绕过了昂贵的全模拟器重复运行。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>发布首个开源多级供应链 digital twin ISOMORPH，以 Markov chain 建模库存-补货动态，状态转移核对经验分布线性作用</li>
+  <li>在 C=50 和 C=200 两种目录规模下生成数据集，含 30 个场景扫描 rollout 与 20 个 Latin-hypercube 扰动，覆盖牛鞭效应和级联瓶颈等动态</li>
+  <li>Chronos、Moirai、TimesFM、Lag-Llama 四个 foundation model zero-shot 评估中 MASE 显著高于 GIFT-Eval 公开参考值，说明供应链场景对现有模型更具挑战性</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12768v1]]</p>
+
+<hr/>
+
+<h4>Physics-Informed 生成模型建模利率期限结构：No-Arbitrage Neural SDE</h4>
+<ul>
+  <li><b>信号源</b>：Johns Hopkins University (JHU)</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12764v1">Physics-Informed Generative Modeling of Interest Rate Term Structures</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>认知提取</b>：将深度生成模型的灵活性与固定收益金融理论（无套利约束）强制融合——类似于在神经网络的"自由发挥"空间里安装一道物理定律护栏，使生成的利率曲线在统计拟合的同时必须满足无套利条件。这在某种程度上类似于用神经网络学物理仿真时加入牛顿定律约束，让预测不会"违背基本规律"。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>JHU 提出基于 physics-informed 生成框架的利率期限结构建模方法，结合 Student-t CVAE 与 Neural SDE + No-Arbitrage PDE 约束。两阶段架构首先用重尾 VAE 解耦宏观形态与绝对利率水平，随后在潜空间内施加无套利 PDE 正则化约束。在美元/英镑/日元主权利率曲线预测中实现 6.58 bps Mean Tenor RMSE，并克服经典 HJM 模型的极端环境缺陷。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：两阶段架构：第一阶段用 Student-t Conditional Variational Autoencoder with Dynamic Level Injection（CVAEsT+LS）从历史期限结构数据中提取重尾潜变量流形，将宏观形态动态与绝对利率基准分离；第二阶段在潜空间内用 Neural SDE 建模连续时间演化，同时施加 No-Arbitrage PDE 惩罚项，确保生成曲线满足无套利约束。</li>
+  <li><b>技术细节</b>：无套利约束通过 PDE 残差作为正则化损失项加入 Neural SDE 的训练目标，类似于 physics-informed neural network（PINN）的做法——在训练时对违反 HJM 无套利条件的轨迹施以惩罚，从而强制模型生成的利率路径在理论上"不可被套利"。Student-t 分布的重尾假设则有效捕捉利率的极端波动，避免高斯假设下的"流形坍缩"。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 CVAEsT+LS 两阶段架构，利用 Student-t 重尾分布解耦宏观形态与绝对利率水平，有效避免 manifold collapse 和套利违约</li>
+  <li>Neural SDE 潜在动力学受 No-Arbitrage PDE 严格惩罚，在 USD/GBP/JPY 三种主权货币上样本外预测达到 6.58 bps Mean Tenor RMSE</li>
+  <li>通过相空间向量场分析实现无监督宏观经济机制识别，克服经典 HJM 模型在零利率下界和极端宏观环境中的大规模漂移违约问题</li>
+</ul>
+
+<hr/>
+<h2>二、行业应用 (Industry Application)</h2>
+<h3>认知模型 (产品/集成/Agentic 商业化)</h3>
+
+<h4>OpenAI Symphony：每个开放任务自动配备独立 Codex Agent 实例</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI Developers 官方</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2054252221941121035">OpenAI Symphony — parallel Codex agent task scheduling</a></li>
+</ul>
+<callout emoji="🎯">
+  <p><b>认知提取</b>：Symphony 将 Codex agent 与任务调度结合，让每个开放任务都有独立的 agent 实例持续运行——这在某种程度上类似于给每个工单配备一名专属程序员，而非让一个程序员串行处理所有工单。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 发布 Symphony 功能：每个待处理任务自动分配一个运行中的 Codex agent，实现并行任务处理。多个 agent 实例可同时独立推进不同工单，无需等待前一个任务完成后才启动下一个。</p>
+<p><b>产品定位</b></p>
+<p>Symphony 是面向开发者的 Agentic 任务调度层，定位为将 Codex 编程 agent 从"串行助手"升级为"并行任务处理引擎"，适用于代码审查、多 PR 并发处理等场景。</p>
+<p>[[FIGURE:x:2054252221941121035]]</p>
+
+<hr/>
+
+<h4>Alibaba Cloud 将 Qwen 3.6 Plus 接入 Nous Research Hermes Agent 平台</h4>
+<ul>
+  <li><b>信号源</b>：Alibaba Cloud 官方 @ Alibaba Cloud</li>
+  <li><b>链接</b>：<a href="https://x.com/alibaba_cloud/status/2054372732234797342">Qwen 3.6 Plus free on Nous Portal — Hermes Agent collaboration</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>认知提取</b>：Alibaba Cloud 将 Qwen 3.6 Plus 模型接入 Nous Research 的 Hermes Agent 平台并限时免费——这类似于手机厂商与第三方应用商店合作，将自家模型能力输送到社区开发者面前，以生态入口换取用户规模。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Alibaba Cloud 宣布 Qwen 3.6 Plus 在 Nous Portal 限时免费开放，并与 Nous Research 合作推出 Hermes Agent，将 Qwen 3.6 Plus 的推理能力集成至该 agent-native 应用平台，面向社区开发者提供调用入口。</p>
+<p><b>产品定位</b></p>
+<p>此次合作属于模型即服务（MaaS）的生态扩张策略：Qwen 3.6 Plus 作为后端推理引擎，Hermes Agent 作为 agentic 应用层，双方联合面向开发者社区推广 agent 原生工作流。</p>
+<p>[[FIGURE:x:2054372732234797342]]</p>
+
+<hr/>
+
+<h4>NVIDIA 推介 Hermes Agent 开源框架：三个月达 14 万 GitHub Stars，支持 RTX PC 与 DGX Spark 本地部署</h4>
+<ul>
+  <li><b>信号源</b>：NVIDIA Blog @ NVIDIA</li>
+  <li><b>链接</b>：<a href="https://blogs.nvidia.com/blog/rtx-ai-garage-hermes-agent-dgx-spark/">Hermes Agent on RTX AI Garage and DGX Spark — NVIDIA Blog</a></li>
+</ul>
+<callout emoji="⚡">
+  <p><b>认知提取</b>：Hermes Agent 将原本依赖数据中心的 agentic 工作流"下放"到 RTX PC 与 DGX Spark 等本地算力设备——这在某种程度上类似于把云端的自主 agent 能力封装进一台可以放在桌面的机器，让自我改进的 AI agent 在端侧独立运行成为可能。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>NVIDIA 在官方博客介绍 Hermes Agent 开源 agentic 框架，该框架专注于 self-improving agents，可运行于消费级 RTX PC 及 DGX Spark 平台，三个月内在 GitHub 累计突破 14 万 stars，成为增速最快的 agentic 框架之一。</p>
+<p><b>产品定位</b></p>
+<p>Hermes Agent 定位为端侧 agentic 部署框架，解决大型 agentic 工作流对云端依赖的问题，面向开发者、研究者及企业提供本地化、低延迟的 agent 运行环境，与 NVIDIA 硬件生态深度集成。</p>
+<p>[[FIGURE:rss:bec7e4d429309826]]</p>
+
+<hr/>
+
+<h4>OpenAI Codex 集成 Computer Use 能力：后台跨应用 GUI 自动化，不占用 Mac 主屏幕</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI Developers 官方账号 @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2054298427245441141">Codex agent with computer use — background GUI automation on Mac</a></li>
+</ul>
+<callout emoji="🛠️">
+  <p><b>认知提取</b>：Codex agent 获得 computer use 能力后，可像真实用户一样操控 GUI 跨应用完成任务，同时以沙箱/后台方式运行，不干扰用户主机环境——这在某种程度上类似于一个会自己操作鼠标键盘的"虚拟实习生"在后台独立工作，用户无需让出屏幕控制权。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 宣布 Codex 集成 computer use 能力，支持跨应用点击、文字输入等 GUI 操作，并可在 Mac 后台持续运行，全程不占用用户主屏幕。这意味着 Codex agent 不再局限于代码编辑器内的文本生成，而是能以完整 GUI 自动化方式执行端到端任务。</p>
+<p><b>产品定位</b></p>
+<p>此功能将 Codex 从代码补全工具升级为具备 GUI 操控能力的 agentic 执行层，面向需要跨工具、跨应用完成复杂开发流程的专业开发者，沙箱化设计保障主机环境安全。</p>
+<p>[[FIGURE:x:2054298427245441141]]</p>
+
+<hr/>
+
+<h4>RubricEM：基于 Rubric 引导的策略分解，将 Meta-RL 扩展至不可验证奖励场景</h4>
+<ul>
+  <li><b>信号源</b>：AK @ X</li>
+  <li><b>链接</b>：<a href="https://x.com/_akhaliq/status/2054545468818854267">RubricEM — Rubric-guided policy decomposition for Meta-RL beyond verifiable rewards</a></li>
+</ul>
+<callout emoji="🎨">
+  <p><b>认知提取</b>：传统强化学习训练语言模型依赖可验证奖励（如数学答案对错），RubricEM 尝试用评分 Rubric 分解策略，使 RL 能用于更难以自动验证的开放性任务——这类似于把考试从"对错题"扩展到"按评分标准打分的主观题"，拓宽了 RL 可应用的任务边界。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>论文 RubricEM 提出基于 Rubric 引导的策略分解方法，将 Meta-RL 扩展到不可验证奖励场景。该方法通过将复杂任务拆解为 Rubric 定义的子目标，为原本缺乏明确奖励信号的开放性任务提供可量化的训练反馈，突破了现有 RL 框架对可验证答案的依赖。</p>
+<p><b>产品定位</b></p>
+<p>RubricEM 定位为 RL 训练框架的方法论扩展，面向需要在写作、分析、推理等主观评估场景中应用强化学习的研究者和工程师，为 agent 训练提供更通用的奖励建模路径。</p>
+<p>[[FIGURE:x:2054545468818854267]]</p>
+```xml
+<h3>多模态 (生成/理解类产品)</h3>
+
+<h4>Google DeepMind AI 鼠标指针交互 Demo：手势、语音与自然指令直调 Gemini</h4>
+<ul>
+  <li><b>信号源</b>：Google DeepMind 官方 X 账号</li>
+  <li><b>链接</b>：<a href="https://x.com/GoogleDeepMind/status/2054246119635300451">Google DeepMind AI Mouse Pointer Interaction Demo</a></li>
+</ul>
+<callout emoji="🎨">
+  <p><b>认知提取</b>：DeepMind 将鼠标指针这一沿用 50 年的人机界面范式与 Gemini 多模态理解结合，探索一种"指哪儿说哪儿"的直觉式 AI 交互方式——类似于把传统遥控器升级为能理解手势和语音的智能助手，让屏幕上的任何内容都能成为 AI 的操作对象。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Google DeepMind 展示了实验性 AI 鼠标指针交互 demo，用户可通过手势移动、语音和自然简写指令直接在屏幕上调度 Gemini 完成任务。该 demo 将传统鼠标输入与 Gemini 的多模态理解能力相结合，实现对屏幕内容的语义感知与响应。</p>
+<p><b>产品定位</b></p>
+<p>实验性 AI 交互界面 demo，面向下一代人机交互范式探索，目标是让用户无需切换到独立 AI 对话框，直接在当前操作屏幕内通过自然语言与手势调用 AI 能力。</p>
+<p>[[FIGURE:x:2054246119635300451]]</p>
+
+<hr/>
+
+<h4>Gemini 语义鼠标：将手写笔记转待办、将视频帧转餐厅预订链接</h4>
+<ul>
+  <li><b>信号源</b>：Google DeepMind 官方</li>
+  <li><b>链接</b>：<a href="https://x.com/GoogleDeepMind/status/2054246130511225053">Google DeepMind AI Mouse Semantic Understanding Demo</a></li>
+</ul>
+<callout emoji="🛠️">
+  <p><b>认知提取</b>：这项技术将鼠标从"位置追踪工具"升级为"语义感知工具"，AI 能理解光标所指向的内容语义并生成上下文相关的交互动作——类似于给鼠标装上了一双"理解意图"的眼睛，而不仅仅是记录坐标。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Google DeepMind 进一步展示了 AI 鼠标的语义理解能力：鼠标指向的内容可被 AI 识别并转化为交互式操作，包括将手写笔记自动转为结构化待办清单、将暂停的视频帧识别为餐厅场景后生成预订链接。这两个用例展示了 vision-language 模型在屏幕级语义理解上的落地潜力。</p>
+<p><b>产品定位</b></p>
+<p>多模态 contextual interaction 能力演示，属于 AI 交互界面的能力层展示，核心解决"用户与屏幕内容之间缺乏智能桥梁"的问题。</p>
+<p>[[FIGURE:x:2054246130511225053]]</p>
+
+<hr/>
+
+<h4>Google AI Studio 上线 AI 鼠标指针实验：下一代 AI 界面能力公开测试</h4>
+<ul>
+  <li><b>信号源</b>：Google DeepMind 官方 @ Google</li>
+  <li><b>链接</b>：<a href="https://x.com/GoogleDeepMind/status/2054246132222419226">Google DeepMind AI Mouse Experiment on Google AI Studio</a></li>
+</ul>
+<callout emoji="📱">
+  <p><b>认知提取</b>：Google DeepMind 正在探索将 AI 能力嵌入鼠标指针等基础交互组件，使 UI 操作本身具备智能感知与响应能力——类似于把 AI 助手从"弹出窗口"下沉到操作系统最底层的输入设备层面。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Google DeepMind 宣布在 Google AI Studio 上线 AI 鼠标指针实验，将上述两个 demo 的能力开放给开发者试用，标志着该实验性交互范式从内部 demo 阶段进入公开测试阶段。</p>
+<p><b>产品定位</b></p>
+<p>Google AI Studio 作为开发者平台，此次将 AI 鼠标指针实验上线，属于新型 AI 界面能力的开发者预览，探索 AI-enabled mouse pointer 在真实用户场景下的交互反馈。</p>
+<p>[[FIGURE:x:2054246132222419226]]</p>
+
+<hr/>
+
+<h4>NVIDIA 发布 Nemotron 3 Nano Omni：轻量多模态模型配套开发者社区运营</h4>
+<ul>
+  <li><b>信号源</b>：NVIDIA AI 官方 @ NVIDIA</li>
+  <li><b>链接</b>：<a href="https://x.com/NVIDIAAI/status/2054260508966953295">NVIDIA Nemotron 3 Nano Omni Release</a></li>
+</ul>
+<callout emoji="⚡">
+  <p><b>认知提取</b>：NVIDIA 推出 Nemotron 3 Nano Omni，在 Nemotron 系列中补全了面向多模态（Omni）场景的轻量级（Nano）产品线，同时以"Ask the Experts"形式做社区互动推广，模型发布与开发者生态运营并行推进。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>NVIDIA AI 发布 Nemotron 3 Nano Omni 模型，该模型定位为 Nemotron 系列中的轻量级多模态版本，并通过 Nemotron Labs 平台开设专家问答（Ask the Experts）社区互动活动，面向开发者推广该模型的能力与应用场景。</p>
+<p><b>产品定位</b></p>
+<p>轻量级多模态（Omni）语言模型，面向对推理资源敏感的开发者及边缘部署场景，解决多模态理解能力与计算成本之间的平衡问题。</p>
+<p>[[FIGURE:x:2054260508966953295]]</p>
+
+<hr/>
+
+<h4>EgoMemReason：长时域第一人称视频 Memory-Driven Reasoning 评测基准</h4>
+<ul>
+  <li><b>信号源</b>：AK @ 独立转发账号</li>
+  <li><b>链接</b>：<a href="https://x.com/_akhaliq/status/2054543659689816295">EgoMemReason: A Memory-Driven Reasoning Benchmark for Long-Horizon Egocentric Video Understanding</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>认知提取</b>：EgoMemReason 专注于 egocentric 长视频的推理评测，核心挑战是要求模型跨越长时间跨度的视频帧进行记忆驱动的推理——类似于要求 AI 模拟人类通过回忆过去事件来回答当下问题的能力。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>EgoMemReason 是一个面向长时域第一人称（egocentric）视频理解的 memory-driven reasoning benchmark，要求模型在长视频跨度内整合历史帧信息进行推理，评估当前多模态模型在长时域记忆与推理能力上的边界。</p>
+<p><b>产品定位</b></p>
+<p>学术评测基准，面向长视频多模态理解研究社区，专项评估模型在 egocentric 视角下的长时域记忆推理能力，可用于衡量具身 AI 及可穿戴设备场景下的视觉理解水平。</p>
+<p>[[FIGURE:x:2054543659689816295]]</p>
+
+<hr/>
+
+<h4>SenseNova-U1 提出 NEO-unify：单一架构统一多模态理解与生成</h4>
+<ul>
+  <li><b>信号源</b>：AK @ X（转发 SenseTime SenseNova-U1）</li>
+  <li><b>链接</b>：<a href="https://x.com/_akhaliq/status/2054538618832609681">SenseNova-U1: NEO-unify Architecture for Unified Multimodal Understanding and Generation</a></li>
+</ul>
+<callout emoji="🎯">
+  <p><b>认知提取</b>：SenseNova-U1 尝试用单一架构 NEO-unify 同时处理多模态理解（感知）和生成（创作）任务——类似于让同一个大脑既能"读图"又能"画图"，而非分别训练两个专用系统，代表了多模态统一建模的技术路线探索。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>SenseTime 发布 SenseNova-U1，提出 NEO-unify 架构，旨在用统一模型同时支持多模态理解（图文问答、视频理解等）与多模态生成（图像/视频生成等）任务，探索在单一模型框架内消除理解与生成之间的能力割裂问题。</p>
+<p><b>产品定位</b></p>
+<p>统一多模态基础模型，面向需要同时部署理解与生成能力的应用场景，解决现有多模态系统"理解模型"与"生成模型"分离带来的系统复杂度与资源开销问题。</p>
+<p>[[FIGURE:x:2054538618832609681]]</p>
+```
+```xml
+<h3>世界模型 (Robotics / Embodied AI / 自动驾驶等)</h3>
+<h4>Figure 第四代人形机器人 F.04 完成关键设计评审，进入生产准备阶段</h4>
+<ul>
+  <li><b>信号源</b>：Brett Adcock @ Figure</li>
+  <li><b>链接</b>：<a href="https://x.com/adcock_brett/status/2054392873685340287">Figure CEO Brett Adcock on F.04 Critical Design Review</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>认知提取</b>：F.04 完成 CDR（关键设计评审）并进入设计锁定阶段，标志着 Figure 从研发迭代正式切换到生产准备轨道；CEO 自述本次代际跨度为历代最大，但具体技术参数尚未披露。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Figure CEO Brett Adcock 宣布人形机器人 F.04 已完成关键设计评审（CDR），设计正式锁定，零部件开始发货。Adcock 表示此次 F.04 相较前代的代际升级跨度为 Figure 历代产品中最大的一次，但目前尚未公开具体的技术规格或性能参数。</p>
+<p><b>产品定位</b></p>
+<p>F.04 是 Figure 的第四代商用人形机器人，CDR 节点完成意味着产品从研发阶段进入量产前的工程化落地阶段，是迈向规模化部署的关键里程碑。</p>
+<p>[[FIGURE:x:2054392873685340287]]</p>
+```
+<h3>AI infra (推理框架/部署/硬件商业化)</h3>
+
+<h4>NVIDIA 与 Ineffable Intelligence 达成强化学习基础设施工程合作</h4>
+<ul>
+  <li><b>信号源</b>：NVIDIA Blog @ NVIDIA</li>
+  <li><b>链接</b>：<a href="https://blogs.nvidia.com/blog/ineffable-intelligence-reinforcement-learning-infrastructure/">Ineffable Intelligence and NVIDIA Partner to Build Reinforcement Learning Infrastructure</a></li>
+</ul>
+<callout emoji="⚡">
+  <p><b>认知提取</b>：这是 NVIDIA 与专注于强化学习的新兴实验室 Ineffable Intelligence 的基础设施层合作，目标是将大规模计算资源转化为 RL agent 的自主学习能力。David Silver 作为 AlphaGo 核心架构师，其新实验室的技术方向被视为 RL 领域的重要信号。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>NVIDIA 与由 AlphaGo 核心架构师 David Silver 创立的伦敦 AI 实验室 Ineffable Intelligence 宣布工程级合作，双方将共同构建面向大规模强化学习训练的底层基础设施，旨在为 RL agent 的自主学习提供算力与系统支撑。</p>
+<p><b>产品定位</b></p>
+<p>面向强化学习研究与工程化落地的基础设施平台，解决大规模 RL 训练在计算调度、样本吞吐与 agent 环境交互上的系统瓶颈。</p>
+<p>[[FIGURE:rss:818a609903c6967b]]</p>
+
+<hr/>
+
+<h4>Unsloth 发布 Qwen3.6 实验性 MTP GGUFs，MoE 推理速度达 220 tokens/s</h4>
+<ul>
+  <li><b>信号源</b>：Daniel Han @ Unsloth</li>
+  <li><b>链接</b>：<a href="https://x.com/danielhanchen/status/2054537306732941412">Unsloth Qwen3.6 Experimental MTP GGUFs Release</a></li>
+</ul>
+<callout emoji="🛠️">
+  <p><b>认知提取</b>：Unsloth 将 Multi-Token Prediction（MTP）引入 Qwen3.6 的 GGUF 量化推理，通过 speculative decoding 思路在单 GPU 上实现显著加速。这在某种程度上类似于让模型"预先草拟"后续词再验证，从而减少串行生成的瓶颈；但 draft tokens 超过 2 个时接受率从 83% 骤降至 50%，边际收益反而变负。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Unsloth 发布 Qwen3.6 系列实验性 MTP GGUFs：27B 密集模型达 140 tokens/s，35B-A3B MoE 模型达 220 tokens/s，相比原版 GGUF 提速约 1.4x。测试表明 draft tokens 设为 2 时接受率为 83%，超过 2 个后接受率骤降至 50%，推荐配置为 draft tokens=2。</p>
+<p><b>产品定位</b></p>
+<p>面向本地/边缘部署场景的量化推理加速工具，通过 MTP speculative decoding 降低单 GPU 上大参数量模型的生成延迟，解决 GGUF 格式在 MoE 架构下的推理吞吐瓶颈。</p>
+<p>[[FIGURE:x:2054537306732941412]]</p>
+
+<hr/>
+<h2>折叠区</h2>
+<ul>
+  <li>NVIDIA AI 官方：NVIDIA AI 分享使用 Skills 构建视频分析 AI Agents 的技术资源链接，无详细内容（<a href="[https://x.com/NVIDIAAI/status/2054592431312539888](https://x.com/NVIDIAAI/status/2054592431312539888)">链接</a>）</li>
+  <li>Garry Tan：Garry Tan 发表政治观点推文，批评旧金山政客 Connie Chan，内容与 AI 研究无关（<a href="[https://x.com/garrytan/status/2054591422758568045](https://x.com/garrytan/status/2054591422758568045)">链接</a>）</li>
+  <li>TechCrunch @ 科技媒体：勒索软件黑客声称入侵 Foxconn，该公司是 Apple、Google 和 Nvidia 的主要电子产品制造商（<a href="[https://x.com/TechCrunch/status/2054588028946096379](https://x.com/TechCrunch/status/2054588028946096379)">链接</a>）</li>
+  <li>OpenAI Developers @ OpenAI：OpenAI Developers 发布一条仅含链接的推文，无实质内容说明（<a href="[https://x.com/OpenAIDevs/status/2054586226855100663](https://x.com/OpenAIDevs/status/2054586226855100663)">链接</a>）</li>
+  <li>OpenAI Developers @ OpenAI：OpenAI 向企业用户推广 Codex，30 天内切换的符合条件的企业新用户可获 2 个月免费使用（<a href="[https://x.com/OpenAIDevs/status/2054586214112780518](https://x.com/OpenAIDevs/status/2054586214112780518)">链接</a>）</li>
+  <li>Austen Allred：Austen Allred 透露正在为 Gauntlet AI 拍摄一个保密项目，无实质技术内容（<a href="[https://x.com/Austen/status/2054584986427121849](https://x.com/Austen/status/2054584986427121849)">链接</a>）</li>
+  <li>Marc Andreessen：Marc Andreessen 发推呼吁通过 Clarity Act，无技术或研究实质内容（<a href="[https://x.com/pmarca/status/2054583012940222589](https://x.com/pmarca/status/2054583012940222589)">链接</a>）</li>
+  <li>dex：用户 dex 分享了一条与政治相关的内容，称其有趣，无实质技术或研究内容（<a href="[https://x.com/dexhorthy/status/2054580894787408371](https://x.com/dexhorthy/status/2054580894787408371)">链接</a>）</li>
+  <li>Margaret Thatcher：用户发布政治调侃推文，无实质 AI 研究内容（<a href="[https://x.com/dexhorthy/status/2054580442985369994](https://x.com/dexhorthy/status/2054580442985369994)">链接</a>）</li>
+  <li>Austen Allred：Austen Allred 宣传 Gauntlet AI，称其为将传统工程师转型为 AI-first 前沿部署工程师的培（<a href="[https://x.com/Austen/status/2054578758506475820](https://x.com/Austen/status/2054578758506475820)">链接</a>）</li>
+  <li>TechCrunch @ 科技媒体：Amazon 在搜索栏推出由 Alexa+ 驱动的 AI 购物助手（<a href="[https://x.com/TechCrunch/status/2054578055763681526](https://x.com/TechCrunch/status/2054578055763681526)">链接</a>）</li>
+  <li>Austen Allred：Austen Allred 发表简短评论，称某问题可在 10 分钟内通过 tooling 解决，无具体上下文（<a href="[https://x.com/Austen/status/2054578043843121340](https://x.com/Austen/status/2054578043843121340)">链接</a>）</li>
+  <li>Dwarkesh Patel：Dwarkesh Patel 提出观点：人类价值观是一种 misgeneralization，并类比认为 AI alig（<a href="[https://x.com/dwarkesh_sp/status/2054577727299334321](https://x.com/dwarkesh_sp/status/2054577727299334321)">链接</a>）</li>
+  <li>Perplexity 官方 @ Perplexity：Perplexity 分享 PayPal 企业版客户案例：PayPal 每周在 Perplexity Enterpris（<a href="[https://x.com/perplexity_ai/status/2054577555387371577](https://x.com/perplexity_ai/status/2054577555387371577)">链接</a>）</li>
+  <li>Carlos E. Perez：Carlos E. Perez 评论 Applied Labs 为客户服务（CX）部门构建了 AI-native 平台，（<a href="[https://x.com/IntuitMachine/status/2054575076842803471](https://x.com/IntuitMachine/status/2054575076842803471)">链接</a>）</li>
+  <li>TechCrunch @ 媒体：国防科技公司 Anduril 完成 50 亿美元融资，估值翻倍至 610 亿美元（<a href="[https://x.com/TechCrunch/status/2054574443780100252](https://x.com/TechCrunch/status/2054574443780100252)">链接</a>）</li>
+  <li>TechCrunch 官方账号：TechCrunch 转推一则关于 Reddit r/WallStreetBets 社区反对 SEC 削弱季报要求提案的（<a href="[https://x.com/TechCrunch/status/2054573781608464743](https://x.com/TechCrunch/status/2054573781608464743)">链接</a>）</li>
+  <li>TechCrunch @ 媒体：美国国会议员要求 Instructure 就 Canvas 平台数据泄露事件作出解释（<a href="[https://x.com/TechCrunch/status/2054571541007122872](https://x.com/TechCrunch/status/2054571541007122872)">链接</a>）</li>
+  <li>Shawn Wang：Shawn Wang 发表关于 prompt injection 讨论的评论性推文，内容为对他人反应的批评，无实质技术信（<a href="[https://x.com/swyx/status/2054570997865718220](https://x.com/swyx/status/2054570997865718220)">链接</a>）</li>
+  <li>Rohan Paul：Rohan Paul 推介 Runable 平台并宣传其移动应用开发竞赛，参赛者可直接将 iOS/Android app（<a href="[https://x.com/rohanpaul_ai/status/2054570046001914018](https://x.com/rohanpaul_ai/status/2054570046001914018)">链接</a>）</li>
+  <li>Wolfram Ravenwolf：用户分享个人使用 Codex 的体验，并庆祝其自制 AI 助手 Amy 创建三周年，无实质技术内容（<a href="[https://x.com/WolframRvnwlf/status/2054566224441627130](https://x.com/WolframRvnwlf/status/2054566224441627130)">链接</a>）</li>
+  <li>Rohan Paul：X 平台首个全 AI 驱动的电台正式播出，24/7 追踪 GitHub、HuggingFace、OpenRouter 等（<a href="[https://x.com/rohanpaul_ai/status/2054566150168842254](https://x.com/rohanpaul_ai/status/2054566150168842254)">链接</a>）</li>
+  <li>TechCrunch @ 科技媒体：WhatsApp 在 Meta AI 聊天中新增隐身模式（incognito mode）功能（<a href="[https://x.com/TechCrunch/status/2054565913312305323](https://x.com/TechCrunch/status/2054565913312305323)">链接</a>）</li>
+  <li>TechCrunch 官方：TechCrunch 宣布 Disrupt 2026 大会设置 6 个舞台，定位面向当前更严峻的创业市场，无实质技术内容（<a href="[https://x.com/TechCrunch/status/2054562641654530393](https://x.com/TechCrunch/status/2054562641654530393)">链接</a>）</li>
+  <li>Carlos E. Perez：Carlos E. Perez 发表个人观点，认为 AI 会揭示人类自身的心理问题，无实质技术内容（<a href="[https://x.com/IntuitMachine/status/2054562445130191149](https://x.com/IntuitMachine/status/2054562445130191149)">链接</a>）</li>
+  <li>Tim Rocktäschel：Tim Rocktäschel 发布简短感叹，提及 Darwin 和 Gödel，无实质内容（<a href="[https://x.com/_rockt/status/2054561315507552547](https://x.com/_rockt/status/2054561315507552547)">链接</a>）</li>
+  <li>NVIDIA AI 官方 @ NVIDIA：NVIDIA AI 官方账号发出随意提问，询问用户本地运行什么模型，无实质内容（<a href="[https://x.com/NVIDIAAI/status/2054555165706105278](https://x.com/NVIDIAAI/status/2054555165706105278)">链接</a>）</li>
+  <li>TechCrunch @ 科技媒体：Poppy 推出主动式 AI 助手，旨在帮助用户整理数字生活（<a href="[https://x.com/TechCrunch/status/2054555066963759574](https://x.com/TechCrunch/status/2054555066963759574)">链接</a>）</li>
+  <li>Percy Liang：Percy Liang 分享由 William Barr Held 构建的 token viewer 工具，用于查看最新（<a href="[https://x.com/percyliang/status/2054550984597328101](https://x.com/percyliang/status/2054550984597328101)">链接</a>）</li>
+  <li>Percy Liang：Percy Liang 团队为下一代 Marin 模型征集高质量训练数据，目前已有 18T tokens，欢迎提供 pr（<a href="[https://x.com/percyliang/status/2054550981527146942](https://x.com/percyliang/status/2054550981527146942)">链接</a>）</li>
+</ul>
+
+<hr/>
+<p><i>本日报由 HH Research Pipeline 自动生成，由 Claude 抽取和撰写，以原文为准。<br/>处理信号 291 条 · 头条 30 条 · 高价值 193 条</i></p>

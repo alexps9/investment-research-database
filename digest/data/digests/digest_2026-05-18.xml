@@ -1,0 +1,815 @@
+<title>HH Research Daily · 2026-05-18</title>
+
+<h2>TL;DR</h2>
+<p>今日 AI 动态速览：</p>
+<p>
+<b>世界模型</b>方向，Meta AI 提出 VGGT-Ω，首次证明 feed-forward 三维重建模型存在类似语言模型的 scaling law——Sintel 基准相机估计精度提升 77%，GPU 内存仅为原版 30%，且习得的空间 registers 可泛化至 VLA 模型。
+<b>认知模型</b>方向，xAI 将 Hermes Agent 与 X 平台深度打通，支持 X Premium 登录与实时帖子检索，构建社交媒体 AI 闭环。
+</p>
+
+<h3>快速跳转</h3>
+<table>
+<tr><th></th><th>认知模型</th><th>多模态智能</th><th>世界模型</th><th>AI infra</th><th>ai4s</th></tr>
+<tr><td><b>前沿研究</b></td><td><a href="#research-cognitive">→</a></td><td><a href="#research-multimodal">→</a></td><td><a href="#research-world">→</a></td><td><a href="#research-infra">→</a></td><td><a href="#research-ai4s">→</a></td></tr>
+<tr><td><b>行业应用</b></td><td><a href="#application-cognitive">→</a></td><td><a href="#application-multimodal">→</a></td><td><a href="#application-world">→</a></td><td><a href="#application-infra">→</a></td><td><a href="#application-ai4s">→</a></td></tr>
+</table>
+<p>📊 <b>行业洞察专区</b>（资本 / 监管 / 人才 / 趋势 / 观点）：<a href="#insights">→ 跳转</a></p>
+
+<hr/>
+<h2>头条</h2>
+
+<h4>Meta AI 提出 VGGT-Ω：首次验证 feed-forward 三维重建的 scaling law，精度提升 77%、内存降至 30%</h4>
+<ul>
+<li><b>信号源</b>：Meta AI（VGGT 团队）</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15195v1">VGGT-Ω: Scaling Up Feed-Forward 3D Reconstruction</a></li>
+</ul>
+<callout emoji="🌟">
+<p><b>Our Insights</b>：这项工作的核心意义不在于又一个 SOTA 数字，而在于回答了一个架构级问题——3D 重建能否像 LLM 那样"加数据加算力就变好"？答案是肯定的。Register attention 的设计类似于在跨帧通信中设置少数"信息代表"而非全员两两通话，这种压缩出的空间摘要天然适合作为 embodied AI 的感知基座，暗示重建任务可作为通用空间理解的 pretext task。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>VGGT-Ω 对 VGGT feed-forward 三维重建模型进行大规模扩展：将多专用输出头合并为单一稠密预测头，引入 register attention 机制压缩跨帧信息交换，并构建支持动态场景的自监督学习协议，训练数据量扩大 15x。最终在 Sintel 基准相机估计精度较前 SOTA 提升 77%，GPU 内存仅为原版 30%，且 learned registers 可直接增强 VLA 模型并支持语言对齐。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：三处核心改动——（1）多任务单一稠密预测头替代多个专用输出头；（2）register attention 以紧凑 registers 替代全局注意力降低跨帧通信开销；（3）动态场景数据标注流水线 + 自监督协议利用大量无标签视频扩展训练规模。</li>
+<li><b>技术细节</b>：Register attention 的直觉类似于会议中只让几位"代表"（registers）在不同小组（帧）之间传递信息，而非所有成员两两通话——大幅降低注意力复杂度，同时 registers 的全局视野使其自然聚合跨帧场景几何信息，成为下游任务可复用的空间摘要。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>引入 register attention 机制，训练 GPU 内存仅为 VGGT 的 30%</li>
+<li>训练数据量扩大 15x，模型质量随规模可预测提升（scaling law 成立）</li>
+<li>Sintel 基准相机估计精度较前 SOTA 提升 77%；learned registers 可增强 VLA 模型并支持语言对齐</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15195v1]]</p>
+[[REASON:arxiv:2605.15195v1]]入选理由：Meta AI 首次证明 feed-forward 3D 重建存在 scaling law，范式级突破——从精心设计优化算法转向规模化数据驱动，且空间表征可泛化至 embodied AI。[[/REASON]]
+
+<hr/>
+
+<h4>xAI Hermes Agent 接入 X Premium 登录与实时帖子检索，构建社交媒体 AI 闭环</h4>
+<ul>
+<li><b>信号源</b>：xAI 官方</li>
+<li><b>链接</b>：<a href="https://x.com/xai/status/2055745332919808181">Hermes Agent now supports X Premium sign-in and X search</a></li>
+</ul>
+<callout emoji="🎯">
+<p><b>Our Insights</b>：这相当于给 AI Agent 开通了社交媒体的"实时新闻订阅"渠道——不同于 RAG 检索静态知识库，Hermes 直接接入 X 的实时信息流，意味着 Agent 的 context window 从"训练截止日期"延伸到了"此刻正在发生的对话"。更深层的信号是：xAI 正在以 X 数据独占性构建护城河，将社交图谱与 AI 推理深度绑定。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>xAI 宣布 Hermes Agent 新增支持 X Premium 订阅登录，用户可以 X Premium 身份使用 Agent 并直接检索 X 平台帖子内容，实现 AI Agent 与社交媒体实时信息流的深度打通。</p>
+<p><b>产品定位</b></p>
+<p>面向 X Premium 用户的 AI Agent 增强功能，定位于利用 X 平台独有的实时社交数据为 Agent 提供差异化信息源，强化 xAI 生态闭环。</p>
+<p>[[FIGURE:x:2055745332919808181]]</p>
+[[REASON:x:2055745332919808181]]入选理由：xAI 旗舰 Agent 产品与 X 平台实时数据首次打通，体现 AI+社交媒体生态整合战略，属重大产品集成动态。[[/REASON]]
+
+<hr/>
+<h2>一、前沿研究 (Research Frontier)</h2>
+<h3 id="research-cognitive">认知模型 (Cognitive Models)</h3>
+
+<h4>Tensor Similarity：用代数等价判定替代经验近似的机械可解释性度量方法</h4>
+<ul>
+  <li><b>信号源</b>：Samuel L Smith（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15183v1">Tensor Similarity for Mechanistic Interpretability</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b>：现有相似性度量要么靠行为表现（被分布外样本欺骗），要么依赖特定参数表示（对等价变换不稳健）。Tensor similarity 将"判断两个子模块是否等价"从凭感觉的经验近似升级为封闭的代数等价判定——类似于把"凭直觉判断两段代码功能相同"替换为形式化证明，从根本上改变了机械可解释性研究的验证方式。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 tensor similarity 度量方法，用于机械可解释性研究中判断两个神经网络子模块是否实现相同计算。该度量基于权重参数，对 weight-space symmetries（置换、缩放等对称变换）完全不变，通过递归算法捕获跨层机制，在 grokking 和 backdoor insertion 训练动态追踪上优于现有相似性指标。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：将网络相似性问题形式化为代数等价判定：tensor similarity 定义在权重空间上，商去所有等价对称变换（weight-space symmetries），再用递归算法逐层聚合局部张量等价关系，以捕获全局跨层功能等价。</li>
+  <li><b>技术细节</b>：核心思想类似群论中的轨道等价——将两个网络的权重张量视为在对称群作用下的等价类，只要存在一组合法的对称变换能将一个映射到另一个，即认为功能等价。递归算法沿计算图传播等价关系，避免穷举搜索的指数复杂度。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 tensor similarity 度量，对 weight-space symmetries（置换、缩放等）完全不变</li>
+  <li>设计高效递归算法，可捕获跨层的全局功能等价性（cross-layer mechanisms）</li>
+  <li>在 grokking 与 backdoor insertion 实验中，对训练动态的追踪保真度高于现有相似性指标</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：tensor similarity 在 grokking 和 backdoor insertion 等训练动态场景下比现有度量具有更高保真度，且将相似性验证问题约化为已解的代数问题，从根本上消除了对经验近似的依赖。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15183v1]]</p>
+
+<hr/>
+
+<h4>MIT 提出 MeMo：冻结 LLM 参数、用独立记忆模型实现可插拔知识注入</h4>
+<ul>
+  <li><b>信号源</b>：MIT CSAIL</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15156v1">MeMo: Memory as a Model for Knowledge Injection into Frozen LLMs</a></li>
+</ul>
+<callout emoji="🧠">
+  <p><b>Our Insights</b>：知识注入的核心矛盾一直是"更新知识"与"保持模型稳定"之间的张力——全参微调会破坏已有能力，RAG 依赖检索质量且对闭源模型受限。MeMo 将这个张力转化为模块化分工：让一个独立的记忆模块承担所有知识演化的代价，LLM 只负责推理。类似于给大脑配置一块可随时替换的外置记忆芯片，而非每次学新知识都重写神经连接。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>MIT CSAIL 提出 MeMo（Memory as a Model）框架，将新知识编码进独立的 memory model，保持 LLM 参数全程冻结，支持 plug-and-play 接入开源与闭源 LLM（无需访问权重或输出 logits）。在 BrowseComp-Plus、NarrativeQA、MuSiQue 三项基准上取得具竞争力的结果，尤其在检索噪声鲁棒性方面表现突出。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：MeMo 将知识注入拆解为两个独立模块：一个专门的 memory model 负责编码新语料（含跨文档关系建模），以及一个与 LLM 解耦的接口层。推理时 LLM 直接消费 memory model 的输出，无需修改自身参数或重新训练。</li>
+  <li><b>技术细节</b>：Memory model 以模块化方式捕捉文档间复杂的交叉关系，而非简单的 chunk-level embedding，使检索对噪声更鲁棒。接口设计不依赖 LLM 内部 logits，因此对闭源 API（如 GPT / Claude）同样适用——类似于给图书馆配备一名独立检索员，无论图书馆内部如何管理，检索员都能向读者提供准确摘要。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>将新知识编码进独立 memory model，LLM 参数全程冻结，从根本上规避灾难性遗忘问题</li>
+  <li>推理时检索成本与语料库大小无关，相比传统 RAG 可扩展性更强</li>
+  <li>无需访问 LLM 权重或输出 logits，可 plug-and-play 接入开源与闭源 LLM</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：在 BrowseComp-Plus、NarrativeQA 和 MuSiQue 三个基准上，MeMo 相比现有方法在多种设置下均取得具竞争力的表现，尤其在检索噪声鲁棒性方面表现突出。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15156v1]]</p>
+
+<hr/>
+
+<h4>SDAR：门控蒸馏让 Agent RL 训练兼顾稳定性与密集监督有效性</h4>
+<ul>
+  <li><b>信号源</b>：（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15155v1">SDAR: Self-Distilled Agentic Reinforcement Learning with Gated On-Policy Distillation</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b>：Agent 后训练长期面临一个两难：纯 RL 奖励信号稀疏、轨迹级反馈延迟；直接蒸馏 teacher 信号又会在 teacher 犯错时污染训练。SDAR 的 sigmoid 门控类似于一位导师"有条件地发言"——只在自己有把握时才传递梯度，这标志着 agent 后训练范式从单一轨迹奖励向混合 token 级蒸馏的实质性演化。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 SDAR（Self-Distilled Agentic Reinforcement Learning），以 GRPO 为主干并将 OPSD 作为门控辅助目标。通过 sigmoid gate 筛选 teacher 认可的正增益 token 强化蒸馏、软化衰减负向拒绝信号。在 Qwen2.5 和 Qwen3 系列上，于 ALFWorld / WebShop / Search-QA 三个多轮 agent 基准上较 GRPO 分别提升 +9.4% / +10.2% / +7.0%，同时避免了 naive GRPO+OPSD 混合的训练不稳定性。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：SDAR 以 GRPO 作为主要优化骨架，将 On-Policy Self-Distillation（OPSD）设计为门控辅助目标。Teacher 分支接收包含 privileged context（如技能库）的增广输入，生成 token 级指导信号；student 分支通过 detached token-level gap 计算 sigmoid gate 值，决定每个 token 的蒸馏权重，在多轮交互中实现稳定的密集监督。</li>
+  <li><b>技术细节</b>：对 teacher log-prob 高于 student 的正增益 token，gate 值接近 1，强化知识蒸馏；对因技能检索或利用不完善导致 teacher 给出 rejection 的负向 token，gate 值软化趋近 0，避免错误信号污染训练——类似于给蒸馏损失加了一个"置信度滤波器"，只在老师有把握时才传递梯度。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 sigmoid 门控机制，对 teacher 认可的正增益 token 增强蒸馏，对负向 rejection 软化衰减，解决 OPSD 在多轮场景中的不稳定问题</li>
+  <li>在 Qwen2.5 和 Qwen3 系列上，SDAR 较 GRPO 在 ALFWorld 提升 +9.4%、WebShop-Acc 提升 +10.2%、Search-QA 提升 +7.0%</li>
+  <li>在不同模型规模下均优于 RL+OPSD 混合基线，避免了 naive GRPO+OPSD 的训练不稳定性</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15155v1]]</p>
+
+<hr/>
+
+<h4>SRT：让 LLM 用自生成的回忆链替代外部记忆模块，多轮对话 F1 提升 4.7%</h4>
+<ul>
+  <li><b>信号源</b>：（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15102v1">Self-Recall Thinking for Long-Context Multi-Turn Dialogue</a></li>
+</ul>
+<callout emoji="🧪">
+  <p><b>Our Insights</b>：外部记忆检索模块的核心代价是 IO 延迟和额外系统复杂性；而粗暴地截断历史会损失关键上下文。SRT 将检索这一行为内化为模型自身推理链的一部分，让 LLM 先"圈出"相关历史片段再作答——类似于考试时先在草稿纸上标出题干关键词，而非每次都重读整份卷子。这个方向的深层问题是：内化的记忆选择能否在极长对话中保持准确性？</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 Self-Recall Thinking（SRT）框架，通过依赖构建、能力初始化与推理优化三步流程，让 LLM 在多轮对话中生成显式的自回忆链（self-recall chains），选择性回忆关键历史轮次，无需任何外部记忆模块。在多个多轮对话数据集上 F1 提升 4.7%，端到端延迟降低 14.7%。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：SRT 分三阶段：（1）Dependency Construction：从对话数据中自动生成 self-recall chains，标注跨轮依赖关系；（2）Capability Initialization：通过监督训练使模型具备生成 recall token 推理链的能力；（3）Reasoning Improvement：使用可验证奖励（verifiable rewards）对回忆准确性与最终答案正确性进行强化优化。</li>
+  <li><b>技术细节</b>：推理阶段模型不处理完整历史，而是先生成一组 recall token 指向最相关的历史轮次，再基于这些轮次生成回复——类似于阅读长文时先用荧光笔标出关键段落再作答，而不是每次都重读全文。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>SRT 通过生成自回忆链显式标注历史依赖轮次，使模型推理时无需处理完整对话历史</li>
+  <li>在多个多轮对话数据集上，SRT 相较先前方法 F1 提升 4.7%，端到端延迟降低 14.7%</li>
+  <li>可验证奖励信号用于强化回忆准确性与推理正确性，完全替代外部摘要或检索模块</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：SRT 在多个多轮对话基准上超越现有 SOTA，F1 提升 4.7%，端到端延迟降低 14.7%，兼顾推理效率与上下文一致性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15102v1]]</p>
+
+<hr/>
+
+<h4>DDC：耦合采样广度与深度的 Inference-Time Scaling 框架，token 消耗降低 10 倍</h4>
+<ul>
+  <li><b>信号源</b>：（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15100v1">Dual-Dimensional Consistency for Efficient Inference-Time Scaling</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>Our Insights</b>：现有 inference-time scaling 策略将"采多少条路径"（width）和"每条走多深"（depth）视为独立旋钮分别调节，本质上是用割裂的局部最优凑全局结果。DDC 将两者耦合为统一的质量信号——这揭示出一个更深的问题：推理计算的分配不应该是静态超参，而应该是随问题难度和当前推理状态动态协商的资源调度决策。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 Dual-Dimensional Consistency（DDC）框架，将 Confidence-Weighted Bayesian 协议与 Trend-Aware Stratified Pruning 结合，同时优化 inference-time scaling 的 sampling width 和 depth 两个维度。在五个 benchmark 上 token 消耗降低 10 倍以上，同时保持或超越强基线准确率，并有效过滤 hallucination，避免过早截断复杂但有效的推理链。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：DDC 由两个核心组件构成：Confidence-Weighted Bayesian 协议负责在 width 维度聚合多条推理路径的置信度信号，引导共识形成；Trend-Aware Stratified Pruning 负责在 depth 维度动态识别推理链的质量趋势，对低质量链实施提前终止，同时保护仍在收敛的有效链。</li>
+  <li><b>技术细节</b>：Confidence-Weighted Bayesian 协议通过对每条采样路径赋以置信度权重更新后验分布，抑制多数投票中 hallucination 相互强化的风险。Trend-Aware Stratified Pruning 监测每条推理链在生成过程中的质量趋势（而非仅看当前步骤），将链按趋势分层，对明显下滑的链及早剪枝——类似于在马拉松中根据选手的配速曲线而非瞬时速度决定是否继续跟跑。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 DDC 框架，耦合 sampling width（Confidence-Weighted Bayesian 共识）与 depth（Trend-Aware Stratified Pruning）两个维度</li>
+  <li>在五个 benchmark 上 token 消耗降低超 10 倍，准确率持平或优于强基线</li>
+  <li>有效过滤 hallucination，同时避免过早截断复杂但有效的推理链</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15100v1]]</p>
+
+<hr/>
+
+<h4>CAST：从历史工具调用轨迹提炼经验画像，让 LLM 自适应调整 Tool Use 推理深度</h4>
+<ul>
+  <li><b>信号源</b>：（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15041v1">CAST: Case-Based Agentic Scaffolding for Tool Use via Reinforcement Learning</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>Our Insights</b>：Tool use 优化长期依赖"给更多 demonstration"的路线，本质上是让模型记住样例输出而非理解任务结构。CAST 将优化方向切换为"结构化经验萃取"——从历史轨迹中提炼复杂度画像和失败画像，再通过 RL 奖励信号将这些元知识固化到模型行为中。这揭示出一个更深的问题：当工具调用场景越来越多样化，模型需要的不是更多样例，而是能泛化的经验规律。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 CAST 框架，将历史工具调用轨迹作为结构化 case，分别提取复杂度画像（估计最优推理深度）与失败画像（预测结构性崩溃点），通过细粒度 reward 设计和自适应推理策略在 reinforcement learning 中内化 case-based 知识。在 BFCLv2 和 ToolBench 上整体执行准确率最高提升 5.85 个百分点，平均推理长度减少 26%，schema 结构性错误显著降低。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：CAST 采用 case-based reasoning 视角，将工具调用历史轨迹结构化为 case 库，分别提取复杂度画像与失败画像，转化为 RL 训练中的细粒度 reward，驱动模型自主习得自适应推理策略，推理时无需显式检索 case。</li>
+  <li><b>技术细节</b>：复杂度画像根据历史轨迹对任务难度聚类，指导模型在简单任务上减少不必要的链式推理；失败画像统计结构性错误的高发模式（如参数缺失、类型不匹配），并映射到对应的惩罚 reward——整体机制类似于外科医生建立"术中并发症处置手册"，提炼风险模式而非背诵每台手术。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>CAST 从历史执行轨迹中提取复杂度画像和失败画像，作为 RL 训练的 case-derived 信号</li>
+  <li>细粒度 reward 设计使模型在 BFCLv2 和 ToolBench 上整体执行准确率最高提升 5.85 个百分点</li>
+  <li>自适应推理机制将平均推理长度压缩 26%，显著减少 schema 结构性错误</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15041v1]]</p>
+<h3 id="research-multimodal">多模态智能 (Multimodal Intelligence)</h3>
+
+<h4>ATLAS：用单一"功能 token"统一 agentic 操作与 latent 视觉推理</h4>
+<ul>
+  <li><b>信号源</b>：全球学术机构（arxiv:2605.15198v1）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15198v1">ATLAS: Agentic Tool-integrated Latent Anchored Reasoning with Functional Tokens</a></li>
+</ul>
+<callout emoji="🧠">
+  <p><b>Our Insights</b>：视觉推理中"思考"与"行动"长期被视为需要不同系统承载的两件事——ATLAS 用同一个词表 token 把它们统一起来，类似于用同一种自然语言既能内心独白也能发号施令，而不再需要两套语言体系。这个架构选择的更深含义是：agentic 能力和 latent 推理的边界或许是人为划定的，而非认知上必然的。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>ATLAS 在标准 VLM 词表中引入离散"功能 token"，每个 token 与预绑定的视觉操作（如裁剪、缩放、注意力聚焦）绑定，生成后即触发对应操作并将输出折叠回 context，而非展开为图像 token 序列——外表是一个词，展开后是完整执行逻辑。配套的 Latent-Anchored GRPO（LA-GRPO）在 GRPO 训练目标上追加静态加权辅助损失，专门强化功能 token 的稀疏梯度信号，确保 RL 训练稳定收敛，全程无需修改模型架构或推理逻辑。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：在 VLM tokenizer 词表中注册若干功能 token，经标准自回归解码生成后触发预绑定视觉操作，输出折叠回 context；整体训练复用 SFT + RL（GRPO），零架构修改。</li>
+  <li><b>技术细节</b>：LA-GRPO 在 GRPO 基础上为功能 token 额外计算一路静态加权辅助梯度，防止低频 token 在 RL 中被边缘化；功能 token 的视觉操作绑定类似程序宏（macro）——外表单词，展开后为完整逻辑块。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>功能 token 机制使单一离散 token 同时承担 agentic 操作与 latent 视觉推理，无需视觉监督信号</li>
+  <li>LA-GRPO 通过静态加权辅助目标锚定功能 token，解决 RL 训练中稀疏梯度导致的不稳定问题</li>
+  <li>ATLAS 在多个视觉推理 benchmark 上取得领先性能，保持可解释性，完全兼容标准自回归训练范式</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：ATLAS 通过词表扩展而非架构改造，打通了 agentic 与 latent 视觉推理两条技术路线，为 VLM 在无视觉监督场景下的推理能力提升提供了低成本路径。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15198v1]]</p>
+
+<hr/>
+
+<h4>VLM 的"时空错位"缺陷：MBZUAI 用印度文化文物 benchmark TAB-VLM 揭示模型时间推理盲区</h4>
+<ul>
+  <li><b>信号源</b>：MBZUAI（arxiv:2605.15071v1）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15071v1">TAB-VLM: Temporal Anachronism Benchmark for Vision-Language Models</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>Our Insights</b>：这项工作揭示的不只是"文化覆盖不足"的老问题，而是一个更深层的认知缺陷：模型缺乏真正的时间轴概念，只能用"现在"的框架去理解"过去"的物品——就像让一个只熟悉现代建筑的人去判断石器时代的工具。这说明多模态模型的"理解"本质上是模式匹配而非历史推理。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>MBZUAI 构建 TAB-VLM benchmark，收录横跨史前至现代的 1600 件印度文化文物图像，设计 600 道多选题、覆盖六类时间推理场景（材料鉴定、年代定位、文化框架识别等），系统评测 10 个主流 VLM 对历史文物的时间推理能力。结果显示最优模型 GPT-5.2 整体准确率仅 58.7%，且性能差距在不同架构与规模间持续存在，揭示 cultural anachronism 是当前视觉 AI 系统的系统性局限。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：构建 TAB-VLM benchmark，1600 件印度文化文物图像 + 600 道六类多选题，针对性检测非西方、非现代视觉文化的欠代表性问题。</li>
+  <li><b>技术细节</b>：核心挑战在于要求模型识别文物所属历史时期并拒绝用现代或西方框架错误解读——benchmark 设计专门针对训练数据中 cultural anachronism 的系统性偏差。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 cultural anachronism 概念：VLM 倾向用时代错误框架解读历史文物，横跨史前至现代的 1600 件印度文化文物全覆盖</li>
+  <li>构建 TAB-VLM benchmark，600 道题覆盖六类时间推理场景，系统评测 10 个 SOTA 模型</li>
+  <li>最优模型 GPT-5.2 整体准确率仅 58.7%，且性能差距在不同架构与规模间持续存在</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：TAB-VLM 提供了一个可复现的评测框架，将"文化多样性覆盖"问题具象化为可量化的时间推理能力缺口，指向多模态模型在非西方历史语境下泛化能力的边界。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15071v1]]</p>
+
+<hr/>
+
+<h4>SpeakerLLM：将说话人验证从"黑箱打分"升级为有证据链的自然语言推理</h4>
+<ul>
+  <li><b>信号源</b>：全球学术机构（arxiv:2605.15044v1）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15044v1">SpeakerLLM: Speaker Verification and Understanding with Large Language Models</a></li>
+</ul>
+<callout emoji="📚">
+  <p><b>Our Insights</b>：传统说话人验证系统的输出是一个 0/1 判决，就像法官只宣布有罪无罪却不给任何理由；SpeakerLLM 把判决过程变成了一份有物证、有推理链的侦探报告。这一范式转变的深层意义是：可解释性不再是"好有最好"的附加项，而是让音频 AI 真正进入高风险场景（如司法取证、安全认证）的前提条件。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>SpeakerLLM 以 LLM 为骨干，引入分层说话人 tokenizer：utterance-level embedding 编码全局身份与画像信息，frame-level feature 保留细粒度声学描述符，两者共同馈入 LLM。验证推理任务通过 decision-composition policy 将录音条件、说话人 profile 证据和最终 same-or-different 决策组织为有序推理 trace，支持说话人画像、录音条件分析、utterance 对比及结构化验证推理四类任务，最终实现"先陈述物证、再整合画像、最后给出有据可查结论"的侦探式推理流程。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：分层说话人 tokenizer 分别编码 utterance 级身份摘要与 frame 级细粒度声学描述符；decision-composition policy 构建结构化推理 trace，将证据层次与最终决策分离。</li>
+  <li><b>技术细节</b>：推理 trace 的结构类似侦探案件报告——物证（声学特征、录音环境）先于人物画像（身份特征），最后输出有据可查的结论；verification-reasoning targets 指导 LLM 生成符合 schema 的决策链。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>分层说话人 tokenizer 同时编码 utterance 级身份摘要与 frame 级细粒度声学描述符，兼顾全局与局部信息</li>
+  <li>decision-composition policy 将 profile 级证据与最终 same-or-different 决策分离，形成结构化推理 trace</li>
+  <li>SpeakerLLM-Base 在说话人画像和录音条件理解上优于通用 audio-LLM；SpeakerLLM-VR 保持强判决准确率同时产出可解释决策链</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：SpeakerLLM 标志着说话人验证从"给结论"向"给论证"的范式演进；作者计划开源元数据增强的监督数据集与 target 构建代码，具备较强的社区复现价值。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15044v1]]</p>
+
+<hr/>
+
+<h4>EPFL EverAnimate：用"持久记忆锚点"机制解决 90 秒长视频人体动画的时序漂移问题</h4>
+<ul>
+  <li><b>信号源</b>：EPFL（arxiv:2605.15042v1）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15042v1">EverAnimate: Long-Duration Human Video Generation with Persistent Latent Propagation</a></li>
+</ul>
+<callout emoji="🧪">
+  <p><b>Our Insights</b>：长视频生成中的 drift 问题类似于手抄长文时笔迹逐渐走样——每次 chunk 生成都在前一步的偏差上累积误差。EverAnimate 的核心洞见是：解决长时序一致性的关键不在于扩大模型容量，而在于设计显式的"记忆恢复"机制。这一思路对整个长视频生成领域有普适借鉴意义。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>EverAnimate 是一个针对长时域人体动画生成的 post-training 框架，仅需轻量 LoRA 微调。核心包含两个机制：Persistent Latent Propagation 在 latent 空间跨 chunk 传播身份与运动信息，维护上下文记忆；Restorative Flow Matching 在采样阶段对 flow 速度场施加修正项，将漂移的生成路径隐式拉回与参考帧一致的流形——类似导航系统的"重新校准"。在 90 秒超长动画上，相比 SOTA 方法 PSNR/SSIM 提升 15%/15%，LPIPS/FID 下降 32%/27%。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：Persistent Latent Propagation 在每个 chunk 间维护并传递 latent context memory，确保角色外观与运动一致性；Restorative Flow Matching 在 flow 采样阶段引入速度修正项，将生成路径锚定到参考帧。整体只需 LoRA 微调，无需全量重训练。</li>
+  <li><b>技术细节</b>：Restorative Flow Matching 的修正项作用于 flow matching 的速度估计而非分数函数，类比 diffusion guidance 但针对连续流形；与传统 chunk 式生成相比，引入了跨 chunk 的显式记忆传递通路。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>Persistent Latent Propagation 在 latent 空间跨 chunk 传播身份与运动信息，缓解时序遗忘</li>
+  <li>Restorative Flow Matching 通过速度场修正引入隐式还原目标，提升 chunk 内保真度</li>
+  <li>仅用轻量 LoRA 微调，90 秒动画上 PSNR/SSIM 提升 15%/15%，LPIPS/FID 下降 32%/27%</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：EverAnimate 以极低的参数开销（LoRA）在超长视频生成上实现了显著的质量提升，验证了"显式记忆恢复"作为 post-training 补丁的可行性，为工业界低成本升级现有视频生成系统提供了参考路径。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15042v1]]</p>
+
+<hr/>
+
+<h4>UW 提出 RefDecoder：通过参考注意力机制补齐视频 VAE 解码器的细节还原能力</h4>
+<ul>
+  <li><b>信号源</b>：University of Washington（arxiv:2605.15196v1）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15196v1">RefDecoder: Reference-Conditioned Video VAE Decoding with Attention</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b>：现有视频生成流水线中"去噪重、解码轻"的不对称设计，犹如精心排练后却用廉价音响放音——细节在最后一步白白丢失。RefDecoder 指出了一个长期被忽视的架构债：解码器作为"信息还原者"与去噪网络拥有同等地位，而非附属模块。这一视角或将推动业界重新评估 VAE 解码器在整体视频生成质量中的权重。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>UW 提出 RefDecoder，以 reference attention 机制为核心：将参考图像通过轻量 image encoder 映射为高维细节 token，在视频 VAE 解码器每个上采样阶段与去噪后的视频 latent token 协同处理，弥补传统 latent diffusion model 中解码器无条件化的架构缺陷。在 Inter4K、WebVid、Large Motion 等基准上重建 PSNR 最高提升 +2.1dB，在 Wan 2.1 和 VideoVAE+ 两种 backbone 上均验证有效，可即插即用替换现有 I2V 系统解码器，无需 fine-tuning。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：参考图像经轻量 image encoder 编码为高维 token，在解码器每个上采样阶段通过 reference attention 与视频 latent token 联合处理，让解码器在每一步都能"回头看"参考帧高频细节。</li>
+  <li><b>技术细节</b>：传统 LDM 解码器对输入一视同仁，不感知原始参考帧——就像翻译官只拿到语义大纲而不知原文具体措辞。RefDecoder 的 reference attention 在空间结构上施加显式对齐约束，从而在解码侧恢复高频细节。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>在 Inter4K、WebVid、Large Motion 基准上重建 PSNR 最高提升 +2.1dB，验证于 Wan 2.1 和 VideoVAE+ 两种 backbone</li>
+  <li>可即插即用替换现有 I2V 系统解码器，在 VBench I2V 基准上主体一致性、背景一致性和综合质量全面提升</li>
+  <li>泛化至风格迁移、视频编辑等多类视觉生成任务，具备较强通用性</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：RefDecoder 以无需 fine-tuning 的即插即用方式提升现有视频生成系统的解码质量，揭示了 VAE 解码器在视频生成流水线中长期被低估的信息还原潜力。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15196v1]]</p>
+
+<hr/>
+
+<h4>DiffusionOPD：在线策略蒸馏框架统一扩散模型多任务 RL 训练，超越 multi-reward RL 基线</h4>
+<ul>
+  <li><b>信号源</b>：全球学术机构（arxiv:2605.15055v1）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15055v1">DiffusionOPD: Online Policy Distillation for Multi-Task Diffusion Model Training</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b>：让扩散模型同时响应多个 RL 奖励信号而不互相干扰，是图像生成对齐的核心难题。DiffusionOPD 的类比是教育学上的"先培养专科老师、再让通才学生逐步吸收"，而非一开始就让学生同时应付所有考试。更值得关注的是其理论贡献：将策略蒸馏从离散 token 扩展到连续扩散过程，代表了"多任务 RL 对齐"范式从语言模型向图像生成系统迁移的一次系统性推进。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>DiffusionOPD 提出基于 Online Policy Distillation（OPD）的 diffusion 模型多任务训练范式：第一阶段针对每个任务独立训练专属 teacher（单任务 RL 优化）；第二阶段沿 student 自身 rollout 轨迹将多个 teacher 同时蒸馏为统一 student，从而解耦单任务探索与多任务集成。框架在连续状态 Markov 过程下推导出逐步 KL 闭合解目标，统一 SDE 与 ODE 精化路径，理论与实验均表明 analytic gradient 相比 PPO-style policy gradient 具备更低方差和更强泛化性，在多 benchmark 上超越 multi-reward RL 与 cascade RL 基线。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：两阶段流程——先独立训练各任务 teacher，再通过 Online Policy Distillation 沿 student rollout 轨迹将多 teacher 能力蒸馏到单一 student；连续状态 Markov 过程下推导逐步 KL 闭合解，统一 SDE/ODE 两条精化路径。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>将 OPD 框架从离散 token 推广到连续状态 Markov 过程，推导出逐步 KL 闭合解，统一 SDE/ODE 两条精化路径</li>
+  <li>理论与实验均表明 analytic gradient 相比 PPO-style policy gradient 具备更低方差和更强泛化性</li>
+  <li>DiffusionOPD 在训练效率与最终性能上一致优于 multi-reward RL 和 cascade RL 基线，达到 state-of-the-art</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：DiffusionOPD 为扩散模型多任务 RL 对齐提供了兼具理论严格性与工程可行性的框架，其从离散到连续的泛化路径为后续将语言模型对齐技术迁移到生成模型奠定了理论基础。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15055v1]]</p>
+<h3 id="research-world">世界模型 (World Model)</h3>
+
+<h4>VGGT-Edit：原生 3D 特征空间中的文本条件场景编辑，摆脱 2D 代理依赖</h4>
+<ul>
+  <li><b>信号源</b>：全球学术机构（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15186v1">VGGT-Edit: Feed-Forward 3D Scene Editing with Text Conditions</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b>：3D 场景编辑领域长期借道 2D 图像再投影回 3D，就像把平面地图折成立体模型——天然有信息损耗。VGGT-Edit 在 3D 特征空间中直接预测几何残差，标志着这条绕路终结：编辑的"母语"从 2D 变成了 3D，多视角一致性才能真正有保证。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>VGGT-Edit 在 feed-forward 3D 重建骨架 VGGT 上引入文本条件编辑能力，通过 depth-synchronized text injection 将语义指令与场景深度/位姿空间对齐，再由 residual transformation head 直接预测 3D 几何位移，最终以多项损失联合监督实现高保真编辑。研究同步构建 DeltaScene Dataset，经 3D agreement filtering 保证训练数据质量，整体推理速度达到近实时。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：在 VGGT feed-forward 骨架上串联 depth-synchronized text injection 模块与 residual transformation head，前者将文本语义"投影"到每个体素局部坐标系，后者以残差方式预测几何位移，背景区域残差自然趋近零，无需额外掩码。</li>
+  <li><b>技术细节</b>：residual transformation head 类似图像编辑中的差值预测——模型只需学习"编辑前后的几何差异"而非完整输出；depth-synchronized injection 则让语言指令具备空间感知能力，确保多视角下同一语义指令落在一致的 3D 位置。联合损失包含 geometric accuracy 与 cross-view consistency 两项。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 depth-synchronized text injection，将语义指令与 3D 骨架空间姿态对齐，解决多视角指令对齐问题</li>
+  <li>residual transformation head 直接预测场景几何位移，在保留背景稳定性的同时完成结构变形</li>
+  <li>构建 DeltaScene Dataset 大规模数据集，通过 3D agreement filtering 保证训练数据质量，实验显示明显优于 2D-lifting 基线</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：VGGT-Edit 在纹理清晰度和多视角一致性上大幅超越 2D-lifting 基线方法，同时实现近实时推理速度。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15186v1]]</p>
+
+<hr/>
+
+<h4>PDI-Bench：用投影几何残差给视频生成模型装上"量角器"</h4>
+<ul>
+  <li><b>信号源</b>：全球学术机构（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15185v1">PDI-Bench: Benchmarking Perspective Distortion in Video Generation</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>Our Insights</b>：视频生成的评测长期停留在"好不好看"的感知层，而物理世界的投影几何是有数学约束的——近大远小、刚体各部分相对距离不变。PDI-Bench 将这套几何规律量化为可计算分数，相当于把"评委打分"升级为"物理合规性审计"，对未来世界模型的几何推理能力提出了更硬的标准。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>PDI-Bench（Perspective Distortion Index）提出一套针对视频生成模型的几何一致性定量评测框架：利用 SAM 2 分割目标、CoTracker3 追踪点轨迹、MegaSaM 单目重建将 2D 观测提升至 3D 世界坐标，随后计算 scale-depth alignment、3D motion consistency、3D structural rigidity 三类投影几何残差并聚合为 PDI 分数。配套发布 PDI-Dataset 以专项压测几何一致性约束。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：三步流水线——(1) SAM 2 分割 + CoTracker3 点跟踪获取目标中心观测；(2) MegaSaM 单目重建将 2D 观测提升至 3D 世界坐标；(3) 基于投影几何计算三类残差并聚合为 PDI 分数。</li>
+  <li><b>技术细节</b>：scale-depth alignment 利用透视缩放规律（近大远小）交叉验证深度图自洽性；3D motion consistency 检查追踪点轨迹在 3D 重建空间中的帧间连贯性；rigidity 约束检查刚体各部分是否保持相对距离不变，三项合力诊断感知指标无法触及的几何失败模式。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 PDI-Bench 框架，从生成视频中提取 scale-depth alignment、3D motion consistency、3D structural rigidity 三类几何残差指标</li>
+  <li>构建 PDI-Dataset，覆盖多种场景以专项压测几何一致性约束</li>
+  <li>在主流视频生成模型上发现常见感知指标无法捕捉的几何特定失败模式</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：PDI-Bench 在当前 SOTA 视频生成模型上揭示了多种感知指标未能捕获的几何一致性缺陷，验证了该框架作为物理世界模型进展诊断工具的有效性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15185v1]]</p>
+
+<hr/>
+
+<h4>清华大学提出 CLOVER，闭环自蒸馏让自动驾驶规划训练目标与评测指标真正对齐</h4>
+<ul>
+  <li><b>信号源</b>：清华大学（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15120v1">CLOVER: Closed-Loop Planning via Evaluator-Filtered Self-Distillation for Autonomous Driving</a></li>
+</ul>
+<callout emoji="🧠">
+  <p><b>Our Insights</b>：端到端自动驾驶规划的核心困境不是模型能力，而是训练信号与评测维度的结构性错位——单条专家轨迹模仿无法覆盖安全、舒适等多维度目标。CLOVER 把这个隐性偏差显式化，用评估器子分数直接反向蒸馏，类似于让考生不再背范文而是读懂评分细则后针对性练习，这是规划器优化范式的一次实质性转变。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>清华大学提出 CLOVER（Closed-Loop Planning via Evaluator-Filtered Self-Distillation），针对端到端自动驾驶规划中训练-评估不匹配问题，采用 generator-scorer 双模块架构：generator 生成多样候选轨迹，scorer 预测规划评估指标子分数以完成推理阶段排序。训练分两阶段——首先用评估器过滤的伪专家轨迹扩展候选覆盖，再通过保守闭环自蒸馏将真实评估器子分数蒸馏到 scorer，并用 top-k 和 vector-Pareto 目标精炼 generator。在 NAVSIM 基准上达到 94.5 PDMS 和 90.4 EPDMS。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：轻量 generator-scorer 双模块；generator 负责多样候选轨迹生成，scorer 学习预测评估器子分数；两阶段训练——集合级伪专家轨迹覆盖监督 + 闭环自蒸馏精炼，配合 stability regularization 约束更新幅度。</li>
+  <li><b>技术细节</b>：保守闭环自蒸馏的关键在于理论保证——当 scorer 选出的目标在真实评估器下整体富集（enriched）且更新幅度受控时，即使 scorer 不完美，generator 仍能稳步收敛；类似于"不完美老师只要整体选题质量高于平均且每步更新有节制，学生依然能持续进步"。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 evaluator-filtered 伪专家轨迹构建方法，突破单轨迹模仿的候选集覆盖局限</li>
+  <li>设计保守闭环自蒸馏机制，以真实评估器子分数训练 scorer，再用 top-k 和 vector-Pareto 目标精炼 generator</li>
+  <li>在 NAVSIM 上达到 94.5 PDMS / 90.4 EPDMS，navHard 子集达 48.3 EPDMS，nuScenes 开环评测 L2 误差和碰撞率最优</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15120v1]]</p>
+
+<hr/>
+
+<h4>HandITL：人机控制权平滑移交，让 VLA 灵巧手操作从抖动中恢复</h4>
+<ul>
+  <li><b>信号源</b>：全球学术机构（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15157v1">HandITL: Hand-in-the-Loop Intervention for Dexterous Manipulation</a></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>Our Insights</b>：VLA 落地灵巧操作的瓶颈往往不在模型智能，而在人机交互通道的连续性——高维关节空间的瞬时控制权切换会产生不可控抖动，这是纯软件问题。HandITL 将其转化为信号混合工程问题，类似飞行员与自动驾驶仪之间的平滑移交，揭示了 Embodied AI 工程化落地中一个常被忽视的基础设施层问题。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>HandITL（Hand-in-the-Loop）针对 VLA 模型在高自由度灵巧手操作中人工接管产生的"gesture jumps"问题，将人类矫正意图与自主策略执行在关节空间进行连续混合，避免硬切换导致的高维阶跃跳变。收集的干预数据随后用于 VLA 策略的 Interactive Imitation Learning 微调，最终接管抖动减少 99.8%，抓取失败减少 87.5%，经 HandITL 干预数据微调的策略在三项长时域任务上平均优于标准遥操作数据训练策略 19%。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：HandITL 在接管窗口内将遥操作信号逐步增权、策略信号逐步减权，形成连续混合轨迹；收集干预数据用于 Interactive Imitation Learning（IIL）微调，构建"干预—学习"闭环。</li>
+  <li><b>技术细节</b>：混合过程类似音频淡入淡出——接管开始时遥操作权重从 0 渐增至 1，策略权重同步递减，使关节运动轨迹保持 C0 连续；这一设计在不修改 VLA 架构的前提下，仅通过接口层工程即可消除 gesture jump，适配任意下游策略。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>HandITL 将人类遥操作意图与 VLA 策略输出平滑混合，相比直接接管抖动减少 99.8%，抓取失败率降低 87.5%</li>
+  <li>用 HandITL 干预数据进行策略微调，在三项长时域灵巧操作任务上平均超越标准遥操作训练策略 19%</li>
+  <li>在双臂协作、工具使用、细粒度长时域操作任务上均得到验证</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15157v1]]</p>
+
+<hr/>
+
+<h4>CoCo-InEKF：用连续接触协方差替代二值开关，双足机器人状态估计感知"半接触"</h4>
+<ul>
+  <li><b>信号源</b>：全球学术机构（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15122v1">CoCo-InEKF: Continuous Contact-Covariance Invariant Extended Kalman Filter for Legged Robot State Estimation</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b>：传统滤波器把接触状态建模为布尔值，就像用开关灯表达光线强弱——粗糙且丢失信息。CoCo-InEKF 改用神经网络预测的连续协方差矩阵来表达"对接触的置信度"，本质上是把硬规则替换为数据驱动的不确定性建模，这一范式转变对任何依赖接触检测的机器人系统都有参考价值。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>CoCo-InEKF 在可微分不变扩展卡尔曼滤波（InEKF）框架上，将传统二值接触状态替换为轻量神经网络端到端预测的接触速度协方差矩阵。协方差大小动态反映接触可信度，涵盖从稳固接触到方向性打滑的连续中间状态，滤波器自适应加权腿部里程计测量。整个系统以状态误差损失端到端训练，无需人工标注接触真值，并在双足机器人仿真与真机舞蹈等复杂运动上验证鲁棒性。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：在 InEKF 测量更新步骤中，以神经网络预测的接触速度协方差矩阵替代二值硬判决，协方差直接嵌入滤波器作为测量噪声权重；同步提出自动化接触候选点选取流程，降低工程调参依赖。</li>
+  <li><b>技术细节</b>：轻量 MLP 接收关节状态与运动信息，输出每个候选接触点的速度协方差矩阵；以端到端状态误差损失反向传播优化，类似于让滤波器"学会怀疑自己的传感器"——协方差越大表示对该接触测量越不信任，滤波器自动降权。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出以连续接触速度协方差替代二值接触状态，动态调制接触置信度，涵盖从稳固接触到方向性打滑的各类情形</li>
+  <li>轻量神经网络端到端训练，使用状态误差损失，无需人工标注接触真值标签</li>
+  <li>双足机器人实验表明线速度估计精度与效率折中优于基线，并在真机舞蹈等复杂运动中验证鲁棒性</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：在双足机器人上，CoCo-InEKF 在线速度估计精度和滤波一致性两项指标上均优于二值接触基线方法，并成功泛化到真机舞蹈与复杂地面交互等高动态场景。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15122v1]]</p>
+
+<hr/>
+
+<h4>Articraft：LLM 充当建模程序员，用程序化生成解锁铰接式 3D 资产的规模化供给</h4>
+<ul>
+  <li><b>信号源</b>：全球学术机构（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15187v1">Articraft: Automated Articulated 3D Asset Generation via LLM-based Agentic System</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>Our Insights</b>：铰接式 3D 资产（带关节的物体，如机械臂、抽屉柜）长期是机器人仿真与 VR 的数据瓶颈，根本原因在于手工建模成本极高且无法规模化。Articraft 把这个问题重新定义为"让 LLM 按规范 API 写建模代码"，通过沙盒反馈闭环驯化 LLM 的代码能力，思路本质上是把 LLM 的泛化代码能力导入一个有约束的领域专用通道——这对其他稀缺结构化数据生成场景同样有方法论借鉴价值。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Articraft 是一个基于 LLM 的 agentic 系统，将铰接式 3D 资产生成转化为程序生成任务：LLM 调用领域特定 SDK 定义零件、组合几何体、指定关节并编写测试，受限沙盒 harness 自动执行代码、验证资产合法性并返回结构化错误，形成"写代码—验证—反馈"的 agentic 循环。基于该系统构建了含 10K+ 铰接资产、245 类别的 Articraft-10K 数据集，可直接用于机器人仿真与 VR 下游任务。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：Articraft agentic 循环由三部分组成——领域特定 SDK（封装 part 定义、geometry 组合、joint 约束等建模原语）、受限沙盒 harness（执行代码并验证合法性）、LLM 迭代修正（根据结构化报错自动修 bug），类似软件 CI/CD 流水线。</li>
+  <li><b>技术细节</b>：SDK 设计屏蔽 URDF 等底层细节，仅暴露高层建模接口，降低 LLM 的调用难度；harness 自动运行 LLM 编写的测试用例，生成结构化错误报告反馈给 LLM；该闭环在不依赖人工标注的前提下实现大规模资产生成，生成质量优于 SOTA 铰接资产生成器和通用代码 agent。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>Articraft 以 program-writing 方式生成铰接 3D 资产，质量优于 SOTA 铰接资产生成器和通用代码 agent</li>
+  <li>设计了领域特定 SDK + 受限沙盒 harness，为 LLM 提供结构化接口与反馈，避免 URDF 文件等复杂细节干扰</li>
+  <li>基于 Articraft 构建 Articraft-10K 数据集，含 10K+ 铰接资产、245 类别，可用于机器人仿真和 VR 下游任务</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15187v1]]</p>
+<h3 id="research-infra">AI infra</h3>
+
+<h4>UC Berkeley 提出 AsyncFC：LLM Function Calling 从同步阻塞升级为异步并发，无需微调</h4>
+<ul>
+  <li><b>信号源</b>：UC Berkeley</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15077v1">AsyncFC: Asynchronous Function Calling for LLM Decoding</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b>：传统 function calling 让 LLM 每次调用工具都要"等待完成再继续"，类似于单线程程序逐行阻塞——AsyncFC 把这一交互改造成类似 JavaScript Promise 的异步 future 模式，揭示了 LLM 本身就具备对"未解析符号占位符"进行推理的隐藏能力，意味着 agent 工具调用的并发化无需重新训练即可实现。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>UC Berkeley 提出 AsyncFC 框架，将 LLM decoding 与 function execution 解耦，允许模型解码与函数执行并行运行，以及多函数间并发执行。AsyncFC 无需对现有模型进行微调或修改，仅在执行层引入异步机制，在标准 function-calling benchmark 及软件工程 benchmark 上均显著降低端到端任务完成时间，同时保持任务准确率不变。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：AsyncFC 是纯执行层（execution-layer）框架，覆盖于现有 LLM 和 function 实现之上。当 LLM 发起 function call 时，不阻塞解码，而是立即返回一个 symbolic future 作为占位符，LLM 继续解码后续内容；function 在后台并行执行，结果就绪后替换 future；当依赖关系允许时，多个 function 可并发执行。</li>
+  <li><b>技术细节</b>：AsyncFC 借鉴编程语言中的 future/promise 机制：函数调用返回一个符号化占位符（symbolic future），LLM 可以像引用已知值一样继续推理链，直到真实结果需要被使用时才做替换——类似于 Python 的 <i>asyncio</i> 或 JavaScript 的 <i>Promise</i>，让 I/O 等待期间 GPU 上的解码不空转。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>AsyncFC 在纯执行层实现异步 function calling，LLM decoding 与 function execution 可重叠，无需微调或修改现有模型与函数实现</li>
+  <li>在标准 function-calling benchmark 及软件工程 benchmark 上，端到端任务完成时间显著降低，任务准确率保持不变</li>
+  <li>实验结果表明 LLM 具备对 symbolic futures（未解析执行结果占位符）进行推理的原生能力</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：AsyncFC 在多个 benchmark 上验证了无需模型改动即可实现 LLM 工具调用并发化的可行性，显著缩短端到端任务完成时间，同时与同步执行保持等价的任务准确率。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15077v1]]</p>
+
+<hr/>
+
+<h4>排队论视角下的 Speculative Decoding：为何高负载时加速效果会衰减</h4>
+<ul>
+  <li><b>信号源</b>：global_academia（独立研究团队）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15051v1">An Interpretable Latency Model for Speculative Decoding in LLM Serving</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>Our Insights</b>：这项工作本质上回答了生产部署中长期被忽视的问题：为何 speculative decoding 在真实 serving 系统中随负载升高加速效果衰减——它把 LLM serving 建模为排队论问题，类似于用交通流量公式预测高速公路拥堵，而不是在空旷测试道路上量油耗，为从实验室基准到生产配置决策的鸿沟架起了桥梁。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>研究团队为 LLM serving 中的 speculative decoding（SD）建立可解释延迟模型，利用 Little's Law 从请求速率推断 effective batch size，并将 per-request 负载分解为 prefill、drafting、verification 三部分，在 vLLM 上广泛实验验证，覆盖不同模型规模、draft length 及 acceptance probability，并将框架延伸至 MoE 模型。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：将 SD serving 延迟拆解为 prefill、drafting、verification 三阶段，每阶段进一步分为 load-independent（固定开销）和 load-dependent（随 batch size 线性增长）两部分；通过 Little's Law（L = λW）将稳态请求速率 λ 映射到 effective batch size，在不直接观测 batch size 的情况下建立端到端延迟预测模型。</li>
+  <li><b>技术细节</b>：模型参数通过在 vLLM 上的系统性 profiling 拟合得到，覆盖 verifier/drafter 大小比、prefill 长度、decode 长度、draft length、acceptance probability 及请求速率等维度。对 MoE 的扩展在 load-dependent 项中引入 expert activation sparsity 系数，反映 token routing 对实际计算量的影响——类似于为稀疏激活网络配置一套"浮动电费"计价体系。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>利用 Little's Law 从可观测请求速率推断 effective batch size，无需直接控制批大小，模型与 vLLM 实测延迟吻合良好</li>
+  <li>揭示 SD 加速随服务器负载增加而衰减的机制：load-dependent 的 verification 成本抵消 drafting 收益</li>
+  <li>将框架扩展至 MoE 模型，sparse expert activation 在不同负载区间显著改变等效服务成本</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：模型在多种配置下准确复现 vLLM 实测延迟曲线，定量刻画了 draft length、acceptance rate 和 verifier-drafter 规模比在不同负载下对加速比的影响，为生产环境 SD 配置优化提供结构化指导框架。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15051v1]]</p>
+
+<hr/>
+
+<h4>Hugging Face 提出量化条件攻击：AWQ / GPTQ / GGUF 均中招，全精度模型量化后激活恶意行为</h4>
+<ul>
+  <li><b>信号源</b>：Hugging Face</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15152v1">Quantization-Conditioned Backdoor Attacks on Large Language Models</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>Our Insights</b>：这项工作揭示了 LLM 量化部署链条中一个此前被低估的安全盲区：模型发布者与使用者在量化工具上的不对称性，使得"看起来干净的模型"可被设计为在用户执行量化时才激活恶意行为——类似于一颗定时炸弹，只有当目标方扣下特定扳机（量化操作）时才爆炸，本质上回答了"量化本身是否构成可利用的攻击面"这一问题，且攻击范围远超此前认知。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Hugging Face 研究者提出首个可对 AWQ、GPTQ、GGUF I-quants 等主流量化方案生效的量化条件攻击：通过向特定 weight block 注入 outlier，诱导量化过程中大量权重被舍入为零，使全精度下看似良性的模型在量化后表现出恶意行为。现有量化条件攻击仅对简单量化方案有效，本攻击首次突破主流复杂量化方案的防御边界，在三种攻击场景与多个 LLM 上评估，成功率显著高于先前方法。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：攻击者在全精度模型权重的特定 block 中注入人工构造的大幅度 outlier，使量化过程（scale 计算基于 outlier 的极端值）将周围大量正常权重压缩至零，从而制造可预测的权重塌陷（weight collapse）。全精度模型行为正常，量化后激活恶意行为，形成"量化条件后门"。</li>
+  <li><b>技术细节</b>：现代量化方法（AWQ / GPTQ / GGUF）通常按 block/group 对权重做 scale 归一化，若 block 内存在极大 outlier，scale 被拉大，其余权重量化后精度极低乃至全部归零。攻击者只需找到敏感 block 并注入合适幅度的 outlier，便可在不影响全精度推理的前提下，对量化后模型植入精确可控的功能性破坏——类似于在液体中加入只在特定温度下反应的隐形催化剂。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 outlier injection 攻击，利用量化方法中大 outlier 导致其他权重被舍入为零的共性特征，在 AWQ、GPTQ、GGUF I-quants 上均成功触发恶意行为</li>
+  <li>现有量化条件攻击仅对简单量化方案有效，本攻击首次突破主流复杂量化方案的防御边界</li>
+  <li>在三种攻击场景与多个 LLM 上评估，成功率显著高于先前方法</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15152v1]]</p>
+<h3 id="research-ai4s">ai4s (AI for Science)</h3>
+
+<h4>首个连续处理变量因果基础模型：in-context learning 直接推断个体治疗响应曲线</h4>
+<ul>
+  <li><b>信号源</b>：arXiv（Sriram Krishnan 等）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15133v1">Causal Foundation Model for Continuous Treatments</a></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>Our Insights</b>：这项工作将因果推断从"为每个任务单独训练模型"转向"元学习一个通用先验并在推理时直接摊销贝叶斯后验"——类似于用预训练语言模型代替针对每道题重新训练的专用解题器，标志着因果推断从任务专属向基础模型范式的演化。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出首个面向连续处理变量的因果基础模型，通过在合成数据先验上训练 transformer，利用 in-context learning 在推理时直接从观测数据中重建个体治疗响应曲线（ITE），无需针对目标任务微调即可达到 SOTA 表现。核心思路是设计专门包含连续处理变量的合成数据生成过程（DGP）先验，构建丰富的因果训练语料，从而将传统马尔可夫链蒙特卡洛推断的计算开销摊销到预训练阶段。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：两阶段流程——（1）设计覆盖连续处理变量的 DGP 先验，合成大量因果观测数据集；（2）在此语料上训练 transformer，推理时接收带有连续处理值和结果的观测样本作为上下文，直接预测任意处理值下的潜在结果。</li>
+  <li><b>技术细节</b>：模型接收一批观测样本（连续处理值 + 结果）作为 context，预测任意处理值下的潜在结果，类似于"看一眼散点图就能画出整条剂量-反应曲线"，无需对每个新数据集重新做后验推断。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>首个针对连续处理变量的因果基础模型，无需额外训练或微调即可泛化到未见任务</li>
+  <li>设计了专门包含连续处理变量的合成 DGP 先验，构建丰富的因果训练语料</li>
+  <li>在个体治疗响应曲线重建任务上超越针对特定任务专门训练的因果模型，达到 SOTA</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：在多个连续处理因果推断基准上，该基础模型超越了专为各任务定制训练的因果模型，验证了元学习范式在连续处理设定下的有效性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15133v1]]</p>
+
+<hr/>
+
+<h4>CMU 提出检索增强多模态框架：34.8% 临床事件仅存于叙述文本，EHR 表格无法独立重建完整时间线</h4>
+<ul>
+  <li><b>信号源</b>：CMU（arXiv 2605.15168）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15168v1">Retrieval-Augmented Multimodal Alignment for Clinical Timeline Reconstruction</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b>：临床文本"知道发生了什么"，EHR 表格"知道确切时间"——该框架揭示两种模态存在大量不可替代的互补信息，本质上回答了医疗 AI 的核心难题：如何从描述性语言中提取出机器可计算的时序结构，而非简单地让语言模型"理解"病历。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>CMU 提出检索增强多模态对齐框架，将非结构化临床叙述文本与结构化 EHR 数据融合，以图式多步流程重建精确临床时间线。框架在 MIMIC-III/IV 的 i2m4 基准测试上，多模态管道在绝对时间戳准确率（AULTC）和时序一致性指标上持续优于单模态文本基线，且研究发现文本中 34.8% 的临床事件在表格记录中完全缺失，说明单靠任一模态都无法构建完整的患者轨迹。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：图式三步流程——从临床叙述中提取锚定事件构建时序骨架；将非核心事件相对定位到骨架上；再通过检索结构化 EHR 行作为外部时间证据，对整体时间线进行绝对时间校准。</li>
+  <li><b>技术细节</b>：系统类似于"先画地图骨架，再用 GPS 锚点校正坐标"——临床叙述提供事件语义和相对顺序，EHR 结构化行提供精确时间戳锚点，两者通过检索匹配融合。使用指令微调大语言模型在 i2b2/i2m4 benchmark 上评估。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>多模态管道在 MIMIC-III/IV 的 i2m4 基准上 AULTC 绝对时间戳准确率和时序一致性指标均优于单模态文本重建，且不损失事件匹配率</li>
+  <li>34.8% 的文本派生临床事件在 EHR 表格记录中完全缺失，两种模态存在大量互补信息</li>
+  <li>图式三步流程将事件提取、相对定位与时间校准解耦，保证各步骤可独立分析与改进</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15168v1]]</p>
+
+<hr/>
+
+<h4>COTCAgent：将统计计算外包给可执行代码，让 LLM 在纵向 EHR 上做无幻觉定量推理</h4>
+<ul>
+  <li><b>信号源</b>：arXiv 2605.15016</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15016v1">COTCAgent: Chain-of-Thought Completion for Clinical Decision Support over Longitudinal EHR</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b>：把统计计算交给可执行代码、把语义判断留给语言模型，这是"工具调用 + 结构化推理流水线"范式在医疗 AI 中的具体实例——揭示的深层问题是：LLM 在定量时序推理上的失败，根源不在于参数规模不足，而在于架构上没有隔离"计算"与"理解"两种本质不同的任务。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 COTCAgent 框架，针对纵向电子健康记录（EHR）的临床决策支持问题，通过 Temporal-Statistics Adapter（TSA）、Chain-of-Thought Completion（COTC）层和有界完成模块三部分解耦统计计算与语言生成。基于 Baichuan-M2 的 COTCAgent 在自建数据集上 Top-1 准确率达 90.47%，在 HealthBench 上达 70.41%，超越现有医疗 Agent 和主流 LLM。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：分层推理框架包含三个核心模块——TSA 将临床分析计划转成可执行代码以标准化趋势统计输出；COTC 层利用症状-趋势-疾病知识库进行加权评分评估疾病风险；有界完成模块通过标准化问询和迭代评分约束结构化证据获取。</li>
+  <li><b>技术细节</b>：TSA 充当"代码翻译器"，把自然语言的分析意图变成可执行代码片段，让统计趋势的输出标准化可验证；COTC 层类似加权投票系统，将症状、趋势、疾病知识库的匹配分数迭代叠加，最终输出风险评估结论。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 COTCAgent 三模块框架，将统计计算、特征匹配和语言生成解耦，降低对复杂多模态输入的依赖</li>
+  <li>TSA 将分析计划转换为可执行代码，规避 LLM 在定量趋势推断上的幻觉问题</li>
+  <li>基于 Baichuan-M2 的 COTCAgent 在自建数据集 Top-1 准确率 90.47%，HealthBench 上 70.41%，超越现有医疗 Agent 和主流 LLM</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15016v1]]</p>
+
+<hr/>
+
+<h4>MIT CSAIL 发布 Croissant Baker：本地优先工具让私有大规模数据集也能纳入 ML 数据治理体系</h4>
+<ul>
+  <li><b>信号源</b>：MIT CSAIL（arXiv 2605.15079）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15079v1">Croissant Baker: Local-First ML Dataset Metadata Generation</a></li>
+</ul>
+<callout emoji="📚">
+  <p><b>Our Insights</b>：将元数据生成从"必须上传至公共平台"搬到本地运行，类似于把图书馆目录编制从"必须去中央馆"变成"可在本馆自主完成"——真正的价值在于打通了受访问控制的敏感医疗数据（如 MIMIC-IV）与标准化数据治理规范之间的工程壁垒，为可复现性研究扫清了合规障碍。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>MIT CSAIL 发布 Croissant Baker，一款本地优先的开源命令行工具，可从数据集目录直接生成符合 Croissant JSON-LD 标准的 ML 数据集 metadata，支持 140+ 数据集，最大规模至 MIMIC-IV（8.86 亿行、374 个 Parquet 文件），与标准 ground truth 的一致性达 97–100%。工具采用模块化 handler 注册表架构，整个流程在本地闭环运行，适配受访问控制的敏感数据仓库。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：本地优先的模块化架构，通过 handler 注册表识别不同格式的数据集文件（CSV、Parquet 等），自动推断字段类型与结构，输出符合 Croissant JSON-LD 规范的 metadata 文件，并内置验证步骤确保合规性。</li>
+  <li><b>技术细节</b>：核心机制类似"数据集的自动目录馆员"——给定一个目录，handler 注册表按文件类型分派对应解析器，提取 schema 与统计信息，再按 Croissant 规范模板填充 JSON-LD 节点，整个流程无需网络连接。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>支持模块化 handler 注册表，可从本地目录直接生成经过验证的 Croissant metadata，无需上传至公共平台</li>
+  <li>在 140+ 数据集上完成评测，最大规模覆盖 MIMIC-IV（886M 行、374 个 Parquet 文件）</li>
+  <li>与生产者编写或标准衍生的 ground truth 对比，跨多领域一致性达 97–100%</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：Croissant Baker 在跨领域的 held-out 数据集对比中达到 97–100% 的 metadata 一致性，并成功处理 MIMIC-IV 等超大规模医疗数据集，验证了工具的实用性与泛化能力。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15079v1]]</p>
+
+<hr/>
+
+<h4>CMU 提出医学逆问题后验不确定性结构化分解：将固有歧义与推断误差显式隔离，暴露隐藏失效模式</h4>
+<ul>
+  <li><b>信号源</b>：CMU（arXiv 2605.15050）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15050v1">Structured Decomposition of Posterior Uncertainty in Deep Generative Models for Linear Inverse Problems</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>Our Insights</b>：将"地图本来就是模糊的"（固有歧义）与"导航软件算错了"（推断误差）混为一谈，会导致对模型失效模式的漏判——这一分解框架的意义不只在于更精准的误差估计，更在于它让医学影像 AI 的可信度评估从"综合指标"走向"分层归因"，这在高风险临床部署中具有实质意义。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>CMU 提出一种结构化分解框架，将深度生成模型在线性逆问题后验推断中的不确定性拆分为"前向算子固有歧义"与"推断估计误差"两部分，通过级联公式支持校准分析，并在加速 MRI 与 EEG 源成像任务上验证。研究发现，仅依赖重建质量指标选模型时，会系统性地遗漏某类失效模式，而不确定性分解能将其暴露。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：对后验分布进行结构化分解——将总后验不确定性拆解为"前向算子固有歧义"（给定观测数据后多解空间的大小）与"推断估计不确定性"（由深度生成模型引入的额外误差），用级联（cascade）公式使两个分量可分别计算和分析。</li>
+  <li><b>技术细节</b>：类比误差分析中的系统误差与随机误差之分——固有歧义类似测量仪器分辨率上限决定的不可减小误差，估计不确定性类似操作引入的随机误差。通过级联公式对两者分别做 simulation-based calibration 检验，判断模型在哪个"层面"失效。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出后验不确定性结构化分解方法，将固有歧义与估计不确定性显式隔离，用级联公式表达</li>
+  <li>在高斯解析后验示例上验证分解正确性，并迁移至加速 MRI 重建任务</li>
+  <li>将校准诊断工具应用于 EEG 源成像，揭示仅依赖重建质量选模型时隐藏的失效模式</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：在 MRI 与 EEG 两类医学逆问题上，分解框架成功暴露了仅用重建质量指标无法发现的模型失效模式，证明校准分析在高风险医疗影像场景中的必要性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15050v1]]</p>
+
+<hr/>
+
+<h4>DeepTokenEEG：0.29M 参数轻量模型以 EEG tokenization 实现阿尔茨海默病早期诊断，特定频段准确率达 100%</h4>
+<ul>
+  <li><b>信号源</b>：arXiv 2605.15009</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.15009v1">DeepTokenEEG: Lightweight EEG Tokenization for Alzheimer's Disease Classification</a></li>
+</ul>
+<callout emoji="🧪">
+  <p><b>Our Insights</b>：将 NLP 中的 tokenization 思路迁移到脑电信号处理，本质上是在回答"能否用可边缘部署的轻量模型替代专家级 EEG 解读"这个临床可及性问题——如果成立，AD 早筛就不再需要昂贵的大型医疗设备或深度学习服务器，这对资源受限地区意义深远；但 100% 准确率在单数据集上的泛化能力仍需跨中心验证。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 DeepTokenEEG，一种用于阿尔茨海默病（AD）早期诊断的轻量级 EEG 分类模型，仅 0.29M 参数，利用空间与时间 tokenizer 提取时频域 AD 生物标志物。在 274 名受试者（180 AD + 94 健康对照）的数据集上，特定频段达到 100% 准确率，相比同数据集 SOTA 提升 1.41–15.35%，且模型体量远小于现有重型深度学习方法。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：空间 tokenizer 与时间 tokenizer 双路结构，分别对多通道 EEG 的空间分布和时序变化进行 token 化表示，随后融合两路特征用于 AD vs. 健康对照分类，整体参数量仅 0.29M。</li>
+  <li><b>技术细节</b>：类比 NLP 中将句子切分为词元后送入 Transformer——DeepTokenEEG 将多通道脑电信号在空间维度（跨电极）和时间维度（跨时间窗）分别切块为 token，使模型能同时感知不同脑区的协同模式和信号的时频演变特征，无需堆叠大量卷积层或注意力层。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>DeepTokenEEG 仅含 0.29M 参数，在 274 名受试者数据集上特定频段达到 100% 分类准确率</li>
+  <li>相比同数据集 SOTA 方法准确率提升 1.41–15.35%，且模型体量远小于现有重型深度学习方法</li>
+  <li>空间与时间双路 tokenizer 同时捕捉时域和频域 AD 相关生物标志物，适合轻量化边缘部署</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：在包含 274 名受试者的混合数据集上，DeepTokenEEG 在特定频段达到 100% 准确率，超越现有 SOTA 方法，因参数量极小（0.29M）具备边缘设备部署潜力，但跨中心泛化能力有待进一步验证。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.15009v1]]</p>
+
+<hr/>
+<h2>折叠区</h2>
+<ul>
+  <li>Hieu Pham：Hieu Pham 在某城市短暂停留，邀请对 AI infra（尤其是 heterogeneous workloads （<a href="[https://x.com/hyhieu226/status/2055967501348213011](https://x.com/hyhieu226/status/2055967501348213011)">链接</a>）</li>
+  <li>Hieu Pham：Hieu Pham 在推文中请求某编程工具添加 vim 键绑定支持，无实质技术内容（<a href="[https://x.com/hyhieu226/status/2055819428034744511](https://x.com/hyhieu226/status/2055819428034744511)">链接</a>）</li>
+  <li>xAI 官方：xAI 提醒用户在其平台上连接 X 账户，无实质技术或产品发布内容（<a href="[https://x.com/xai/status/2055745334513672284](https://x.com/xai/status/2055745334513672284)">链接</a>）</li>
+</ul>
+
+<hr/>
+<p><i>本日报由 HH Research Pipeline 自动生成，由 Claude 抽取和撰写，以原文为准。<br/>处理信号 68 条 · 头条 2 条 · 高价值 65 条</i></p>

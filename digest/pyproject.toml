@@ -1,0 +1,53 @@
+[project]
+name = "hh-research"
+version = "0.1.0"
+description = "HH Research — Daily AI signal pipeline (X + arXiv → Claude → Feishu)"
+requires-python = ">=3.11"
+dependencies = [
+    # LLM
+    "anthropic>=0.40.0",
+    # Data sources
+    "arxiv>=2.1.3",
+    "httpx>=0.27.0",
+    # Feishu (lark-oapi SDK for programmatic use; lark-cli remains for ops)
+    "lark-oapi>=1.4.0",
+    # Utilities
+    "pydantic>=2.9.0",
+    "python-dotenv>=1.0.1",
+    "pyyaml>=6.0.2",
+    "tenacity>=9.0.0",          # retries with exponential backoff
+    "python-dateutil>=2.9.0",
+    "boto3>=1.42.97",
+    "pymupdf>=1.27.2.3",
+    "psycopg[binary]>=3.3.4",
+    # Data enrichment
+    "pyalex>=0.18",              # OpenAlex API client (Phase 2)
+    "pypinyin>=0.50",            # Chinese name <-> pinyin matching (Phase 1)
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.6.0",
+    "mypy>=1.11.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hh_research"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "N"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

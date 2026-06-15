@@ -1,0 +1,193 @@
+<title>HH Research Daily · 2026-05-12</title>
+
+<callout emoji="🌅">
+  <p><b>本日信号概览：</b>处理信号 31 条 · 头条候选 11 条 · 高价值 13 条</p>
+  <p>arxiv 论文 0 篇 · X 推文 31 条</p>
+</callout>
+
+<h2>今日 TL;DR</h2>
+<p>OpenAI 密集发布日：成立 40 亿美元独立部署公司 OpenAI Deployment Company（产业全景）、推出网络安全防御平台 Daybreak（行业应用）、John Schulman 披露连续流式多模态通用模型 zero-shot 能力涌现（行业应用）。</p>
+<hr/>
+<h2>头条</h2>
+<p><b>OpenAI 成立独立部署公司，初始投资 40 亿美元、派驻 150 名驻场工程师</b> · <a href="https://x.com/gdb/status/2053884619695730745">Greg Brockman on OpenAI Deployment Company</a></p>
+<p>OpenAI 宣布成立 OpenAI Deployment Company，初始投资 40 亿美元、19 家合作伙伴，派驻 150 名 Forward Deployed Engineers 帮助企业最大化 AI 部署成效。</p>
+<callout emoji="🌟">
+<p>OpenAI 正式拆分出一个专注企业 AI 落地的独立部署公司，通过驻场工程师与大规模资本入局，将 AI 部署服务从卖 API 升级为"交钥匙工程"——这在某种程度上类似于咨询公司 + 系统集成商的结合体，但背靠 OpenAI 核心模型能力。</p>
+</callout>
+<hr/>
+<h4>OpenAI 发布 Daybreak 网络安全平台：前沿模型 + Codex 武装防御方</h4>
+<ul>
+<li><b>信号源</b>：OpenAI 官方 · Greg Brockman · Sam Altman @ OpenAI</li>
+<li><b>链接</b>：<a href="https://x.com/OpenAI/status/2053939702110269822">OpenAI announces Daybreak</a></li>
+</ul>
+<callout emoji="🔥">
+<p><b>认知提取</b>：Daybreak 本质上是 OpenAI 将其最强模型能力与 Codex 代码能力打包为一个面向网络安全防御者的专项产品，目标是让安全团队能以自动化速度响应威胁——这在某种程度上类似于给防守方配备了一支永不疲倦的 AI 安全工程师团队。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 发布 Daybreak 网络安全平台，整合旗舰模型与 Codex 及安全合作伙伴，面向防御方加速漏洞修复与软件安全保障。Sam Altman 表示计划与尽可能多的企业合作，实现 7×24 小时持续安全扫描与修复。</p>
+<p><b>产品定位</b></p>
+<p>防御导向的 AI 网络安全平台，核心思路是将前沿模型能力优先提供给防御方，以抵消 AI 被攻击者滥用的风险。</p>
+<p>[[FIGURE:x:2053939702110269822]]</p>
+<hr/>
+<h4>John Schulman：连续流式多模态通用模型实现 zero-shot instruction following</h4>
+<ul>
+<li><b>信号源</b>：John Schulman @ OpenAI</li>
+<li><b>链接</b>：<a href="https://x.com/johnschulman2/status/2053940940885332028">John Schulman on multimodal general model progress</a></li>
+</ul>
+<callout emoji="✨">
+<p><b>认知提取</b>：一旦模型具备连续流式多模态 I/O（同时接收音频、视频、文本并实时输出），大量原本需要专门训练的任务会自动涌现为 zero-shot 能力——这在某种程度上类似于通用操作系统出现后，许多专用嵌入式系统的功能可以被软件替代。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>John Schulman 分享 multimodal 通用模型进展：continuous/simultaneous audio+video+text-&gt;audio+text 的 type signature 实现后，实时翻译、视频事件检测等任务均可 zero-shot instruction following，无需专用模型。</p>
+<p><b>产品定位</b></p>
+<p>通用流式多模态模型，通过统一 I/O 架构替代多个专用模型，降低应用层开发复杂度。</p>
+<p>[[FIGURE:x:2053940940885332028]]</p>
+
+<hr/>
+<h2>一、前沿研究 (Research Frontier)</h2>
+<h3>认知模型 (Cognitive Models)</h3>
+<h4>SocialReasoning Bench：AI Agent 能执行任务但无法持续维护用户立场</h4>
+<ul>
+<li><b>信号源</b>：MSFTResearch @ Microsoft Research</li>
+<li><b>链接</b>：<a href="https://x.com/MSFTResearch/status/2053890478165147693">SocialReasoning Bench</a></li>
+</ul>
+<callout emoji="🧠">
+<p><b>认知提取</b>：SocialReasoning Bench 揭示了当前 AI agent 的一个系统性缺陷：执行能力（task execution）与利益对齐（interest alignment）是两回事——agent 能"做到"但不能"站在你这边"。这类似于一个能干的员工，技术上完成了任务，却始终没把客户的真实利益放在首位。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Microsoft Research 推出 SocialReasoning Bench，专门评测 AI agent 在社交情境中识别并维护用户立场与利益的能力。研究发现，跨多个主流模型存在一致规律：agent 在任务执行层面表现良好，但即便显式指示其优化用户利益，仍无法在社交推理场景中持续站在用户一方，暴露出执行能力与对齐能力之间的系统性鸿沟。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：SocialReasoning Bench 是一个专为评测 AI agent 社交推理能力设计的 benchmark，核心考察 agent 是否能在社交情境中识别并持续维护用户的立场与利益，而非仅完成表层任务指令。</li>
+<li><b>技术细节</b>：该 benchmark 设置了需要 agent 在社交场景中代表用户利益进行推理和行动的任务，通过显式给出"优化用户利益"的指令来测试 agent 的遵循能力，从而区分执行能力与对齐能力之间的差距。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>跨多个模型观察到稳定规律：agent 执行任务能力较强，但在社交推理场景下无法持续优化用户立场</li>
+<li>即便明确指示 agent 优化用户利益，失败模式依然稳定复现</li>
+<li>SocialReasoning Bench 作为新评测基准，系统性衡量 agent 的社交推理与用户利益对齐能力</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：多模型测试结果一致表明，agent 的任务执行能力与其维护用户利益的能力之间存在显著且稳定的鸿沟，表明当前主流模型在社交推理层面存在系统性不足。</li>
+</ul>
+<p>[[FIGURE:x:2053890478165147693]]</p>
+<hr/>
+<h4>OpenAI Lilian Weng 团队发布训练运行日志手册：Human-AI Collaboration 的实践经验</h4>
+<ul>
+<li><b>信号源</b>：Lilian Weng @ OpenAI</li>
+<li><b>链接</b>：<a href="https://x.com/lilianweng/status/2053940822438281608">Training Run Logbook</a></li>
+</ul>
+<callout emoji="📚">
+<p><b>认知提取</b>：Weng 团队将其 AI 训练实践经验整理成详细日志手册，核心洞察是：改善 human-AI collaboration 的前提是加强 human-human collaboration——团队内部的协作质量决定了与 AI 系统协作的上限。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>OpenAI Lilian Weng 团队发布训练运行日志手册，历时数月完成 12 个版本共 137 页。手册主题围绕 human-AI collaboration 改进，将大规模训练运行中的实践经验系统化整理，核心发现指向团队内部 human-human collaboration 质量是提升 human-AI 协作效果的前置条件。</p>
+<p>[[FIGURE:x:2053940822438281608]]</p>
+
+<hr/>
+<h2>二、行业应用 (Industry Application)</h2>
+```xml
+<h3>认知模型 (产品/集成/Agentic 商业化)</h3>
+
+<h4>Codex 新增 OpenAI Developers 插件，缩短 API 调用路径</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI Developers 官方 @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2053925962287583379">OpenAI Codex now has an OpenAI Developers plugin</a></li>
+</ul>
+<callout emoji="🎨">
+  <p><b>认知提取</b>：Codex 新增 OpenAI Developers 插件，让开发者在 coding agent 工作流中直接调用 OpenAI API，相当于在代码生成工具内嵌入了 OpenAI 官方 SDK 的上下文感知助手，缩短从构想到 API 调用的路径。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 为 Codex 推出 OpenAI Developers 插件，支持开发者通过 OpenAI API 更快构建 AI 应用与 agents。该插件将 OpenAI 官方 API 文档与调用上下文直接注入 coding agent 工作流，开发者无需切换工具即可完成从代码生成到 API 集成的完整链路。</p>
+<p><b>产品定位</b></p>
+<p>面向使用 Codex 的开发者，定位为 coding agent 内的 OpenAI 生态集成层，解决开发者在构建 AI 应用时频繁查阅文档、手动拼接 API 调用的效率问题。</p>
+<p>[[FIGURE:x:2053925962287583379]]</p>
+
+<hr/>
+
+<h4>Sam Altman：ChatGPT 个性化与 personality 组合已触发体验质变</h4>
+<ul>
+  <li><b>信号源</b>：Sam Altman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/sama/status/2053971387308745046">Sam Altman on ChatGPT's new model feel</a></li>
+</ul>
+<callout emoji="🛠️">
+  <p><b>认知提取</b>：Altman 的表述暗示 ChatGPT 近期更新在模型能力、对话个性（personality）与用户个性化（personalization）三者组合上实现了协同效应，使产品体验发生了感知层面的质变——类似于硬件性能、操作系统与应用生态同时成熟后智能手机从"工具"变成"伴侣"的那个时刻。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Sam Altman 公开表示，ChatGPT 新模型在结合 personalization 与 personality 调整后，整体体验已跨越质变门槛，感觉像一个全新的东西。这一表述指向模型能力、对话风格与用户记忆三个维度的协同升级，而非单一技术指标的线性提升。</p>
+<p><b>产品定位</b></p>
+<p>ChatGPT 作为消费级对话产品，此次更新重心从"功能扩展"转向"体验质感"，通过 personality 与 personalization 的深度融合提升用户粘性与长期留存。</p>
+<p>[[FIGURE:x:2053971387308745046]]</p>
+
+<hr/>
+
+<h4>ml-intern 新增私有数据支持，agent 自动从 250 万开源模型中选优并 fine-tune</h4>
+<ul>
+  <li><b>信号源</b>：Lewis Tunstall @ Hugging Face</li>
+  <li><b>链接</b>：<a href="https://x.com/_lewtun/status/2053870101011501114">ml-intern now supports private datasets for automated fine-tuning</a></li>
+</ul>
+<callout emoji="⚡">
+  <p><b>认知提取</b>：ml-intern 将 fine-tune 流程进一步自动化——用户只需上传私有数据，agent 自动从海量开源模型库中挑选最适合任务的模型并完成训练，类似一个"自动调度的机器学习助理"。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>ml-intern 工具新增私有数据集上传功能，agent 可从超过 250 万个开源模型中自动进行 model selection，并针对用户数据完成 fine-tune，全流程无需人工干预。该工具完全开源，降低了中小团队使用定制化模型的门槛。</p>
+<p><b>产品定位</b></p>
+<p>面向需要快速定制模型但缺乏 MLOps 资源的开发者与研究团队，定位为端到端自动化 fine-tuning agent，解决模型选型复杂、训练流程繁琐的问题。</p>
+<p>[[FIGURE:x:2053870101011501114]]</p>
+
+<hr/>
+
+<h4>GPT-Realtime-2 演示：口头 standup 直接驱动工单系统自动化</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI Developers 官方 X 账号</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2053964133570412826">GPT-Realtime-2 demo: voice-driven ticket automation from standup updates</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>认知提取</b>：该演示将实时语音模型 GPT-Realtime-2 与项目管理工单系统集成，口头陈述即可驱动工作流自动化——类似于把语音助手升级为能直接操控软件工具的 agent。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI Developers 展示了 GPT-Realtime-2 的企业场景集成案例：团队成员进行口头 standup 更新后，模型实时解析语音内容并自动完成票务系统（ticketing system）中的工单移动操作，全程无需人工点击。该演示体现了 GPT-Realtime-2 在 tool-use 与 workflow automation 上的实际落地能力。</p>
+<p><b>产品定位</b></p>
+<p>面向使用项目管理工具的研发与运营团队，定位为语音驱动的 agentic 工作流自动化方案，将实时语音理解与软件操作直接打通，减少会议记录与手动更新工单的重复劳动。</p>
+<p>[[FIGURE:x:2053964133570412826]]</p>
+```
+<h3>多模态 (生成/理解类产品)</h3>
+<h4>Thinky 发布 Full-Duplex 多模态模型，主攻实时人机交互</h4>
+<ul>
+  <li><b>信号源</b>：John Schulman @ Thinky</li>
+  <li><b>链接</b>：<a href="https://x.com/johnschulman2/status/2053940452789981426">John Schulman on Thinky full-duplex multimodal model</a></li>
+</ul>
+<callout emoji="🎨">
+  <p><b>认知提取</b>：Thinky 的研究方向是将"interaction model"作为 AI 系统面向用户的外层，使其具备实时双工通信能力并能持续学习用户真实意图。这在某种程度上类似于为 AI 大脑加装一个社交神经系统——不仅要思考，还要随时保持与人的自然同步对话。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>John Schulman 创立的 Thinky 发布了 full-duplex 多模态模型，支持自然实时的双向人机交互。该模型强调在不牺牲底层智能能力的前提下，推进 human-AI collaboration，使 AI 系统能够以接近人类对话节奏的方式持续响应并学习用户真实意图。</p>
+<p><b>产品定位</b></p>
+<p>Thinky 定位于构建"interaction model"这一新型 AI 交互层——区别于传统 turn-based 对话，full-duplex 架构允许模型在用户说话时同步处理并准备回应，目标是解决当前 AI 助手在实时对话流畅性与上下文连贯性上的短板。</p>
+<p>[[FIGURE:x:2053940452789981426]]</p>
+
+<hr/>
+<h2>三、产业全景 (Industry Macro)</h2>
+<h3>产业趋势 (Trend)</h3>
+<p><b>FrontierMath benchmark 约 1/3 题目存在致命错误，历史评分可信度存疑</b> · <a href="https://x.com/EpochAIResearch/status/2053995435870892048">Epoch AI on FrontierMath benchmark quality issues</a></p>
+<p>Epoch AI 官方公告，经 AI 辅助审查发现 FrontierMath benchmark 中约三分之一题目含致命错误，将在完成人工核查后重新发布修正版并重新评分，现有模型在该 benchmark 上的得分均需重新审视。</p>
+<callout emoji="⚖️">
+  <p>FrontierMath 是当前主流的前沿数学推理评估基准，1/3 题目出错意味着过去基于此 benchmark 的模型横向比较结论均存在不确定性，修正版发布前相关排名需谨慎参考。</p>
+</callout>
+
+<hr/>
+<h2>折叠区</h2>
+<ul>
+  <li>cat：用户分享 Claude Code 的 `claude agents` 命令用法，可在终端启动 control plane（<a href="[https://x.com/_catwu/status/2053999857799672111](https://x.com/_catwu/status/2053999857799672111)">链接</a>）</li>
+  <li>OpenAI Developers 官方 X 账号：OpenAI Developers 分享 voice-to-action workflow 示例仓库，邀请开发者 for（<a href="[https://x.com/OpenAIDevs/status/2053964145155068025](https://x.com/OpenAIDevs/status/2053964145155068025)">链接</a>）</li>
+  <li>Soumith Chintala：PyTorch 创始人 Soumith Chintala 分享 Thinky 产品路线图，聚焦提升人机带宽与协作智能，并（<a href="[https://x.com/soumithchintala/status/2053940215505645938](https://x.com/soumithchintala/status/2053940215505645938)">链接</a>）</li>
+  <li>OpenAI 官方 @ X：OpenAI 推文介绍 Daybreak，一款用于自动化安全检测、验证与响应的工具或集成产品（<a href="[https://x.com/OpenAI/status/2053939706468139481](https://x.com/OpenAI/status/2053939706468139481)">链接</a>）</li>
+  <li>Sierra AI 官方 @ Sierra Platform：Sierra AI 分享客户案例：ecoATM 部署 AI voice agent 处理重复性问题，让人工客服专注于高价（<a href="[https://x.com/SierraPlatform/status/2053911809573507258](https://x.com/SierraPlatform/status/2053911809573507258)">链接</a>）</li>
+  <li>NVIDIA AI 官方 @ NVIDIA：NVIDIA AI 发布 OpenShell v0.0.37，新增可插拔计算驱动（Docker/Podman/Kuber（<a href="[https://x.com/NVIDIAAI/status/2053883076691030447](https://x.com/NVIDIAAI/status/2053883076691030447)">链接</a>）</li>
+  <li>Amanda Askell：Anthropic 将 Claude 的 Constitutional AI 文件&quot;Claude&#x27;s Constitut（<a href="[https://x.com/AnthropicAI/status/2053881827396653207](https://x.com/AnthropicAI/status/2053881827396653207)">链接</a>）</li>
+  <li>Google AI Developers 官方 @ Google DeepMind：Google DeepMind 与 Coursera 合作推出 Gemini for Developers 专项课程，内（<a href="[https://x.com/googleaidevs/status/2053868609747746897](https://x.com/googleaidevs/status/2053868609747746897)">链接</a>）</li>
+</ul>
+
+<hr/>
+<p><i>本日报由 HH Research Pipeline 自动生成，由 Claude 抽取和撰写，以原文为准。<br/>处理信号 31 条 · 头条 11 条 · 高价值 13 条</i></p>

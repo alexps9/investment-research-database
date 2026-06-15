@@ -1,0 +1,135 @@
+<title>HH Research Daily · 2026-06-09</title>
+
+<h1 align="center">📌 Top 3 大新闻</h1>
+
+<h3>苹果 WWDC 2026：发布 Google Gemini 驱动的"Siri AI"，每年付 Google 约 $10 亿——AI 战略从"自研领先"转向"端侧编排 + 云端外包"</h3>
+<ul>
+<li><b>信号源</b>：<b>Apple 官方 Newsroom</b> · <b>Google×Apple 联合声明</b>（Bloomberg / CNBC / The Verge 多源交叉，<a href="https://www.apple.com/newsroom/2026/06/apple-unveils-next-generation-of-apple-intelligence-siri-ai-and-more/">Apple</a> · <a href="https://blog.google/company-news/inside-google/company-announcements/joint-statement-google-apple/">Google</a>）</li>
+</ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>这不是一次产品升级，而是一次 AI 战略路线的公开转向。两年前承诺的 AI 版 Siri 未兑现后，苹果选择把最难的前沿模型能力外包：下一代 Apple Foundation Models 基于 Google 的 <b>1.2 万亿参数定制 Gemini 模型</b>（约为苹果现有云端模型的 8 倍），每年向 Google 支付约 <b>$10 亿</b>，云端推理跑在 NVIDIA Blackwell 上；简单请求仍由设备端约 200 亿参数小模型处理。这条"端侧编排 + 云端外包"的分层路线，把筹码从"模型能力领先"换成了"分发入口 + 隐私 + 系统编排权"——10 亿级设备的默认入口仍在手中。三处张力值得跟踪：其一，苹果一边每年从 Google 收取约 $200 亿搜索默认金、一边付费向 Google 买 AI，双方"竞合"绑定进一步加深；其二，苹果用 AFM 品牌包装、淡化 Google 贡献、突出 NVIDIA，反映其对"自研落后"叙事的高度敏感；其三，对其他想进入苹果生态的模型方，系统编排层的准入门槛被进一步抬高。资本市场态度分化——WWDC 期间 AAPL 股价由涨转跌，显示市场对"外包能否换来 AI 叙事重估"尚存分歧。</p>
+</callout>
+<p>　　在 Tim Cook 任内最后一场 WWDC 主旨演讲（9 月正式交棒 John Ternus）上，苹果发布全新一代 <b>"Siri AI"</b> 与下一代 Apple Intelligence，覆盖 iOS 27、macOS "Golden Gate" 等全平台；苹果称新 Siri 是"全新版本"，对话与个性化能力大幅增强，以分阶段 beta 推出。</p>
+<p>　　与之同步的是底层架构的重构：苹果与 Google 达成多年合作，下一代 Apple Foundation Models 将以 Gemini 模型与 Google 云技术为基础。据 Bloomberg 等报道，苹果将每年付费约 $10 亿授权一个 1.2 万亿参数的定制 Gemini 模型，云端 AFM Cloud Pro 跑在 NVIDIA Blackwell GPU 上、被苹果称为可比肩 Gemini 前沿模型；端侧则保留自训的约 200 亿参数模型处理简单请求与编排（个人上下文、应用调度、屏幕感知）。</p>
+<p>　　这套分层把"难问题"全部交给云端外包能力，等于公开承认在前沿模型自研上的追赶受挫，转而以分发与隐私为核心重新定位竞争。多家投行与媒体观点分化：乐观者视其为"以小成本锁定最强能力、专注生态"的务实选择，谨慎者则担忧其对竞争对手的深度依赖与 Services 估值承压。</p>
+<p>　　<i>* 注：交易金额、模型参数与硬件细节为 Bloomberg/CNBC 等媒体报道，苹果未完整披露商业条款；以官方后续口径为准。</i></p>
+
+<hr/>
+
+<h3>OpenAI 秘密递交 IPO 招股书（S-1）：估值传闻 $1 万亿、Q1 单季收入近 $60 亿——AI 行业定价锚点即将接受公开市场检验</h3>
+<ul>
+<li><b>信号源</b>：<b>OpenAI 官方</b>（WSJ / CNBC 报道 · The Information / Fortune 财务测算，<a href="https://openai.com/index/openai-submits-confidential-s-1/">OpenAI</a> · <a href="https://x.com/rohanpaul_ai/status/2064103154833383534">Rohan Paul @ X</a>）</li>
+</ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>秘密递交 S-1（招股说明书草案）是启动 IPO 审查的标准第一步，允许公司在不公开财务的前提下先行预审。真正的看点是头部 AI 实验室正<b>集体</b>迈向公开市场——除 OpenAI 外，Anthropic 上周已同类提交、SpaceX-xAI 合并实体 5 月 20 日已递公开 S-1；若按传闻区间，仅这几家的新股供给合计可能超过 <b>$1350 亿</b>，规模史上罕见。OpenAI 的公开定价将成为整个 AI 赛道的<b>估值锚点</b>——此前一级市场给这类公司定价的"私募估值逻辑"，将首次被公开市场的盈利性标准压力测验。基本面是典型的"高增长 + 高亏损"组合：媒体报道 Q1 单季收入近 $60 亿、当前年化收入约 $250 亿且仍高速增长，但第三方测算 2026 年 GAAP 口径亏损可能达 <b>$250 亿</b>量级（显著高于常被引用的 $140 亿 non-GAAP 数字）。若以 $1 万亿估值对应约 $250 亿年化收入，约 <b>40 倍市销率</b>隐含了极高的增长预期。S-1 转公开版后披露的 ARR、毛利结构、算力资本开支与对上游算力/资金方的依赖度，将是最关键的跟踪节点。</p>
+</callout>
+<p>　　OpenAI 官方确认已向美国证监会（SEC）秘密提交 S-1 草案，正式进入 IPO 审查流程；据 WSJ、CNBC 报道，此举与同期资本市场动作密集叠加——Anthropic 上周完成同类秘密提交，SpaceX 则在 5 月 20 日递交公开 S-1、首次披露 SpaceX-xAI 合并实体的审计财务。两家顶级 AI 实验室在同一窗口同步启动，标志着这是行业性节奏转变而非单一事件。</p>
+<p>　　财务侧，The Information 报道 OpenAI 仅第一季度收入就接近 $60 亿；第三方机构测算其当前年化收入约 $250 亿、并预计到 2027 年中升至约 $420 亿，但 2026 年 GAAP 亏损或落在 $250 亿量级，盈利路径与算力开支是公开市场最大的未知数。</p>
+<p>　　值得注意的是，Sam Altman 在递交 S-1 的同一天发布了 OpenAI 三阶段 AGI（通用人工智能）路线图，明确 2028 年 3 月为"AI 完成大部分自身研究"的里程碑——叙事定调与资本动作同步，而未来几个月转公开的招股书，将直接检验这份路线图的财务可信度。</p>
+<p>　　<i>* 注：估值、收入与亏损多为媒体报道与第三方测算，秘密 S-1 内容尚未公开，一切以正式披露文件为准。</i></p>
+
+<hr/>
+
+<h3>王鹤 He Wang 团队发布 LIMMT：仅用不足 3% 动捕数据超越全量训练——人形机器人"数据质量优于数量"的首个系统性论据</h3>
+<ul>
+<li><b>论文</b>：<a href="https://arxiv.org/abs/2606.06953">LIMMT: A Data-Centric Framework for Physics-Based Humanoid Motion Tracking</a>（<b>王鹤 He Wang</b> 合作 · Zekun Qi 清华共一 · Yi Li 通讯）</li>
+</ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>基于物理仿真的人形机器人动作追踪长期默认"数据越多越好"，研究者倾向用全量动作捕捉数据库训练策略。LIMMT 用不足 <b>3%</b> 的数据打破了这一假设——它把数据质量拆成<b>物理可行性、多样性、复杂度</b>三个可度量维度，并指出低质量数据不只是噪声、更会主动把梯度方向带偏。这是该方向<b>首个以数据为中心的系统性研究</b>，对实体智能的数据策略有直接含义：大规模动捕采集的边际价值可能远低于预期，而精细筛选与质量过滤的优先级应当上调。在真机数据昂贵、采集周期长的现实约束下，"先建质量过滤管线、再谈数据规模"可能比盲目堆量更具性价比——这与近期多项"数据质量优于数量"的研究方向相互呼应。</p>
+</callout>
+<p>　　现有 physics-based 人形动作追踪多用 AMASS 等开放数据集的全量数据，鲜有人系统研究数据质量对训练效果的影响。LIMMT 从物理可行性（排除物理上不合理片段）、多样性（覆盖广泛动作空间）、复杂度（筛除过简或冗余片段）三维定义动作数据质量，据此过滤 AMASS，最终用不足 3% 的数据训练出超越全量基线的追踪性能。</p>
+<p>　　核心机制在于：高质量数据在训练早期就能引导策略进入更优的优化轨迹，而低质量数据会主动拉偏梯度方向。研究还对网络来源的估计动捕数据做了清洗，验证了框架在真实噪声数据上的泛化有效性。</p>
+<p>　　<i>* 注：论文为预印本，尚无同行评审与独立复现。</i></p>
+
+<hr/>
+
+<h1 align="center">🗺️ 今日导览</h1>
+
+<h3>基础模型</h3>
+
+<h4>Ryan Greenblatt 团队量化"无思维链"推理：GPT-5.5 已达 3 分钟任务时长，每年翻倍，2030 年或超 25 分钟</h4>
+<ul><li><b>论文</b>：<a href="https://arxiv.org/abs/2606.07157">Measuring the Implicit Reasoning Capabilities of LMs Without Chain-of-Thought</a>（Ryan Greenblatt 合作 · Alan Turing Institute Dewi S. W. Gould 一作）</li></ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>当前主流 AI 安全框架默认"监控思维链（CoT）≈ 监控模型行为"。这篇论文动摇的正是这一前提——前沿模型在<b>不输出任何中间推理步骤</b>的情况下隐式完成复杂任务的能力，正以每年翻倍的速度增长，2030 年可能达 25 分钟人类任务量级。若趋势延续，基于行为可观测性构建的安全与监管路径，其有效窗口比预期更短。</p>
+</callout>
+<p>　　研究在逾 3 万道题、43 个基准上测量前沿模型的 no-CoT 表现，定义"任务完成时间 horizon"等指标。结果显示过去六年该指标每年翻倍，GPT-5.5 已超 3 分钟（对应 1,500+ 个 o3-mini 推理 token）；中位预测 2028 年超 7 分钟、2030 年超 25 分钟，但不确定性较大。</p>
+
+<h4>百度 DuMate-DeepResearch：图式动态规划 + 双层执行，DeepResearch Bench 系列双榜 SOTA</h4>
+<ul><li><b>论文</b>：<a href="https://arxiv.org/abs/2606.07299">DuMate-DeepResearch: Multi-Agent Deep Research with Graph-Based Dynamic Planning</a>（Can Xu 合作 · Dawei Yin 通讯）</li></ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>核心改变是把规划层与检索层彻底解耦：内层 Search Agent 独立运行自己的规划循环，主 Agent Core 不被嘈杂检索结果干扰。<b>这说明 Deep Research 系统的瓶颈不在模型能力，而在系统架构——检索噪声隔离与长程规划稳定性才是可控变量。</b>百度在两个榜单登顶，表明国内厂商在 agentic 系统工程上的竞争力正在补齐。</p>
+</callout>
+<p>　　系统分 Agent Core（规划调度）与 Tool Ecosystem（检索渲染）两层，引入图式动态规划（支持反思/回溯/并行分支）、递归双层执行、rubric-based 测试时优化三项机制。最终在 DeepResearch Bench 取得 58.03%、Bench II 取得 61.95% 并在信息召回与分析维度排名第一。</p>
+
+<h4>Perplexity × Harvard：自主 agent 相比纯搜索，任务完成时间降 87%、成本降 94%</h4>
+<ul><li><b>信号源</b>：<b>Perplexity</b> 官方（<a href="https://x.com/perplexity_ai/status/2064023455453110286">推文</a>）</li></ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>历时 3 个月、对比自主 agent（Computer）与传统搜索在真实工作任务中的表现，结果时间减少 <b>87%</b>、成本降低 <b>94%</b>。这是 agentic 产品相比 search 的效率优势<b>首次通过外部学术合作量化发布</b>，第三方参与使可信度高于内部测评，对 search-first 产品的定价逻辑构成压力。</p>
+</callout>
+
+<h4>WorldBench：视觉多样性驱动的多模态推理评测，15 个主流模型最强仅得 64.0%</h4>
+<ul><li><b>论文</b>：<a href="https://arxiv.org/abs/2606.06538">WorldBench: A Visually Diverse Benchmark for Multimodal Reasoning</a>（Shengbang Tong / Wenhu Chen 合作）</li></ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>现有多模态大模型（MLLM）评测多靠加任务类型提难度，视觉输入本身的多样性长期被忽视。WorldBench 专门针对"视觉多样性"设计，结果最强模型仅得 <b>64.0%</b>、部分接近随机水平。<b>这表明当前 MLLM 的视觉泛化存在系统性短板</b>，现有 benchmark 可能严重高估了模型的真实视觉能力上限。</p>
+</callout>
+
+<h3>世界模型</h3>
+
+<h4>NUS Mike Zheng Shou 团队 ActionMap：体素热力图替代单点预测，VLA 操控性能 +8.2%</h4>
+<ul><li><b>论文</b>：<a href="https://arxiv.org/abs/2606.06904">ActionMap: Voxel Heatmap Action Head for Visual Language Action Models</a>（Mike Zheng Shou 通讯 · NUS）</li></ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>现有视觉语言行动模型（VLA）的动作解码器几乎都把控制信号压成"一个点"输出。ActionMap 改成"输出一张三维空间热力图"——<b>这意味着动作表征是独立于骨干网络与训练配方之外、此前几乎无人系统优化的可调维度</b>。若被更多骨干验证，action decoder 的设计将成为 VLA 产品差异化的新卡点。</p>
+</callout>
+<p>　　ActionMap 在三维离散化动作空间上预测概率热力图（类似把坐标回归换成空间 softmax），无需改骨干、即插即用。在 LIBERO 四套件平均上超越 OpenVLA-OFT 的 L1 回归头 +8.2%，低数据场景数据效率显著更高，并在真实 Franka 机械臂上验证一致提升。</p>
+
+<h4>TARS 在 ICRA 2026 发布三项具身成果：21 自由度 DexHand、OmniVTA 视触觉模型、AWE 3.0 基础模型</h4>
+<ul><li><b>信号源</b>：The Humanoid Hub（ICRA 2026 报道，<a href="https://x.com/TheHumanoidHub/status/2063959178029535526">推文</a>）</li></ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>TARS 同步发布硬件（21 自由度灵巧手）、感知（视触觉世界模型 + 接触预测）与通用基础模型三条线，分工解决灵巧度、接触预测与长视野双臂协调，合成一套从硬件到算法的完整具身系统栈。<b>同时布局三条线的公司当前仍属少数</b>，后续量产与商业落地节奏值得跟踪。</p>
+</callout>
+
+<h4>MIT Song Han 团队发布 SANA 世界模型 causal 版本，单张 H100 接近实时推理</h4>
+<ul><li><b>信号源</b>：<b>Song Han</b> @ MIT（<a href="https://x.com/songhan_mit/status/2064033809746530426">推文</a>）</li></ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>此前高质量世界模型推理通常需多卡集群，SANA causal 版在单张 H100 上实现接近实时推理。<b>单卡实时是机器人与自动驾驶实时控制落地的关键门槛</b>，这条路线若稳定，对世界模型的部署成本预期有直接影响。</p>
+</callout>
+<p>　　<i>* 注：来自个人推文，具体指标与对比基线待正式论文验证。</i></p>
+
+<h3>AI infra</h3>
+
+<h4>NVIDIA 在 Blackwell 上用 NVFP4 训练 Llama 3，相比 FP8 提速 1.31–1.73× 无精度损失</h4>
+<ul><li><b>信号源</b>：<b>NVIDIA AI</b> 官方（<a href="https://x.com/NVIDIAAI/status/2064105188219134041">推文</a>）</li></ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>NVFP4 低精度训练在 Blackwell 上对 Llama 3 8B 与 405B 均实现 <b>1.31–1.73×</b> 加速且无精度损失。FP4 在 405B 超大规模上的验证意义大于小模型，直接影响训练成本；而该路径绑定 Blackwell，对仍在 Hopper 平台的训练集群形成换代压力。</p>
+</callout>
+
+<h3>AI4S</h3>
+
+<h4>Cambridge Miles Cranmer 团队 GPLFR：联合优化压缩与预测，首建系外行星气候模型仿真器</h4>
+<ul><li><b>论文</b>：<a href="https://arxiv.org/abs/2606.06576">Gaussian Process Latent Factor Regression for High-Dimensional Scientific Emulation</a>（Miles Cranmer 资深合作 · Cambridge）</li></ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>科学仿真代理模型长期依赖"先用主成分分析（PCA）压缩、再用高斯过程（GP）回归预测"的两阶段框架，但两步目标不对齐，在"低样本、高维输出"下表现差。GPLFR 把解码器权重解析积分掉、将两步合进同一目标函数。<b>这意味着"先压缩再预测"不再是科学 emulator 的唯一可行路径</b>，对系外行星、气候、核聚变等仿真成本极高的领域尤为有价值。</p>
+</callout>
+<p>　　<i>* 注：预印本，系外行星气候仿真器的验证依赖自身仿真结果，尚无独立第三方复现。</i></p>
+
+<h4>Anthropic 研究：AI agent 在生物数据库检索中同一查询结果偏差逾 20 倍，引入可复现工具后显著改善</h4>
+<ul><li><b>信号源</b>：<b>Anthropic</b> 研究（Rohan Paul 转述，<a href="https://x.com/rohanpaul_ai/status/2064089553431069046">推文</a>）</li></ul>
+<callout emoji="💡" background-color="light-orange" border-color="orange">
+<p><b>Insights</b></p>
+<p>Claude Sonnet 4 在同一 Ebola 序列检索任务中三次运行分别返回 106、15、5 条（人工标注 266 条），检索不一致直接导致疫情溯源结论错误。<b>核心问题不在模型能力，而在生物数据库接口分散、脚本脆弱</b>——底层数据基础设施的标准化程度，可能比模型选择更能决定 AI agent 在生命科学领域能走多远。</p>
+</callout>
+
+<hr/>
+<p><i>本期由 HH Research 在今日主线全量版（229 信号）基础上精编：Top 3 经多源广泛检索交叉核实（Apple Newsroom/Google 联合声明、OpenAI 官方、Bloomberg/CNBC/WSJ/The Information 等），四赛道保留当日最重要信号、删减次要项。部分研究为预印本/个人推文，未经同行评审或独立复现；估值与财务为媒体报道及第三方测算，以原始来源为准。</i></p>
