@@ -27,11 +27,14 @@ services:
       AWS_BEARER_TOKEN_BEDROCK: ${AWS_BEARER_TOKEN_BEDROCK}
       AWS_REGION_NAME: ${AWS_REGION_NAME:-us-east-1}
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      # DeepSeek-V4 fallback (direct, must NOT go through the proxy — see NO_PROXY).
+      DEEPSEEK_FALLBACK_API_KEY: ${DEEPSEEK_FALLBACK_API_KEY:-}
       # Egress Bedrock calls through an overseas proxy (Anthropic geo-blocks CN IPs).
-      # Leave BEDROCK_PROXY_URL empty to disable. Keep localhost out of the proxy.
+      # Leave BEDROCK_PROXY_URL empty to disable. Keep localhost + DeepSeek out of the proxy
+      # so the fallback works even when the proxy node itself is down.
       HTTP_PROXY: ${BEDROCK_PROXY_URL:-}
       HTTPS_PROXY: ${BEDROCK_PROXY_URL:-}
-      NO_PROXY: localhost,127.0.0.1,backend,mcp,agent,litellm,proxy
+      NO_PROXY: localhost,127.0.0.1,backend,mcp,agent,litellm,proxy,api.deepseek.com,.deepseek.com
     depends_on:
       proxy:
         condition: service_started
