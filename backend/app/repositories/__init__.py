@@ -87,10 +87,10 @@ class SourceRepo:
         stmt = (
             select(Source)
             .options(
-                selectinload(Source.organization),
+                selectinload(Source.organization).selectinload(Organization.org_tags).selectinload(OrgTag.tag),
                 selectinload(Source.accounts),
                 selectinload(Source.source_tags).selectinload(SourceTag.tag),
-                selectinload(Source.experiences).selectinload(SourceExperience.organization),
+                selectinload(Source.experiences).selectinload(SourceExperience.organization).selectinload(Organization.org_tags),
             )
             .offset(skip)
             .limit(limit)
@@ -109,10 +109,10 @@ class SourceRepo:
             select(Source)
             .where(Source.id == source_id)
             .options(
-                selectinload(Source.organization),
+                selectinload(Source.organization).selectinload(Organization.org_tags).selectinload(OrgTag.tag),
                 selectinload(Source.accounts),
                 selectinload(Source.source_tags).selectinload(SourceTag.tag),
-                selectinload(Source.experiences).selectinload(SourceExperience.organization),
+                selectinload(Source.experiences).selectinload(SourceExperience.organization).selectinload(Organization.org_tags),
             )
         )
         return result.scalar_one_or_none()
