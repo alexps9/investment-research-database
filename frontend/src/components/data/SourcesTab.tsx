@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { api } from '@/lib/api';
 import type { Source, Organization } from '@/lib/types';
 import { Badge } from '@/components/ui/Badge';
-import { Plus, ExternalLink, Pencil, Trash2, Search, User, Building2, Rss } from 'lucide-react';
+import { Plus, ExternalLink, Pencil, Trash2, Search } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { SourceEditModal } from '@/components/SourceEditModal';
 import { OrganizationEditModal } from '@/components/OrganizationEditModal';
@@ -27,14 +27,12 @@ const CSV_COLUMNS: CsvColumn<Source>[] = [
   { key: 'description', header: 'description' },
 ];
 
-type TypeTab = 'person' | 'organization' | 'other';
-const TYPE_TABS: { id: TypeTab; label: string; icon: typeof User; types: string[] }[] = [
-  { id: 'person', label: '人物', icon: User, types: ['person'] },
-  { id: 'organization', label: '组织', icon: Building2, types: ['organization'] },
-  { id: 'other', label: '其他', icon: Rss, types: ['rss', 'website', 'github_repo', 'arxiv_category', 'newsletter', 'social_account'] },
-];
+interface Props {
+  /** 'person' | 'organization' | undefined = show all */
+  sourceType?: 'person' | 'organization';
+}
 
-export function SourcesTab() {
+export function SourcesTab({ sourceType }: Props) {
   const { t } = useLang();
   const [sources, setSources] = useState<Source[]>([]);
   const [orgs, setOrgs] = useState<Organization[]>([]);
@@ -44,17 +42,18 @@ export function SourcesTab() {
   const [orgModalOpen, setOrgModalOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
   const [q, setQ] = useState('');
-  const [typeTab, setTypeTab] = useState<TypeTab>('person');
   const { selected, toggle, setAll, clear } = useRowSelection();
 
   useEffect(() => {
-    api.get<Source[]>('/sources?limit=2000').then(setSources).catch(console.error).finally(() => setLoading(false));
+    setLoading(true);
+    const url = sourceType ? `/sources?limit=2000&source_type=${sourceType}` : '/sources?limit=2000';
+    api.get<Source[]>(url).then(setSources).catch(console.error).finally(() => setLoading(false));
     api.get<Organization[]>('/organizations?limit=500').then(setOrgs).catch(console.error);
-  }, []);
+  }, [sourceType]);
 
-  function handleOrgSaved(saved: Organization) {
-    setOrgs((prev) => {
-      const idx = prev.findIndex((o) => o.id === saved.id);
+  function handleSaved(saved: Source) {
+    setSources((prev) => {
+      const idx = prev.findIndex((s) => s.id === saved.id);
       if (idx === -1) return [saved, ...prev];
       const next = [...prev];
       next[idx] = saved;
@@ -62,24 +61,9 @@ export function SourcesTab() {
     });
   }
 
-  const currentTypes = TYPE_TABS.find((t) => t.id === typeTab)?.types ?? ['person'];
-
-  const filtered = useMemo(() => {
-    let list = sources.filter((s) => currentTypes.includes(s.source_type));
-    const k = q.trim().toLowerCase();
-    if (!k) return list;
-    return list.filter((s) =>
-      s.name.toLowerCase().includes(k) ||
-      (s.organization?.name ?? '').toLowerCase().includes(k) ||
-      (s.sector ?? '').toLowerCase().includes(k),
-    );
-  }, [sources, q, typeTab]);
-
-  const allChecked = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
-
-  function handleSaved(saved: Source) {
-    setSources((prev) => {
-      const idx = prev.findIndex((s) => s.id === saved.id);
+  function handleOrgSaved(saved: Organization) {
+    setOrgs((prev) => {
+      const idx = prev.findIndex((o) => o.id === saved.id);
       if (idx === -1) return [saved, ...prev];
       const next = [...prev];
       next[idx] = saved;
@@ -97,26 +81,22 @@ export function SourcesTab() {
     }
   }
 
+  const filtered = useMemo(() => {
+    const k = q.trim().toLowerCase();
+    if (!k) return sources;
+    return sources.filter((s) =>
+      s.name.toLowerCase().includes(k) ||
+      (s.organization?.name ?? '').toLowerCase().includes(k) ||
+      (s.sector ?? '').toLowerCase().includes(k),
+    );
+  }, [sources, q]);
+
+  const allChecked = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
+
+  const isOrgView = sourceType === 'organization';
+
   return (
     <div>
-      {/* Type tabs */}
-      <div className="mb-4 inline-flex rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
-        {TYPE_TABS.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => setTypeTab(id)}
-            className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-              typeTab === id ? 'bg-blue-600 text-white shadow-sm' : 'text-gray-500 hover:bg-gray-50'
-            }`}
-          >
-            <Icon size={14} /> {label}
-            <span className={`ml-1 rounded-full px-1.5 py-0.5 text-xs ${typeTab === id ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
-              {sources.filter((s) => TYPE_TABS.find((t) => t.id === id)?.types.includes(s.source_type)).length}
-            </span>
-          </button>
-        ))}
-      </div>
-
       {/* Toolbar */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="relative w-72 max-w-full">
@@ -124,23 +104,25 @@ export function SourcesTab() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder={t('data.search.sources')}
+            placeholder={isOrgView ? '搜索机构…' : t('data.search.sources')}
             className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div className="flex items-center gap-2">
-          <ExportBar
-            count={selected.size}
-            onExportSelected={() => downloadCsv(sources.filter((s) => selected.has(s.id)), CSV_COLUMNS, 'sources')}
-            onExportAll={() => downloadCsv(filtered, CSV_COLUMNS, 'sources')}
-            onClear={clear}
-          />
-          {typeTab === 'organization' ? (
+          {!isOrgView && (
+            <ExportBar
+              count={selected.size}
+              onExportSelected={() => downloadCsv(sources.filter((s) => selected.has(s.id)), CSV_COLUMNS, 'sources')}
+              onExportAll={() => downloadCsv(filtered, CSV_COLUMNS, 'sources')}
+              onClear={clear}
+            />
+          )}
+          {isOrgView ? (
             <button
               onClick={() => { setEditingOrg(null); setOrgModalOpen(true); }}
               className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
             >
-              <Plus size={16} /> 新建组织
+              <Plus size={16} /> 新建机构
             </button>
           ) : (
             <button
@@ -155,8 +137,8 @@ export function SourcesTab() {
 
       {loading ? (
         <p className="text-sm text-gray-400">{t('common.loading')}</p>
-      ) : typeTab === 'organization' ? (
-        /* ── Organization table ────────────────────────────────────────────── */
+      ) : isOrgView ? (
+        /* ── Organization table ─────────────────────────────────────────────── */
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
           <table className="w-full text-sm">
             <thead className="bg-gray-50/80 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -176,7 +158,8 @@ export function SourcesTab() {
                     <td className="px-4 py-3 font-medium text-gray-900">
                       {org.name}
                       {org.website_url && (
-                        <a href={org.website_url} target="_blank" rel="noreferrer" className="ml-2 text-blue-400 hover:text-blue-600">
+                        <a href={org.website_url} target="_blank" rel="noreferrer"
+                          className="ml-2 text-blue-400 hover:text-blue-600">
                           <ExternalLink size={12} className="inline" />
                         </a>
                       )}
@@ -214,7 +197,7 @@ export function SourcesTab() {
           {orgs.length === 0 && <p className="px-4 py-10 text-center text-sm text-gray-400">{t('common.empty')}</p>}
         </div>
       ) : (
-        /* ── Person / Other source table ────────────────────────────────────── */
+        /* ── Person / source table ──────────────────────────────────────────── */
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
           <table className="w-full text-sm">
             <thead className="bg-gray-50/80 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -224,8 +207,9 @@ export function SourcesTab() {
                 </th>
                 <th className="px-4 py-3">{t('sources.col.name')}</th>
                 <th className="px-4 py-3">{t('sources.col.tier')}</th>
-                {typeTab === 'person' && <th className="px-4 py-3">所属组织</th>}
-                {typeTab === 'person' && <th className="px-4 py-3">研究领域</th>}
+                {sourceType === 'person' && <th className="px-4 py-3">所属组织</th>}
+                {sourceType === 'person' && <th className="px-4 py-3">研究领域</th>}
+                {!sourceType && <th className="px-4 py-3">类型</th>}
                 <th className="px-4 py-3">{t('sources.col.activity')}</th>
                 <th className="px-4 py-3">Links</th>
                 <th className="px-4 py-3 text-right">{t('action.actions')}</th>
@@ -237,10 +221,10 @@ export function SourcesTab() {
                   <td className="px-4 py-3"><Checkbox checked={selected.has(src.id)} onChange={() => toggle(src.id)} /></td>
                   <td className="px-4 py-3 font-medium text-gray-900">{src.name}</td>
                   <td className="px-4 py-3">{src.tier ? <Badge variant="purple">{src.tier}</Badge> : <span className="text-gray-300">—</span>}</td>
-                  {typeTab === 'person' && (
-                    <td className="px-4 py-3 text-gray-500 text-xs">{src.organization?.name ?? '—'}</td>
+                  {sourceType === 'person' && (
+                    <td className="px-4 py-3 text-xs text-gray-500">{src.organization?.name ?? '—'}</td>
                   )}
-                  {typeTab === 'person' && (
+                  {sourceType === 'person' && (
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
                         {src.source_tags.slice(0, 3).map((st) => (
@@ -248,6 +232,9 @@ export function SourcesTab() {
                         ))}
                       </div>
                     </td>
+                  )}
+                  {!sourceType && (
+                    <td className="px-4 py-3"><Badge variant="gray">{src.source_type}</Badge></td>
                   )}
                   <td className="px-4 py-3">
                     <Badge variant={activityColor[src.activity_status] ?? 'gray'}>{src.activity_status}</Badge>
