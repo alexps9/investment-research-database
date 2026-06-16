@@ -112,7 +112,11 @@ curl -X POST http://localhost:9000/qa -H 'Content-Type: application/json' -d '{"
   Hosted backend: `https://Alexps9yyy-hh-research-api.hf.space`.
 - Embeddings: OpenAI-compatible, default **SiliconFlow `BAAI/bge-m3` (1024 dims)**;
   the `embeddings.vector` column dim must match (`set_embedding_dim.sql`).
-- Chat/RAG: **DeepSeek `deepseek-chat`**.
+- Chat/RAG: an OpenAI-compatible **LiteLLM gateway** (`*_BASE_URL=http://litellm:4000/v1`,
+  model `claude-sonnet-4-6`). Primary = **AWS Bedrock Claude** (egressed through an
+  overseas SS proxy, since Anthropic geo-blocks CN IPs); **fallback = DeepSeek-V4**
+  (`api.deepseek.com`, direct via `NO_PROXY`) so Q&A keeps working when the proxy /
+  Bedrock is down. App code is provider-agnostic — it only ever sees the gateway.
 - Semantic search / RAG / funding / daily features require their env keys and the
   `migration_0004.sql` tables; otherwise those endpoints return errors while the
   rest of the API keeps working.
@@ -121,14 +125,30 @@ curl -X POST http://localhost:9000/qa -H 'Content-Type: application/json' -d '{"
 
 - **Frontend deploys to Vercel** (live: https://investment-research-database.vercel.app/),
   not GitHub Pages. Deploy = `git push public database/v1.0:main --force`; Vercel
-  auto-builds. Set Vercel env `NEXT_PUBLIC_API_URL` to the backend URL. A
-  `deploy-pages.yml` workflow exists but is **not** the deploy path — ignore it.
+  auto-builds. A `deploy-pages.yml` workflow exists but is **not** the deploy path — ignore it.
+- **Vercel → Tencent backend proxy**: `frontend/vercel.json` rewrites `/api/:path*`
+  to the HTTP-only Tencent backend (`http://110.40.131.38:8000`), avoiding mixed-content.
+  `next.config.js` only enables `rewrites()` in dev and only sets `trailingSlash`
+  for GitHub-Pages builds (`NEXT_PUBLIC_BASE_PATH`), else the 308s break the proxy.
 - Backend + MCP deploy to Hugging Face Spaces via `git subtree split` (see
   [`memory/deployment.md`](memory/deployment.md)).
 - **Frontend pages are merged** — `/data` (Sources/Signals/Entities tabs, `?tab=`)
   and `/explore` (AI Q&A + semantic + keyword search). Old routes
   (`/sources /signals /entities /wiki /ask`) are client redirects; don't recreate
   them as full pages. Selective CSV export is client-side (`frontend/src/lib/csv.ts`).
+- **Row selection + bulk actions** live in `components/data/selection.tsx`
+  (`useRowSelection`, `Checkbox`, `ExportBar`, `bulkDelete`). The three checkbox
+  lists (person Sources / Signals / Entities) wire `onDeleteSelected` into
+  `ExportBar` for **bulk delete**; `bulkDelete()` deletes sequentially (REPEATABLE
+  READ ⇒ avoid concurrent-write 409s) and reports per-id success/failure.
+- **AI search & Q&A return entities only** (`/ai/search?types=entity`, `/ai/ask`
+  defaults `object_types=["entity"]`) — source rows duplicate entities. The Explore
+  UI shows these hits under the "信源 / Source" label. The Q&A system prompt forbids
+  exposing retrieval jargon ("context") and keeps "no info" replies to one sentence.
+- **Dashboard / graph labels**: the 4th stat card is **Knowledge Graph** (relations
+  count → `/graph`), not "组织". Entity types render via `entityTypeLabel()` in
+  `lib/entityColors.ts` (e.g. `model` → "AI 模型"). Graph type/relation filters are
+  **solo-focus**: clicking one isolates+re-clusters its subgraph.
 - **Static-export gotcha**: with `output: 'export'`, a dynamic route's
   `generateStaticParams()` must return a non-empty array (see `wiki/entities/[id]`).
 

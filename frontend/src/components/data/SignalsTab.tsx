@@ -9,7 +9,7 @@ import { Plus, ExternalLink, Pencil, Trash2, Search } from 'lucide-react';
 import { format } from 'date-fns';
 import { SignalEditModal } from '@/components/SignalEditModal';
 import { downloadCsv, type CsvColumn } from '@/lib/csv';
-import { useRowSelection, Checkbox, ExportBar } from './selection';
+import { useRowSelection, Checkbox, ExportBar, bulkDelete } from './selection';
 
 const typeBadge: Record<string, 'blue' | 'green' | 'purple' | 'yellow' | 'default'> = {
   paper: 'blue', blog: 'green', tweet: 'purple', model_release: 'yellow', news: 'default',
@@ -36,6 +36,7 @@ export function SignalsTab() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Signal | null>(null);
   const [q, setQ] = useState('');
+  const [deleting, setDeleting] = useState(false);
   const { selected, toggle, setAll, clear } = useRowSelection();
 
   useEffect(() => {
@@ -72,6 +73,19 @@ export function SignalsTab() {
     }
   }
 
+  async function handleBulkDelete() {
+    const ids = signals.filter((s) => selected.has(s.id)).map((s) => s.id);
+    if (ids.length === 0) return;
+    if (!confirm(t('action.confirm_bulk_delete').replace('{n}', String(ids.length)))) return;
+    setDeleting(true);
+    const { ok, failed } = await bulkDelete(ids, (id) => api.delete(`/signals/${id}`));
+    const okSet = new Set(ok);
+    setSignals((prev) => prev.filter((s) => !okSet.has(s.id)));
+    clear();
+    setDeleting(false);
+    if (failed.length) alert(t('action.bulk_delete_failed').replace('{n}', String(failed.length)));
+  }
+
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -96,6 +110,8 @@ export function SignalsTab() {
             onExportSelected={() => downloadCsv(signals.filter((s) => selected.has(s.id)), CSV_COLUMNS, 'signals')}
             onExportAll={() => downloadCsv(filtered, CSV_COLUMNS, 'signals')}
             onClear={clear}
+            onDeleteSelected={handleBulkDelete}
+            deleting={deleting}
           />
           <button
             onClick={() => { setEditing(null); setModalOpen(true); }}

@@ -17,7 +17,8 @@
 │ (LangGraph)  │   /api/*          │ PostgreSQL+pgvector │
 │ :9000 /qa    │                   │   (Supabase)        │
 └──────────────┘                   └─────────────────────┘
-              external LLM/embeddings: DeepSeek (chat) · SiliconFlow bge-m3 (embed)
+    external LLM/embeddings: LiteLLM gateway → Bedrock Claude (primary) /
+    DeepSeek-V4 (fallback) for chat · SiliconFlow bge-m3 (embed)
 ```
 
 ## Key principle
@@ -47,7 +48,8 @@ Next.js 14 app router. Pages are consolidated (do NOT recreate the old split pag
 
 - `app/dashboard` — stats + recent activity.
 - `app/data` — **Data Hub**: tabbed Sources / Signals / Entities (merged). Reads
-  `?tab=`. Per-row checkboxes + client-side CSV export (`lib/csv.ts`).
+  `?tab=`. Per-row checkboxes + client-side CSV export (`lib/csv.ts`) + **bulk
+  delete** (`components/data/selection.tsx`: `useRowSelection`/`ExportBar`/`bulkDelete`).
 - `app/explore` — **Explore**: one page with three modes — AI Q&A (`/ai/ask`),
   semantic search (`/ai/search`), keyword search (`/search`). Results deep-link to
   the entity Wiki.
@@ -137,9 +139,11 @@ load empty (the alert whitelist did exactly this → prefilter degraded to all
 ## Data flow examples
 
 - **Semantic search**: query → `services/llm.embed_text` (SiliconFlow) → pgvector
-  cosine search in `embeddings` → hits.
-- **RAG ask**: question → semantic search for context → `services/llm.chat`
-  (DeepSeek) → grounded answer + sources.
+  cosine search in `embeddings` → hits. Search & RAG retrieve **entities only**
+  (`object_types=["entity"]`) since source rows duplicate entities.
+- **RAG ask**: question → semantic search (entities) → `services/llm.chat`
+  (LiteLLM gateway → Bedrock Claude, DeepSeek-V4 fallback) → grounded answer +
+  sources. The system prompt forbids exposing retrieval internals ("context").
 - **Daily Boost**: pick top signals in window → optional LLM summary → upsert
   `daily_digests`.
 
@@ -147,4 +151,6 @@ load empty (the alert whitelist did exactly this → prefilter degraded to all
 
 - Embeddings: OpenAI-compatible; default **SiliconFlow `BAAI/bge-m3`, 1024 dims**.
   The `embeddings.vector` column dimension MUST match (`set_embedding_dim.sql`).
-- Chat / RAG: **DeepSeek `deepseek-chat`** (OpenAI-compatible).
+- Chat / RAG: OpenAI-compatible **LiteLLM gateway** (`http://litellm:4000/v1`).
+  Primary **AWS Bedrock Claude** (`claude-sonnet-4-6`, via overseas SS proxy);
+  fallback **DeepSeek-V4** (`api.deepseek.com`, direct). App sees only the gateway.

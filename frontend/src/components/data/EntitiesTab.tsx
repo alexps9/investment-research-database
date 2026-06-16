@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { Plus, BookOpen, Search, Pencil, Trash2, Check, X, GitBranch } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { downloadCsv, type CsvColumn } from '@/lib/csv';
-import { useRowSelection, Checkbox, ExportBar } from './selection';
+import { useRowSelection, Checkbox, ExportBar, bulkDelete } from './selection';
 
 const typeColor: Record<string, 'blue' | 'green' | 'purple' | 'yellow' | 'default'> = {
   topic: 'blue',
@@ -46,6 +46,7 @@ export function EntitiesTab() {
   const [form, setForm] = useState({ name: '', canonical_name: '', entity_type: 'topic', introduction: '' });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editState, setEditState] = useState<EditState | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const { selected, toggle, setAll, clear } = useRowSelection();
 
   // Map: entityId → parent entity name (for display in table)
@@ -177,6 +178,24 @@ export function EntitiesTab() {
     } catch (err) { alert(String(err)); }
   }
 
+  async function handleBulkDelete() {
+    const ids = entities.filter((e) => selected.has(e.id)).map((e) => e.id);
+    if (ids.length === 0) return;
+    if (!confirm(t('action.confirm_bulk_delete').replace('{n}', String(ids.length)))) return;
+    setDeleting(true);
+    const { ok, failed } = await bulkDelete(ids, (id) => api.delete(`/entities/${id}`));
+    const okSet = new Set(ok);
+    setEntities((prev) => prev.filter((e) => !okSet.has(e.id)));
+    setParentMap((m) => {
+      const n = { ...m };
+      okSet.forEach((id) => delete n[id]);
+      return n;
+    });
+    clear();
+    setDeleting(false);
+    if (failed.length) alert(t('action.bulk_delete_failed').replace('{n}', String(failed.length)));
+  }
+
   const inputCls = 'w-full rounded border border-gray-200 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500';
 
   return (
@@ -211,6 +230,8 @@ export function EntitiesTab() {
             onExportSelected={() => downloadCsv(entities.filter((e) => selected.has(e.id)), CSV_COLUMNS, 'research_fields')}
             onExportAll={() => downloadCsv(filtered, CSV_COLUMNS, 'research_fields')}
             onClear={clear}
+            onDeleteSelected={handleBulkDelete}
+            deleting={deleting}
           />
           <button onClick={() => setShowForm(!showForm)}
             className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700">

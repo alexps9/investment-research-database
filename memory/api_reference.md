@@ -59,9 +59,15 @@ are under the `/api` prefix. Interactive docs at `/docs`.
 
 ## AI — semantic search & RAG
 - `GET /api/ai/status` → `{embeddings_enabled, chat_enabled, embedding_model, llm_model}`
-- `GET /api/ai/search?q=&types=entity,source,signal&limit=`  (vector search)
-- `POST /api/ai/ask` `{question, top_k}` → `{answer, sources}`  (RAG)
-- `POST /api/ai/reindex` `{object_types?}`  (rebuild vector index)
+- `GET /api/ai/search?q=&types=entity,source,signal&limit=`  (vector search). `types`
+  defaults to all, but the **frontend passes `types=entity`** — source rows duplicate
+  entities, so search surfaces entities only (shown under the "信源 / Source" label).
+- `POST /api/ai/ask` `{question, top_k, object_types?}` → `{answer, sources}` (RAG).
+  Retrieval defaults to **`object_types=["entity"]`**. The system prompt is tuned to
+  never mention "context"/retrieval internals and to keep "no relevant info" replies
+  to one short sentence. Chat runs through the LiteLLM gateway (Bedrock Claude →
+  DeepSeek-V4 fallback); upstream errors surface as **502**.
+- `POST /api/ai/reindex` `{object_types?}`  (rebuild vector index; indexes all types)
 
 ## Daily Boost
 - `GET /api/daily?limit=` · `GET /api/daily/latest` · `GET /api/daily/{date}`

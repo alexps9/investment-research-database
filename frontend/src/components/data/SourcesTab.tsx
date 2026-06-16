@@ -8,7 +8,7 @@ import { useLang } from '@/lib/i18n';
 import { SourceEditModal } from '@/components/SourceEditModal';
 import { OrganizationEditModal } from '@/components/OrganizationEditModal';
 import { downloadCsv, type CsvColumn } from '@/lib/csv';
-import { useRowSelection, Checkbox, ExportBar } from './selection';
+import { useRowSelection, Checkbox, ExportBar, bulkDelete } from './selection';
 
 const activityColor: Record<string, 'green' | 'blue' | 'yellow' | 'gray'> = {
   very_active: 'green', active: 'blue', normal: 'yellow', inactive: 'gray', unknown: 'gray',
@@ -40,6 +40,7 @@ export function SourcesTab() {
   const [orgModalOpen, setOrgModalOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
   const [q, setQ] = useState('');
+  const [deleting, setDeleting] = useState(false);
   const { selected, toggle, setAll, clear } = useRowSelection();
 
   // Restore sub-view from URL (?sub=person|organization)
@@ -94,6 +95,19 @@ export function SourcesTab() {
     } catch (err) {
       alert(`${t('action.delete_failed')}: ${String(err)}`);
     }
+  }
+
+  async function handleBulkDelete() {
+    const ids = sources.filter((s) => selected.has(s.id)).map((s) => s.id);
+    if (ids.length === 0) return;
+    if (!confirm(t('action.confirm_bulk_delete').replace('{n}', String(ids.length)))) return;
+    setDeleting(true);
+    const { ok, failed } = await bulkDelete(ids, (id) => api.delete(`/sources/${id}`));
+    const okSet = new Set(ok);
+    setSources((prev) => prev.filter((s) => !okSet.has(s.id)));
+    clear();
+    setDeleting(false);
+    if (failed.length) alert(t('action.bulk_delete_failed').replace('{n}', String(failed.length)));
   }
 
   const filtered = useMemo(() => {
@@ -151,6 +165,8 @@ export function SourcesTab() {
               onExportSelected={() => downloadCsv(sources.filter((s) => selected.has(s.id)), CSV_COLUMNS, 'sources')}
               onExportAll={() => downloadCsv(filtered, CSV_COLUMNS, 'sources')}
               onClear={clear}
+              onDeleteSelected={handleBulkDelete}
+              deleting={deleting}
             />
           )}
           {isOrgView ? (

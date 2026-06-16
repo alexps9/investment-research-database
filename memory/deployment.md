@@ -51,9 +51,14 @@ its `main`. So deploying the frontend is just:
 git push public database/v1.0:main --force   # Vercel auto-builds & deploys
 ```
 
-Set the Vercel project env var `NEXT_PUBLIC_API_URL` to the backend URL
-(`https://Alexps9yyy-hh-research-api.hf.space`) so the static client knows where
-the API is.
+The deployed frontend reaches the backend through a **Vercel edge rewrite**:
+`frontend/vercel.json` proxies `/api/:path*` → the Tencent backend
+(`http://110.40.131.38:8000/api/:path*`). This keeps the browser on HTTPS while the
+backend is HTTP-only (no mixed-content). Notes:
+- `next.config.js` enables `rewrites()` **only in dev**; in prod Vercel uses
+  `vercel.json`. `trailingSlash` is enabled **only** for GitHub-Pages builds
+  (`NEXT_PUBLIC_BASE_PATH`); on Vercel it must stay off or 308 redirects break the proxy.
+- To point at the HF backend instead, set `NEXT_PUBLIC_API_URL` and drop the rewrite.
 
 > History / gotchas:
 > - We do **NOT** use GitHub Pages. A `deploy-pages.yml` workflow exists but is not
@@ -99,6 +104,15 @@ host while keeping the DB on Supabase and the frontend on Vercel. Artifacts live
   Bedrock calls through it via `HTTPS_PROXY=http://proxy:8118` (`BEDROCK_PROXY_URL`).
   `PROXY_FORWARD_URL=ss://...` is the node. Correct Bedrock model id is
   `us.anthropic.claude-sonnet-4-6` (no `-v1:0`; note `anthropic` spelling).
+  - SS nodes rotate/expire. When Q&A 502s with proxy `503 Service Unavailable` or
+    `i/o timeout`, decode a fresh node from the subscription, TCP-test it, then update
+    `PROXY_FORWARD_URL` and recreate `proxy`+`litellm`.
+- **LLM fallback (DeepSeek-V4):** litellm `fallbacks` route `claude-sonnet-4-6` →
+  `deepseek-v4` (`openai/deepseek-v4-pro` on `api.deepseek.com`, key
+  `DEEPSEEK_FALLBACK_API_KEY`) when the primary errors. **`api.deepseek.com` is in
+  `NO_PROXY`** so the fallback stays reachable even when the SS proxy is down — the
+  whole point of the fallback. (DeepSeek's API exposes `deepseek-v4-pro` /
+  `deepseek-v4-flash`, not a bare `deepseek-v4`.)
 - Embeddings stay on **SiliconFlow bge-m3 (1024 dims)** — reachable from CN directly.
 - ghcr/dockerhub pulls from CN: used the **NJU mirror** `ghcr.nju.edu.cn` for the
   litellm image (direct ghcr blob CDN stalls from China); dockerhub `ginuerzh/gost`

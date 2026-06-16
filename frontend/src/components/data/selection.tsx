@@ -1,6 +1,6 @@
 'use client';
 import { useState, useCallback } from 'react';
-import { Download, CheckSquare, X } from 'lucide-react';
+import { Download, CheckSquare, X, Trash2 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 
 /** Reusable row-selection state keyed by id. */
@@ -22,6 +22,28 @@ export function useRowSelection() {
   const clear = useCallback(() => setSelected(new Set()), []);
 
   return { selected, toggle, setAll, clear };
+}
+
+/**
+ * Delete a batch of ids one-by-one. Sequential (not Promise.all) on purpose:
+ * the backend runs at REPEATABLE READ isolation, so concurrent deletes can
+ * raise serialization 409s. Returns which ids succeeded vs failed.
+ */
+export async function bulkDelete(
+  ids: string[],
+  deleteOne: (id: string) => Promise<unknown>,
+): Promise<{ ok: string[]; failed: string[] }> {
+  const ok: string[] = [];
+  const failed: string[] = [];
+  for (const id of ids) {
+    try {
+      await deleteOne(id);
+      ok.push(id);
+    } catch {
+      failed.push(id);
+    }
+  }
+  return { ok, failed };
 }
 
 export function Checkbox({
@@ -47,17 +69,24 @@ export function Checkbox({
   );
 }
 
-/** Export toolbar: shows selection count, export-selected and export-all buttons. */
+/**
+ * Selection toolbar: shows selection count, optional bulk-delete, export-selected
+ * and export-all. Pass `onDeleteSelected` to enable the bulk-delete button.
+ */
 export function ExportBar({
   count,
   onExportSelected,
   onExportAll,
   onClear,
+  onDeleteSelected,
+  deleting,
 }: {
   count: number;
   onExportSelected: () => void;
   onExportAll: () => void;
   onClear: () => void;
+  onDeleteSelected?: () => void;
+  deleting?: boolean;
 }) {
   const { t } = useLang();
   return (
@@ -74,6 +103,16 @@ export function ExportBar({
           >
             <X size={13} />
           </button>
+          {onDeleteSelected && (
+            <button
+              onClick={onDeleteSelected}
+              disabled={deleting}
+              className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 shadow-sm hover:bg-red-100 disabled:opacity-50"
+            >
+              <Trash2 size={15} className={deleting ? 'animate-pulse' : ''} />
+              {deleting ? t('action.deleting') : t('action.delete_selected')}
+            </button>
+          )}
           <button
             onClick={onExportSelected}
             className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
