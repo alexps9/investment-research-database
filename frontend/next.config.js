@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
+
+// GitHub Pages needs a basePath + trailing slashes to serve the static export
+// from a subpath. Vercel serves at the root and proxies /api/* via vercel.json,
+// where trailing-slash redirects would break the API proxy — so only enable
+// trailingSlash for the GitHub Pages build (detected via the base path).
+const isGithubPages = !!process.env.NEXT_PUBLIC_BASE_PATH;
+
 const nextConfig = {
   // Static export for GitHub Pages.
   // In local dev (`next dev`), output is ignored so hot-reload and rewrites still work.
@@ -7,7 +14,7 @@ const nextConfig = {
   // GitHub Pages serves the site under /investment-research-database
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
 
-  trailingSlash: true,
+  trailingSlash: isGithubPages,
 
   // <Image> optimisation requires a Node.js server; disable for static export.
   images: { unoptimized: true },
