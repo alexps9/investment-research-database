@@ -1,24 +1,23 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Database, Zap, Layers, User, Building2 } from 'lucide-react';
+import { Database, Zap, Layers, Radio } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SourcesTab } from '@/components/data/SourcesTab';
 import { SignalsTab } from '@/components/data/SignalsTab';
 import { EntitiesTab } from '@/components/data/EntitiesTab';
 
-type Tab = 'persons' | 'organizations' | 'signals' | 'entities';
+type Tab = 'sources' | 'signals' | 'entities';
 
-const TABS: { id: Tab; label: string; icon: typeof User }[] = [
-  { id: 'persons',       label: '研究者',   icon: User      },
-  { id: 'organizations', label: '机构',      icon: Building2 },
-  { id: 'signals',       label: '信号',      icon: Zap       },
-  { id: 'entities',      label: '研究领域',  icon: Layers    },
+const TABS: { id: Tab; label: string; icon: typeof Radio }[] = [
+  { id: 'sources',  label: '信号源',   icon: Radio  },
+  { id: 'signals',  label: '信号',      icon: Zap    },
+  { id: 'entities', label: '研究领域',  icon: Layers },
 ];
 
 export default function DataPage() {
   const { t } = useLang();
-  const [tab, setTab] = useState<Tab>('persons');
+  const [tab, setTab] = useState<Tab>('sources');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -54,10 +53,9 @@ export default function DataPage() {
       </div>
 
       <div className="animate-fade-in">
-        {tab === 'persons'       && <SourcesTab sourceType="person"       />}
-        {tab === 'organizations' && <SourcesTab sourceType="organization" />}
-        {tab === 'signals'       && <SignalsTab />}
-        {tab === 'entities'      && <EntitiesTab />}
+        {tab === 'sources'  && <SourcesTab />}
+        {tab === 'signals'  && <SignalsTab />}
+        {tab === 'entities' && <EntitiesTab />}
       </div>
     </div>
   );

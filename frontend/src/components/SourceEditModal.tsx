@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
-import type { Source, SourceCreate, SourceUpdate, TagNode, Organization, SourceExperience, SourceExperienceCreate } from '@/lib/types';
+import type { Source, SourceCreate, SourceUpdate, Entity, Organization, SourceExperience, SourceExperienceCreate } from '@/lib/types';
 import { Modal } from '@/components/ui/Modal';
 import { useLang } from '@/lib/i18n';
 import { X, Plus, Trash2 } from 'lucide-react';
@@ -28,20 +28,23 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Available topics and organizations
-  const [allTopics, setAllTopics] = useState<TagNode[]>([]);
+  // Research fields (topic/approach entities) and organizations
+  const [researchFields, setResearchFields] = useState<Entity[]>([]);
   const [allOrgs, setAllOrgs] = useState<Organization[]>([]);
-  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const [selectedFieldIds, setSelectedFieldIds] = useState<string[]>([]);
 
   // Experiences state (person sources only)
   const [experiences, setExperiences] = useState<SourceExperience[]>([]);
   const [newExp, setNewExp] = useState<Partial<SourceExperienceCreate>>({});
   const [addingExp, setAddingExp] = useState(false);
 
-  // Load topics and organizations once
+  // Load research fields (managed in the Research Fields page) and organizations
   useEffect(() => {
     if (!open) return;
-    api.get<TagNode[]>('/tags?tag_type=topic').then(setAllTopics).catch(() => {});
+    Promise.all([
+      api.get<Entity[]>('/entities?entity_type=topic&limit=1000').catch(() => []),
+      api.get<Entity[]>('/entities?entity_type=approach&limit=1000').catch(() => []),
+    ]).then(([topics, approaches]) => setResearchFields([...topics, ...approaches]));
     api.get<Organization[]>('/organizations?limit=500').then(setAllOrgs).catch(() => {});
   }, [open]);
 
@@ -62,16 +65,23 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
         ? { ...source }
         : { name: '', source_type: 'person', activity_status: 'unknown', is_active: true },
     );
-    setSelectedTagIds(source ? source.source_tags.map((st) => st.tag_id) : []);
     setError(null);
   }
+
+  // Pre-select research fields by matching existing source tags by name
+  useEffect(() => {
+    if (!open) return;
+    if (!source) { setSelectedFieldIds([]); return; }
+    const tagNames = new Set(source.source_tags.map((st) => st.tag?.name).filter(Boolean));
+    setSelectedFieldIds(researchFields.filter((rf) => tagNames.has(rf.name)).map((rf) => rf.id));
+  }, [open, source, researchFields]);
 
   function set<K extends keyof SourceCreate>(key: K, value: SourceCreate[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
-  function toggleTag(id: string) {
-    setSelectedTagIds((prev) =>
+  function toggleField(id: string) {
+    setSelectedFieldIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   }
@@ -81,7 +91,7 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
     setSaving(true);
     setError(null);
     try {
-      const payload: SourceUpdate = { ...form, tag_ids: selectedTagIds };
+      const payload: SourceUpdate = { ...form, research_field_ids: selectedFieldIds };
       let saved: Source;
       if (source) {
         saved = await api.patch<Source>(`/sources/${source.id}`, payload);
@@ -168,17 +178,17 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
           <textarea rows={2} value={form.description ?? ''} onChange={(e) => set('description', e.target.value || undefined)} className={inputCls} />
         </div>
 
-        {/* Topics multi-select */}
+        {/* Research fields multi-select (sourced from the Research Fields page) */}
         <div className="col-span-2">
-          <label className={labelCls}>研究领域（Topics）</label>
-          {selectedTagIds.length > 0 && (
+          <label className={labelCls}>研究领域（来自研究领域库）</label>
+          {selectedFieldIds.length > 0 && (
             <div className="mb-2 flex flex-wrap gap-1">
-              {selectedTagIds.map((tid) => {
-                const tag = allTopics.find((t) => t.id === tid);
-                return tag ? (
-                  <span key={tid} className="flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700">
-                    {tag.name}
-                    <button type="button" onClick={() => toggleTag(tid)} className="text-blue-400 hover:text-blue-700">
+              {selectedFieldIds.map((fid) => {
+                const rf = researchFields.find((r) => r.id === fid);
+                return rf ? (
+                  <span key={fid} className="flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700">
+                    {rf.name}
+                    <button type="button" onClick={() => toggleField(fid)} className="text-blue-400 hover:text-blue-700">
                       <X size={11} />
                     </button>
                   </span>
@@ -187,18 +197,19 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
             </div>
           )}
           <div className="max-h-36 overflow-y-auto rounded-md border border-gray-200 p-2">
-            {allTopics.length === 0 ? (
-              <p className="text-xs text-gray-400">暂无 topic，请先在研究领域页面创建</p>
+            {researchFields.length === 0 ? (
+              <p className="text-xs text-gray-400">暂无研究领域，请先在「研究领域」页面创建</p>
             ) : (
-              allTopics.map((tag) => (
-                <label key={tag.id} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 hover:bg-gray-50">
+              researchFields.map((rf) => (
+                <label key={rf.id} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 hover:bg-gray-50">
                   <input
                     type="checkbox"
-                    checked={selectedTagIds.includes(tag.id)}
-                    onChange={() => toggleTag(tag.id)}
+                    checked={selectedFieldIds.includes(rf.id)}
+                    onChange={() => toggleField(rf.id)}
                     className="h-3.5 w-3.5 accent-blue-600"
                   />
-                  <span className="text-sm text-gray-700">{tag.name}</span>
+                  <span className="text-sm text-gray-700">{rf.name}</span>
+                  <span className="ml-auto text-[10px] uppercase text-gray-400">{rf.entity_type}</span>
                 </label>
               ))
             )}

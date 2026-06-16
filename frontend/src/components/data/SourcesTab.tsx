@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { api } from '@/lib/api';
 import type { Source, Organization } from '@/lib/types';
 import { Badge } from '@/components/ui/Badge';
-import { Plus, ExternalLink, Pencil, Trash2, Search } from 'lucide-react';
+import { Plus, ExternalLink, Pencil, Trash2, Search, User, Building2 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { SourceEditModal } from '@/components/SourceEditModal';
 import { OrganizationEditModal } from '@/components/OrganizationEditModal';
@@ -27,13 +27,11 @@ const CSV_COLUMNS: CsvColumn<Source>[] = [
   { key: 'description', header: 'description' },
 ];
 
-interface Props {
-  /** 'person' | 'organization' | undefined = show all */
-  sourceType?: 'person' | 'organization';
-}
+type View = 'person' | 'organization';
 
-export function SourcesTab({ sourceType }: Props) {
+export function SourcesTab() {
   const { t } = useLang();
+  const [view, setView] = useState<View>('person');
   const [sources, setSources] = useState<Source[]>([]);
   const [orgs, setOrgs] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,12 +42,29 @@ export function SourcesTab({ sourceType }: Props) {
   const [q, setQ] = useState('');
   const { selected, toggle, setAll, clear } = useRowSelection();
 
+  // Restore sub-view from URL (?sub=person|organization)
+  useEffect(() => {
+    const sub = new URLSearchParams(window.location.search).get('sub');
+    if (sub === 'organization' || sub === 'person') setView(sub);
+  }, []);
+
+  function selectView(next: View) {
+    setView(next);
+    setQ('');
+    clear();
+    const url = new URL(window.location.href);
+    url.searchParams.set('sub', next);
+    window.history.replaceState(null, '', url.toString());
+  }
+
   useEffect(() => {
     setLoading(true);
-    const url = sourceType ? `/sources?limit=2000&source_type=${sourceType}` : '/sources?limit=2000';
-    api.get<Source[]>(url).then(setSources).catch(console.error).finally(() => setLoading(false));
+    api.get<Source[]>('/sources?limit=2000&source_type=person')
+      .then(setSources).catch(console.error).finally(() => setLoading(false));
     api.get<Organization[]>('/organizations?limit=500').then(setOrgs).catch(console.error);
-  }, [sourceType]);
+  }, []);
+
+  const sourceType: View = view;
 
   function handleSaved(saved: Source) {
     setSources((prev) => {
@@ -97,6 +112,27 @@ export function SourcesTab({ sourceType }: Props) {
 
   return (
     <div>
+      {/* Person / Organization segmented toggle */}
+      <div className="mb-4 inline-flex rounded-lg border border-gray-200 bg-gray-50 p-1">
+        {([
+          ['person', '人物', User],
+          ['organization', '机构', Building2],
+        ] as const).map(([v, label, Icon]) => (
+          <button
+            key={v}
+            onClick={() => selectView(v)}
+            className={`flex items-center gap-1.5 rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+              view === v ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Icon size={14} /> {label}
+            <span className={`ml-0.5 rounded-full px-1.5 text-xs ${view === v ? 'bg-blue-50 text-blue-600' : 'bg-gray-200 text-gray-500'}`}>
+              {v === 'person' ? sources.length : orgs.length}
+            </span>
+          </button>
+        ))}
+      </div>
+
       {/* Toolbar */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="relative w-72 max-w-full">
