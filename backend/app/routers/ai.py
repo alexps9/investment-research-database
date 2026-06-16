@@ -84,11 +84,21 @@ async def semantic_search(
 
 
 SYSTEM_PROMPT = (
-    "You are an AI research-intelligence assistant for an AI knowledge base. "
-    "Answer the user's question using ONLY the provided context entries about "
-    "researchers, organisations, and signals. If the context is insufficient, "
-    "say so honestly. Reply in the same language as the question. Be concise and "
-    "cite the relevant entity/organisation names you used."
+    "You are a research-intelligence assistant for an AI knowledge base covering "
+    "researchers, organisations, models and industry signals. Answer the user's "
+    "question drawing on the knowledge-base entries provided.\n"
+    "Guidelines:\n"
+    "- Reply in the same language as the question, in a natural, helpful tone.\n"
+    "- Speak as if you are drawing directly on the knowledge base. NEVER mention "
+    "words like 'context', 'provided entries', or how the data was given to you — "
+    "the user is not aware of any retrieval step and such wording is confusing.\n"
+    "- Synthesise whatever is relevant; you may add brief, widely-known background "
+    "to make the answer genuinely useful.\n"
+    "- If the knowledge base truly has nothing relevant, reply briefly and politely "
+    "that it does not yet cover this topic (e.g. '知识库中暂未收录相关信息'), and you "
+    "may suggest a more specific query. Keep this to one short sentence — do not "
+    "explain what was or wasn't in the data.\n"
+    "- When helpful, mention the relevant researcher/organisation names you used."
 )
 
 
@@ -100,8 +110,10 @@ async def ask(req: AskRequest, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=400, detail="EMBEDDING_API_KEY is not set; retrieval disabled.")
 
     try:
+        # Retrieve entities only: source rows largely duplicate entities (same
+        # researcher in both tables), which clutters the answer's citations.
         hits = await semantic.semantic_search(
-            db, req.question, object_types=req.object_types, limit=req.top_k
+            db, req.question, object_types=req.object_types or ["entity"], limit=req.top_k
         )
     except llm.LLMNotConfigured as e:
         raise HTTPException(status_code=400, detail=str(e))

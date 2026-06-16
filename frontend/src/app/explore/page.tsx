@@ -21,12 +21,18 @@ function hitWikiLink(hit: SearchHit): string | null {
 }
 
 function HitRow({ hit }: { hit: SearchHit }) {
+  const { lang } = useLang();
   const link = hitWikiLink(hit);
+  // Search now returns entities only; surface them under the user-facing
+  // "source / 信源" label, which is how users think of these researchers.
+  const typeLabel =
+    hit.object_type === 'entity' ? (lang === 'zh' ? '信源' : 'Source') : hit.object_type;
+  const variant = hit.object_type === 'entity' ? 'green' : (typeBadge[hit.object_type] ?? 'default');
   const body = (
     <div className="flex items-start justify-between gap-3 rounded-xl border border-gray-100 bg-white p-3.5 transition-all hover:border-blue-200 hover:shadow-sm">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <Badge variant={typeBadge[hit.object_type] ?? 'default'}>{hit.object_type}</Badge>
+          <Badge variant={variant}>{typeLabel}</Badge>
           <span className="truncate text-sm font-medium text-gray-900">{hit.name}</span>
           {link && <BookOpen size={13} className="shrink-0 text-blue-400" />}
         </div>
@@ -80,7 +86,7 @@ export default function ExplorePage() {
         setAnswer(res.answer);
         setHits(res.sources);
       } else if (mode === 'semantic') {
-        setHits(await api.get<SearchHit[]>(`/ai/search?q=${encodeURIComponent(query)}&limit=20`));
+        setHits(await api.get<SearchHit[]>(`/ai/search?q=${encodeURIComponent(query)}&types=entity&limit=20`));
       } else {
         setKeyword(await api.get<SearchResults>(`/search?q=${encodeURIComponent(query)}`));
       }
