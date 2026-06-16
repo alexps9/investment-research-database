@@ -530,8 +530,17 @@ class EntityRepo:
         obj = EntityRelation(**data.model_dump())
         self.db.add(obj)
         await self.db.commit()
-        await self.db.refresh(obj)
-        return obj
+        # Eager-load subject/object so EntityRelationOut serialization doesn't
+        # trigger a lazy load outside the async context (MissingGreenlet).
+        result = await self.db.execute(
+            select(EntityRelation)
+            .where(EntityRelation.id == obj.id)
+            .options(
+                selectinload(EntityRelation.subject).selectinload(Entity.aliases),
+                selectinload(EntityRelation.object_entity).selectinload(Entity.aliases),
+            )
+        )
+        return result.scalar_one()
 
     async def get_relation(self, relation_id: str) -> Optional[EntityRelation]:
         result = await self.db.execute(
