@@ -20,7 +20,13 @@ async function fetcher<T>(path: string, init?: RequestInit): Promise<T> {
     const body = await res.text().catch(() => '');
     throw new Error(`${res.status} ${res.statusText}: ${body}`);
   }
-  return res.json() as Promise<T>;
+  // 204 No Content (e.g. DELETE) or an empty body has no JSON to parse.
+  if (res.status === 204 || res.headers.get('content-length') === '0') {
+    return undefined as T;
+  }
+  const text = await res.text();
+  if (!text) return undefined as T;
+  return JSON.parse(text) as T;
 }
 
 export const api = {
