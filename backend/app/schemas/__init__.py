@@ -103,6 +103,8 @@ class SourceUpdate(SourceExtended):
     importance_score: Optional[float] = None
     reliability_score: Optional[float] = None
     is_active: Optional[bool] = None
+    # When provided, atomically replaces all topic tags for this source
+    tag_ids: Optional[list[str]] = None
 
 
 class SourceOut(SourceBase):
@@ -146,6 +148,14 @@ class TagOut(TagBase):
     model_config = ConfigDict(from_attributes=True)
     id: str
     created_at: datetime
+
+
+class TagTreeOut(TagOut):
+    """Tag with nested children for tree views."""
+    children: list["TagTreeOut"] = []
+
+
+TagTreeOut.model_rebuild()
 
 
 SourceTagOut.model_rebuild()
@@ -254,7 +264,7 @@ class EntityBase(BaseModel):
     name: str
     canonical_name: str
     entity_type: str
-    description: Optional[str] = None
+    introduction: Optional[str] = None
     homepage_url: Optional[str] = None
     metadata: dict = {}
 
@@ -267,7 +277,7 @@ class EntityUpdate(BaseModel):
     name: Optional[str] = None
     canonical_name: Optional[str] = None
     entity_type: Optional[str] = None
-    description: Optional[str] = None
+    introduction: Optional[str] = None
     homepage_url: Optional[str] = None
     metadata: Optional[dict] = None
 

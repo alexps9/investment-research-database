@@ -1,4 +1,5 @@
 from typing import Optional
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
@@ -48,6 +49,16 @@ async def update_entity(entity_id: str, data: EntityUpdate, db: AsyncSession = D
     if not entity:
         raise HTTPException(status_code=404, detail="Entity not found")
     return await repo.update(entity, data)
+
+
+@router.delete("/{entity_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_entity(entity_id: str, db: AsyncSession = Depends(get_db)):
+    """Delete entity and cascade-remove all its graph relations."""
+    repo = EntityRepo(db)
+    entity = await repo.get(entity_id)
+    if not entity:
+        raise HTTPException(status_code=404, detail="Entity not found")
+    await repo.delete(entity)
 
 
 @router.post("/{entity_id}/aliases", response_model=EntityAliasOut, status_code=201)

@@ -1,6 +1,6 @@
 from typing import Optional, Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, or_, and_
+from sqlalchemy import select, delete as sa_delete, func, or_, and_
 from sqlalchemy.orm import selectinload
 
 from app.models import (
@@ -14,7 +14,7 @@ from app.schemas import (
     SourceCreate, SourceUpdate, SourceAccountCreate, SourceTagCreate,
     SignalCreate, SignalUpdate, SignalAnalysisCreate, SignalEntityCreate,
     EntityCreate, EntityUpdate, EntityAliasCreate, EntityRelationCreate,
-    PipelineRunCreate,
+    PipelineRunCreate, TagCreate,
 )
 
 
@@ -98,8 +98,20 @@ class SourceRepo:
         return await self.get(obj.id)
 
     async def update(self, source: Source, data: SourceUpdate) -> Source:
-        for key, value in data.model_dump(exclude_unset=True).items():
+        payload = data.model_dump(exclude_unset=True)
+        tag_ids = payload.pop("tag_ids", None)
+
+        for key, value in payload.items():
             setattr(source, key, value)
+
+        # Atomically replace topic tags when tag_ids is explicitly provided
+        if tag_ids is not None:
+            await self.db.execute(
+                sa_delete(SourceTag).where(SourceTag.source_id == source.id)
+            )
+            for tid in tag_ids:
+                self.db.add(SourceTag(source_id=source.id, tag_id=tid, assigned_by="manual"))
+
         await self.db.commit()
         return await self.get(source.id)
 
@@ -145,12 +157,34 @@ class TagRepo:
         result = await self.db.execute(select(Tag).where(Tag.name == name))
         return result.scalar_one_or_none()
 
-    async def create(self, name: str, tag_type: str = "topic") -> Tag:
-        obj = Tag(name=name, tag_type=tag_type)
+    async def get(self, tag_id: str) -> Optional[Tag]:
+        result = await self.db.execute(select(Tag).where(Tag.id == tag_id))
+        return result.scalar_one_or_none()
+
+    async def list_by_type(self, tag_type: Optional[str] = None) -> Sequence[Tag]:
+        stmt = select(Tag).order_by(Tag.name)
+        if tag_type:
+            stmt = stmt.where(Tag.tag_type == tag_type)
+        result = await self.db.execute(stmt)
+        return result.scalars().all()
+
+    async def create(self, name: str, tag_type: str = "topic", parent_id: Optional[str] = None) -> Tag:
+        obj = Tag(name=name, tag_type=tag_type, parent_id=parent_id)
         self.db.add(obj)
         await self.db.commit()
         await self.db.refresh(obj)
         return obj
+
+    async def update(self, tag: Tag, data: dict) -> Tag:
+        for key, value in data.items():
+            setattr(tag, key, value)
+        await self.db.commit()
+        await self.db.refresh(tag)
+        return tag
+
+    async def delete(self, tag: Tag) -> None:
+        await self.db.delete(tag)
+        await self.db.commit()
 
 
 # ── Signal ────────────────────────────────────────────────────────────────────
@@ -331,6 +365,10 @@ class EntityRepo:
             setattr(entity, key, value)
         await self.db.commit()
         return await self.get(entity.id)
+
+    async def delete(self, entity: Entity) -> None:
+        await self.db.delete(entity)
+        await self.db.commit()
 
     async def add_alias(self, entity_id: str, data: EntityAliasCreate) -> EntityAlias:
         obj = EntityAlias(entity_id=entity_id, **data.model_dump())

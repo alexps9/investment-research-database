@@ -125,7 +125,7 @@ class Tag(Base):
     name: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
     tag_type: Mapped[str] = mapped_column(
         String(50), nullable=False, server_default="topic"
-    )  # topic, method, domain, content_type, org_type
+    )  # topic, approach, domain, content_type, org_type
     parent_id: Mapped[str | None] = mapped_column(
         UUID(as_uuid=False), ForeignKey("tags.id", ondelete="SET NULL"), nullable=True
     )
@@ -237,8 +237,8 @@ class Entity(Base):
     canonical_name: Mapped[str] = mapped_column(Text, nullable=False)
     entity_type: Mapped[str] = mapped_column(
         String(50), nullable=False
-    )  # person, organization, paper, model, method, dataset, benchmark, topic, project, system, event
-    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    )  # person, organization, paper, model, approach, dataset, benchmark, topic, project, system, event
+    introduction: Mapped[str | None] = mapped_column(Text, nullable=True)
     homepage_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     metadata_: Mapped[dict] = mapped_column("metadata", JSONB, nullable=False, server_default="{}")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
@@ -306,9 +306,28 @@ class SignalEntity(Base):
 
 
 VALID_RELATION_TYPES = {
+    # ── Research / technical ─────────────────────────────────────────
     "WORKS_AT", "AFFILIATED_WITH", "PUBLISHED", "AUTHORED", "RELEASED",
     "PROPOSES", "USES", "EVALUATES_ON", "BUILT_ON", "MENTIONS", "ABOUT",
     "FOCUSES_ON", "RELATED_TO", "COMPETES_WITH", "IMPROVES", "INTRODUCES",
+    # ── Topic hierarchy ──────────────────────────────────────────────
+    "SUBTOPIC_OF", "HAS_SUBTOPIC",
+    # ── Person ↔ Person ─────────────────────────────────────────────
+    "CO_AUTHOR",        # 共同作者
+    "CO_WORK",          # 合作者
+    "CLASSMATE",        # 同门 / 同学
+    "ADVISOR_OF",       # 导师 → 学生
+    "SUBORDINATE_OF",   # 下属 → 上级
+    # ── Person ↔ Organization ────────────────────────────────────────
+    "PRE_WORKED_AT",    # 曾就职于
+    "GRADUATED_FROM",   # 毕业于
+    "FOUNDED",          # 创立了
+    # ── Organization ↔ Organization ─────────────────────────────────
+    "SUBSIDIARY_OF",    # 子机构 → 母机构 (e.g. DeepMind → Google)
+    "COMPETITOR_OF",    # 竞争关系
+    "PARTNER_OF",       # 合作伙伴
+    "ACQUIRED_BY",      # 被收购
+    "SPUN_OFF_FROM",    # 从…分拆
 }
 
 

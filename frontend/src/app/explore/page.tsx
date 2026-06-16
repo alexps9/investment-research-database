@@ -216,7 +216,7 @@ export default function ExplorePage() {
                         <span className="flex items-center gap-1 text-sm font-medium text-gray-900 group-hover:text-blue-600">
                           {ent.name} <BookOpen size={12} className="text-blue-400" />
                         </span>
-                        {ent.description && <p className="truncate text-xs text-gray-500">{ent.description}</p>}
+                        {ent.introduction && <p className="truncate text-xs text-gray-500">{ent.introduction}</p>}
                       </Link>
                       <Badge variant="blue">{ent.entity_type}</Badge>
                     </li>

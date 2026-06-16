@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Database, Radio, Zap, Box } from 'lucide-react';
+import { Database, Radio, Zap, Layers } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SourcesTab } from '@/components/data/SourcesTab';
@@ -11,7 +11,7 @@ type Tab = 'sources' | 'signals' | 'entities';
 const TABS: { id: Tab; tKey: string; icon: typeof Radio }[] = [
   { id: 'sources', tKey: 'data.tab.sources', icon: Radio },
   { id: 'signals', tKey: 'data.tab.signals', icon: Zap },
-  { id: 'entities', tKey: 'data.tab.entities', icon: Box },
+  { id: 'entities', tKey: 'data.tab.entities', icon: Layers },
 ];
 
 export default function DataPage() {

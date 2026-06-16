@@ -61,7 +61,7 @@ export default function WikiEntityClient({ id }: { id: string }) {
             {entity.entity_type}
           </Badge>
         </div>
-        {entity.description && <p className="text-gray-600">{entity.description}</p>}
+        {entity.introduction && <p className="text-gray-600">{entity.introduction}</p>}
         {entity.homepage_url && (
           <a href={entity.homepage_url} target="_blank" rel="noreferrer"
             className="mt-1 flex items-center gap-1 text-sm text-blue-600 hover:underline">

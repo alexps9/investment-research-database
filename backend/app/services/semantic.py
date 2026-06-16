@@ -26,8 +26,8 @@ def _entity_text(e: Entity) -> str:
         parts.append(e.canonical_name)
     if e.entity_type:
         parts.append(f"type: {e.entity_type}")
-    if e.description:
-        parts.append(e.description)
+    if e.introduction:
+        parts.append(e.introduction)
     meta = e.metadata_ or {}
     for key in ("research_focus", "sector", "tier"):
         if meta.get(key):
@@ -37,7 +37,7 @@ def _entity_text(e: Entity) -> str:
 
 def _source_text(s: Source) -> str:
     parts = [s.name, f"type: {s.source_type}"]
-    for val in (s.sector, s.tier, s.research_focus, s.role_title, s.description, s.tier_reason):
+    for val in (s.sector, s.tier, s.role_title, s.description, s.tier_reason):
         if val:
             parts.append(str(val))
     return " | ".join(parts)
@@ -162,7 +162,7 @@ async def semantic_search(
         if obj is None:
             continue
         name = getattr(obj, "name", None) or getattr(obj, "title", "")
-        desc = getattr(obj, "description", None) or getattr(obj, "abstract", None)
+        desc = getattr(obj, "introduction", None) or getattr(obj, "description", None) or getattr(obj, "abstract", None)
         results.append({
             "object_type": otype,
             "object_id": oid,

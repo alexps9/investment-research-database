@@ -35,7 +35,6 @@ export interface SourceTag {
 export interface SourceExtended {
   tier?: string;
   sector?: string;
-  research_focus?: string;
   tier_reason?: string;
   notes?: string;
   source_authority?: string;
@@ -63,6 +62,8 @@ export interface SourceCreate extends SourceExtended {
   importance_score?: number;
   reliability_score?: number;
   is_active?: boolean;
+  /** When provided, atomically replaces all topic tags for the source. */
+  tag_ids?: string[];
 }
 
 export type SourceUpdate = Partial<SourceCreate>;
@@ -84,6 +85,15 @@ export interface Source extends SourceExtended {
   source_tags: SourceTag[];
   created_at: string;
   updated_at: string;
+}
+
+export interface TagNode {
+  id: string;
+  name: string;
+  tag_type: string;
+  parent_id?: string;
+  description?: string;
+  children?: TagNode[];
 }
 
 export interface SignalAnalysis {
@@ -146,7 +156,7 @@ export interface Entity {
   name: string;
   canonical_name: string;
   entity_type: string;
-  description?: string;
+  introduction?: string;
   homepage_url?: string;
   metadata: Record<string, unknown>;
   aliases: EntityAlias[];
