@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { useLang } from '@/lib/i18n';
-import { LayoutDashboard, Radio, Zap, Box, Network } from 'lucide-react';
+import { LayoutDashboard, Radio, Zap, Layers, Network } from 'lucide-react';
 
 const EMPTY_STATS: DashboardStats = {
   total_sources: 0, total_signals: 0, total_entities: 0, total_relations: 0,
@@ -43,7 +43,7 @@ export default function DashboardPage() {
   const statCards = [
     { labelKey: 'dashboard.stats.sources',  value: stats.total_sources,   href: '/data?tab=sources',  color: 'text-blue-600',   icon: Radio,   bg: 'from-blue-500 to-sky-500'      },
     { labelKey: 'dashboard.stats.signals',  value: stats.total_signals,   href: '/data?tab=signals',  color: 'text-purple-600', icon: Zap,     bg: 'from-purple-500 to-fuchsia-500' },
-    { labelKey: 'dashboard.stats.entities', value: stats.total_entities,  href: '/data?tab=entities', color: 'text-green-600',  icon: Box,     bg: 'from-emerald-500 to-green-500'  },
+    { labelKey: 'dashboard.stats.entities', value: stats.total_entities,  href: '/data?tab=entities', color: 'text-green-600',  icon: Layers,  bg: 'from-emerald-500 to-green-500'  },
     { labelKey: 'dashboard.stats.orgs',     value: stats.total_relations, href: '/graph',             color: 'text-orange-600', icon: Network, bg: 'from-orange-500 to-amber-500'   },
   ];
 

@@ -89,7 +89,7 @@ export interface SourceCreate extends SourceExtended {
   is_active?: boolean;
   /** When provided, atomically replaces all topic tags for the source. */
   tag_ids?: string[];
-  /** Research-field entity IDs (topic/approach); resolved to tags by name on save. */
+  /** Research-field entity IDs (topic); resolved to tags by name on save. */
   research_field_ids?: string[];
 }
 

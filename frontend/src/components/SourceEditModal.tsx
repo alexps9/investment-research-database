@@ -28,7 +28,7 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Research fields (topic/approach entities) and organizations
+  // Research fields (topic entities) and organizations
   const [researchFields, setResearchFields] = useState<Entity[]>([]);
   const [allOrgs, setAllOrgs] = useState<Organization[]>([]);
   const [selectedFieldIds, setSelectedFieldIds] = useState<string[]>([]);
@@ -41,10 +41,7 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
   // Load research fields (managed in the Research Fields page) and organizations
   useEffect(() => {
     if (!open) return;
-    Promise.all([
-      api.get<Entity[]>('/entities?entity_type=topic&limit=1000').catch(() => []),
-      api.get<Entity[]>('/entities?entity_type=approach&limit=1000').catch(() => []),
-    ]).then(([topics, approaches]) => setResearchFields([...topics, ...approaches]));
+    api.get<Entity[]>('/entities?entity_type=topic&limit=1000').then(setResearchFields).catch(() => {});
     api.get<Organization[]>('/organizations?limit=500').then(setAllOrgs).catch(() => {});
   }, [open]);
 

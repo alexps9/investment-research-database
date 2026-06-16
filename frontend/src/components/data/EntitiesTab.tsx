@@ -11,10 +11,10 @@ import { downloadCsv, type CsvColumn } from '@/lib/csv';
 import { useRowSelection, Checkbox, ExportBar } from './selection';
 
 const typeColor: Record<string, 'blue' | 'green' | 'purple' | 'yellow' | 'default'> = {
-  topic: 'blue', approach: 'yellow',
+  topic: 'blue',
 };
 
-const FIELD_TYPES = ['topic', 'approach'];
+const FIELD_TYPES = ['topic'];
 
 const CSV_COLUMNS: CsvColumn<Entity>[] = [
   { key: 'id', header: 'id' },

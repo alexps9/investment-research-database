@@ -45,10 +45,7 @@ export function OrganizationEditModal({ open, org, onClose, onSaved }: Props) {
 
   useEffect(() => {
     if (!open) return;
-    Promise.all([
-      api.get<Entity[]>('/entities?entity_type=topic&limit=1000').catch(() => []),
-      api.get<Entity[]>('/entities?entity_type=approach&limit=1000').catch(() => []),
-    ]).then(([topics, approaches]) => setResearchFields([...topics, ...approaches]));
+    api.get<Entity[]>('/entities?entity_type=topic&limit=1000').then(setResearchFields).catch(() => {});
     api.get<Organization[]>('/organizations?limit=500').then(setAllOrgs).catch(() => {});
   }, [open]);
 
