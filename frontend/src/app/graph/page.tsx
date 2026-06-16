@@ -7,7 +7,7 @@ import type { EntityRelation, SearchHit, AIStatus } from '@/lib/types';
 import { useLang } from '@/lib/i18n';
 import { ENTITY_COLORS, entityColor } from '@/lib/entityColors';
 import KnowledgeGraph, { type GraphNode, type GraphLink } from '@/components/graph/KnowledgeGraph';
-import { Search, BookOpen, X, Network, Loader2, Sparkles } from 'lucide-react';
+import { Search, BookOpen, X, Network, Loader2, Sparkles, RefreshCw } from 'lucide-react';
 
 export default function GraphPage() {
   const { t } = useLang();
@@ -20,6 +20,8 @@ export default function GraphPage() {
   const [aiStatus, setAiStatus] = useState<AIStatus | null>(null);
   const [locating, setLocating] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<{ created: number; skipped: number } | null>(null);
 
   useEffect(() => {
     api.get<EntityRelation[]>('/graph/relations?limit=1000').then(setRelations).catch(console.error).finally(() => setLoading(false));
@@ -81,6 +83,22 @@ export default function GraphPage() {
     setSelected(node);
   }
 
+  async function handleSync() {
+    setSyncing(true);
+    setSyncResult(null);
+    try {
+      const res = await api.post<{ created: number; skipped: number }>('/graph/sync', {});
+      setSyncResult(res);
+      // Reload relations
+      const rels = await api.get<typeof relations>('/graph/relations?limit=1000');
+      setRelations(rels);
+    } catch (err) {
+      alert(`同步失败: ${String(err)}`);
+    } finally {
+      setSyncing(false);
+    }
+  }
+
   // Semantic-first locate: vector search over entities, fall back to substring match.
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -122,6 +140,22 @@ export default function GraphPage() {
             <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('graph.title')}</h1>
             <p className="text-sm text-gray-500">{nodes.length} · {links.length} {t('graph.relations')}</p>
           </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleSync}
+            disabled={syncing}
+            className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-600 shadow-sm hover:bg-gray-50 disabled:opacity-50"
+            title="从信号源/组织数据同步关系到知识图谱"
+          >
+            <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} />
+            {syncing ? '同步中…' : '同步关系'}
+          </button>
+          {syncResult && (
+            <span className="text-xs text-green-600">
+              +{syncResult.created} 新建，{syncResult.skipped} 已存在
+            </span>
+          )}
         </div>
         <form onSubmit={handleSearch} className="relative w-80 max-w-full">
           {embeddingsOn
