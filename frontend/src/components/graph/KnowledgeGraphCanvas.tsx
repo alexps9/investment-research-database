@@ -4,6 +4,28 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
 import { entityColor } from '@/lib/entityColors';
 
+// Semantic color palette for relation types
+const REL_COLORS: Record<string, string> = {
+  WORKS_AT: '#3b82f6',      // blue
+  PRE_WORKED_AT: '#93c5fd', // light blue
+  FOCUSES_ON: '#10b981',    // green
+  SUBTOPIC_OF: '#6366f1',   // indigo
+  HAS_SUBTOPIC: '#818cf8',
+  SUBSIDIARY_OF: '#f59e0b', // amber
+  PARTNER_OF: '#14b8a6',
+  COMPETITOR_OF: '#ef4444', // red
+  ACQUIRED_BY: '#f97316',
+  CO_AUTHOR: '#8b5cf6',     // violet
+  ADVISOR_OF: '#ec4899',    // pink
+  CLASSMATE: '#d946ef',
+  CO_WORK: '#a855f7',
+  SUBORDINATE_OF: '#94a3b8',
+};
+
+function relColor(label: string): string {
+  return REL_COLORS[label] ?? '#94a3b8';
+}
+
 export interface GraphNode {
   id: string;
   name: string;
@@ -114,8 +136,8 @@ export default function KnowledgeGraphCanvas({
       ctx.strokeStyle = selected ? '#0f172a' : '#ffffff';
       ctx.stroke();
 
-      // labels appear when zoomed in enough, or always for highlighted nodes
-      if (scale > 1.1 || selected || (highlightNodes && highlightNodes.has(node.id))) {
+      // labels appear when zoomed in enough, or always for highlighted / selected nodes
+      if (scale > 0.9 || selected || (highlightNodes && highlightNodes.has(node.id))) {
         const fontSize = (compact ? 3.2 : 3.6) + (selected ? 0.6 : 0);
         ctx.font = `${fontSize}px Inter, system-ui, sans-serif`;
         const label = node.name.length > 28 ? node.name.slice(0, 27) + '…' : node.name;
@@ -204,19 +226,21 @@ export default function KnowledgeGraphCanvas({
       nodeLabel={(n: GraphNode) => `${n.name}  ·  ${n.type}`}
       nodeCanvasObject={paintNode}
       nodePointerAreaPaint={paintPointerArea}
-      linkColor={(l: GraphLink) =>
-        highlightNodes &&
-        highlightNodes.has(endpointId(l.source)) &&
-        highlightNodes.has(endpointId(l.target))
-          ? '#475569'
-          : 'rgba(148,163,184,0.35)'
-      }
+      linkColor={(l: GraphLink) => {
+        const active =
+          highlightNodes &&
+          highlightNodes.has(endpointId(l.source)) &&
+          highlightNodes.has(endpointId(l.target));
+        if (!active && highlightNodes) return 'rgba(148,163,184,0.15)';
+        const base = relColor(l.label ?? '');
+        return active ? base : `${base}55`;
+      }}
       linkWidth={(l: GraphLink) =>
         highlightNodes &&
         highlightNodes.has(endpointId(l.source)) &&
         highlightNodes.has(endpointId(l.target))
-          ? 1.5
-          : 0.6
+          ? 1.8
+          : 0.8
       }
       linkDirectionalArrowLength={compact ? 2.5 : 3.5}
       linkDirectionalArrowRelPos={1}

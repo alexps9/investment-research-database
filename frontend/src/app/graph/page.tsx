@@ -17,6 +17,8 @@ export default function GraphPage() {
   const [focusId, setFocusId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [disabledTypes, setDisabledTypes] = useState<Set<string>>(new Set());
+  const [disabledRelTypes, setDisabledRelTypes] = useState<Set<string>>(new Set());
+  const [showRelFilter, setShowRelFilter] = useState(false);
   const [aiStatus, setAiStatus] = useState<AIStatus | null>(null);
   const [locating, setLocating] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
@@ -47,12 +49,23 @@ export default function GraphPage() {
     return Array.from(s).sort();
   }, [allNodes]);
 
+  const relTypesPresent = useMemo(() => {
+    const s = new Set<string>();
+    allLinks.forEach((l) => { if (l.label) s.add(l.label); });
+    return Array.from(s).sort();
+  }, [allLinks]);
+
   const { nodes, links } = useMemo(() => {
     const keptNodes = allNodes.filter((n) => !disabledTypes.has(n.type));
     const keptIds = new Set(keptNodes.map((n) => n.id));
-    const keptLinks = allLinks.filter((l) => keptIds.has(l.source) && keptIds.has(l.target));
+    const keptLinks = allLinks.filter(
+      (l) =>
+        keptIds.has(l.source) &&
+        keptIds.has(l.target) &&
+        !disabledRelTypes.has(l.label ?? ''),
+    );
     return { nodes: keptNodes, links: keptLinks };
-  }, [allNodes, allLinks, disabledTypes]);
+  }, [allNodes, allLinks, disabledTypes, disabledRelTypes]);
 
   const degree = useMemo(() => {
     const d: Record<string, number> = {};
@@ -72,6 +85,14 @@ export default function GraphPage() {
 
   function toggleType(ty: string) {
     setDisabledTypes((prev) => {
+      const next = new Set(prev);
+      next.has(ty) ? next.delete(ty) : next.add(ty);
+      return next;
+    });
+  }
+
+  function toggleRelType(ty: string) {
+    setDisabledRelTypes((prev) => {
       const next = new Set(prev);
       next.has(ty) ? next.delete(ty) : next.add(ty);
       return next;
@@ -188,25 +209,61 @@ export default function GraphPage() {
           )}
 
           {!loading && typesPresent.length > 0 && (
-            <div className="absolute bottom-4 left-4 max-w-[220px] rounded-xl border border-gray-200 bg-white/90 p-3 shadow-sm backdrop-blur">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">{t('graph.entity_types')}</p>
-              <div className="flex flex-wrap gap-1.5">
-                {typesPresent.map((ty) => {
-                  const off = disabledTypes.has(ty);
-                  return (
-                    <button
-                      key={ty}
-                      onClick={() => toggleType(ty)}
-                      className={`flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs transition ${
-                        off ? 'border-gray-200 text-gray-300' : 'border-gray-200 text-gray-700 hover:border-gray-300'
-                      }`}
-                    >
-                      <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: off ? '#e5e7eb' : (ENTITY_COLORS[ty] ?? '#94a3b8') }} />
-                      {ty}
-                    </button>
-                  );
-                })}
+            <div className="absolute bottom-4 left-4 flex flex-col gap-2">
+              {/* Node type filter */}
+              <div className="max-w-[220px] rounded-xl border border-gray-200 bg-white/90 p-3 shadow-sm backdrop-blur">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">{t('graph.entity_types')}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {typesPresent.map((ty) => {
+                    const off = disabledTypes.has(ty);
+                    return (
+                      <button
+                        key={ty}
+                        onClick={() => toggleType(ty)}
+                        className={`flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs transition ${
+                          off ? 'border-gray-200 text-gray-300' : 'border-gray-200 text-gray-700 hover:border-gray-300'
+                        }`}
+                      >
+                        <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: off ? '#e5e7eb' : (ENTITY_COLORS[ty] ?? '#94a3b8') }} />
+                        {ty}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
+
+              {/* Relation type filter (toggle) */}
+              {relTypesPresent.length > 0 && (
+                <div className="max-w-[220px] rounded-xl border border-gray-200 bg-white/90 shadow-sm backdrop-blur">
+                  <button
+                    onClick={() => setShowRelFilter((v) => !v)}
+                    className="flex w-full items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500"
+                  >
+                    关系类型
+                    <span className="text-gray-400">{showRelFilter ? '▲' : '▼'}</span>
+                  </button>
+                  {showRelFilter && (
+                    <div className="flex flex-wrap gap-1.5 p-3 pt-0">
+                      {relTypesPresent.map((ty) => {
+                        const off = disabledRelTypes.has(ty);
+                        return (
+                          <button
+                            key={ty}
+                            onClick={() => toggleRelType(ty)}
+                            className={`rounded-full border px-2 py-0.5 text-xs transition ${
+                              off
+                                ? 'border-gray-200 text-gray-300'
+                                : 'border-slate-300 bg-slate-50 text-slate-600 hover:border-slate-400'
+                            }`}
+                          >
+                            {ty}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
