@@ -4,13 +4,13 @@ from sqlalchemy import select, delete as sa_delete, func, or_, and_
 from sqlalchemy.orm import selectinload
 
 from app.models import (
-    Organization, Source, SourceAccount, SourceExperience, Tag, SourceTag,
+    Organization, OrgTag, Source, SourceAccount, SourceExperience, Tag, SourceTag,
     Signal, SignalAnalysis, SignalEntity,
     Entity, EntityAlias, EntityRelation,
     PipelineRun,
 )
 from app.schemas import (
-    OrganizationCreate, OrganizationUpdate,
+    OrganizationCreate, OrganizationUpdate, OrgTagCreate,
     SourceCreate, SourceUpdate, SourceAccountCreate, SourceTagCreate,
     SourceExperienceCreate,
     SignalCreate, SignalUpdate, SignalAnalysisCreate, SignalEntityCreate,
@@ -25,8 +25,14 @@ class OrganizationRepo:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def list(self, skip: int = 0, limit: int = 100) -> Sequence[Organization]:
-        result = await self.db.execute(select(Organization).offset(skip).limit(limit))
+    async def list(self, skip: int = 0, limit: int = 200) -> Sequence[Organization]:
+        result = await self.db.execute(
+            select(Organization)
+            .options(
+                selectinload(Organization.org_tags).selectinload(OrgTag.tag),
+            )
+            .offset(skip).limit(limit)
+        )
         return result.scalars().all()
 
     async def count(self) -> int:
@@ -34,22 +40,37 @@ class OrganizationRepo:
         return result.scalar_one()
 
     async def get(self, org_id: str) -> Optional[Organization]:
-        result = await self.db.execute(select(Organization).where(Organization.id == org_id))
+        result = await self.db.execute(
+            select(Organization)
+            .where(Organization.id == org_id)
+            .options(
+                selectinload(Organization.org_tags).selectinload(OrgTag.tag),
+            )
+        )
         return result.scalar_one_or_none()
 
     async def create(self, data: OrganizationCreate) -> Organization:
-        obj = Organization(**data.model_dump())
+        payload = data.model_dump(exclude={'tag_ids'}, exclude_unset=False)
+        obj = Organization(**payload)
         self.db.add(obj)
         await self.db.commit()
         await self.db.refresh(obj)
         return obj
 
     async def update(self, org: Organization, data: OrganizationUpdate) -> Organization:
-        for key, value in data.model_dump(exclude_unset=True).items():
+        updates = data.model_dump(exclude_unset=True, exclude={'tag_ids'})
+        for key, value in updates.items():
             setattr(org, key, value)
+
+        if data.tag_ids is not None:
+            await self.db.execute(
+                sa_delete(OrgTag).where(OrgTag.org_id == org.id)
+            )
+            for tid in data.tag_ids:
+                self.db.add(OrgTag(org_id=org.id, tag_id=tid))
+
         await self.db.commit()
-        await self.db.refresh(org)
-        return org
+        return await self.get(org.id)  # type: ignore[return-value]
 
     async def delete(self, org: Organization) -> None:
         await self.db.delete(org)

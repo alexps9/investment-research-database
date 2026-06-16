@@ -1,10 +1,13 @@
-"""Organizations CRUD."""
+"""Organizations CRUD with tag/parent-org management."""
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.repositories import OrganizationRepo
-from app.schemas import OrganizationOut, OrganizationCreate, OrganizationUpdate
+from app.schemas import (
+    OrganizationOut, OrganizationCreate, OrganizationUpdate,
+    OrgTagCreate, OrgTagOut,
+)
 
 router = APIRouter(prefix="/organizations", tags=["organizations"])
 

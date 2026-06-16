@@ -1,11 +1,12 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import { api } from '@/lib/api';
-import type { Source } from '@/lib/types';
+import type { Source, Organization } from '@/lib/types';
 import { Badge } from '@/components/ui/Badge';
 import { Plus, ExternalLink, Pencil, Trash2, Search, User, Building2, Rss } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { SourceEditModal } from '@/components/SourceEditModal';
+import { OrganizationEditModal } from '@/components/OrganizationEditModal';
 import { downloadCsv, type CsvColumn } from '@/lib/csv';
 import { useRowSelection, Checkbox, ExportBar } from './selection';
 
@@ -36,16 +37,30 @@ const TYPE_TABS: { id: TypeTab; label: string; icon: typeof User; types: string[
 export function SourcesTab() {
   const { t } = useLang();
   const [sources, setSources] = useState<Source[]>([]);
+  const [orgs, setOrgs] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Source | null>(null);
+  const [orgModalOpen, setOrgModalOpen] = useState(false);
+  const [editingOrg, setEditingOrg] = useState<Organization | null>(null);
   const [q, setQ] = useState('');
   const [typeTab, setTypeTab] = useState<TypeTab>('person');
   const { selected, toggle, setAll, clear } = useRowSelection();
 
   useEffect(() => {
     api.get<Source[]>('/sources?limit=2000').then(setSources).catch(console.error).finally(() => setLoading(false));
+    api.get<Organization[]>('/organizations?limit=500').then(setOrgs).catch(console.error);
   }, []);
+
+  function handleOrgSaved(saved: Organization) {
+    setOrgs((prev) => {
+      const idx = prev.findIndex((o) => o.id === saved.id);
+      if (idx === -1) return [saved, ...prev];
+      const next = [...prev];
+      next[idx] = saved;
+      return next;
+    });
+  }
 
   const currentTypes = TYPE_TABS.find((t) => t.id === typeTab)?.types ?? ['person'];
 
@@ -120,18 +135,86 @@ export function SourcesTab() {
             onExportAll={() => downloadCsv(filtered, CSV_COLUMNS, 'sources')}
             onClear={clear}
           />
-          <button
-            onClick={() => { setEditing(null); setModalOpen(true); }}
-            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
-          >
-            <Plus size={16} /> {t('action.new')}
-          </button>
+          {typeTab === 'organization' ? (
+            <button
+              onClick={() => { setEditingOrg(null); setOrgModalOpen(true); }}
+              className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+            >
+              <Plus size={16} /> 新建组织
+            </button>
+          ) : (
+            <button
+              onClick={() => { setEditing(null); setModalOpen(true); }}
+              className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+            >
+              <Plus size={16} /> {t('action.new')}
+            </button>
+          )}
         </div>
       </div>
 
       {loading ? (
         <p className="text-sm text-gray-400">{t('common.loading')}</p>
+      ) : typeTab === 'organization' ? (
+        /* ── Organization table ────────────────────────────────────────────── */
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50/80 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+              <tr>
+                <th className="px-4 py-3">名称</th>
+                <th className="px-4 py-3">类型</th>
+                <th className="px-4 py-3">上属机构</th>
+                <th className="px-4 py-3">领域</th>
+                <th className="px-4 py-3 text-right">操作</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {orgs.map((org) => {
+                const parentOrg = org.parent_org_id ? orgs.find((o) => o.id === org.parent_org_id) : null;
+                return (
+                  <tr key={org.id} className="transition-colors hover:bg-blue-50/40">
+                    <td className="px-4 py-3 font-medium text-gray-900">
+                      {org.name}
+                      {org.website_url && (
+                        <a href={org.website_url} target="_blank" rel="noreferrer" className="ml-2 text-blue-400 hover:text-blue-600">
+                          <ExternalLink size={12} className="inline" />
+                        </a>
+                      )}
+                    </td>
+                    <td className="px-4 py-3"><Badge variant="gray">{org.org_type}</Badge></td>
+                    <td className="px-4 py-3 text-xs text-gray-500">{parentOrg?.name ?? '—'}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-1">
+                        {org.org_tags?.slice(0, 3).map((ot) => (
+                          <Badge key={ot.tag_id} variant="blue">{ot.tag?.name ?? ot.tag_id.slice(0, 6)}</Badge>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end gap-1">
+                        <button onClick={() => { setEditingOrg(org); setOrgModalOpen(true); }}
+                          className="rounded-md p-1.5 text-gray-400 hover:bg-blue-50 hover:text-blue-600">
+                          <Pencil size={15} />
+                        </button>
+                        <button onClick={async () => {
+                          if (!confirm(`确定删除 "${org.name}"?`)) return;
+                          await api.delete(`/organizations/${org.id}`).catch((e) => alert(String(e)));
+                          setOrgs((prev) => prev.filter((o) => o.id !== org.id));
+                        }}
+                          className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600">
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {orgs.length === 0 && <p className="px-4 py-10 text-center text-sm text-gray-400">{t('common.empty')}</p>}
+        </div>
       ) : (
+        /* ── Person / Other source table ────────────────────────────────────── */
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
           <table className="w-full text-sm">
             <thead className="bg-gray-50/80 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -143,7 +226,6 @@ export function SourcesTab() {
                 <th className="px-4 py-3">{t('sources.col.tier')}</th>
                 {typeTab === 'person' && <th className="px-4 py-3">所属组织</th>}
                 {typeTab === 'person' && <th className="px-4 py-3">研究领域</th>}
-                {typeTab === 'organization' && <th className="px-4 py-3">类型</th>}
                 <th className="px-4 py-3">{t('sources.col.activity')}</th>
                 <th className="px-4 py-3">Links</th>
                 <th className="px-4 py-3 text-right">{t('action.actions')}</th>
@@ -166,9 +248,6 @@ export function SourcesTab() {
                         ))}
                       </div>
                     </td>
-                  )}
-                  {typeTab === 'organization' && (
-                    <td className="px-4 py-3"><Badge variant="gray">{src.source_type}</Badge></td>
                   )}
                   <td className="px-4 py-3">
                     <Badge variant={activityColor[src.activity_status] ?? 'gray'}>{src.activity_status}</Badge>
@@ -204,6 +283,7 @@ export function SourcesTab() {
       )}
 
       <SourceEditModal open={modalOpen} source={editing} onClose={() => setModalOpen(false)} onSaved={handleSaved} />
+      <OrganizationEditModal open={orgModalOpen} org={editingOrg} onClose={() => setOrgModalOpen(false)} onSaved={handleOrgSaved} />
     </div>
   );
 }

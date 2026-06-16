@@ -26,13 +26,18 @@ class Organization(Base):
     website_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     country: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    parent_org_id: Mapped[str | None] = mapped_column(
+        UUID(as_uuid=False), ForeignKey("organizations.id", ondelete="SET NULL"), nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
+    parent_org: Mapped["Organization | None"] = relationship("Organization", remote_side="Organization.id")
     sources: Mapped[list["Source"]] = relationship("Source", back_populates="organization")
     signals: Mapped[list["Signal"]] = relationship("Signal", back_populates="organization")
+    org_tags: Mapped[list["OrgTag"]] = relationship("OrgTag", back_populates="organization", cascade="all, delete-orphan")
 
 
 class Source(Base):
@@ -117,6 +122,24 @@ class SourceAccount(Base):
     __table_args__ = (
         Index("ix_source_accounts_platform_url", "platform", "url", unique=True),
     )
+
+
+class OrgTag(Base):
+    """Organization ↔ Topic/Approach tag link."""
+    __tablename__ = "org_tags"
+
+    org_id: Mapped[str] = mapped_column(
+        UUID(as_uuid=False), ForeignKey("organizations.id", ondelete="CASCADE"), primary_key=True
+    )
+    tag_id: Mapped[str] = mapped_column(
+        UUID(as_uuid=False), ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True
+    )
+    confidence: Mapped[float] = mapped_column(Float, nullable=False, server_default="1.0")
+    assigned_by: Mapped[str] = mapped_column(String(50), nullable=False, server_default="manual")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    organization: Mapped["Organization"] = relationship("Organization", back_populates="org_tags")
+    tag: Mapped["Tag"] = relationship("Tag")
 
 
 class SourceExperience(Base):

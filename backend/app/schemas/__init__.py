@@ -12,6 +12,7 @@ class OrganizationBase(BaseModel):
     website_url: Optional[str] = None
     description: Optional[str] = None
     country: Optional[str] = None
+    parent_org_id: Optional[str] = None
 
 
 class OrganizationCreate(OrganizationBase):
@@ -25,11 +26,29 @@ class OrganizationUpdate(BaseModel):
     website_url: Optional[str] = None
     description: Optional[str] = None
     country: Optional[str] = None
+    parent_org_id: Optional[str] = None
+    # Atomic tag replacement
+    tag_ids: Optional[list[str]] = None
+
+
+class OrgTagCreate(BaseModel):
+    tag_id: str
+    confidence: float = 1.0
+    assigned_by: str = "manual"
+
+
+class OrgTagOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    tag_id: str
+    confidence: float
+    assigned_by: str
+    tag: Optional["TagOut"] = None
 
 
 class OrganizationOut(OrganizationBase):
     model_config = ConfigDict(from_attributes=True)
     id: str
+    org_tags: list[OrgTagOut] = []
     created_at: datetime
     updated_at: datetime
 

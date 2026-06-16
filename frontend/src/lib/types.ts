@@ -1,3 +1,10 @@
+export interface OrgTag {
+  tag_id: string;
+  confidence: number;
+  assigned_by: string;
+  tag?: { id: string; name: string; tag_type: string };
+}
+
 export interface Organization {
   id: string;
   name: string;
@@ -6,6 +13,8 @@ export interface Organization {
   website_url?: string;
   description?: string;
   country?: string;
+  parent_org_id?: string;
+  org_tags: OrgTag[];
   created_at: string;
   updated_at: string;
 }
