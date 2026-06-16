@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import clsx from 'clsx';
 import {
-  LayoutDashboard, Database, Sparkles, Network, Flame, TrendingUp, LogOut,
+  LayoutDashboard, Database, Sparkles, Network, Flame, TrendingUp, LogOut, Microscope,
 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { useAuth } from '@/lib/auth';
@@ -19,6 +19,7 @@ const NAV_GROUPS = [
     items: [
       { href: '/data', tKey: 'nav.data', icon: Database },
       { href: '/explore', tKey: 'nav.explore', icon: Sparkles },
+      { href: '/research', tKey: 'nav.research', icon: Microscope },
       { href: '/graph', tKey: 'nav.graph', icon: Network },
     ],
   },

@@ -14,11 +14,14 @@ from agent.alert_agent.node import run_alerts
 from agent.digest_agent.node import run_digest
 from agent.entity_agent import run_entity_extraction
 from agent.ingestion_agent import run_ingestion
+from agent.deep_research_agent import run_deep_research
 
 app = FastAPI(title="HH-Research Agent Service", version="2.0.0")
 
 # Track background job status (in-memory; sufficient for single-container deploy)
 _jobs: dict[str, dict[str, Any]] = {}
+# Deep-research jobs (long-running; polled for progress + final report)
+_research_jobs: dict[str, dict[str, Any]] = {}
 
 
 class QARequest(BaseModel):
@@ -28,6 +31,12 @@ class QARequest(BaseModel):
 class QAResponse(BaseModel):
     answer: str
     question: str
+
+
+class ResearchRequest(BaseModel):
+    question: str = Field(min_length=3, max_length=4000)
+    max_subtopics: int = Field(default=4, ge=1, le=6)
+    searches_per_topic: int = Field(default=2, ge=1, le=4)
 
 
 class TriggerRequest(BaseModel):
@@ -52,6 +61,48 @@ async def qa(body: QARequest):
         traceback.print_exc()
         raise HTTPException(status_code=502, detail=str(exc)) from exc
     return QAResponse(question=body.question, answer=answer or "(no answer)")
+
+
+@app.post("/research/start")
+async def research_start(body: ResearchRequest, background: BackgroundTasks):
+    """Kick off a deep-research run; returns a job_id to poll for progress."""
+    job_id = f"research-{asyncio.get_event_loop().time():.0f}-{len(_research_jobs)}"
+    _research_jobs[job_id] = {
+        "status": "running", "phase": "queued", "message": "排队中…",
+        "pct": 0, "question": body.question, "result": None, "error": None,
+    }
+
+    def on_progress(phase: str, message: str, pct: int) -> None:
+        job = _research_jobs.get(job_id)
+        if job is not None:
+            job.update(phase=phase, message=message, pct=pct)
+
+    async def _job():
+        try:
+            result = await run_deep_research(
+                body.question,
+                on_progress=on_progress,
+                max_subtopics=body.max_subtopics,
+                searches_per_topic=body.searches_per_topic,
+            )
+            job = _research_jobs.get(job_id, {})
+            job.update(status="done", phase="done", message="研究完成", pct=100, result=result)
+        except Exception as exc:  # noqa: BLE001
+            import traceback
+            traceback.print_exc()
+            job = _research_jobs.get(job_id, {})
+            job.update(status="failed", error=str(exc), message=f"失败: {exc}")
+
+    background.add_task(_job)
+    return {"job_id": job_id, "status": "running"}
+
+
+@app.get("/research/status/{job_id}")
+async def research_status(job_id: str):
+    job = _research_jobs.get(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="research job not found")
+    return job
 
 
 async def _run_stage(stage: str, params: TriggerRequest) -> dict:

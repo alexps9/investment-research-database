@@ -43,6 +43,11 @@ class Settings(BaseSettings):
     llm_model: str = "deepseek-chat"
     llm_timeout_seconds: int = 60
 
+    # --- Deep-research agent service ----------------------------------------
+    # The backend proxies /api/research/* to the agent container so the frontend
+    # can reach long-running deep-research jobs over the same /api channel.
+    agent_base_url: str = "http://agent:9000"
+
     # --- Auth (JWT bearer login) --------------------------------------------
     # JWT signing secret — MUST be overridden in production via env JWT_SECRET.
     jwt_secret: str = "hh-research-dev-secret-change-me"

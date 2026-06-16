@@ -101,6 +101,13 @@ services:
     environment:
       KB_API_BASE_URL: http://backend:8000
       LLM_BASE_URL: http://litellm:4000/v1
+      # Deep-research web search (DuckDuckGo) + page fetches must egress through
+      # the overseas proxy (DDG/most sites are blocked from CN). httpx picks these
+      # up automatically (trust_env). Keep internal services off the proxy so LLM
+      # (litellm) + KB (backend) calls stay direct.
+      HTTP_PROXY: ${BEDROCK_PROXY_URL:-}
+      HTTPS_PROXY: ${BEDROCK_PROXY_URL:-}
+      NO_PROXY: localhost,127.0.0.1,backend,mcp,agent,litellm,proxy
     ports:
       - "9000:9000"
     depends_on:

@@ -91,8 +91,8 @@ host while keeping the DB on Supabase and the frontend on Vercel. Artifacts live
 - Host: `ubuntu@110.40.131.38` (SSH alias `hh-server`, key `~/.ssh/database.pem`).
 - Services (5 containers): `proxy` (gost) → `litellm:4000` (OpenAI→Bedrock gateway)
   → `backend:8000` (→ Supabase, alembic skipped since schema is shared),
-  `mcp:8765` (→ `http://backend:8000`), `agent` (idle container, run pipelines on
-  demand / via cron).
+  `mcp:8765` (→ `http://backend:8000`), `agent:9000` (Q&A `/qa` + **deep research**
+  `/research/*`; also runs pipelines on demand / via cron).
 - The agent image build context is the **repo root** (it imports `agent/` + `tools/`
   + `skills/`); backend/mcp build from their own dirs.
 - **LLM = AWS Bedrock Claude via the LiteLLM gateway.** Backend (`DEEPSEEK_*` +
@@ -113,6 +113,16 @@ host while keeping the DB on Supabase and the frontend on Vercel. Artifacts live
   `NO_PROXY`** so the fallback stays reachable even when the SS proxy is down — the
   whole point of the fallback. (DeepSeek's API exposes `deepseek-v4-pro` /
   `deepseek-v4-flash`, not a bare `deepseek-v4`.)
+- **Deep Research agent** (`agent/deep_research_agent/`, served at `agent:9000
+  /research/start|status`): the backend proxies `/api/research/*` to it
+  (`agent_base_url=http://agent:9000`), so the Vercel frontend `/research` page reaches
+  it over the same `/api` edge proxy. Its **web search (DuckDuckGo) + page fetches must
+  egress through the SS proxy** — DDG is blocked from CN, so without it `sources` is
+  empty and the report is LLM-only. The `agent` service therefore sets
+  `HTTP_PROXY/HTTPS_PROXY=${BEDROCK_PROXY_URL}` (= `http://proxy:8118`) with internal
+  services (`litellm,backend,mcp,agent,proxy`) in `NO_PROXY` so LLM/KB calls stay
+  direct. httpx auto-uses these env proxies (`trust_env`). Research jobs are in-memory
+  (lost on agent restart). Verified e2e on the server (~2–4 min/run, real sources).
 - Embeddings stay on **SiliconFlow bge-m3 (1024 dims)** — reachable from CN directly.
 - ghcr/dockerhub pulls from CN: used the **NJU mirror** `ghcr.nju.edu.cn` for the
   litellm image (direct ghcr blob CDN stalls from China); dockerhub `ginuerzh/gost`

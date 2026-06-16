@@ -92,8 +92,18 @@ Next.js 14 app router. Pages are consolidated (do NOT recreate the old split pag
   - `alert_agent/` — important analyzed signals → Feishu push (prefilter + store dedup).
   - `digest_agent/` — daily Feishu-XML brief from analyzed signals + funding.
   - `data_agent/` — **read-only** ReAct Q&A via HTTP `POST /qa`.
+  - `deep_research_agent/` — open_deep_research-style report generator: **brief →
+    plan → parallel research (search+read+reflect) → compress → final report**.
+    `llm.py` (gateway clients per role), `search.py` (DuckDuckGo + HTML→text fetch,
+    DDG redirect unwrapping), `researcher.py` (orchestrator + progress callback).
+    Bounded (≤6 sub-topics, ≤4 searches/topic, concurrency 3). Exposed as **async
+    jobs**: `POST /research/start` + `GET /research/status/{id}`; the backend proxies
+    these at `/api/research/*` so the Vercel frontend reaches them over `/api`.
   - Orchestration: `graph.py` (Ingestion→Analysis→Entity+Alert), `run.py` (cron CLI),
     `service.py` (FastAPI on :9000). LLM via `llm.py` → LiteLLM gateway (Bedrock Claude).
+    The agent container egresses external search/fetch through the overseas proxy
+    (`HTTP(S)_PROXY=proxy:8118`, internal services in `NO_PROXY`) since DuckDuckGo is
+    blocked from CN.
 
 ### Lesson: refactoring a standalone pipeline into the agent system
 

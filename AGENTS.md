@@ -77,8 +77,11 @@ MCP_TRANSPORT=streamable-http python server.py
 # Multi-agent (from repo root)
 pip install -r agent/requirements.txt
 python -m agent.run pipeline              # full LangGraph pipeline
-python -m agent.service                   # HTTP Q&A on :9000
+python -m agent.service                   # HTTP Q&A + deep research on :9000
 curl -X POST http://localhost:9000/qa -H 'Content-Type: application/json' -d '{"question":"..."}'
+# Deep research (async): start → poll
+curl -X POST http://localhost:9000/research/start -H 'Content-Type: application/json' -d '{"question":"..."}'
+curl http://localhost:9000/research/status/<job_id>
 ```
 
 ## Conventions
@@ -120,6 +123,20 @@ curl -X POST http://localhost:9000/qa -H 'Content-Type: application/json' -d '{"
 - Semantic search / RAG / funding / daily features require their env keys and the
   `migration_0004.sql` tables; otherwise those endpoints return errors while the
   rest of the API keeps working.
+- **Deep Research agent** (`agent/deep_research_agent/`): an open_deep_research-style
+  pipeline — **brief → plan (sub-topics) → parallel web research (search + read +
+  reflect) → compress → final report**. All LLM calls go through the LiteLLM gateway
+  (`llm.py`, roles map to optional `*_MODEL` env overrides); web search uses the free
+  DuckDuckGo `tools/websearch` + an HTML→text page fetcher (`search.py`). Bounded by
+  design (≤6 sub-topics, ≤4 searches/topic, concurrency 3) so a run is ~2–4 min.
+  Exposed as **async jobs**: agent `POST /research/start` + `GET /research/status/{id}`
+  (in-memory job dict with `phase`/`pct`/`message` progress), proxied by the backend
+  at `/api/research/*` (`backend/app/routers/research.py`, `agent_base_url` →
+  `http://agent:9000`). The frontend `/research` page polls status and renders the
+  Markdown report (react-markdown + `@tailwindcss/typography`). **The agent container
+  egresses search/fetch through the overseas proxy** (`HTTP(S)_PROXY=proxy:8118`,
+  internal services in `NO_PROXY`) because DuckDuckGo is blocked from CN — without it
+  `sources` come back empty and the report is LLM-only.
 
 ## Deployment & frontend notes
 

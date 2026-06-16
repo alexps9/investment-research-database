@@ -8,7 +8,7 @@ from app.core.config import get_settings
 from app.core.seed import seed_users
 from app.routers import (
     sources, signals, entities, search, wiki, runs, dashboard, graph,
-    export, ai, daily, funding, tags, organizations, auth,
+    export, ai, daily, funding, tags, organizations, auth, research,
 )
 
 settings = get_settings()
@@ -44,6 +44,7 @@ app.include_router(funding.router, prefix=prefix)
 app.include_router(tags.router, prefix=prefix)
 app.include_router(organizations.router, prefix=prefix)
 app.include_router(auth.router, prefix=prefix)
+app.include_router(research.router, prefix=prefix)
 
 
 def _pg_sqlstate(exc: BaseException) -> str | None:

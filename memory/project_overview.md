@@ -16,6 +16,8 @@ investment/financing tracker on top.
   connected by typed relations (WORKS_AT, AUTHORED, USES, …).
 - **Wiki**: per-entity profile aggregating aliases, relations and related signals.
 - **Semantic search + RAG** (`/ai/*`): pgvector embeddings + DeepSeek chat.
+- **Deep Research** (`/research/*` → agent): open_deep_research-style multi-step
+  agent (brief → plan → web research → report) with a `/research` page in the UI.
 - **Daily Boost** (`/daily/*`): auto-selects the day's top signals and writes a
   summary digest.
 - **Funding** (`/funding/*`): investment/financing events + trend aggregation.
@@ -39,7 +41,7 @@ investment/financing tracker on top.
 backend/      FastAPI app (routers, models, schemas, repositories, services, alembic)
 frontend/     Next.js app (app router, components, lib) — merged Data Hub + Explore
 mcp_server/   MCP wrapper over the backend REST API
-agent/        LangGraph multi-agent: ingestion/analysis/entity/alert/digest/data + graph/run/service
+agent/        LangGraph multi-agent: ingestion/analysis/entity/alert/digest/data/deep_research + graph/run/service
 tools/        Atomic KB tools; one package per domain (sources/signals/…/notify/websearch)
 skills/       Composed workflows; one dir per skill (…/signal_triage, headline_selection); skills/headline/ shared vendored support pkg
 memory/       This documentation set (for humans + code agents)

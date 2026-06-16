@@ -69,6 +69,16 @@ are under the `/api` prefix. Interactive docs at `/docs`.
   DeepSeek-V4 fallback); upstream errors surface as **502**.
 - `POST /api/ai/reindex` `{object_types?}`  (rebuild vector index; indexes all types)
 
+## Deep Research  (async, proxied to the agent service on :9000)
+- `POST /api/research/start` `{question, max_subtopics?=4 (1–6), searches_per_topic?=2 (1–4)}`
+  → `{job_id, status:"running"}`. Kicks off an open_deep_research-style run (brief →
+  plan → parallel web research → compress → report). Takes ~2–4 min.
+- `GET /api/research/status/{job_id}` → `{status:"running"|"done"|"failed", phase, pct,
+  message, result?, error?}`. On `done`, `result = {question, brief, subtopics[],
+  report (Markdown), sources[{title,url}]}`. The frontend `/research` page polls this.
+- Backend just proxies to the agent (`agent_base_url` → `http://agent:9000`); jobs are
+  in-memory on the agent (lost on restart). Agent unreachable → **502**.
+
 ## Daily Boost
 - `GET /api/daily?limit=` · `GET /api/daily/latest` · `GET /api/daily/{date}`
 - `POST /api/daily/generate?digest_date=&window_days=&limit=`
