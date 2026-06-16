@@ -44,7 +44,7 @@ export default function DashboardPage() {
     { labelKey: 'dashboard.stats.sources',  value: stats.total_sources,   href: '/data?tab=sources',  color: 'text-blue-600',   icon: Radio,   bg: 'from-blue-500 to-sky-500'      },
     { labelKey: 'dashboard.stats.signals',  value: stats.total_signals,   href: '/data?tab=signals',  color: 'text-purple-600', icon: Zap,     bg: 'from-purple-500 to-fuchsia-500' },
     { labelKey: 'dashboard.stats.entities', value: stats.total_entities,  href: '/data?tab=entities', color: 'text-green-600',  icon: Layers,  bg: 'from-emerald-500 to-green-500'  },
-    { labelKey: 'dashboard.stats.orgs',     value: stats.total_relations, href: '/graph',             color: 'text-orange-600', icon: Network, bg: 'from-orange-500 to-amber-500'   },
+    { labelKey: 'dashboard.stats.relations', value: stats.total_relations, href: '/graph',             color: 'text-orange-600', icon: Network, bg: 'from-orange-500 to-amber-500'   },
   ];
 
   return (

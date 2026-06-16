@@ -23,3 +23,24 @@ export function entityColor(type: string | undefined): string {
 }
 
 export const ENTITY_TYPES = Object.keys(ENTITY_COLORS);
+
+// Human-readable labels so the graph shows e.g. "AI 模型" instead of the raw
+// `model` enum value, which is ambiguous to end users.
+const ENTITY_TYPE_LABELS: Record<string, { zh: string; en: string }> = {
+  person:       { zh: '人物',     en: 'Person' },
+  organization: { zh: '机构',     en: 'Organization' },
+  paper:        { zh: '论文',     en: 'Paper' },
+  model:        { zh: 'AI 模型',  en: 'AI Model' },
+  method:       { zh: '方法',     en: 'Method' },
+  dataset:      { zh: '数据集',   en: 'Dataset' },
+  benchmark:    { zh: '基准',     en: 'Benchmark' },
+  topic:        { zh: '研究领域', en: 'Topic' },
+  project:      { zh: '项目',     en: 'Project' },
+  system:       { zh: '系统',     en: 'System' },
+  event:        { zh: '事件',     en: 'Event' },
+};
+
+export function entityTypeLabel(type: string | undefined, lang: 'zh' | 'en' = 'zh'): string {
+  if (!type) return '';
+  return ENTITY_TYPE_LABELS[type]?.[lang] ?? type;
+}

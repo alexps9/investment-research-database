@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import type { EntityRelation, SearchHit, AIStatus } from '@/lib/types';
 import { useLang } from '@/lib/i18n';
-import { ENTITY_COLORS, entityColor } from '@/lib/entityColors';
+import { ENTITY_COLORS, entityColor, entityTypeLabel } from '@/lib/entityColors';
 import KnowledgeGraph, { type GraphNode, type GraphLink } from '@/components/graph/KnowledgeGraph';
 import { Search, BookOpen, X, Network, Loader2, Sparkles, RefreshCw } from 'lucide-react';
 
 export default function GraphPage() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [relations, setRelations] = useState<EntityRelation[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<GraphNode | null>(null);
@@ -268,7 +268,7 @@ export default function GraphPage() {
                       <button
                         key={ty}
                         onClick={() => toggleType(ty)}
-                        title={active ? '点击取消聚焦' : `只显示 ${ty}`}
+                        title={active ? '点击取消聚焦' : `只显示 ${entityTypeLabel(ty, lang)}`}
                         className={`flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs transition ${
                           active
                             ? 'border-blue-400 bg-blue-50 font-semibold text-blue-700 ring-1 ring-blue-300'
@@ -278,7 +278,7 @@ export default function GraphPage() {
                         }`}
                       >
                         <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: dimmed ? '#e5e7eb' : (ENTITY_COLORS[ty] ?? '#94a3b8') }} />
-                        {ty}
+                        {entityTypeLabel(ty, lang)}
                       </button>
                     );
                   })}
@@ -330,7 +330,7 @@ export default function GraphPage() {
             <div className="mb-4 flex items-start justify-between">
               <div>
                 <span className="mb-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium text-white" style={{ backgroundColor: entityColor(selected.type) }}>
-                  {selected.type}
+                  {entityTypeLabel(selected.type, lang)}
                 </span>
                 <h2 className="text-lg font-bold text-gray-900">{selected.name}</h2>
                 <p className="mt-1 text-xs text-gray-400">{degree[selected.id] ?? 0} {t('graph.connections')}</p>
