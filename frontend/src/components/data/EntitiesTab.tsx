@@ -91,7 +91,9 @@ export function EntitiesTab() {
     e.preventDefault();
     try {
       const created = await api.post<Entity>('/entities', { ...form, metadata: {} });
-      setEntities((prev) => [created, ...prev]);
+      // Backend get-or-create may return an existing row — dedupe so the list
+      // never shows the same entity twice.
+      setEntities((prev) => [created, ...prev.filter((e) => e.id !== created.id)]);
       setShowForm(false);
       setForm({ name: '', canonical_name: '', entity_type: 'topic', introduction: '' });
     } catch (err) { alert(String(err)); }
@@ -135,18 +137,11 @@ export function EntitiesTab() {
       });
       setEntities((prev) => prev.map((e) => (e.id === ent.id ? updated : e)));
 
-      // 2. Handle parent (SUBTOPIC_OF) relation change
-      const parentChanged =
-        editState.parentId !== (editState.currentRelId ? /* old parent was set */ '' : '') ||
-        (editState.currentRelId !== null && editState.parentId === '') || // removed
-        (editState.parentId !== '' && editState.currentRelId === null) || // added
-        (editState.currentRelId !== null && editState.parentId !== ''); // might have changed
-
-      // Delete old relation if exists
+      // 2. Re-point the parent (SUBTOPIC_OF) relation: drop the old edge then
+      // re-create it only when a (different, non-self) parent is selected.
       if (editState.currentRelId) {
         await api.delete(`/entities/relations/${editState.currentRelId}`).catch(() => {});
       }
-      // Create new relation if parent selected
       if (editState.parentId && editState.parentId !== ent.id) {
         await api.post(`/entities/${ent.id}/relations`, {
           subject_entity_id: ent.id,

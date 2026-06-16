@@ -44,6 +44,14 @@ are under the `/api` prefix. Interactive docs at `/docs`.
 - `GET /api/entities/{id}/signals` · `GET /api/entities/{id}/relations`
 - `POST /api/entities/{id}/relations`  (relation_type ∈ VALID_RELATION_TYPES)
 - `GET /api/graph/relations?limit=`
+- `POST /api/graph/sync` — derive **explicit** edges from structured data
+  (person→WORKS_AT/PRE_WORKED_AT org, person/org→FOCUSES_ON topic, org→SUBSIDIARY_OF parent).
+  Idempotent; entities matched by name *or* canonical_name. Returns `{created, skipped}`.
+- `POST /api/graph/infer` — derive **implicit** edges: `CO_WORK` between people who
+  share an org (current or via experiences) and `CO_AUTHOR` between people on the same
+  signal. Symmetric (one canonical min/max edge per pair), idempotent, pairs capped at
+  25 members/group. Returns `{created, skipped}`. Manual trigger via the graph page
+  buttons; scheduled via `deploy/graph_refresh.sh` (cron).
 - `GET /api/wiki/entities/{id}`  (full profile)
 
 ## Search

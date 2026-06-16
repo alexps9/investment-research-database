@@ -91,7 +91,18 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
     setSaving(true);
     setError(null);
     try {
-      const payload: SourceUpdate = { ...form, research_field_ids: selectedFieldIds };
+      // Strip read-only / nested fields that came from the spread Source object,
+      // and send `organization_id` as null (not undefined) so clearing the org
+      // actually persists — JSON.stringify drops undefined keys.
+      const {
+        organization: _org, source_tags: _st, experiences: _ex, accounts: _ac,
+        id: _id, created_at: _c, updated_at: _u, ...rest
+      } = form as Record<string, unknown>;
+      const payload: SourceUpdate = {
+        ...(rest as SourceUpdate),
+        organization_id: form.organization_id ?? null,
+        research_field_ids: selectedFieldIds,
+      };
       let saved: Source;
       if (source) {
         saved = await api.patch<Source>(`/sources/${source.id}`, payload);

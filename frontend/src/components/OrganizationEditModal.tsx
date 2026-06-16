@@ -130,7 +130,16 @@ export function OrganizationEditModal({ open, org, onClose, onSaved }: Props) {
     if (!form.name?.trim()) return;
     setSaving(true);
     try {
-      const payload = { ...form, research_field_ids: selectedFieldIds };
+      // Strip read-only / nested fields and send parent_org_id as null (not
+      // undefined) so clearing the parent org actually persists.
+      const {
+        org_tags: _ot, parent_org: _po, created_at: _c, updated_at: _u, id: _id, ...rest
+      } = form as Record<string, unknown>;
+      const payload = {
+        ...rest,
+        parent_org_id: form.parent_org_id ?? null,
+        research_field_ids: selectedFieldIds,
+      };
       let saved: Organization;
       if (org) {
         saved = await api.patch<Organization>(`/organizations/${org.id}`, payload);

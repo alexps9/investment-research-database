@@ -24,6 +24,8 @@ export default function GraphPage() {
   const [noMatch, setNoMatch] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState<{ created: number; skipped: number } | null>(null);
+  const [inferring, setInferring] = useState(false);
+  const [inferResult, setInferResult] = useState<{ created: number; skipped: number } | null>(null);
 
   useEffect(() => {
     api.get<EntityRelation[]>('/graph/relations?limit=1000').then(setRelations).catch(console.error).finally(() => setLoading(false));
@@ -56,14 +58,19 @@ export default function GraphPage() {
   }, [allLinks]);
 
   const { nodes, links } = useMemo(() => {
-    const keptNodes = allNodes.filter((n) => !disabledTypes.has(n.type));
-    const keptIds = new Set(keptNodes.map((n) => n.id));
+    const typeKeptIds = new Set(allNodes.filter((n) => !disabledTypes.has(n.type)).map((n) => n.id));
     const keptLinks = allLinks.filter(
       (l) =>
-        keptIds.has(l.source) &&
-        keptIds.has(l.target) &&
+        typeKeptIds.has(l.source) &&
+        typeKeptIds.has(l.target) &&
         !disabledRelTypes.has(l.label ?? ''),
     );
+    // Aggregate the view to the active subgraph: drop nodes that have no kept
+    // link so filtering by relation/entity type actually collapses the graph
+    // instead of leaving orphan dots floating around.
+    const connected = new Set<string>();
+    keptLinks.forEach((l) => { connected.add(l.source); connected.add(l.target); });
+    const keptNodes = allNodes.filter((n) => typeKeptIds.has(n.id) && connected.has(n.id));
     return { nodes: keptNodes, links: keptLinks };
   }, [allNodes, allLinks, disabledTypes, disabledRelTypes]);
 
@@ -120,6 +127,21 @@ export default function GraphPage() {
     }
   }
 
+  async function handleInfer() {
+    setInferring(true);
+    setInferResult(null);
+    try {
+      const res = await api.post<{ created: number; skipped: number }>('/graph/infer', {});
+      setInferResult(res);
+      const rels = await api.get<typeof relations>('/graph/relations?limit=1000');
+      setRelations(rels);
+    } catch (err) {
+      alert(`推断失败: ${String(err)}`);
+    } finally {
+      setInferring(false);
+    }
+  }
+
   // Semantic-first locate: vector search over entities, fall back to substring match.
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -165,9 +187,9 @@ export default function GraphPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={handleSync}
-            disabled={syncing}
+            disabled={syncing || inferring}
             className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-600 shadow-sm hover:bg-gray-50 disabled:opacity-50"
-            title="从信号源/组织数据同步关系到知识图谱"
+            title="从信号源/组织的结构化数据同步显式关系（任职/研究领域/上属机构等）"
           >
             <RefreshCw size={14} className={syncing ? 'animate-spin' : ''} />
             {syncing ? '同步中…' : '同步关系'}
@@ -175,6 +197,20 @@ export default function GraphPage() {
           {syncResult && (
             <span className="text-xs text-green-600">
               +{syncResult.created} 新建，{syncResult.skipped} 已存在
+            </span>
+          )}
+          <button
+            onClick={handleInfer}
+            disabled={syncing || inferring}
+            className="flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm text-indigo-600 shadow-sm hover:bg-indigo-100 disabled:opacity-50"
+            title="推断隐式关系：同事/前同事（共享机构）、共同作者（共享论文）"
+          >
+            <Sparkles size={14} className={inferring ? 'animate-pulse' : ''} />
+            {inferring ? '推断中…' : '推断关系'}
+          </button>
+          {inferResult && (
+            <span className="text-xs text-indigo-600">
+              +{inferResult.created} 推断，{inferResult.skipped} 已存在
             </span>
           )}
         </div>

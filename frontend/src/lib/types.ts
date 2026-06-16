@@ -13,7 +13,7 @@ export interface Organization {
   website_url?: string;
   description?: string;
   country?: string;
-  parent_org_id?: string;
+  parent_org_id?: string | null;
   org_tags: OrgTag[];
   created_at: string;
   updated_at: string;
@@ -77,7 +77,9 @@ export interface SourceExtended {
 export interface SourceCreate extends SourceExtended {
   name: string;
   source_type?: string;
-  organization_id?: string;
+  // null explicitly clears the affiliated organization (undefined would be
+  // dropped by JSON.stringify and leave it unchanged).
+  organization_id?: string | null;
   affiliation_type?: string;
   role_title?: string;
   description?: string;
