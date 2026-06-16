@@ -411,6 +411,16 @@ class EntityRepo:
         await self.db.refresh(obj)
         return obj
 
+    async def get_relation(self, relation_id: str) -> Optional[EntityRelation]:
+        result = await self.db.execute(
+            select(EntityRelation).where(EntityRelation.id == relation_id)
+        )
+        return result.scalar_one_or_none()
+
+    async def delete_relation(self, relation: EntityRelation) -> None:
+        await self.db.delete(relation)
+        await self.db.commit()
+
     async def count_signal_entities(self, entity_id: str) -> int:
         result = await self.db.execute(
             select(func.count()).select_from(SignalEntity).where(SignalEntity.entity_id == entity_id)

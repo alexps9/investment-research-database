@@ -93,3 +93,13 @@ async def add_relation(entity_id: str, data: EntityRelationCreate, db: AsyncSess
         raise HTTPException(status_code=422, detail="subject_entity_id must match path entity_id")
     repo = EntityRepo(db)
     return await repo.add_relation(data)
+
+
+@router.delete("/relations/{relation_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_relation(relation_id: str, db: AsyncSession = Depends(get_db)):
+    """Delete a single entity relation by ID."""
+    repo = EntityRepo(db)
+    rel = await repo.get_relation(relation_id)
+    if not rel:
+        raise HTTPException(status_code=404, detail="Relation not found")
+    await repo.delete_relation(rel)

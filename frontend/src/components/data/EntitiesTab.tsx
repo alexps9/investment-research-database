@@ -1,11 +1,11 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import { api } from '@/lib/api';
-import type { Entity } from '@/lib/types';
+import type { Entity, EntityRelation } from '@/lib/types';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import Link from 'next/link';
-import { Plus, BookOpen, Search, Pencil, Trash2, Check, X, ChevronRight } from 'lucide-react';
+import { Plus, BookOpen, Search, Pencil, Trash2, Check, X, GitBranch } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { downloadCsv, type CsvColumn } from '@/lib/csv';
 import { useRowSelection, Checkbox, ExportBar } from './selection';
@@ -14,7 +14,6 @@ const typeColor: Record<string, 'blue' | 'green' | 'purple' | 'yellow' | 'defaul
   topic: 'blue', approach: 'yellow',
 };
 
-// Only show topic and approach entities in the Research Fields tab
 const FIELD_TYPES = ['topic', 'approach'];
 
 const CSV_COLUMNS: CsvColumn<Entity>[] = [
@@ -31,7 +30,10 @@ interface EditState {
   canonical_name: string;
   entity_type: string;
   introduction: string;
-  homepage_url: string;
+  /** Current SUBTOPIC_OF relation ID (if any) */
+  currentRelId: string | null;
+  /** Currently selected parent entity ID */
+  parentId: string;
 }
 
 export function EntitiesTab() {
@@ -41,14 +43,33 @@ export function EntitiesTab() {
   const [showForm, setShowForm] = useState(false);
   const [q, setQ] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [form, setForm] = useState({ name: '', canonical_name: '', entity_type: 'topic', introduction: '', homepage_url: '' });
+  const [form, setForm] = useState({ name: '', canonical_name: '', entity_type: 'topic', introduction: '' });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editState, setEditState] = useState<EditState | null>(null);
   const { selected, toggle, setAll, clear } = useRowSelection();
 
+  // Map: entityId → parent entity name (for display in table)
+  const [parentMap, setParentMap] = useState<Record<string, string>>({});
+
   useEffect(() => {
     api.get<Entity[]>('/entities?limit=1000').then((all) => {
-      setEntities(all.filter((e) => FIELD_TYPES.includes(e.entity_type)));
+      const filtered = all.filter((e) => FIELD_TYPES.includes(e.entity_type));
+      setEntities(filtered);
+
+      // Build parent map from SUBTOPIC_OF relations
+      const ids = filtered.map((e) => e.id);
+      // Fetch all relations for graph and extract parent info
+      api.get<EntityRelation[]>('/graph/relations?limit=2000').then((rels) => {
+        const map: Record<string, string> = {};
+        const byId = Object.fromEntries(filtered.map((e) => [e.id, e]));
+        rels.forEach((r) => {
+          if (r.relation_type === 'SUBTOPIC_OF' && ids.includes(r.subject_entity_id)) {
+            const parent = r.object_entity ?? byId[r.object_entity_id];
+            if (parent) map[r.subject_entity_id] = parent.name;
+          }
+        });
+        setParentMap(map);
+      }).catch(() => {});
     }).catch(console.error).finally(() => setLoading(false));
   }, []);
 
@@ -72,32 +93,82 @@ export function EntitiesTab() {
       const created = await api.post<Entity>('/entities', { ...form, metadata: {} });
       setEntities((prev) => [created, ...prev]);
       setShowForm(false);
-      setForm({ name: '', canonical_name: '', entity_type: 'topic', introduction: '', homepage_url: '' });
+      setForm({ name: '', canonical_name: '', entity_type: 'topic', introduction: '' });
     } catch (err) { alert(String(err)); }
   }
 
-  function startEdit(ent: Entity) {
+  /** Start editing: load entity's SUBTOPIC_OF relation to pre-fill parent selector */
+  async function startEdit(ent: Entity) {
+    let currentRelId: string | null = null;
+    let parentId = '';
+    try {
+      const rels = await api.get<EntityRelation[]>(`/entities/${ent.id}/relations`);
+      const subtopic = rels.find(
+        (r) => r.relation_type === 'SUBTOPIC_OF' && r.subject_entity_id === ent.id,
+      );
+      if (subtopic) {
+        currentRelId = subtopic.id;
+        parentId = subtopic.object_entity_id;
+      }
+    } catch { /* ignore */ }
+
     setEditingId(ent.id);
     setEditState({
       name: ent.name,
       canonical_name: ent.canonical_name,
       entity_type: ent.entity_type,
       introduction: ent.introduction ?? '',
-      homepage_url: ent.homepage_url ?? '',
+      currentRelId,
+      parentId,
     });
   }
 
   async function saveEdit(ent: Entity) {
     if (!editState) return;
     try {
+      // 1. Update entity fields
       const updated = await api.patch<Entity>(`/entities/${ent.id}`, {
         name: editState.name,
         canonical_name: editState.canonical_name,
         entity_type: editState.entity_type,
         introduction: editState.introduction || undefined,
-        homepage_url: editState.homepage_url || undefined,
       });
       setEntities((prev) => prev.map((e) => (e.id === ent.id ? updated : e)));
+
+      // 2. Handle parent (SUBTOPIC_OF) relation change
+      const parentChanged =
+        editState.parentId !== (editState.currentRelId ? /* old parent was set */ '' : '') ||
+        (editState.currentRelId !== null && editState.parentId === '') || // removed
+        (editState.parentId !== '' && editState.currentRelId === null) || // added
+        (editState.currentRelId !== null && editState.parentId !== ''); // might have changed
+
+      // Delete old relation if exists
+      if (editState.currentRelId) {
+        await api.delete(`/entities/relations/${editState.currentRelId}`).catch(() => {});
+      }
+      // Create new relation if parent selected
+      if (editState.parentId && editState.parentId !== ent.id) {
+        await api.post(`/entities/${ent.id}/relations`, {
+          subject_entity_id: ent.id,
+          relation_type: 'SUBTOPIC_OF',
+          object_entity_id: editState.parentId,
+          confidence: 1.0,
+          extracted_by: 'manual',
+        });
+      }
+
+      // Update local parent map
+      setParentMap((m) => {
+        const next = { ...m };
+        if (!editState.parentId) {
+          delete next[ent.id];
+        } else {
+          const parent = entities.find((e) => e.id === editState.parentId);
+          if (parent) next[ent.id] = parent.name;
+        }
+        return next;
+      });
+
       setEditingId(null);
     } catch (err) { alert(String(err)); }
   }
@@ -107,6 +178,7 @@ export function EntitiesTab() {
     try {
       await api.delete(`/entities/${ent.id}`);
       setEntities((prev) => prev.filter((e) => e.id !== ent.id));
+      setParentMap((m) => { const n = { ...m }; delete n[ent.id]; return n; });
     } catch (err) { alert(String(err)); }
   }
 
@@ -114,8 +186,8 @@ export function EntitiesTab() {
 
   return (
     <div>
+      {/* Toolbar */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        {/* Search */}
         <div className="relative w-64 max-w-full">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
@@ -126,7 +198,6 @@ export function EntitiesTab() {
           />
         </div>
 
-        {/* Type filter */}
         <div className="flex gap-1">
           {['all', ...FIELD_TYPES].map((tp) => (
             <button
@@ -159,34 +230,34 @@ export function EntitiesTab() {
           <form onSubmit={handleCreate} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-1 block text-xs font-medium text-gray-600">名称 *</label>
-              <input required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                className={inputCls} />
+              <input required value={form.name}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className={inputCls} />
             </div>
             <div>
               <label className="mb-1 block text-xs font-medium text-gray-600">规范名称 *</label>
-              <input required value={form.canonical_name} onChange={(e) => setForm((f) => ({ ...f, canonical_name: e.target.value }))}
-                className={inputCls} />
+              <input required value={form.canonical_name}
+                onChange={(e) => setForm((f) => ({ ...f, canonical_name: e.target.value }))} className={inputCls} />
             </div>
             <div>
               <label className="mb-1 block text-xs font-medium text-gray-600">类型</label>
-              <select value={form.entity_type} onChange={(e) => setForm((f) => ({ ...f, entity_type: e.target.value }))}
-                className={inputCls}>
+              <select value={form.entity_type}
+                onChange={(e) => setForm((f) => ({ ...f, entity_type: e.target.value }))} className={inputCls}>
                 {FIELD_TYPES.map((ty) => <option key={ty} value={ty}>{ty}</option>)}
               </select>
             </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-gray-600">主页 URL</label>
-              <input value={form.homepage_url} onChange={(e) => setForm((f) => ({ ...f, homepage_url: e.target.value }))}
-                className={inputCls} />
-            </div>
             <div className="col-span-full">
               <label className="mb-1 block text-xs font-medium text-gray-600">简介</label>
-              <textarea rows={2} value={form.introduction} onChange={(e) => setForm((f) => ({ ...f, introduction: e.target.value }))}
-                className={inputCls} />
+              <textarea rows={2} value={form.introduction}
+                onChange={(e) => setForm((f) => ({ ...f, introduction: e.target.value }))} className={inputCls} />
             </div>
             <div className="col-span-full flex gap-3">
-              <button type="submit" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">{t('action.save')}</button>
-              <button type="button" onClick={() => setShowForm(false)} className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700">{t('action.cancel')}</button>
+              <button type="submit" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                {t('action.save')}
+              </button>
+              <button type="button" onClick={() => setShowForm(false)}
+                className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700">
+                {t('action.cancel')}
+              </button>
             </div>
           </form>
         </Card>
@@ -204,8 +275,8 @@ export function EntitiesTab() {
                 </th>
                 <th className="px-4 py-3">名称</th>
                 <th className="px-4 py-3">类型</th>
+                <th className="px-4 py-3">所属上级</th>
                 <th className="px-4 py-3">简介</th>
-                <th className="px-4 py-3">别名</th>
                 <th className="px-4 py-3 text-right">{t('action.actions')}</th>
               </tr>
             </thead>
@@ -214,18 +285,24 @@ export function EntitiesTab() {
                 const isEditing = editingId === ent.id;
                 return (
                   <tr key={ent.id} className={`transition-colors hover:bg-blue-50/40 ${selected.has(ent.id) ? 'bg-blue-50/60' : ''}`}>
-                    <td className="px-4 py-2.5"><Checkbox checked={selected.has(ent.id)} onChange={() => toggle(ent.id)} /></td>
+                    <td className="px-4 py-2.5">
+                      <Checkbox checked={selected.has(ent.id)} onChange={() => toggle(ent.id)} />
+                    </td>
 
-                    {/* Name / canonical */}
+                    {/* Name */}
                     <td className="px-4 py-2.5">
                       {isEditing && editState ? (
-                        <div className="flex flex-col gap-1">
-                          <input value={editState.name} onChange={(e) => setEditState((s) => s ? { ...s, name: e.target.value } : s)}
-                            className={inputCls} placeholder="名称" />
-                          <input value={editState.canonical_name} onChange={(e) => setEditState((s) => s ? { ...s, canonical_name: e.target.value } : s)}
-                            className={inputCls} placeholder="规范名称" />
-                          <input value={editState.homepage_url} onChange={(e) => setEditState((s) => s ? { ...s, homepage_url: e.target.value } : s)}
-                            className={inputCls} placeholder="主页 URL" />
+                        <div className="flex flex-col gap-1.5">
+                          <input
+                            value={editState.name}
+                            onChange={(e) => setEditState((s) => s ? { ...s, name: e.target.value } : s)}
+                            className={inputCls} placeholder="名称"
+                          />
+                          <input
+                            value={editState.canonical_name}
+                            onChange={(e) => setEditState((s) => s ? { ...s, canonical_name: e.target.value } : s)}
+                            className={inputCls} placeholder="规范名称（英文）"
+                          />
                         </div>
                       ) : (
                         <div>
@@ -240,7 +317,11 @@ export function EntitiesTab() {
                     {/* Type */}
                     <td className="px-4 py-2.5">
                       {isEditing && editState ? (
-                        <select value={editState.entity_type} onChange={(e) => setEditState((s) => s ? { ...s, entity_type: e.target.value } : s)} className={inputCls}>
+                        <select
+                          value={editState.entity_type}
+                          onChange={(e) => setEditState((s) => s ? { ...s, entity_type: e.target.value } : s)}
+                          className={inputCls}
+                        >
                           {FIELD_TYPES.map((ty) => <option key={ty} value={ty}>{ty}</option>)}
                         </select>
                       ) : (
@@ -248,22 +329,45 @@ export function EntitiesTab() {
                       )}
                     </td>
 
-                    {/* Introduction */}
-                    <td className="px-4 py-2.5 max-w-xs">
+                    {/* Parent / hierarchy */}
+                    <td className="px-4 py-2.5">
                       {isEditing && editState ? (
-                        <textarea rows={2} value={editState.introduction}
-                          onChange={(e) => setEditState((s) => s ? { ...s, introduction: e.target.value } : s)}
-                          className={inputCls} placeholder="简介" />
+                        <select
+                          value={editState.parentId}
+                          onChange={(e) => setEditState((s) => s ? { ...s, parentId: e.target.value } : s)}
+                          className={inputCls}
+                        >
+                          <option value="">— 无上级 —</option>
+                          {entities
+                            .filter((e) => e.id !== ent.id)
+                            .map((e) => (
+                              <option key={e.id} value={e.id}>
+                                {parentMap[e.id] ? `${parentMap[e.id]} › ` : ''}{e.name}
+                              </option>
+                            ))}
+                        </select>
+                      ) : parentMap[ent.id] ? (
+                        <span className="flex items-center gap-1 text-xs text-gray-500">
+                          <GitBranch size={11} className="text-gray-400" />
+                          {parentMap[ent.id]}
+                        </span>
                       ) : (
-                        <span className="line-clamp-2 text-xs text-gray-500">{ent.introduction ?? '—'}</span>
+                        <span className="text-xs text-gray-300">—</span>
                       )}
                     </td>
 
-                    {/* Aliases */}
-                    <td className="px-4 py-2.5">
-                      <div className="flex flex-wrap gap-1">
-                        {ent.aliases.slice(0, 3).map((a) => <Badge key={a.id} variant="gray">{a.alias}</Badge>)}
-                      </div>
+                    {/* Introduction */}
+                    <td className="px-4 py-2.5 max-w-xs">
+                      {isEditing && editState ? (
+                        <textarea
+                          rows={2}
+                          value={editState.introduction}
+                          onChange={(e) => setEditState((s) => s ? { ...s, introduction: e.target.value } : s)}
+                          className={inputCls} placeholder="简介"
+                        />
+                      ) : (
+                        <span className="line-clamp-2 text-xs text-gray-500">{ent.introduction ?? '—'}</span>
+                      )}
                     </td>
 
                     {/* Actions */}
@@ -271,23 +375,27 @@ export function EntitiesTab() {
                       <div className="flex items-center justify-end gap-1">
                         {isEditing ? (
                           <>
-                            <button onClick={() => saveEdit(ent)} title="保存" className="rounded p-1 text-green-600 hover:bg-green-50">
+                            <button onClick={() => saveEdit(ent)} title="保存"
+                              className="rounded p-1 text-green-600 hover:bg-green-50">
                               <Check size={14} />
                             </button>
-                            <button onClick={() => setEditingId(null)} title="取消" className="rounded p-1 text-gray-400 hover:bg-gray-100">
+                            <button onClick={() => setEditingId(null)} title="取消"
+                              className="rounded p-1 text-gray-400 hover:bg-gray-100">
                               <X size={14} />
                             </button>
                           </>
                         ) : (
                           <>
-                            <button onClick={() => startEdit(ent)} title="编辑" className="rounded p-1 text-gray-400 hover:bg-blue-50 hover:text-blue-600">
+                            <button onClick={() => startEdit(ent)} title="编辑"
+                              className="rounded p-1 text-gray-400 hover:bg-blue-50 hover:text-blue-600">
                               <Pencil size={13} />
                             </button>
                             <Link href={`/wiki/entities/${ent.id}`} title="Wiki"
-                              className="flex items-center gap-0.5 rounded p-1 text-blue-600 hover:bg-blue-50">
+                              className="flex items-center rounded p-1 text-blue-600 hover:bg-blue-50">
                               <BookOpen size={13} />
                             </Link>
-                            <button onClick={() => handleDelete(ent)} title="删除" className="rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-600">
+                            <button onClick={() => handleDelete(ent)} title="删除"
+                              className="rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-600">
                               <Trash2 size={13} />
                             </button>
                           </>
