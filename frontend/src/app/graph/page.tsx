@@ -9,6 +9,10 @@ import { ENTITY_COLORS, entityColor, entityTypeLabel } from '@/lib/entityColors'
 import KnowledgeGraph, { type GraphNode, type GraphLink } from '@/components/graph/KnowledgeGraph';
 import { Search, BookOpen, X, Network, Loader2, Sparkles, RefreshCw } from 'lucide-react';
 
+// Entity types hidden from the knowledge graph (kept in the data model, just not
+// surfaced here — `model` is ambiguous/noisy for end users).
+const HIDDEN_ENTITY_TYPES = new Set(['model']);
+
 export default function GraphPage() {
   const { t, lang } = useLang();
   const [relations, setRelations] = useState<EntityRelation[]>([]);
@@ -16,9 +20,10 @@ export default function GraphPage() {
   const [selected, setSelected] = useState<GraphNode | null>(null);
   const [focusId, setFocusId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
-  // Solo-focus filter: null = show all; string = show only that type.
-  const [focusType, setFocusType] = useState<string | null>(null);
-  const [focusRelType, setFocusRelType] = useState<string | null>(null);
+  // Combinable focus filter: empty set = show all; otherwise show only the
+  // selected entity / relation types (union), re-clustered around them.
+  const [focusTypes, setFocusTypes] = useState<Set<string>>(new Set());
+  const [focusRelTypes, setFocusRelTypes] = useState<Set<string>>(new Set());
   const [showRelFilter, setShowRelFilter] = useState(false);
   // Incremented on every filter change to force-remount the canvas so the
   // force simulation restarts from scratch and re-clusters the subgraph.
@@ -40,9 +45,11 @@ export default function GraphPage() {
     const nodeMap = new Map<string, GraphNode>();
     const links: GraphLink[] = [];
     for (const rel of relations) {
-      if (rel.subject) nodeMap.set(rel.subject_entity_id, { id: rel.subject_entity_id, name: rel.subject.name, type: rel.subject.entity_type });
-      if (rel.object_entity) nodeMap.set(rel.object_entity_id, { id: rel.object_entity_id, name: rel.object_entity.name, type: rel.object_entity.entity_type });
-      if (rel.subject && rel.object_entity) {
+      const subjHidden = rel.subject ? HIDDEN_ENTITY_TYPES.has(rel.subject.entity_type) : true;
+      const objHidden = rel.object_entity ? HIDDEN_ENTITY_TYPES.has(rel.object_entity.entity_type) : true;
+      if (rel.subject && !subjHidden) nodeMap.set(rel.subject_entity_id, { id: rel.subject_entity_id, name: rel.subject.name, type: rel.subject.entity_type });
+      if (rel.object_entity && !objHidden) nodeMap.set(rel.object_entity_id, { id: rel.object_entity_id, name: rel.object_entity.name, type: rel.object_entity.entity_type });
+      if (rel.subject && rel.object_entity && !subjHidden && !objHidden) {
         links.push({ id: rel.id, source: rel.subject_entity_id, target: rel.object_entity_id, label: rel.relation_type });
       }
     }
@@ -62,24 +69,25 @@ export default function GraphPage() {
   }, [allLinks]);
 
   const { nodes, links } = useMemo(() => {
-    // Solo-focus: if a type is focused, include only that type; otherwise all.
+    // Combinable focus: empty set = keep all; otherwise keep the union of the
+    // selected entity types (and selected relation types).
     const typeKeptIds = new Set(
       allNodes
-        .filter((n) => focusType === null || n.type === focusType)
+        .filter((n) => focusTypes.size === 0 || focusTypes.has(n.type))
         .map((n) => n.id),
     );
     const keptLinks = allLinks.filter(
       (l) =>
-        typeKeptIds.has(l.source) &&
-        typeKeptIds.has(l.target) &&
-        (focusRelType === null || l.label === focusRelType),
+        typeKeptIds.has(l.source as string) &&
+        typeKeptIds.has(l.target as string) &&
+        (focusRelTypes.size === 0 || (l.label != null && focusRelTypes.has(l.label))),
     );
     // Drop nodes with no kept edges so the subgraph is tight.
     const connected = new Set<string>();
-    keptLinks.forEach((l) => { connected.add(l.source); connected.add(l.target); });
+    keptLinks.forEach((l) => { connected.add(l.source as string); connected.add(l.target as string); });
     const keptNodes = allNodes.filter((n) => typeKeptIds.has(n.id) && connected.has(n.id));
     return { nodes: keptNodes, links: keptLinks };
-  }, [allNodes, allLinks, focusType, focusRelType]);
+  }, [allNodes, allLinks, focusTypes, focusRelTypes]);
 
   const degree = useMemo(() => {
     const d: Record<string, number> = {};
@@ -98,12 +106,26 @@ export default function GraphPage() {
   const embeddingsOn = aiStatus?.embeddings_enabled ?? false;
 
   function toggleType(ty: string) {
-    setFocusType((prev) => (prev === ty ? null : ty));
+    setFocusTypes((prev) => {
+      const next = new Set(prev);
+      if (next.has(ty)) next.delete(ty); else next.add(ty);
+      return next;
+    });
     setFilterKey((k) => k + 1);
   }
 
   function toggleRelType(ty: string) {
-    setFocusRelType((prev) => (prev === ty ? null : ty));
+    setFocusRelTypes((prev) => {
+      const next = new Set(prev);
+      if (next.has(ty)) next.delete(ty); else next.add(ty);
+      return next;
+    });
+    setFilterKey((k) => k + 1);
+  }
+
+  function resetFilters() {
+    setFocusTypes(new Set());
+    setFocusRelTypes(new Set());
     setFilterKey((k) => k + 1);
   }
 
@@ -251,9 +273,9 @@ export default function GraphPage() {
               <div className="max-w-[220px] rounded-xl border border-gray-200 bg-white/90 p-3 shadow-sm backdrop-blur">
                 <div className="mb-2 flex items-center justify-between">
                   <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{t('graph.entity_types')}</p>
-                  {(focusType !== null || focusRelType !== null) && (
+                  {(focusTypes.size > 0 || focusRelTypes.size > 0) && (
                     <button
-                      onClick={() => { setFocusType(null); setFocusRelType(null); setFilterKey((k) => k + 1); }}
+                      onClick={resetFilters}
                       className="rounded px-1.5 py-0.5 text-[10px] text-gray-400 hover:bg-gray-100 hover:text-gray-600"
                     >
                       全部
@@ -262,13 +284,13 @@ export default function GraphPage() {
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {typesPresent.map((ty) => {
-                    const active = focusType === ty;
-                    const dimmed = focusType !== null && !active;
+                    const active = focusTypes.has(ty);
+                    const dimmed = focusTypes.size > 0 && !active;
                     return (
                       <button
                         key={ty}
                         onClick={() => toggleType(ty)}
-                        title={active ? '点击取消聚焦' : `只显示 ${entityTypeLabel(ty, lang)}`}
+                        title={active ? '点击取消该类型' : `加入聚焦：${entityTypeLabel(ty, lang)}`}
                         className={`flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs transition ${
                           active
                             ? 'border-blue-400 bg-blue-50 font-semibold text-blue-700 ring-1 ring-blue-300'
@@ -292,19 +314,24 @@ export default function GraphPage() {
                     onClick={() => setShowRelFilter((v) => !v)}
                     className="flex w-full items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500"
                   >
-                    关系类型
+                    <span className="flex items-center gap-1.5">
+                      关系类型
+                      {focusRelTypes.size > 0 && (
+                        <span className="rounded-full bg-indigo-100 px-1.5 text-[10px] font-semibold text-indigo-600">{focusRelTypes.size}</span>
+                      )}
+                    </span>
                     <span className="text-gray-400">{showRelFilter ? '▲' : '▼'}</span>
                   </button>
                   {showRelFilter && (
                     <div className="flex flex-wrap gap-1.5 p-3 pt-0">
                       {relTypesPresent.map((ty) => {
-                        const active = focusRelType === ty;
-                        const dimmed = focusRelType !== null && !active;
+                        const active = focusRelTypes.has(ty);
+                        const dimmed = focusRelTypes.size > 0 && !active;
                         return (
                           <button
                             key={ty}
                             onClick={() => toggleRelType(ty)}
-                            title={active ? '点击取消聚焦' : `只显示 ${ty} 关系`}
+                            title={active ? '点击取消该关系' : `加入聚焦：${ty} 关系`}
                             className={`rounded-full border px-2 py-0.5 text-xs transition ${
                               active
                                 ? 'border-indigo-400 bg-indigo-50 font-semibold text-indigo-700 ring-1 ring-indigo-300'

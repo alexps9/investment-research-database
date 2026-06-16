@@ -154,9 +154,10 @@ curl http://localhost:9000/research/status/<job_id>
   (`/sources /signals /entities /wiki /ask`) are client redirects; don't recreate
   them as full pages. Selective CSV export is client-side (`frontend/src/lib/csv.ts`).
 - **Row selection + bulk actions** live in `components/data/selection.tsx`
-  (`useRowSelection`, `Checkbox`, `ExportBar`, `bulkDelete`). The three checkbox
-  lists (person Sources / Signals / Entities) wire `onDeleteSelected` into
-  `ExportBar` for **bulk delete**; `bulkDelete()` deletes sequentially (REPEATABLE
+  (`useRowSelection`, `Checkbox`, `ExportBar`, `bulkDelete`). All four checkbox
+  lists — person Sources, **Organizations**, Signals, Entities (topic) — wire
+  `onExportSelected/onExportAll` + `onDeleteSelected` into `ExportBar` for **bulk
+  export (CSV) + bulk delete**; `bulkDelete()` deletes sequentially (REPEATABLE
   READ ⇒ avoid concurrent-write 409s) and reports per-id success/failure.
 - **AI search & Q&A return entities only** (`/ai/search?types=entity`, `/ai/ask`
   defaults `object_types=["entity"]`) — source rows duplicate entities. The Explore
@@ -164,8 +165,11 @@ curl http://localhost:9000/research/status/<job_id>
   exposing retrieval jargon ("context") and keeps "no info" replies to one sentence.
 - **Dashboard / graph labels**: the 4th stat card is **Knowledge Graph** (relations
   count → `/graph`), not "组织". Entity types render via `entityTypeLabel()` in
-  `lib/entityColors.ts` (e.g. `model` → "AI 模型"). Graph type/relation filters are
-  **solo-focus**: clicking one isolates+re-clusters its subgraph.
+  `lib/entityColors.ts`. The graph **hides the `model` entity type**
+  (`HIDDEN_ENTITY_TYPES` in `app/graph/page.tsx`). Graph entity/relation filters are
+  **multi-select (combinable)**: clicking toggles each type into a focus set
+  (`focusTypes`/`focusRelTypes`), and the union subgraph re-clusters (filterKey
+  remount); "全部" resets.
 - **Static-export gotcha**: with `output: 'export'`, a dynamic route's
   `generateStaticParams()` must return a non-empty array (see `wiki/entities/[id]`).
 

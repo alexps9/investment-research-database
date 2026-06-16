@@ -27,6 +27,17 @@ const CSV_COLUMNS: CsvColumn<Source>[] = [
   { key: 'description', header: 'description' },
 ];
 
+const ORG_CSV_COLUMNS: CsvColumn<Organization>[] = [
+  { key: 'id', header: 'id' },
+  { key: 'name', header: 'name' },
+  { key: 'org_type', header: 'org_type' },
+  { key: 'country', header: 'country' },
+  { key: 'website_url', header: 'website_url' },
+  { key: 'aliases', header: 'aliases', get: (o) => (o.aliases ?? []).join('; ') },
+  { key: 'org_tags', header: 'tags', get: (o) => (o.org_tags ?? []).map((ot) => ot.tag?.name ?? '').filter(Boolean).join('; ') },
+  { key: 'description', header: 'description' },
+];
+
 type View = 'person' | 'organization';
 
 export function SourcesTab() {
@@ -110,6 +121,19 @@ export function SourcesTab() {
     if (failed.length) alert(t('action.bulk_delete_failed').replace('{n}', String(failed.length)));
   }
 
+  async function handleOrgBulkDelete() {
+    const ids = orgs.filter((o) => selected.has(o.id)).map((o) => o.id);
+    if (ids.length === 0) return;
+    if (!confirm(t('action.confirm_bulk_delete').replace('{n}', String(ids.length)))) return;
+    setDeleting(true);
+    const { ok, failed } = await bulkDelete(ids, (id) => api.delete(`/organizations/${id}`));
+    const okSet = new Set(ok);
+    setOrgs((prev) => prev.filter((o) => !okSet.has(o.id)));
+    clear();
+    setDeleting(false);
+    if (failed.length) alert(t('action.bulk_delete_failed').replace('{n}', String(failed.length)));
+  }
+
   const filtered = useMemo(() => {
     const k = q.trim().toLowerCase();
     if (!k) return sources;
@@ -120,7 +144,17 @@ export function SourcesTab() {
     );
   }, [sources, q]);
 
+  const orgFiltered = useMemo(() => {
+    const k = q.trim().toLowerCase();
+    if (!k) return orgs;
+    return orgs.filter((o) =>
+      o.name.toLowerCase().includes(k) ||
+      (o.org_type ?? '').toLowerCase().includes(k),
+    );
+  }, [orgs, q]);
+
   const allChecked = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
+  const orgAllChecked = orgFiltered.length > 0 && orgFiltered.every((o) => selected.has(o.id));
 
   const isOrgView = sourceType === 'organization';
 
@@ -159,7 +193,16 @@ export function SourcesTab() {
           />
         </div>
         <div className="flex items-center gap-2">
-          {!isOrgView && (
+          {isOrgView ? (
+            <ExportBar
+              count={selected.size}
+              onExportSelected={() => downloadCsv(orgs.filter((o) => selected.has(o.id)), ORG_CSV_COLUMNS, 'organizations')}
+              onExportAll={() => downloadCsv(orgFiltered, ORG_CSV_COLUMNS, 'organizations')}
+              onClear={clear}
+              onDeleteSelected={handleOrgBulkDelete}
+              deleting={deleting}
+            />
+          ) : (
             <ExportBar
               count={selected.size}
               onExportSelected={() => downloadCsv(sources.filter((s) => selected.has(s.id)), CSV_COLUMNS, 'sources')}
@@ -195,6 +238,9 @@ export function SourcesTab() {
           <table className="w-full text-sm">
             <thead className="bg-gray-50/80 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
               <tr>
+                <th className="w-10 px-4 py-3">
+                  <Checkbox checked={orgAllChecked} onChange={() => setAll(orgFiltered.map((o) => o.id), !orgAllChecked)} indeterminate={selected.size > 0} />
+                </th>
                 <th className="px-4 py-3">名称</th>
                 <th className="px-4 py-3">类型</th>
                 <th className="px-4 py-3">上属机构</th>
@@ -203,10 +249,11 @@ export function SourcesTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {orgs.map((org) => {
+              {orgFiltered.map((org) => {
                 const parentOrg = org.parent_org_id ? orgs.find((o) => o.id === org.parent_org_id) : null;
                 return (
-                  <tr key={org.id} className="transition-colors hover:bg-blue-50/40">
+                  <tr key={org.id} className={`transition-colors hover:bg-blue-50/40 ${selected.has(org.id) ? 'bg-blue-50/60' : ''}`}>
+                    <td className="px-4 py-3"><Checkbox checked={selected.has(org.id)} onChange={() => toggle(org.id)} /></td>
                     <td className="px-4 py-3 font-medium text-gray-900">
                       {org.name}
                       {org.website_url && (
@@ -246,7 +293,7 @@ export function SourcesTab() {
               })}
             </tbody>
           </table>
-          {orgs.length === 0 && <p className="px-4 py-10 text-center text-sm text-gray-400">{t('common.empty')}</p>}
+          {orgFiltered.length === 0 && <p className="px-4 py-10 text-center text-sm text-gray-400">{t('common.empty')}</p>}
         </div>
       ) : (
         /* ── Person / source table ──────────────────────────────────────────── */
