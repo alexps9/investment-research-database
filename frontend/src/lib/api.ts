@@ -10,12 +10,25 @@ function resolveUrl(path: string): string {
   return `/api${path}`;
 }
 
+export const TOKEN_KEY = 'hh_token';
+
+function authHeader(): Record<string, string> {
+  if (typeof window === 'undefined') return {};
+  const token = window.localStorage.getItem(TOKEN_KEY);
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 async function fetcher<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(resolveUrl(path), {
-    headers: { 'Content-Type': 'application/json', ...init?.headers },
+    headers: { 'Content-Type': 'application/json', ...authHeader(), ...init?.headers },
     cache: 'no-store',
     ...init,
   });
+  if (res.status === 401 && typeof window !== 'undefined') {
+    // Token missing/expired — drop it and let the auth gate take over.
+    window.localStorage.removeItem(TOKEN_KEY);
+    window.dispatchEvent(new Event('hh-auth-expired'));
+  }
   if (!res.ok) {
     const body = await res.text().catch(() => '');
     throw new Error(`${res.status} ${res.statusText}: ${body}`);

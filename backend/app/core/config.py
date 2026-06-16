@@ -43,6 +43,18 @@ class Settings(BaseSettings):
     llm_model: str = "deepseek-chat"
     llm_timeout_seconds: int = 60
 
+    # --- Auth (JWT bearer login) --------------------------------------------
+    # JWT signing secret — MUST be overridden in production via env JWT_SECRET.
+    jwt_secret: str = "hh-research-dev-secret-change-me"
+    jwt_algorithm: str = "HS256"
+    jwt_expire_minutes: int = 60 * 24 * 7  # 7 days
+    # Seed initial users on startup (idempotent). Format: "user:pass,user2:pass2".
+    # Defaults mirror the project's bootstrap accounts; change passwords in prod.
+    seed_users: str = (
+        "alex:alex0409,qiutian:qiutian123,haolin:haolin123,"
+        "angela:angela123,aseed:aseed123"
+    )
+
     # --- Redis (local: docker compose; prod: Amazon ElastiCache) ------------
     redis_url: str = "redis://localhost:6379/0"
 

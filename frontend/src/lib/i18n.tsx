@@ -35,6 +35,15 @@ const TRANS: Record<Lang, Record<string, string>> = {
     'nav.group.overview': '概览',
     'nav.group.knowledge': '知识',
     'nav.group.insight':  '洞察',
+    // auth
+    'auth.title':       '登录',
+    'auth.subtitle':    'AI 情报知识库',
+    'auth.username':    '用户名',
+    'auth.password':    '密码',
+    'auth.sign_in':     '登录',
+    'auth.signing_in':  '登录中…',
+    'auth.failed':      '用户名或密码错误',
+    'auth.logout':      '退出登录',
     // data hub (merged sources/signals/entities)
     'data.title':       '数据中心',
     'data.subtitle':    '统一管理信号源、信号与实体',
@@ -239,6 +248,15 @@ const TRANS: Record<Lang, Record<string, string>> = {
     'nav.group.overview': 'Overview',
     'nav.group.knowledge': 'Knowledge',
     'nav.group.insight':  'Insight',
+    // auth
+    'auth.title':       'Sign in',
+    'auth.subtitle':    'AI Intelligence Knowledge Base',
+    'auth.username':    'Username',
+    'auth.password':    'Password',
+    'auth.sign_in':     'Sign in',
+    'auth.signing_in':  'Signing in…',
+    'auth.failed':      'Invalid username or password',
+    'auth.logout':      'Log out',
     // data hub (merged sources/signals/entities)
     'data.title':       'Data Hub',
     'data.subtitle':    'Manage sources, signals and entities in one place',

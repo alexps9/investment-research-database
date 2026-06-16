@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Sidebar from '@/components/Sidebar';
 import { LangProvider } from '@/lib/i18n';
+import { AuthProvider } from '@/lib/auth';
+import AppGate from '@/components/AppGate';
 
 export const metadata: Metadata = {
   title: 'HH Research – AI Intelligence Knowledge Base',
@@ -11,12 +12,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh">
-      <body className="flex min-h-screen">
+      <body className="min-h-screen">
         <LangProvider>
-          <Sidebar />
-          <main className="flex-1 overflow-auto">
-            {children}
-          </main>
+          <AuthProvider>
+            <AppGate>{children}</AppGate>
+          </AuthProvider>
         </LangProvider>
       </body>
     </html>

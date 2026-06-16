@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, Text, Boolean, Float, Integer, ForeignKey, DateTime, func, Index
+from sqlalchemy import String, Text, Boolean, Float, Integer, ForeignKey, DateTime, func, Index, text
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from pgvector.sqlalchemy import Vector
@@ -12,6 +12,19 @@ _settings = get_settings()
 
 def gen_uuid():
     return str(uuid.uuid4())
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[str] = mapped_column(UUID(as_uuid=False), primary_key=True, default=gen_uuid)
+    username: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    display_name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="true")
+    is_admin: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="false")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class Organization(Base):
@@ -408,6 +421,15 @@ class EntityRelation(Base):
         ),
         Index("ix_entity_relations_subject", "subject_entity_id"),
         Index("ix_entity_relations_object", "object_entity_id"),
+        # Manual relations have NULL source_signal_id, which the constraint above
+        # treats as distinct (so it never blocks dupes). This partial unique index
+        # closes that gap and stops duplicate manual edges.
+        Index(
+            "ix_entity_relations_manual_unique",
+            "subject_entity_id", "relation_type", "object_entity_id",
+            unique=True,
+            postgresql_where=text("source_signal_id IS NULL"),
+        ),
     )
 
 

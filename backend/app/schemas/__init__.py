@@ -478,6 +478,27 @@ class FundingOut(FundingBase):
     updated_at: datetime
 
 
+# ── Auth ──────────────────────────────────────────────────────────────────────
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+class UserOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: str
+    username: str
+    display_name: Optional[str] = None
+    is_admin: bool = False
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserOut
+
+
 # ── Pagination ────────────────────────────────────────────────────────────────
 
 class PaginatedResponse(BaseModel):

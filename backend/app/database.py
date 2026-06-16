@@ -19,6 +19,12 @@ engine = create_async_engine(
     pool_timeout=settings.db_pool_timeout,
     pool_recycle=settings.db_pool_recycle,
     connect_args=_connect_args,
+    # Snapshot isolation: PostgreSQL READ COMMITTED already prevents dirty
+    # reads; REPEATABLE READ additionally prevents non-repeatable AND phantom
+    # reads, so every request sees a single consistent snapshot. Write/write
+    # conflicts surface as serialization failures (SQLSTATE 40001), which the
+    # API maps to a retryable 409 (see app.main).
+    isolation_level="REPEATABLE READ",
 )
 
 AsyncSessionLocal = async_sessionmaker(

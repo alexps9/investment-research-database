@@ -4,9 +4,10 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import clsx from 'clsx';
 import {
-  LayoutDashboard, Database, Sparkles, Network, Flame, TrendingUp,
+  LayoutDashboard, Database, Sparkles, Network, Flame, TrendingUp, LogOut,
 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
+import { useAuth } from '@/lib/auth';
 
 const NAV_GROUPS = [
   {
@@ -33,6 +34,7 @@ const NAV_GROUPS = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { lang, setLang, t } = useLang();
+  const { user, logout } = useAuth();
 
   return (
     <aside className="flex h-screen w-60 flex-col border-r border-gray-200 bg-white">
@@ -91,6 +93,27 @@ export default function Sidebar() {
             EN
           </button>
         </div>
+
+        {/* Current user + logout */}
+        {user && (
+          <div className="mt-3 flex items-center justify-between gap-2 rounded-lg bg-gray-50 px-3 py-2">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[11px] font-semibold text-white">
+                {(user.display_name || user.username).charAt(0).toUpperCase()}
+              </span>
+              <span className="truncate text-xs font-medium text-gray-700">
+                {user.display_name || user.username}
+              </span>
+            </div>
+            <button
+              onClick={logout}
+              title={t('auth.logout')}
+              className="shrink-0 rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700"
+            >
+              <LogOut size={15} />
+            </button>
+          </div>
+        )}
       </div>
     </aside>
   );

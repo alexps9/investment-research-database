@@ -1,6 +1,7 @@
 from typing import Optional, Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete as sa_delete, func, or_, and_
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
 
 from app.models import (
@@ -39,9 +40,18 @@ async def resolve_field_tag_ids(db: AsyncSession, entity_ids: Sequence[str]) -> 
         existing = await db.execute(select(Tag).where(Tag.name == ent.name))
         tag = existing.scalar_one_or_none()
         if not tag:
-            tag = Tag(name=ent.name, tag_type=tag_type)
-            db.add(tag)
-            await db.flush()
+            # Race-safe get-or-create: tags.name is UNIQUE, so a concurrent
+            # insert would abort this transaction. Wrap in a savepoint and
+            # re-read on conflict instead of failing the whole request.
+            try:
+                async with db.begin_nested():
+                    tag = Tag(name=ent.name, tag_type=tag_type)
+                    db.add(tag)
+                    await db.flush()
+            except IntegrityError:
+                tag = (
+                    await db.execute(select(Tag).where(Tag.name == ent.name))
+                ).scalar_one()
         tag_ids.append(tag.id)
     return tag_ids
 
@@ -475,7 +485,22 @@ class EntityRepo:
         metadata = payload.pop("metadata", {})
         obj = Entity(metadata_=metadata, **payload)
         self.db.add(obj)
-        await self.db.commit()
+        try:
+            await self.db.commit()
+        except IntegrityError:
+            # Unique (canonical_name, entity_type): a concurrent insert won the
+            # race. Recover by returning the existing row (get-or-create).
+            await self.db.rollback()
+            existing = await self.db.execute(
+                select(Entity).where(
+                    Entity.canonical_name == obj.canonical_name,
+                    Entity.entity_type == obj.entity_type,
+                ).options(selectinload(Entity.aliases))
+            )
+            found = existing.scalars().first()
+            if found is not None:
+                return found
+            raise
         await self.db.refresh(obj)
         return await self.get(obj.id)
 
@@ -526,21 +551,51 @@ class EntityRepo:
         )
         return result.scalars().all()
 
-    async def add_relation(self, data: EntityRelationCreate) -> EntityRelation:
-        obj = EntityRelation(**data.model_dump())
-        self.db.add(obj)
-        await self.db.commit()
+    async def _relation_with_endpoints(self, relation_id: str) -> EntityRelation:
         # Eager-load subject/object so EntityRelationOut serialization doesn't
         # trigger a lazy load outside the async context (MissingGreenlet).
         result = await self.db.execute(
             select(EntityRelation)
-            .where(EntityRelation.id == obj.id)
+            .where(EntityRelation.id == relation_id)
             .options(
                 selectinload(EntityRelation.subject).selectinload(Entity.aliases),
                 selectinload(EntityRelation.object_entity).selectinload(Entity.aliases),
             )
         )
         return result.scalar_one()
+
+    async def _find_relation(self, data: EntityRelationCreate) -> Optional[EntityRelation]:
+        conds = [
+            EntityRelation.subject_entity_id == data.subject_entity_id,
+            EntityRelation.relation_type == data.relation_type,
+            EntityRelation.object_entity_id == data.object_entity_id,
+        ]
+        if data.source_signal_id is None:
+            conds.append(EntityRelation.source_signal_id.is_(None))
+        else:
+            conds.append(EntityRelation.source_signal_id == data.source_signal_id)
+        result = await self.db.execute(select(EntityRelation).where(and_(*conds)))
+        return result.scalars().first()
+
+    async def add_relation(self, data: EntityRelationCreate) -> EntityRelation:
+        # Idempotent get-or-create: identical (subject, type, object[, signal])
+        # relations must not duplicate. Concurrent inserts that slip past the
+        # pre-check are caught by the partial unique index and recovered here.
+        existing = await self._find_relation(data)
+        if existing is not None:
+            return await self._relation_with_endpoints(existing.id)
+
+        obj = EntityRelation(**data.model_dump())
+        self.db.add(obj)
+        try:
+            await self.db.commit()
+        except IntegrityError:
+            await self.db.rollback()
+            existing = await self._find_relation(data)
+            if existing is not None:
+                return await self._relation_with_endpoints(existing.id)
+            raise
+        return await self._relation_with_endpoints(obj.id)
 
     async def get_relation(self, relation_id: str) -> Optional[EntityRelation]:
         result = await self.db.execute(
