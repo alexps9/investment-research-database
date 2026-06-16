@@ -8,6 +8,16 @@ are under the `/api` prefix. Interactive docs at `/docs`.
 ## Health
 - `GET /health` → `{"status":"ok"}` (no `/api` prefix)
 
+## Auth (JWT bearer login)
+- `POST /api/auth/login` `{username, password}` → `{access_token, token_type, user}`
+  (401 on bad credentials). Token is an HS256 JWT signed with `JWT_SECRET`.
+- `GET /api/auth/me` (Bearer token) → current `{id, username, display_name, is_admin}`
+- The **frontend gates the whole app** on login; the API itself does not yet
+  require the bearer on data endpoints (so MCP/agents keep working unchanged).
+  Initial accounts are seeded on startup from `SEED_USERS` (see deployment).
+- Concurrency note: writes run under **REPEATABLE READ**; a serialization
+  failure (40001) / deadlock (40P01) is returned as **409** — clients should retry.
+
 ## Dashboard
 - `GET /api/dashboard/stats` → totals (sources/signals/entities/relations)
 - `GET /api/dashboard/latest-signals?limit=`

@@ -3,6 +3,14 @@
 PostgreSQL 16 + pgvector. IDs are UUID strings. Timestamps are timezone-aware.
 Defined in `backend/app/models/__init__.py`.
 
+> Isolation: the API engine runs at **REPEATABLE READ** (snapshot isolation).
+> Write conflicts → 40001/40P01 → 409 (retryable). Get-or-create is race-safe.
+
+## users  (login auth — migration 0008)
+App login accounts. Passwords are pbkdf2_sha256 (never plaintext).
+`id, username (unique), password_hash, display_name, is_active, is_admin, created_at, last_login_at`
+- Seeded on startup from the `SEED_USERS` env (idempotent; existing rows untouched).
+
 ## organizations
 Companies / universities / labs / media / communities.
 `id, name (unique), aliases[], org_type, website_url, description, country, created_at, updated_at`
@@ -53,6 +61,10 @@ source_signal_id→signals, confidence, extracted_by, model_name`
   AUTHORED, RELEASED, PROPOSES, USES, EVALUATES_ON, BUILT_ON, MENTIONS, ABOUT,
   FOCUSES_ON, RELATED_TO, COMPETES_WITH, IMPROVES, INTRODUCES
 - unique on (subject, relation_type, object, source_signal)
+- **manual edges** (`source_signal_id IS NULL`) also have a partial unique index
+  `ix_entity_relations_manual_unique (subject, relation_type, object)` (migration
+  0009) — NULLs are distinct in the base constraint, so this stops duplicate
+  manual edges. `add_relation` is idempotent (returns the existing edge).
 
 ## embeddings  (pgvector)
 `id, object_type, object_id, embedding_type, vector(EMBEDDING_DIMENSIONS), model_name`

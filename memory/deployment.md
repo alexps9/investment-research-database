@@ -19,7 +19,15 @@ git push hf hf-deploy:main --force
 ```
 Set Space secrets: `DATABASE_URL` (Supabase session pooler), `DB_SSL_MODE=require`,
 `EMBEDDING_API_KEY`, `DEEPSEEK_API_KEY` (optional), embedding overrides as needed.
+For login auth set `JWT_SECRET` (long random) and optionally `SEED_USERS`
+(`user:pass,...`, default seeds the bootstrap accounts on first start).
 URL: `https://Alexps9yyy-hh-research-api.hf.space` (health at `/health`).
+
+> Auth/schema note: migrations 0008 (`users`) + 0009 (relation dedupe) are
+> applied by `alembic upgrade head` (HF `start.sh`). The server compose skips
+> alembic, so run `docker compose ... run --rm backend alembic upgrade head`
+> once after pulling new migrations. Users are seeded on startup (idempotent),
+> so deploying any one backend populates the shared Supabase DB.
 
 ## MCP server → Hugging Face Space (Docker)
 

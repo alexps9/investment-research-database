@@ -93,6 +93,18 @@ curl -X POST http://localhost:9000/qa -H 'Content-Type: application/json' -d '{"
   Only commit when asked; never force-push shared branches without confirmation.
 - **Relation types** are an allowlist — see `VALID_RELATION_TYPES` in
   `backend/app/models/__init__.py`; the backend rejects others with 422.
+- **Auth**: JWT bearer login (`/api/auth/login`, `/api/auth/me`); pbkdf2 hashing
+  + PyJWT in `backend/app/core/security.py`. The **frontend** requires login
+  (`AuthProvider` + `AppGate` gate, token in `localStorage`, sent on every
+  request by `frontend/src/lib/api.ts`). Data endpoints are **not** bearer-gated
+  so MCP/agents keep working. Initial users are seeded idempotently on startup
+  from the `SEED_USERS` env (`backend/app/core/seed.py`).
+- **Concurrency / isolation**: the async engine runs at **REPEATABLE READ**
+  (PostgreSQL snapshot isolation — no dirty/non-repeatable/phantom reads).
+  Write/write conflicts surface as 40001/40P01 → mapped to a retryable **409**
+  in `app.main`. Get-or-create paths (tags/entities) are race-safe (savepoint +
+  IntegrityError recovery); manual entity relations have a partial unique index
+  (`source_signal_id IS NULL`) and `add_relation` is idempotent — no dup edges.
 
 ## Key facts an agent needs
 
