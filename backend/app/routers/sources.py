@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Optional
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.repositories import SourceRepo, OrganizationRepo
@@ -6,6 +7,7 @@ from app.schemas import (
     SourceOut, SourceCreate, SourceUpdate,
     SourceAccountCreate, SourceAccountOut,
     SourceTagCreate, SourceTagOut,
+    SourceExperienceCreate, SourceExperienceOut,
     OrganizationOut, OrganizationCreate,
 )
 
@@ -13,9 +15,14 @@ router = APIRouter(prefix="/sources", tags=["sources"])
 
 
 @router.get("", response_model=list[SourceOut])
-async def list_sources(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db)):
+async def list_sources(
+    skip: int = 0,
+    limit: int = 100,
+    source_type: Optional[str] = Query(default=None),
+    db: AsyncSession = Depends(get_db),
+):
     repo = SourceRepo(db)
-    return await repo.list(skip=skip, limit=limit)
+    return await repo.list(skip=skip, limit=limit, source_type=source_type)
 
 
 @router.post("", response_model=SourceOut, status_code=status.HTTP_201_CREATED)
@@ -67,3 +74,30 @@ async def add_tag(source_id: str, data: SourceTagCreate, db: AsyncSession = Depe
     if not source:
         raise HTTPException(status_code=404, detail="Source not found")
     return await repo.add_tag(source_id, data)
+
+
+# ── Experiences ────────────────────────────────────────────────────────────────
+
+@router.get("/{source_id}/experiences", response_model=list[SourceExperienceOut])
+async def list_experiences(source_id: str, db: AsyncSession = Depends(get_db)):
+    repo = SourceRepo(db)
+    if not await repo.get(source_id):
+        raise HTTPException(status_code=404, detail="Source not found")
+    return await repo.get_experiences(source_id)
+
+
+@router.post("/{source_id}/experiences", response_model=SourceExperienceOut, status_code=status.HTTP_201_CREATED)
+async def add_experience(source_id: str, data: SourceExperienceCreate, db: AsyncSession = Depends(get_db)):
+    repo = SourceRepo(db)
+    if not await repo.get(source_id):
+        raise HTTPException(status_code=404, detail="Source not found")
+    return await repo.add_experience(source_id, data)
+
+
+@router.delete("/{source_id}/experiences/{exp_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_experience(source_id: str, exp_id: str, db: AsyncSession = Depends(get_db)):
+    repo = SourceRepo(db)
+    exp = await repo.get_experience(exp_id)
+    if not exp or exp.source_id != source_id:
+        raise HTTPException(status_code=404, detail="Experience not found")
+    await repo.delete_experience(exp)

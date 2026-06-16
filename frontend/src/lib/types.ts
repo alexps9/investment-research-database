@@ -19,6 +19,20 @@ export interface SourceAccount {
   is_active: boolean;
 }
 
+export interface SourceExperience {
+  id: string;
+  organization_id?: string;
+  org_name_raw?: string;
+  role_title?: string;
+  start_date?: string;
+  end_date?: string;
+  is_current: boolean;
+  organization?: Organization;
+  created_at: string;
+}
+
+export type SourceExperienceCreate = Omit<SourceExperience, 'id' | 'organization' | 'created_at'>;
+
 export interface Tag {
   id: string;
   name: string;
@@ -83,6 +97,7 @@ export interface Source extends SourceExtended {
   organization?: Organization;
   accounts: SourceAccount[];
   source_tags: SourceTag[];
+  experiences: SourceExperience[];
   created_at: string;
   updated_at: string;
 }

@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
 from app.routers import (
     sources, signals, entities, search, wiki, runs, dashboard, graph,
-    export, ai, daily, funding, tags,
+    export, ai, daily, funding, tags, organizations,
 )
 
 settings = get_settings()
@@ -37,6 +37,7 @@ app.include_router(ai.router, prefix=prefix)
 app.include_router(daily.router, prefix=prefix)
 app.include_router(funding.router, prefix=prefix)
 app.include_router(tags.router, prefix=prefix)
+app.include_router(organizations.router, prefix=prefix)
 
 
 @app.get("/health")

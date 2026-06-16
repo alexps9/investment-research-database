@@ -4,7 +4,7 @@ from sqlalchemy import select, delete as sa_delete, func, or_, and_
 from sqlalchemy.orm import selectinload
 
 from app.models import (
-    Organization, Source, SourceAccount, Tag, SourceTag,
+    Organization, Source, SourceAccount, SourceExperience, Tag, SourceTag,
     Signal, SignalAnalysis, SignalEntity,
     Entity, EntityAlias, EntityRelation,
     PipelineRun,
@@ -12,6 +12,7 @@ from app.models import (
 from app.schemas import (
     OrganizationCreate, OrganizationUpdate,
     SourceCreate, SourceUpdate, SourceAccountCreate, SourceTagCreate,
+    SourceExperienceCreate,
     SignalCreate, SignalUpdate, SignalAnalysisCreate, SignalEntityCreate,
     EntityCreate, EntityUpdate, EntityAliasCreate, EntityRelationCreate,
     PipelineRunCreate, TagCreate,
@@ -61,17 +62,21 @@ class SourceRepo:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def list(self, skip: int = 0, limit: int = 100) -> Sequence[Source]:
-        result = await self.db.execute(
+    async def list(self, skip: int = 0, limit: int = 100, source_type: Optional[str] = None) -> Sequence[Source]:
+        stmt = (
             select(Source)
             .options(
                 selectinload(Source.organization),
                 selectinload(Source.accounts),
                 selectinload(Source.source_tags).selectinload(SourceTag.tag),
+                selectinload(Source.experiences).selectinload(SourceExperience.organization),
             )
             .offset(skip)
             .limit(limit)
         )
+        if source_type:
+            stmt = stmt.where(Source.source_type == source_type)
+        result = await self.db.execute(stmt)
         return result.scalars().all()
 
     async def count(self) -> int:
@@ -86,7 +91,39 @@ class SourceRepo:
                 selectinload(Source.organization),
                 selectinload(Source.accounts),
                 selectinload(Source.source_tags).selectinload(SourceTag.tag),
+                selectinload(Source.experiences).selectinload(SourceExperience.organization),
             )
+        )
+        return result.scalar_one_or_none()
+
+    async def get_experiences(self, source_id: str) -> Sequence[SourceExperience]:
+        result = await self.db.execute(
+            select(SourceExperience)
+            .where(SourceExperience.source_id == source_id)
+            .options(selectinload(SourceExperience.organization))
+            .order_by(SourceExperience.is_current.desc(), SourceExperience.start_date.desc())
+        )
+        return result.scalars().all()
+
+    async def add_experience(self, source_id: str, data: SourceExperienceCreate) -> SourceExperience:
+        obj = SourceExperience(source_id=source_id, **data.model_dump())
+        self.db.add(obj)
+        await self.db.commit()
+        await self.db.refresh(obj)
+        result = await self.db.execute(
+            select(SourceExperience)
+            .where(SourceExperience.id == obj.id)
+            .options(selectinload(SourceExperience.organization))
+        )
+        return result.scalar_one()
+
+    async def delete_experience(self, exp: SourceExperience) -> None:
+        await self.db.delete(exp)
+        await self.db.commit()
+
+    async def get_experience(self, exp_id: str) -> Optional[SourceExperience]:
+        result = await self.db.execute(
+            select(SourceExperience).where(SourceExperience.id == exp_id)
         )
         return result.scalar_one_or_none()
 

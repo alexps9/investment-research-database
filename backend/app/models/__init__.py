@@ -86,6 +86,7 @@ class Source(Base):
     organization: Mapped["Organization | None"] = relationship("Organization", back_populates="sources")
     accounts: Mapped[list["SourceAccount"]] = relationship("SourceAccount", back_populates="source", cascade="all, delete-orphan")
     source_tags: Mapped[list["SourceTag"]] = relationship("SourceTag", back_populates="source", cascade="all, delete-orphan")
+    experiences: Mapped[list["SourceExperience"]] = relationship("SourceExperience", back_populates="source", cascade="all, delete-orphan")
     signals: Mapped[list["Signal"]] = relationship("Signal", back_populates="source")
 
     __table_args__ = (
@@ -116,6 +117,28 @@ class SourceAccount(Base):
     __table_args__ = (
         Index("ix_source_accounts_platform_url", "platform", "url", unique=True),
     )
+
+
+class SourceExperience(Base):
+    """A person source's past or current affiliation at an organization."""
+    __tablename__ = "source_experiences"
+
+    id: Mapped[str] = mapped_column(UUID(as_uuid=False), primary_key=True, default=gen_uuid)
+    source_id: Mapped[str] = mapped_column(
+        UUID(as_uuid=False), ForeignKey("sources.id", ondelete="CASCADE"), nullable=False
+    )
+    organization_id: Mapped[str | None] = mapped_column(
+        UUID(as_uuid=False), ForeignKey("organizations.id", ondelete="SET NULL"), nullable=True
+    )
+    org_name_raw: Mapped[str | None] = mapped_column(Text, nullable=True)
+    role_title: Mapped[str | None] = mapped_column(Text, nullable=True)
+    start_date: Mapped[str | None] = mapped_column(String(7), nullable=True)  # YYYY-MM
+    end_date: Mapped[str | None] = mapped_column(String(7), nullable=True)
+    is_current: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default="false")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    source: Mapped["Source"] = relationship("Source", back_populates="experiences")
+    organization: Mapped["Organization | None"] = relationship("Organization")
 
 
 class Tag(Base):

@@ -107,12 +107,29 @@ class SourceUpdate(SourceExtended):
     tag_ids: Optional[list[str]] = None
 
 
+class SourceExperienceCreate(BaseModel):
+    organization_id: Optional[str] = None
+    org_name_raw: Optional[str] = None
+    role_title: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    is_current: bool = False
+
+
+class SourceExperienceOut(SourceExperienceCreate):
+    model_config = ConfigDict(from_attributes=True)
+    id: str
+    organization: Optional[OrganizationOut] = None
+    created_at: datetime
+
+
 class SourceOut(SourceBase):
     model_config = ConfigDict(from_attributes=True)
     id: str
     organization: Optional[OrganizationOut] = None
     accounts: list[SourceAccountOut] = []
     source_tags: list[SourceTagOut] = []
+    experiences: list[SourceExperienceOut] = []
     created_at: datetime
     updated_at: datetime
 

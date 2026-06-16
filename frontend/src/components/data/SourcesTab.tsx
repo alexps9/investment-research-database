@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { api } from '@/lib/api';
 import type { Source } from '@/lib/types';
 import { Badge } from '@/components/ui/Badge';
-import { Plus, ExternalLink, Pencil, Trash2, Search } from 'lucide-react';
+import { Plus, ExternalLink, Pencil, Trash2, Search, User, Building2, Rss } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { SourceEditModal } from '@/components/SourceEditModal';
 import { downloadCsv, type CsvColumn } from '@/lib/csv';
@@ -26,6 +26,13 @@ const CSV_COLUMNS: CsvColumn<Source>[] = [
   { key: 'description', header: 'description' },
 ];
 
+type TypeTab = 'person' | 'organization' | 'other';
+const TYPE_TABS: { id: TypeTab; label: string; icon: typeof User; types: string[] }[] = [
+  { id: 'person', label: '人物', icon: User, types: ['person'] },
+  { id: 'organization', label: '组织', icon: Building2, types: ['organization'] },
+  { id: 'other', label: '其他', icon: Rss, types: ['rss', 'website', 'github_repo', 'arxiv_category', 'newsletter', 'social_account'] },
+];
+
 export function SourcesTab() {
   const { t } = useLang();
   const [sources, setSources] = useState<Source[]>([]);
@@ -33,21 +40,25 @@ export function SourcesTab() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Source | null>(null);
   const [q, setQ] = useState('');
+  const [typeTab, setTypeTab] = useState<TypeTab>('person');
   const { selected, toggle, setAll, clear } = useRowSelection();
 
   useEffect(() => {
-    api.get<Source[]>('/sources?limit=1000').then(setSources).catch(console.error).finally(() => setLoading(false));
+    api.get<Source[]>('/sources?limit=2000').then(setSources).catch(console.error).finally(() => setLoading(false));
   }, []);
 
+  const currentTypes = TYPE_TABS.find((t) => t.id === typeTab)?.types ?? ['person'];
+
   const filtered = useMemo(() => {
+    let list = sources.filter((s) => currentTypes.includes(s.source_type));
     const k = q.trim().toLowerCase();
-    if (!k) return sources;
-    return sources.filter((s) =>
+    if (!k) return list;
+    return list.filter((s) =>
       s.name.toLowerCase().includes(k) ||
       (s.organization?.name ?? '').toLowerCase().includes(k) ||
       (s.sector ?? '').toLowerCase().includes(k),
     );
-  }, [sources, q]);
+  }, [sources, q, typeTab]);
 
   const allChecked = filtered.length > 0 && filtered.every((s) => selected.has(s.id));
 
@@ -73,6 +84,25 @@ export function SourcesTab() {
 
   return (
     <div>
+      {/* Type tabs */}
+      <div className="mb-4 inline-flex rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
+        {TYPE_TABS.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            onClick={() => setTypeTab(id)}
+            className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              typeTab === id ? 'bg-blue-600 text-white shadow-sm' : 'text-gray-500 hover:bg-gray-50'
+            }`}
+          >
+            <Icon size={14} /> {label}
+            <span className={`ml-1 rounded-full px-1.5 py-0.5 text-xs ${typeTab === id ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
+              {sources.filter((s) => TYPE_TABS.find((t) => t.id === id)?.types.includes(s.source_type)).length}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Toolbar */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="relative w-72 max-w-full">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -110,9 +140,10 @@ export function SourcesTab() {
                   <Checkbox checked={allChecked} onChange={() => setAll(filtered.map((s) => s.id), !allChecked)} indeterminate={selected.size > 0} />
                 </th>
                 <th className="px-4 py-3">{t('sources.col.name')}</th>
-                <th className="px-4 py-3">{t('sources.col.type')}</th>
                 <th className="px-4 py-3">{t('sources.col.tier')}</th>
-                <th className="px-4 py-3">{t('sources.col.org')}</th>
+                {typeTab === 'person' && <th className="px-4 py-3">所属组织</th>}
+                {typeTab === 'person' && <th className="px-4 py-3">研究领域</th>}
+                {typeTab === 'organization' && <th className="px-4 py-3">类型</th>}
                 <th className="px-4 py-3">{t('sources.col.activity')}</th>
                 <th className="px-4 py-3">Links</th>
                 <th className="px-4 py-3 text-right">{t('action.actions')}</th>
@@ -123,10 +154,25 @@ export function SourcesTab() {
                 <tr key={src.id} className={`transition-colors hover:bg-blue-50/40 ${selected.has(src.id) ? 'bg-blue-50/60' : ''}`}>
                   <td className="px-4 py-3"><Checkbox checked={selected.has(src.id)} onChange={() => toggle(src.id)} /></td>
                   <td className="px-4 py-3 font-medium text-gray-900">{src.name}</td>
-                  <td className="px-4 py-3"><Badge>{src.source_type}</Badge></td>
                   <td className="px-4 py-3">{src.tier ? <Badge variant="purple">{src.tier}</Badge> : <span className="text-gray-300">—</span>}</td>
-                  <td className="px-4 py-3 text-gray-500">{src.organization?.name ?? '—'}</td>
-                  <td className="px-4 py-3"><Badge variant={activityColor[src.activity_status] ?? 'gray'}>{src.activity_status}</Badge></td>
+                  {typeTab === 'person' && (
+                    <td className="px-4 py-3 text-gray-500 text-xs">{src.organization?.name ?? '—'}</td>
+                  )}
+                  {typeTab === 'person' && (
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-1">
+                        {src.source_tags.slice(0, 3).map((st) => (
+                          <Badge key={st.tag_id} variant="blue">{st.tag?.name ?? st.tag_id.slice(0, 6)}</Badge>
+                        ))}
+                      </div>
+                    </td>
+                  )}
+                  {typeTab === 'organization' && (
+                    <td className="px-4 py-3"><Badge variant="gray">{src.source_type}</Badge></td>
+                  )}
+                  <td className="px-4 py-3">
+                    <Badge variant={activityColor[src.activity_status] ?? 'gray'}>{src.activity_status}</Badge>
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
                       {src.accounts.map((acc) => (

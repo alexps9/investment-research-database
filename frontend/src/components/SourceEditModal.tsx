@@ -1,10 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
-import type { Source, SourceCreate, SourceUpdate, TagNode, Organization } from '@/lib/types';
+import type { Source, SourceCreate, SourceUpdate, TagNode, Organization, SourceExperience, SourceExperienceCreate } from '@/lib/types';
 import { Modal } from '@/components/ui/Modal';
 import { useLang } from '@/lib/i18n';
-import { X, ChevronDown } from 'lucide-react';
+import { X, Plus, Trash2 } from 'lucide-react';
 
 // Only person / organization are editable via this modal
 const PERSON_ORG_TYPES = ['person', 'organization'];
@@ -33,12 +33,24 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
   const [allOrgs, setAllOrgs] = useState<Organization[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
 
+  // Experiences state (person sources only)
+  const [experiences, setExperiences] = useState<SourceExperience[]>([]);
+  const [newExp, setNewExp] = useState<Partial<SourceExperienceCreate>>({});
+  const [addingExp, setAddingExp] = useState(false);
+
   // Load topics and organizations once
   useEffect(() => {
     if (!open) return;
     api.get<TagNode[]>('/tags?tag_type=topic').then(setAllTopics).catch(() => {});
     api.get<Organization[]>('/organizations?limit=500').then(setAllOrgs).catch(() => {});
   }, [open]);
+
+  // Load existing experiences when editing a person source
+  useEffect(() => {
+    if (!open || !source || source.source_type !== 'person') { setExperiences([]); return; }
+    // Use experiences embedded in source (populated by API)
+    setExperiences(source.experiences ?? []);
+  }, [open, source]);
 
   // Initialise form when modal opens for a (different) source
   const [initId, setInitId] = useState<string | null>(null);
@@ -233,6 +245,105 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
           <label className={labelCls}>notes</label>
           <textarea rows={1} value={form.notes ?? ''} onChange={(e) => set('notes', e.target.value || undefined)} className={inputCls} />
         </div>
+
+        {/* Experiences (person sources) */}
+        {(form.source_type === 'person' || (!form.source_type && source?.source_type === 'person')) && source && (
+          <div className="col-span-2 border-t border-gray-100 pt-4">
+            <div className="mb-2 flex items-center justify-between">
+              <label className="text-xs font-semibold uppercase tracking-wide text-gray-500">经历（所属组织历史）</label>
+              <button type="button" onClick={() => setAddingExp(true)}
+                className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-blue-600 hover:bg-blue-50">
+                <Plus size={12} /> 添加
+              </button>
+            </div>
+
+            {/* Existing experiences */}
+            <div className="space-y-2">
+              {experiences.map((exp) => (
+                <div key={exp.id} className="flex items-start gap-2 rounded-lg border border-gray-100 bg-gray-50 p-2 text-xs">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-800">{exp.organization?.name ?? exp.org_name_raw ?? '—'}</p>
+                    {exp.role_title && <p className="text-gray-500">{exp.role_title}</p>}
+                    <p className="text-gray-400">
+                      {exp.start_date ?? '?'} — {exp.is_current ? '至今' : (exp.end_date ?? '?')}
+                    </p>
+                  </div>
+                  <button type="button"
+                    onClick={async () => {
+                      await api.delete(`/sources/${source.id}/experiences/${exp.id}`).catch(() => {});
+                      setExperiences((prev) => prev.filter((e) => e.id !== exp.id));
+                    }}
+                    className="shrink-0 text-gray-300 hover:text-red-500">
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Add new experience form */}
+            {addingExp && (
+              <div className="mt-2 grid grid-cols-2 gap-2 rounded-lg border border-blue-100 bg-blue-50 p-3">
+                <div className="col-span-2">
+                  <label className={labelCls}>组织</label>
+                  <select
+                    value={newExp.organization_id ?? ''}
+                    onChange={(e) => setNewExp((n) => ({ ...n, organization_id: e.target.value || undefined }))}
+                    className={inputCls}
+                  >
+                    <option value="">— 选择或在下方填写 —</option>
+                    {allOrgs.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
+                  </select>
+                </div>
+                {!newExp.organization_id && (
+                  <div className="col-span-2">
+                    <label className={labelCls}>组织名称（手动填写）</label>
+                    <input value={newExp.org_name_raw ?? ''} onChange={(e) => setNewExp((n) => ({ ...n, org_name_raw: e.target.value || undefined }))} className={inputCls} />
+                  </div>
+                )}
+                <div>
+                  <label className={labelCls}>职位</label>
+                  <input value={newExp.role_title ?? ''} onChange={(e) => setNewExp((n) => ({ ...n, role_title: e.target.value || undefined }))} className={inputCls} />
+                </div>
+                <div className="flex items-end gap-2">
+                  <label className="flex items-center gap-1 text-xs text-gray-600">
+                    <input type="checkbox" checked={newExp.is_current ?? false}
+                      onChange={(e) => setNewExp((n) => ({ ...n, is_current: e.target.checked }))} />
+                    当前职位
+                  </label>
+                </div>
+                <div>
+                  <label className={labelCls}>开始时间 (YYYY-MM)</label>
+                  <input value={newExp.start_date ?? ''} onChange={(e) => setNewExp((n) => ({ ...n, start_date: e.target.value || undefined }))} className={inputCls} placeholder="2022-03" />
+                </div>
+                <div>
+                  <label className={labelCls}>结束时间 (YYYY-MM)</label>
+                  <input value={newExp.end_date ?? ''} disabled={!!newExp.is_current} onChange={(e) => setNewExp((n) => ({ ...n, end_date: e.target.value || undefined }))} className={inputCls} placeholder="2024-06" />
+                </div>
+                <div className="col-span-2 flex gap-2">
+                  <button type="button"
+                    onClick={async () => {
+                      try {
+                        const saved = await api.post<SourceExperience>(
+                          `/sources/${source.id}/experiences`,
+                          { ...newExp, is_current: newExp.is_current ?? false },
+                        );
+                        setExperiences((prev) => [...prev, saved]);
+                        setNewExp({});
+                        setAddingExp(false);
+                      } catch (err) { alert(String(err)); }
+                    }}
+                    className="rounded-md bg-blue-600 px-3 py-1 text-xs text-white hover:bg-blue-700">
+                    保存
+                  </button>
+                  <button type="button" onClick={() => { setAddingExp(false); setNewExp({}); }}
+                    className="rounded-md bg-gray-100 px-3 py-1 text-xs text-gray-600 hover:bg-gray-200">
+                    取消
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Active */}
         <label className="col-span-2 flex items-center gap-2 text-sm text-gray-700">
