@@ -16,7 +16,9 @@ class OrganizationBase(BaseModel):
 
 
 class OrganizationCreate(OrganizationBase):
-    pass
+    # Atomic topic-tag assignment on create
+    tag_ids: Optional[list[str]] = None
+    research_field_ids: Optional[list[str]] = None
 
 
 class OrganizationUpdate(BaseModel):
@@ -29,6 +31,8 @@ class OrganizationUpdate(BaseModel):
     parent_org_id: Optional[str] = None
     # Atomic tag replacement
     tag_ids: Optional[list[str]] = None
+    # Research-field entity IDs (topic/approach); resolved to tags by name on save
+    research_field_ids: Optional[list[str]] = None
 
 
 class OrgTagCreate(BaseModel):
@@ -108,7 +112,10 @@ class SourceBase(SourceExtended):
 
 
 class SourceCreate(SourceBase):
-    pass
+    # Atomic topic-tag assignment on create
+    tag_ids: Optional[list[str]] = None
+    # Research-field entity IDs (topic/approach); resolved to tags by name on save
+    research_field_ids: Optional[list[str]] = None
 
 
 class SourceUpdate(SourceExtended):
@@ -124,6 +131,8 @@ class SourceUpdate(SourceExtended):
     is_active: Optional[bool] = None
     # When provided, atomically replaces all topic tags for this source
     tag_ids: Optional[list[str]] = None
+    # Research-field entity IDs (topic/approach); resolved to tags by name on save
+    research_field_ids: Optional[list[str]] = None
 
 
 class SourceExperienceCreate(BaseModel):

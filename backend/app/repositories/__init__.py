@@ -19,6 +19,33 @@ from app.schemas import (
 )
 
 
+async def resolve_field_tag_ids(db: AsyncSession, entity_ids: Sequence[str]) -> list[str]:
+    """
+    Map research-field entity IDs (topic/approach entities) to tag IDs,
+    creating a matching tag (by name + type) when one does not yet exist.
+
+    This bridges the two parallel taxonomies: research fields live in the
+    `entities` table (managed in the Research Fields page, graph, wiki) while
+    source/org topic links use the `tags` table. Tagging by the entity name
+    keeps `/graph/sync` (which matches entities by name) consistent.
+    """
+    if not entity_ids:
+        return []
+    result = await db.execute(select(Entity).where(Entity.id.in_(list(entity_ids))))
+    entities = result.scalars().all()
+    tag_ids: list[str] = []
+    for ent in entities:
+        tag_type = ent.entity_type if ent.entity_type in ("topic", "approach") else "topic"
+        existing = await db.execute(select(Tag).where(Tag.name == ent.name))
+        tag = existing.scalar_one_or_none()
+        if not tag:
+            tag = Tag(name=ent.name, tag_type=tag_type)
+            db.add(tag)
+            await db.flush()
+        tag_ids.append(tag.id)
+    return tag_ids
+
+
 # ── Organization ─────────────────────────────────────────────────────────────
 
 class OrganizationRepo:
@@ -50,23 +77,36 @@ class OrganizationRepo:
         return result.scalar_one_or_none()
 
     async def create(self, data: OrganizationCreate) -> Organization:
-        payload = data.model_dump(exclude={'tag_ids'}, exclude_unset=False)
+        payload = data.model_dump(exclude={'tag_ids', 'research_field_ids'})
+        tag_ids = data.tag_ids
+        if data.research_field_ids is not None:
+            tag_ids = await resolve_field_tag_ids(self.db, data.research_field_ids)
+
         obj = Organization(**payload)
         self.db.add(obj)
+        await self.db.flush()
+
+        if tag_ids:
+            for tid in tag_ids:
+                self.db.add(OrgTag(org_id=obj.id, tag_id=tid))
+
         await self.db.commit()
-        await self.db.refresh(obj)
-        return obj
+        return await self.get(obj.id)  # type: ignore[return-value]
 
     async def update(self, org: Organization, data: OrganizationUpdate) -> Organization:
-        updates = data.model_dump(exclude_unset=True, exclude={'tag_ids'})
+        updates = data.model_dump(exclude_unset=True, exclude={'tag_ids', 'research_field_ids'})
         for key, value in updates.items():
             setattr(org, key, value)
 
-        if data.tag_ids is not None:
+        tag_ids = data.tag_ids
+        if data.research_field_ids is not None:
+            tag_ids = await resolve_field_tag_ids(self.db, data.research_field_ids)
+
+        if tag_ids is not None:
             await self.db.execute(
                 sa_delete(OrgTag).where(OrgTag.org_id == org.id)
             )
-            for tid in data.tag_ids:
+            for tid in tag_ids:
                 self.db.add(OrgTag(org_id=org.id, tag_id=tid))
 
         await self.db.commit()
@@ -149,20 +189,36 @@ class SourceRepo:
         return result.scalar_one_or_none()
 
     async def create(self, data: SourceCreate) -> Source:
-        obj = Source(**data.model_dump())
+        payload = data.model_dump()
+        tag_ids = payload.pop("tag_ids", None)
+        field_ids = payload.pop("research_field_ids", None)
+
+        obj = Source(**payload)
         self.db.add(obj)
+        await self.db.flush()
+
+        if field_ids is not None:
+            tag_ids = await resolve_field_tag_ids(self.db, field_ids)
+        if tag_ids:
+            for tid in tag_ids:
+                self.db.add(SourceTag(source_id=obj.id, tag_id=tid, assigned_by="manual"))
+
         await self.db.commit()
-        await self.db.refresh(obj)
         return await self.get(obj.id)
 
     async def update(self, source: Source, data: SourceUpdate) -> Source:
         payload = data.model_dump(exclude_unset=True)
         tag_ids = payload.pop("tag_ids", None)
+        field_ids = payload.pop("research_field_ids", None)
 
         for key, value in payload.items():
             setattr(source, key, value)
 
-        # Atomically replace topic tags when tag_ids is explicitly provided
+        # research_field_ids takes precedence and is resolved to tag IDs
+        if field_ids is not None:
+            tag_ids = await resolve_field_tag_ids(self.db, field_ids)
+
+        # Atomically replace topic tags when a tag set is explicitly provided
         if tag_ids is not None:
             await self.db.execute(
                 sa_delete(SourceTag).where(SourceTag.source_id == source.id)
@@ -405,6 +461,14 @@ class EntityRepo:
             .options(selectinload(Entity.aliases))
         )
         return result.scalar_one_or_none()
+
+    async def get_by_name_type(self, name: str, entity_type: str) -> Optional[Entity]:
+        result = await self.db.execute(
+            select(Entity)
+            .where(Entity.name.ilike(name.strip()), Entity.entity_type == entity_type)
+            .options(selectinload(Entity.aliases))
+        )
+        return result.scalars().first()
 
     async def create(self, data: EntityCreate) -> Entity:
         payload = data.model_dump()

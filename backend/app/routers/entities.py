@@ -33,6 +33,17 @@ async def create_entity(data: EntityCreate, db: AsyncSession = Depends(get_db)):
     return await repo.create(data)
 
 
+@router.post("/ensure", response_model=EntityOut)
+async def ensure_entity(data: EntityCreate, db: AsyncSession = Depends(get_db)):
+    """Get-or-create an entity by (name, entity_type). Used to bridge
+    sources/organizations into the entity graph for relationship editing."""
+    repo = EntityRepo(db)
+    existing = await repo.get_by_name_type(data.name, data.entity_type)
+    if existing:
+        return existing
+    return await repo.create(data)
+
+
 @router.get("/{entity_id}", response_model=EntityOut)
 async def get_entity(entity_id: str, db: AsyncSession = Depends(get_db)):
     repo = EntityRepo(db)
