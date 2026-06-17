@@ -11,8 +11,17 @@ const PLACEHOLDER = [{ id: 'placeholder' }];
 export async function generateStaticParams() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) return PLACEHOLDER;
+  // Hard timeout: when the backend is cross-region/unreachable from the build
+  // machine, a bare fetch can hang and stall (crash) the whole Vercel build. Bail
+  // out fast and fall back to the placeholder shell instead.
   try {
-    const res = await fetch(`${apiUrl}/api/entities?limit=500`, { cache: 'no-store' });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10_000);
+    const res = await fetch(`${apiUrl}/api/entities?limit=500`, {
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
     if (!res.ok) return PLACEHOLDER;
     const entities: Entity[] = await res.json();
     return entities.length ? entities.map((e) => ({ id: e.id })) : PLACEHOLDER;
