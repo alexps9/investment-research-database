@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 import asyncio
+import os
+import time
+import uuid
 from typing import Any, Optional
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException
@@ -22,6 +25,31 @@ app = FastAPI(title="HH-Research Agent Service", version="2.0.0")
 _jobs: dict[str, dict[str, Any]] = {}
 # Deep-research jobs (long-running; polled for progress + final report)
 _research_jobs: dict[str, dict[str, Any]] = {}
+
+# ── Deep-research multi-user controls ────────────────────────────────────────
+# The whole pipeline funnels into one LiteLLM worker + one Bedrock account + one
+# proxy node, so cap how many runs execute at once and queue the rest. A run that
+# can't get a slot stays "queued" (status still "running" so the frontend keeps
+# polling) until one frees up. RESEARCH_MAX_PENDING bounds running+queued so a
+# burst can't blow up memory / the gateway.
+RESEARCH_MAX_CONCURRENT = int(os.getenv("RESEARCH_MAX_CONCURRENT", "2"))
+RESEARCH_MAX_PENDING = int(os.getenv("RESEARCH_MAX_PENDING", "12"))
+# Drop finished (done/failed) jobs this many seconds after they end so the
+# in-memory store stays bounded.
+RESEARCH_JOB_TTL = int(os.getenv("RESEARCH_JOB_TTL", "3600"))
+_research_sem = asyncio.Semaphore(RESEARCH_MAX_CONCURRENT)
+
+
+def _prune_research_jobs() -> None:
+    """Evict finished jobs past their TTL (keeps the in-memory store bounded)."""
+    now = time.time()
+    stale = [
+        jid for jid, j in _research_jobs.items()
+        if j.get("status") in ("done", "failed")
+        and now - j.get("ended_ts", now) > RESEARCH_JOB_TTL
+    ]
+    for jid in stale:
+        _research_jobs.pop(jid, None)
 
 
 class QARequest(BaseModel):
@@ -66,10 +94,24 @@ async def qa(body: QARequest):
 @app.post("/research/start")
 async def research_start(body: ResearchRequest, background: BackgroundTasks):
     """Kick off a deep-research run; returns a job_id to poll for progress."""
-    job_id = f"research-{asyncio.get_event_loop().time():.0f}-{len(_research_jobs)}"
+    _prune_research_jobs()
+
+    # Backpressure: cap total in-flight (running + queued) jobs.
+    active = sum(1 for j in _research_jobs.values() if j.get("status") == "running")
+    if active >= RESEARCH_MAX_PENDING:
+        raise HTTPException(
+            status_code=429,
+            detail="深度研究当前排队已满，请稍后再试 (too many concurrent research jobs)",
+        )
+
+    job_id = f"research-{uuid.uuid4().hex}"
+    queued = active >= RESEARCH_MAX_CONCURRENT
     _research_jobs[job_id] = {
-        "status": "running", "phase": "queued", "message": "排队中…",
+        "status": "running",
+        "phase": "queued",
+        "message": "排队中，等待空闲资源…" if queued else "排队中…",
         "pct": 0, "question": body.question, "result": None, "error": None,
+        "created_ts": time.time(), "ended_ts": None,
     }
 
     def on_progress(phase: str, message: str, pct: int) -> None:
@@ -79,19 +121,27 @@ async def research_start(body: ResearchRequest, background: BackgroundTasks):
 
     async def _job():
         try:
-            result = await run_deep_research(
-                body.question,
-                on_progress=on_progress,
-                max_subtopics=body.max_subtopics,
-                searches_per_topic=body.searches_per_topic,
-            )
+            # Wait for a concurrency slot; the job shows "排队中" until acquired.
+            async with _research_sem:
+                job = _research_jobs.get(job_id)
+                if job is None:
+                    return  # pruned/cancelled while queued
+                job.update(phase="brief", message="开始研究…")
+                result = await run_deep_research(
+                    body.question,
+                    on_progress=on_progress,
+                    max_subtopics=body.max_subtopics,
+                    searches_per_topic=body.searches_per_topic,
+                )
             job = _research_jobs.get(job_id, {})
-            job.update(status="done", phase="done", message="研究完成", pct=100, result=result)
+            job.update(status="done", phase="done", message="研究完成", pct=100,
+                       result=result, ended_ts=time.time())
         except Exception as exc:  # noqa: BLE001
             import traceback
             traceback.print_exc()
             job = _research_jobs.get(job_id, {})
-            job.update(status="failed", error=str(exc), message=f"失败: {exc}")
+            job.update(status="failed", error=str(exc), message=f"失败: {exc}",
+                       ended_ts=time.time())
 
     background.add_task(_job)
     return {"job_id": job_id, "status": "running"}

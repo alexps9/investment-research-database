@@ -130,8 +130,13 @@ curl http://localhost:9000/research/status/<job_id>
   DuckDuckGo `tools/websearch` + an HTML→text page fetcher (`search.py`). Bounded by
   design (≤6 sub-topics, ≤4 searches/topic, concurrency 3) so a run is ~2–4 min.
   Exposed as **async jobs**: agent `POST /research/start` + `GET /research/status/{id}`
-  (in-memory job dict with `phase`/`pct`/`message` progress), proxied by the backend
-  at `/api/research/*` (`backend/app/routers/research.py`, `agent_base_url` →
+  (in-memory job dict with `phase`/`pct`/`message` progress), proxied by the backend.
+  **Multi-user controls** (one LiteLLM worker + one proxy is the bottleneck): a global
+  semaphore caps concurrent runs (`RESEARCH_MAX_CONCURRENT`, default 2) and queues the
+  rest (job stays `running`/phase `queued`); `RESEARCH_MAX_PENDING` (default 12) bounds
+  running+queued (else 429); finished jobs are pruned after `RESEARCH_JOB_TTL` (1h).
+  HTML→text parsing runs via `asyncio.to_thread` so it doesn't stall the event loop.
+  Proxied by the backend at `/api/research/*` (`backend/app/routers/research.py`, `agent_base_url` →
   `http://agent:9000`). The frontend `/research` page polls status and renders the
   Markdown report (react-markdown + `@tailwindcss/typography`). **The agent container
   egresses search/fetch through the overseas proxy** (`HTTP(S)_PROXY=proxy:8118`,

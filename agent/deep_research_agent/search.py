@@ -61,7 +61,10 @@ async def fetch_page(url: str) -> str:
         ctype = resp.headers.get("content-type", "")
         if resp.status_code != 200 or "html" not in ctype and "text" not in ctype:
             return ""
-        return _html_to_text(resp.text)[:MAX_PAGE_CHARS]
+        # HTML→text is CPU-bound regex work; run it off the event loop so it
+        # doesn't stall other concurrent runs' coroutines (progress/polling).
+        text = await asyncio.to_thread(_html_to_text, resp.text)
+        return text[:MAX_PAGE_CHARS]
     except Exception:
         return ""
 

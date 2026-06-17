@@ -108,6 +108,11 @@ services:
       HTTP_PROXY: ${BEDROCK_PROXY_URL:-}
       HTTPS_PROXY: ${BEDROCK_PROXY_URL:-}
       NO_PROXY: localhost,127.0.0.1,backend,mcp,agent,litellm,proxy
+      # Deep-research multi-user limits (one LiteLLM worker + one proxy is the
+      # bottleneck): max runs executing at once, max running+queued, finished-job TTL.
+      RESEARCH_MAX_CONCURRENT: ${RESEARCH_MAX_CONCURRENT:-2}
+      RESEARCH_MAX_PENDING: ${RESEARCH_MAX_PENDING:-12}
+      RESEARCH_JOB_TTL: ${RESEARCH_JOB_TTL:-3600}
     ports:
       - "9000:9000"
     depends_on:
