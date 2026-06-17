@@ -670,7 +670,13 @@ async def _build_scope(
         if obj.get("entity_type") == "person" and subj.get("entity_type") == "organization":
             person_org.setdefault(obj.get("id"), subj.get("name") or "")
 
-    person_list = [i for i in person_ids if i][:120]
+    # Order so the most query-relevant persons come first: direct KB/semantic hits
+    # (e.g. a prominent figure surfaced by the question) ahead of graph-expanded
+    # co-authors. _track_people_events only web-searches the head of this list, so
+    # ordering decides whose recent capital/funding events get surfaced.
+    hit_persons = [i for i in hit_ids if i and i in person_ids]
+    _hit_set = set(hit_persons)
+    person_list = (hit_persons + [i for i in person_ids if i and i not in _hit_set])[:120]
 
     # Resolve names for any person still missing one, so core_people can cover ALL
     # the persons we found (every queried person source is a core person).
@@ -742,7 +748,7 @@ async def _track_people_events(question: str, core_people: list[dict]) -> dict:
     """Web-search each core person for their real-time signals, capital involvement
     and funding events; structure into JSON. Prefer recent events but widen the
     window when nothing fresh exists so the page is never empty."""
-    people = [p for p in core_people if p.get("name")][:8]
+    people = [p for p in core_people if p.get("name")][:10]
     sources: list[dict] = []
     seen: set[str] = set()
     if not people:
