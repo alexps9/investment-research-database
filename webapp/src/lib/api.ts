@@ -4,6 +4,19 @@ function resolveUrl(path: string): string {
   return `/api${path}`;
 }
 
+/**
+ * Wiki entries live in the main frontend app (a different origin than this Studio).
+ * `NEXT_PUBLIC_WIKI_BASE_URL` points at it (e.g. http://110.40.131.38:8080);
+ * falls back to a same-origin relative path when unset.
+ */
+export function wikiHref(relativeOrId: string): string {
+  const rel = relativeOrId.startsWith('/wiki/')
+    ? relativeOrId
+    : `/wiki/entities/${relativeOrId}`;
+  const base = process.env.NEXT_PUBLIC_WIKI_BASE_URL;
+  return base ? `${base.replace(/\/$/, '')}${rel}` : rel;
+}
+
 async function fetcher<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(resolveUrl(path), {
     headers: { 'Content-Type': 'application/json', ...init?.headers },

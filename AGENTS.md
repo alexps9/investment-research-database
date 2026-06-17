@@ -196,9 +196,22 @@ Submitting a question `router.push('/?id=<uuid>')` → progress renders in place
 - `DELETE /api/research/sessions/{id}`
 
 **Agent output extensions** (in addition to `report`/`kb_sources`/`sources`):
-- `scope`: `{topic_ids, lane_ids, paper_ids, person_ids, org_ids}` — LLM maps question to
-  existing `entity_type=topic` lanes/rows; entity IDs from KB hits + graph expansion.
-- `industry`: `{tech_signals, impact_md, top_people, capital}` — web search + LLM structuring.
+- `scope`: `{topic_ids, lane_ids, paper_ids, person_ids, org_ids, core_people}` — LLM maps
+  question to existing `entity_type=topic` lanes/rows; entity IDs from KB hits + graph
+  expansion. `core_people=[{id,name,org,wiki_url}]` are the DB persons (link to their wiki).
+- `industry`: derived **after** the report — `{core_people, tech_signals, impact_md,
+  person_signals, capital, funding, sources}`. `tech_signals`+`impact_md` come from ONE LLM
+  interpretation of the generated report (`_interpret_report_signals`); `person_signals`/
+  `capital`/`funding` come from a per-core-person web search of recent (~last month) events
+  (`_track_people_events`), each item carrying `person_id`+`wiki_url`. Persisted in the
+  `research_sessions.industry` JSON (the DB) and rendered on the Industry page.
+
+Report §4 产业追踪 is composed deterministically from `industry` (`_compose_industry_section`)
+so the report and the Industry page stay consistent.
+
+**Frontend pages**: Trajectory chart supports drag-to-pan + spacing zoom (declutter dense
+years). Industry page links core people to their wiki via `NEXT_PUBLIC_WIKI_BASE_URL`
+(main frontend origin, e.g. `http://110.40.131.38:8080`; relative fallback when unset).
 
 Deploy: CN static mirror on **:8081** (`deploy/webapp.nginx.conf`); optional second Vercel
 project (Root Directory `webapp`). See [`memory/deployment.md`](memory/deployment.md).

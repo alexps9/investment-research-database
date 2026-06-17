@@ -32,6 +32,7 @@ export interface ResearchScope {
   paper_ids?: string[];
   person_ids?: string[];
   org_ids?: string[];
+  core_people?: CorePerson[];
   topic_catalog?: Array<{
     id: string;
     name: string;
@@ -42,11 +43,53 @@ export interface ResearchScope {
   }>;
 }
 
+export interface CorePerson {
+  id: string;
+  name: string;
+  org?: string;
+  wiki_url?: string;
+}
+
+export interface PersonSignal {
+  person_id?: string;
+  person?: string;
+  title?: string;
+  summary?: string;
+  url?: string;
+  date?: string;
+  wiki_url?: string;
+}
+
+export interface CapitalEvent {
+  person_id?: string;
+  person?: string;
+  target?: string;
+  round?: string;
+  amount?: string;
+  investors?: string;
+  url?: string;
+  date?: string;
+  wiki_url?: string;
+}
+
+export interface FundingItem {
+  person_id?: string;
+  person?: string;
+  company?: string;
+  round?: string;
+  amount?: string;
+  url?: string;
+  date?: string;
+  wiki_url?: string;
+}
+
 export interface IndustryData {
-  tech_signals?: Array<{ title: string; summary: string; url?: string }>;
+  core_people?: CorePerson[];
+  tech_signals?: Array<{ title: string; summary: string }>;
   impact_md?: string;
-  top_people?: Array<{ name: string; org: string; why: string; url?: string }>;
-  capital?: Array<{ round: string; target: string; amount: string; investors?: string; url?: string }>;
+  person_signals?: PersonSignal[];
+  capital?: CapitalEvent[];
+  funding?: FundingItem[];
   sources?: Array<{ title: string; url: string }>;
 }
 

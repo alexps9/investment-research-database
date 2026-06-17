@@ -293,81 +293,118 @@ async def _write_route_section(question: str, findings_digest: str, scope: dict,
 
 
 async def _write_people_section(question: str, findings_digest: str, scope: dict,
-                                industry: dict, src_text: str) -> str:
+                                src_text: str) -> str:
     people_hint = json.dumps({
+        "core_people": [
+            {"name": p.get("name"), "org": p.get("org")} for p in (scope.get("core_people") or [])
+        ],
         "person_count": len(scope.get("person_ids") or []),
         "org_count": len(scope.get("org_ids") or []),
-        "industry_top_people": industry.get("top_people") or [],
-    }, ensure_ascii=False)[:3000]
+    }, ensure_ascii=False)[:3500]
     system = (
         "You are an expert analyst writing the '核心人物' section of a deep-research "
         "report. Start with the exact heading '## 3. 核心人物'. Use numbered "
         "sub-sections '### 3.1 <person or team>', '### 3.2 …' covering the key "
-        "researchers/teams/organisations, their affiliations, signature "
-        "contributions, and how they relate to each other and the technology routes. "
-        "Fold all people/org findings here. Cite inline as [n]. Do NOT create any "
-        "other top-level '##' heading. " + _lang_clause(question)
+        "researchers/teams/organisations (prefer the core_people listed), their "
+        "affiliations, signature contributions, and how they relate to each other and "
+        "the technology routes. Fold all people/org findings here. Cite inline as [n]. "
+        "Do NOT create any other top-level '##' heading. " + _lang_clause(question)
     )
     user = (
-        f"Question:\n{question}\n\nKey people hints:\n{people_hint}\n\n"
+        f"Question:\n{question}\n\nKey people (DB):\n{people_hint}\n\n"
         f"Findings:\n{findings_digest}\n\nNumbered sources:\n{src_text}\n\n"
         "Write the '## 3. 核心人物' section with numbered sub-headings."
     )
     return await _chat("report", system, user, temperature=0.3, max_tokens=SECTION_MAX_TOKENS)
 
 
-async def _write_industry_section(question: str, findings_digest: str, industry: dict,
-                                  src_text: str) -> str:
-    industry_text = json.dumps({
-        "tech_signals": industry.get("tech_signals"),
-        "top_people": industry.get("top_people"),
-        "capital": industry.get("capital"),
-        "impact_md": (industry.get("impact_md") or "")[:2500],
-    }, ensure_ascii=False)[:6000]
-    system = (
-        "You are an expert analyst writing the '产业追踪' section of a deep-research "
-        "report. Start with the exact heading '## 4. 产业追踪'. Use numbered "
-        "sub-sections, e.g. '### 4.1 技术信号', '### 4.2 产业影响', "
-        "'### 4.3 关键团队与人才分布', '### 4.4 资本介入'. Fold the industry signals, "
-        "impact analysis, talent locations and capital/funding involvement here. Cite "
-        "inline as [n]. Do NOT create any other top-level '##' heading. "
-        + _lang_clause(question)
-    )
-    user = (
-        f"Question:\n{question}\n\nIndustry analysis:\n{industry_text}\n\n"
-        f"Supporting findings:\n{findings_digest}\n\nNumbered sources:\n{src_text}\n\n"
-        "Write the '## 4. 产业追踪' section with numbered sub-headings."
-    )
-    return await _chat("report", system, user, temperature=0.3, max_tokens=SECTION_MAX_TOKENS)
+def _compose_industry_section(industry: dict) -> str:
+    """Deterministically assemble '## 4. 产业追踪' from the industry dict, so the
+    report's section 4 stays consistent with the Industry Tracking page."""
+    lines: list[str] = ["## 4. 产业追踪", ""]
+
+    signals = industry.get("tech_signals") or []
+    lines.append("### 4.1 技术信号")
+    if signals:
+        for s in signals:
+            title = (s.get("title") or "").strip()
+            summary = (s.get("summary") or "").strip()
+            lines.append(f"- **{title}** — {summary}" if title else f"- {summary}")
+    else:
+        lines.append("_暂无明确的技术信号。_")
+    lines.append("")
+
+    impact = (industry.get("impact_md") or "").strip()
+    lines.append("### 4.2 产业影响")
+    lines.append(impact or "_暂无产业影响分析。_")
+    lines.append("")
+
+    people = industry.get("core_people") or []
+    lines.append("### 4.3 核心人物与实时信号")
+    if people:
+        for p in people[:12]:
+            name = (p.get("name") or "").strip()
+            org = (p.get("org") or "").strip()
+            wiki = p.get("wiki_url")
+            label = f"[{name}]({wiki})" if wiki else name
+            lines.append(f"- {label}{f' · {org}' if org else ''}")
+    else:
+        lines.append("_暂无核心人物。_")
+    psig = industry.get("person_signals") or []
+    for it in psig[:12]:
+        person = (it.get("person") or "").strip()
+        title = (it.get("title") or "").strip()
+        url = it.get("url")
+        date = (it.get("date") or "").strip()
+        head = f"[{title}]({url})" if url else title
+        lines.append(f"  - {person}：{head}{f'（{date}）' if date else ''}")
+    lines.append("")
+
+    cap = industry.get("capital") or []
+    fund = industry.get("funding") or []
+    lines.append("### 4.4 资本介入与融资")
+    if cap or fund:
+        for c in cap[:12]:
+            person = (c.get("person") or "").strip()
+            target = (c.get("target") or "").strip()
+            parts = [x for x in (c.get("round"), c.get("amount"), c.get("investors")) if x]
+            url = c.get("url")
+            tail = f"（{c.get('date')}）" if c.get("date") else ""
+            line = f"- 资本介入 · {person}：{target} {' · '.join(parts)}{tail}".rstrip()
+            if url:
+                line += f" [链接]({url})"
+            lines.append(line)
+        for f in fund[:12]:
+            person = (f.get("person") or "").strip()
+            company = (f.get("company") or "").strip()
+            parts = [x for x in (f.get("round"), f.get("amount")) if x]
+            url = f.get("url")
+            tail = f"（{f.get('date')}）" if f.get("date") else ""
+            line = f"- 融资 · {person}：{company} {' · '.join(parts)}{tail}".rstrip()
+            if url:
+                line += f" [链接]({url})"
+            lines.append(line)
+    else:
+        lines.append("_最近一个月未发现明确的资本介入或融资事件。_")
+    lines.append("")
+    return "\n".join(lines)
 
 
 async def _write_report(question: str, brief: str, blocks: list[dict], scope: dict,
-                        industry: dict, web_sources: list[dict],
-                        kb_sources: list[dict]) -> str:
-    """Assemble the report body with EXACTLY four top-level sections:
-
-    1. 执行摘要  2. 技术路线  3. 核心人物  4. 产业追踪
-
-    All scattered sub-topic findings are folded into these four sections; finer
-    points become numbered sub-headings (2.1, 2.2, 3.1, …).
-    """
+                        web_sources: list[dict], kb_sources: list[dict]) -> str:
+    """Write report sections 1–3 (执行摘要 / 技术路线 / 核心人物). Section 4 (产业追踪)
+    is composed separately from the industry data, and references are appended by the
+    caller — because industry analysis is derived from this report body."""
     src_text = _numbered_sources(kb_sources, web_sources)
     active = [b for b in blocks if b.get("findings")]
     digest = "\n\n".join(f"### {b['subtopic']}\n{b['findings']}" for b in active)[:12000]
 
-    # Exec summary + technology routes need no industry/scope-heavy context, so run
-    # all four section writers concurrently.
-    exec_summary, routes, people, industry_sec = await asyncio.gather(
+    exec_summary, routes, people = await asyncio.gather(
         _write_exec_summary(question, brief, digest, src_text),
         _write_route_section(question, digest, scope, src_text),
-        _write_people_section(question, digest, scope, industry, src_text),
-        _write_industry_section(question, digest, industry, src_text),
+        _write_people_section(question, digest, scope, src_text),
     )
-
-    body = "\n\n".join(
-        p.strip() for p in (exec_summary, routes, people, industry_sec) if p.strip()
-    )
-    return body + _build_references(kb_sources, web_sources)
+    return "\n\n".join(p.strip() for p in (exec_summary, routes, people) if p.strip())
 
 
 # ── Research Studio: scope + industry + mandatory sections ───────────────────
@@ -433,14 +470,17 @@ async def _build_scope(
     relations = await relations_task
     extra_hits = await extra_hits_task
 
-    # Build an id→entity_type index from the relations' nested entities, so we can
-    # classify KB/semantic hits without a per-id fetch.
+    # Build id→entity_type and id→name indexes from the relations' nested entities,
+    # so we can classify KB/semantic hits without a per-id fetch.
     type_index: dict[str, str] = {}
+    name_index: dict[str, str] = {}
     for rel in relations:
         for ent in (rel.get("subject") or {}, rel.get("object_entity") or {}):
             eid, et = ent.get("id"), ent.get("entity_type")
             if eid and et:
                 type_index[eid] = et
+                if ent.get("name"):
+                    name_index[eid] = ent["name"]
 
     paper_ids: set[str] = set()
     person_ids: set[str] = set()
@@ -511,65 +551,148 @@ async def _build_scope(
             if obj.get("entity_type") == "person" and obj.get("id") in person_ids and subj.get("entity_type") == "organization":
                 org_ids.add(subj.get("id"))
 
+    # person → org name (best-effort, from WORKS_AT) for richer "core people" cards.
+    person_org: dict[str, str] = {}
+    for rel in relations:
+        if rel.get("relation_type") != "WORKS_AT":
+            continue
+        subj = rel.get("subject") or {}
+        obj = rel.get("object_entity") or {}
+        if subj.get("entity_type") == "person" and obj.get("entity_type") == "organization":
+            person_org.setdefault(subj.get("id"), obj.get("name") or "")
+        if obj.get("entity_type") == "person" and subj.get("entity_type") == "organization":
+            person_org.setdefault(obj.get("id"), subj.get("name") or "")
+
+    person_list = [i for i in person_ids if i][:80]
+    core_people = [
+        {
+            "id": pid,
+            "name": name_index.get(pid) or "",
+            "org": person_org.get(pid) or "",
+            "wiki_url": f"/wiki/entities/{pid}",
+        }
+        for pid in person_list
+        if name_index.get(pid)
+    ][:12]
+
     return {
         "topic_ids": list(dict.fromkeys(topic_ids)),
         "lane_ids": list(dict.fromkeys(lane_ids)),
         "paper_ids": [i for i in paper_ids if i][:120],
-        "person_ids": [i for i in person_ids if i][:80],
+        "person_ids": person_list,
         "org_ids": [i for i in org_ids if i][:60],
+        "core_people": core_people,
         "topic_catalog": topic_catalog,
     }
 
 
-async def _industry_analysis(question: str, brief: str, blocks: list[dict]) -> dict:
-    """Web-grounded industry tracking: signals, impact, top people, capital."""
-    findings = "\n\n".join(
-        f"### {b['subtopic']}\n{b.get('findings', '')}" for b in blocks if b.get("findings")
-    )[:8000]
-
-    queries = [
-        f"{question} industry adoption funding startup 2024 2025",
-        f"{question} leading researchers companies investment",
-    ]
-    notes: list[str] = []
-    sources: list[dict] = []
-    seen: set[str] = set()
-    for q in queries:
-        bundle = await search_and_read(q, max_results=5, read_top=2)
-        for s in bundle.get("sources", []):
-            if s.get("url") and s["url"] not in seen:
-                seen.add(s["url"])
-                sources.append(s)
-        for r in bundle.get("results", []):
-            if r.get("content"):
-                notes.append(f"[{r.get('title')}]({r.get('url')})\n{r['content'][:3000]}")
-
-    joined = "\n\n---\n\n".join(notes)[:10000]
+async def _interpret_report_signals(question: str, report_body: str) -> dict:
+    """ONE LLM call that reads the generated report and extracts tech signals +
+    an industry-impact reading (no web search — pure interpretation)."""
     system = (
-        "You are an industry analyst. From the research question, brief, findings "
-        "and web notes, produce a structured industry-tracking JSON. Return ONLY "
-        "valid JSON with keys: "
-        "tech_signals (array of {title, summary, url}), "
-        "impact_md (markdown string: industry impact analysis), "
-        "top_people (array of {name, org, why, url?}), "
-        "capital (array of {round, target, amount, investors?, url?}). "
-        "Be factual; use the notes; if uncertain, say so briefly. "
-        + _lang_clause(question)
+        "You are an industry analyst. Read the deep-research REPORT and produce a "
+        "structured reading as JSON ONLY: "
+        '{"tech_signals":[{"title":"...","summary":"..."}],'
+        '"impact_md":"markdown industry-impact analysis"}. '
+        "tech_signals = 4–8 concrete technical signals/trends the report implies "
+        "(each a short title + 1–2 sentence summary). impact_md = a few markdown "
+        "paragraphs on industrialisation impact, adoption and what it means for the "
+        "field. Base everything strictly on the report. " + _lang_clause(question)
     )
-    user = (
-        f"Question: {question}\n\nBrief: {brief}\n\nFindings:\n{findings}\n\n"
-        f"Web notes:\n{joined}"
-    )
-    raw = await _chat("report", system, user, temperature=0.2, max_tokens=2400)
+    user = f"Question: {question}\n\nREPORT:\n{report_body[:14000]}"
+    raw = await _chat("report", system, user, temperature=0.2, max_tokens=1800)
     parsed = _extract_json(raw)
     if not isinstance(parsed, dict):
         parsed = {}
     return {
         "tech_signals": parsed.get("tech_signals") or [],
         "impact_md": parsed.get("impact_md") or "",
-        "top_people": parsed.get("top_people") or [],
+    }
+
+
+async def _track_people_events(question: str, core_people: list[dict]) -> dict:
+    """Web-search each core person for their recent (≈ last month) real-time
+    signals, capital involvement and funding events; structure into JSON."""
+    people = [p for p in core_people if p.get("name")][:6]
+    sources: list[dict] = []
+    seen: set[str] = set()
+    if not people:
+        return {"person_signals": [], "capital": [], "funding": [], "sources": []}
+
+    async def _search_person(p: dict) -> tuple[dict, dict]:
+        org = p.get("org") or ""
+        q = f"{p['name']} {org} funding investment round latest news 2026"
+        bundle = await search_and_read(q, max_results=6, read_top=2)
+        return p, bundle
+
+    results = await asyncio.gather(*[_search_person(p) for p in people])
+    notes: list[str] = []
+    for p, bundle in results:
+        for s in bundle.get("sources", []):
+            if s.get("url") and s["url"] not in seen:
+                seen.add(s["url"])
+                sources.append(s)
+        chunk = [
+            f"[{r.get('title')}]({r.get('url')})\n{r['content'][:2000]}"
+            for r in bundle.get("results", []) if r.get("content")
+        ]
+        notes.append(
+            f"### PERSON {p['name']} (id={p['id']}, org={p.get('org', '')})\n"
+            + "\n\n".join(chunk)[:5000]
+        )
+    joined = "\n\n---\n\n".join(notes)[:14000]
+
+    system = (
+        "You are an industry analyst tracking specific researchers/founders. From the "
+        "per-person web notes, extract ONLY recent events (roughly the LAST MONTH; "
+        "ignore older items). Return JSON ONLY with keys: "
+        '"person_signals":[{"person_id","person","title","summary","url","date"}], '
+        '"capital":[{"person_id","person","target","round","amount","investors","url","date"}], '
+        '"funding":[{"person_id","person","company","round","amount","url","date"}]. '
+        "person_signals = notable recent activity/news; capital = investments the "
+        "person/their org made or received; funding = funding rounds. Always set "
+        "person_id to the id shown for that person. If nothing recent, return empty "
+        "arrays. Do not invent. " + _lang_clause(question)
+    )
+    user = f"Question: {question}\n\nPer-person web notes:\n{joined}"
+    raw = await _chat("report", system, user, temperature=0.2, max_tokens=2600)
+    parsed = _extract_json(raw)
+    if not isinstance(parsed, dict):
+        parsed = {}
+    return {
+        "person_signals": parsed.get("person_signals") or [],
         "capital": parsed.get("capital") or [],
+        "funding": parsed.get("funding") or [],
         "sources": sources,
+    }
+
+
+async def _industry_analysis(question: str, report_body: str, scope: dict) -> dict:
+    """Industry tracking, built on the generated report + the core people:
+
+    - tech_signals & impact_md: one LLM interpretation of the report.
+    - core_people: the DB core people (link to their wiki page).
+    - person_signals / capital / funding: web search of each core person's recent
+      (≈ last month) events.
+    """
+    core_people = scope.get("core_people") or []
+    interp, events = await asyncio.gather(
+        _interpret_report_signals(question, report_body),
+        _track_people_events(question, core_people),
+    )
+    wiki = {p["id"]: p.get("wiki_url") for p in core_people if p.get("id")}
+    for bucket in ("person_signals", "capital", "funding"):
+        for it in events.get(bucket, []):
+            if isinstance(it, dict) and it.get("person_id") in wiki:
+                it["wiki_url"] = wiki[it["person_id"]]
+    return {
+        "core_people": core_people,
+        "tech_signals": interp.get("tech_signals") or [],
+        "impact_md": interp.get("impact_md") or "",
+        "person_signals": events.get("person_signals") or [],
+        "capital": events.get("capital") or [],
+        "funding": events.get("funding") or [],
+        "sources": events.get("sources") or [],
     }
 
 
@@ -634,17 +757,22 @@ async def run_deep_research(
                 kb_map[key] = h
     kb_sources = sorted(kb_map.values(), key=lambda h: h.get("score") or 0, reverse=True)
 
-    # Scope + industry first (the report sections fold these in), then assemble the
-    # four-section report.
-    progress("synthesis", "正在归纳技术路线类别与产业信号…", 80)
-    scope, industry = await asyncio.gather(
-        _build_scope(question, brief, subtopics, kb_sources, blocks),
-        _industry_analysis(question, brief, blocks),
-    )
+    # Scope (DB topic/people mapping) first, then write report sections 1–3.
+    progress("synthesis", "正在归纳技术路线类别与核心人物…", 80)
+    scope = await _build_scope(question, brief, subtopics, kb_sources, blocks)
 
-    progress("report", "正在撰写报告四大板块：执行摘要 / 技术路线 / 核心人物 / 产业追踪…", 90)
-    report = await _write_report(
-        question, brief, blocks, scope, industry, all_sources, kb_sources,
+    progress("report", "正在撰写报告：执行摘要 / 技术路线 / 核心人物…", 88)
+    report_core = await _write_report(question, brief, blocks, scope, all_sources, kb_sources)
+
+    # Industry tracking is derived from the report (tech signals + impact) plus a web
+    # search of each core person's recent capital/funding/signals.
+    progress("report", "正在追踪核心人物的实时信号、资本与融资…", 94)
+    industry = await _industry_analysis(question, report_core, scope)
+
+    # Section 4 (产业追踪) is composed from the industry data so it matches the page.
+    section4 = _compose_industry_section(industry)
+    report = (
+        report_core + "\n\n" + section4 + _build_references(kb_sources, all_sources)
     )
 
     progress("done", "研究完成", 100)

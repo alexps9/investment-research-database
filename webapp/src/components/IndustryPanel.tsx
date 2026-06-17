@@ -2,8 +2,9 @@
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Radio, TrendingUp, Users, Banknote, Newspaper, Activity } from 'lucide-react';
-import type { FundingEvent, IndustryData, Signal } from '@/lib/types';
+import { Radio, TrendingUp, Users, Banknote, Activity, ExternalLink } from 'lucide-react';
+import type { IndustryData } from '@/lib/types';
+import { wikiHref } from '@/lib/api';
 import { useLang } from '@/lib/i18n';
 
 function EmptyCard({ text }: { text: string }) {
@@ -38,60 +39,117 @@ function StatTile({
   );
 }
 
-export default function IndustryPanel({
-  industry,
-  funding,
-  signals,
-}: {
-  industry?: IndustryData | null;
-  funding: FundingEvent[];
-  signals: Signal[];
-}) {
+export default function IndustryPanel({ industry }: { industry?: IndustryData | null }) {
   const { t } = useLang();
+  const corePeople = industry?.core_people ?? [];
   const techSignals = industry?.tech_signals ?? [];
-  const topPeople = industry?.top_people ?? [];
-  const capital = industry?.capital ?? [];
   const impact = industry?.impact_md?.trim();
+  const personSignals = industry?.person_signals ?? [];
+  const capital = industry?.capital ?? [];
+  const funding = industry?.funding ?? [];
+
+  const personLabel = (personId?: string, name?: string, fallbackWiki?: string) => {
+    const wiki = fallbackWiki || (personId ? wikiHref(personId) : undefined);
+    if (name && wiki) {
+      return (
+        <a href={wiki} target="_blank" rel="noopener noreferrer" className="font-medium text-blue-600 hover:underline">
+          {name}
+        </a>
+      );
+    }
+    return <span className="font-medium text-gray-800">{name || '—'}</span>;
+  };
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 pb-12">
       {/* Overview */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile icon={Radio} label={t('industry.signals')} value={techSignals.length} tone="bg-blue-50 text-blue-600" />
-        <StatTile icon={Users} label={t('industry.talent')} value={topPeople.length} tone="bg-emerald-50 text-emerald-600" />
-        <StatTile icon={Banknote} label={t('industry.capital')} value={capital.length} tone="bg-amber-50 text-amber-600" />
-        <StatTile icon={Newspaper} label={t('industry.funding')} value={funding.length} tone="bg-violet-50 text-violet-600" />
+        <StatTile icon={Users} label={t('industry.talent')} value={corePeople.length} tone="bg-emerald-50 text-emerald-600" />
+        <StatTile icon={Activity} label={t('industry.signals_live')} value={personSignals.length} tone="bg-blue-50 text-blue-600" />
+        <StatTile icon={Radio} label={t('industry.signals')} value={techSignals.length} tone="bg-violet-50 text-violet-600" />
+        <StatTile icon={Banknote} label={t('industry.capital')} value={capital.length + funding.length} tone="bg-amber-50 text-amber-600" />
       </div>
 
-      {/* Tech signals */}
+      {/* Real-time signals of core people (web-searched) */}
       <section>
-        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
-          <Radio className="h-5 w-5 text-blue-600" /> {t('industry.signals')}
+        <h2 className="mb-1 flex items-center gap-2 text-lg font-semibold text-gray-900">
+          <Activity className="h-5 w-5 text-blue-600" /> {t('industry.signals_live')}
         </h2>
-        {techSignals.length ? (
-          <div className="grid gap-4 md:grid-cols-2">
-            {techSignals.map((sig, i) => (
+        <p className="mb-4 text-xs text-gray-400">基于网络搜索的核心人物近一个月动态</p>
+        {personSignals.length ? (
+          <div className="grid gap-3 md:grid-cols-2">
+            {personSignals.map((s, i) => (
               <div key={i} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
-                <h3 className="font-medium text-gray-900">
-                  {sig.url ? (
-                    <a href={sig.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                      {sig.title}
+                <div className="flex items-center justify-between gap-2">
+                  {personLabel(s.person_id, s.person, s.wiki_url)}
+                  {s.date && <span className="text-xs text-gray-400">{s.date}</span>}
+                </div>
+                <h3 className="mt-1.5 text-sm font-medium text-gray-900">
+                  {s.url ? (
+                    <a href={s.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 hover:underline">
+                      {s.title} <ExternalLink className="inline h-3 w-3" />
                     </a>
                   ) : (
-                    sig.title
+                    s.title
                   )}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">{sig.summary}</p>
+                {s.summary && <p className="mt-1 text-sm leading-relaxed text-gray-600">{s.summary}</p>}
               </div>
             ))}
           </div>
         ) : (
-          <EmptyCard text="本方向暂未捕捉到明确的技术信号" />
+          <EmptyCard text="近一个月暂未捕捉到核心人物的实时信号" />
         )}
       </section>
 
-      {/* Impact + talent side by side to reduce whitespace */}
+      {/* Core people (= key people, link to wiki) */}
+      <section>
+        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
+          <Users className="h-5 w-5 text-emerald-600" /> {t('industry.talent')}
+        </h2>
+        {corePeople.length ? (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {corePeople.map((p) => (
+              <a
+                key={p.id}
+                href={p.wiki_url ? wikiHref(p.wiki_url) : wikiHref(p.id)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-emerald-300 hover:shadow-md"
+              >
+                <p className="font-medium text-gray-900 group-hover:text-emerald-700">
+                  {p.name}
+                  <ExternalLink className="ml-1 inline h-3 w-3 text-gray-300 group-hover:text-emerald-500" />
+                </p>
+                {p.org && <p className="mt-1 text-xs text-gray-500">{p.org}</p>}
+              </a>
+            ))}
+          </div>
+        ) : (
+          <EmptyCard text="暂未识别到核心人物" />
+        )}
+      </section>
+
+      {/* Tech signals + impact (interpreted from the report) */}
       <div className="grid gap-6 lg:grid-cols-5">
+        <section className="lg:col-span-2">
+          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
+            <Radio className="h-5 w-5 text-violet-600" /> {t('industry.signals')}
+          </h2>
+          {techSignals.length ? (
+            <div className="space-y-3">
+              {techSignals.map((sig, i) => (
+                <div key={i} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                  <h3 className="font-medium text-gray-900">{sig.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{sig.summary}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyCard text="暂无技术信号" />
+          )}
+        </section>
+
         <section className="lg:col-span-3">
           <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
             <TrendingUp className="h-5 w-5 text-rose-600" /> {t('industry.impact')}
@@ -104,80 +162,32 @@ export default function IndustryPanel({
             <EmptyCard text="产业影响分析尚未生成" />
           )}
         </section>
-
-        <section className="lg:col-span-2">
-          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
-            <Users className="h-5 w-5 text-emerald-600" /> {t('industry.talent')}
-          </h2>
-          {topPeople.length ? (
-            <div className="space-y-3">
-              {topPeople.map((p, i) => (
-                <div key={i} className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-                  <p className="font-medium text-gray-900">
-                    {p.url ? (
-                      <a href={p.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                        {p.name}
-                      </a>
-                    ) : (
-                      p.name
-                    )}
-                    {p.org && <span className="ml-2 text-xs font-normal text-gray-500">{p.org}</span>}
-                  </p>
-                  {p.why && <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{p.why}</p>}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyCard text="暂未识别到关键人物" />
-          )}
-        </section>
       </div>
 
-      {/* Capital */}
-      <section>
-        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
-          <Banknote className="h-5 w-5 text-amber-600" /> {t('industry.capital')}
-        </h2>
-        {capital.length ? (
-          <div className="grid gap-4 md:grid-cols-3">
-            {capital.map((c, i) => (
-              <div key={i} className="rounded-xl border border-amber-200 bg-amber-50/50 p-4">
-                <p className="font-medium text-gray-900">
-                  {c.url ? (
-                    <a href={c.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                      {c.target}
-                    </a>
-                  ) : (
-                    c.target
-                  )}
-                </p>
-                <p className="mt-1 text-sm text-gray-600">
-                  {[c.round, c.amount].filter(Boolean).join(' · ') || '融资信息'}
-                </p>
-                {c.investors && <p className="mt-1 text-xs text-gray-500">{c.investors}</p>}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <EmptyCard text="暂未发现明确的资本介入信息" />
-        )}
-      </section>
-
-      {/* Live feeds: funding + signals in two columns */}
+      {/* Capital + funding (web-searched, last month) */}
       <div className="grid gap-6 md:grid-cols-2">
         <section>
-          <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-gray-900">
-            <Banknote className="h-4 w-4 text-violet-600" /> {t('industry.funding')}
+          <h2 className="mb-1 flex items-center gap-2 text-base font-semibold text-gray-900">
+            <Banknote className="h-4 w-4 text-amber-600" /> {t('industry.capital')}
           </h2>
-          {funding.length ? (
+          <p className="mb-3 text-xs text-gray-400">核心人物近一个月的资本介入</p>
+          {capital.length ? (
             <ul className="space-y-2">
-              {funding.slice(0, 12).map((f) => (
-                <li key={f.id} className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm">
-                  <span className="font-medium">{f.company_name}</span>
-                  {f.round && <span className="ml-2 text-gray-500">{f.round}</span>}
-                  {f.amount_raw && <span className="ml-2 text-amber-700">{f.amount_raw}</span>}
-                  {f.source_url && (
-                    <a href={f.source_url} target="_blank" rel="noopener noreferrer" className="ml-2 text-blue-600">
+              {capital.map((c, i) => (
+                <li key={i} className="rounded-lg border border-amber-200 bg-amber-50/50 px-4 py-3 text-sm">
+                  <div className="flex items-center justify-between gap-2">
+                    {personLabel(c.person_id, c.person, c.wiki_url)}
+                    {c.date && <span className="text-xs text-gray-400">{c.date}</span>}
+                  </div>
+                  <p className="mt-1 text-gray-700">
+                    {c.target}
+                    {[c.round, c.amount].filter(Boolean).length > 0 && (
+                      <span className="ml-1 text-gray-500">· {[c.round, c.amount].filter(Boolean).join(' · ')}</span>
+                    )}
+                  </p>
+                  {c.investors && <p className="mt-0.5 text-xs text-gray-500">{c.investors}</p>}
+                  {c.url && (
+                    <a href={c.url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs text-blue-600">
                       来源
                     </a>
                   )}
@@ -185,31 +195,39 @@ export default function IndustryPanel({
               ))}
             </ul>
           ) : (
-            <EmptyCard text="暂无相关融资记录" />
+            <EmptyCard text="近一个月暂无资本介入事件" />
           )}
         </section>
 
         <section>
-          <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-gray-900">
-            <Activity className="h-4 w-4 text-blue-600" /> {t('industry.signals_live')}
+          <h2 className="mb-1 flex items-center gap-2 text-base font-semibold text-gray-900">
+            <Banknote className="h-4 w-4 text-violet-600" /> {t('industry.funding')}
           </h2>
-          {signals.length ? (
+          <p className="mb-3 text-xs text-gray-400">核心人物近一个月的融资事件</p>
+          {funding.length ? (
             <ul className="space-y-2">
-              {signals.slice(0, 12).map((s) => (
-                <li key={s.id} className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm">
-                  {s.url ? (
-                    <a href={s.url} target="_blank" rel="noopener noreferrer" className="font-medium text-blue-600 hover:underline">
-                      {s.title}
+              {funding.map((f, i) => (
+                <li key={i} className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm">
+                  <div className="flex items-center justify-between gap-2">
+                    {personLabel(f.person_id, f.person, f.wiki_url)}
+                    {f.date && <span className="text-xs text-gray-400">{f.date}</span>}
+                  </div>
+                  <p className="mt-1 text-gray-700">
+                    {f.company}
+                    {[f.round, f.amount].filter(Boolean).length > 0 && (
+                      <span className="ml-1 text-gray-500">· {[f.round, f.amount].filter(Boolean).join(' · ')}</span>
+                    )}
+                  </p>
+                  {f.url && (
+                    <a href={f.url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs text-blue-600">
+                      来源
                     </a>
-                  ) : (
-                    <span className="font-medium">{s.title}</span>
                   )}
-                  {s.published_at && <span className="ml-2 text-xs text-gray-400">{s.published_at.slice(0, 10)}</span>}
                 </li>
               ))}
             </ul>
           ) : (
-            <EmptyCard text="暂无实时信号" />
+            <EmptyCard text="近一个月暂无融资事件" />
           )}
         </section>
       </div>

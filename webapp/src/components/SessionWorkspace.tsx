@@ -11,13 +11,7 @@ import TrajectoryChart from '@/components/TrajectoryChart';
 import PeopleGraph from '@/components/PeopleGraph';
 import IndustryPanel from '@/components/IndustryPanel';
 import { api } from '@/lib/api';
-import type {
-  Entity,
-  EntityRelation,
-  FundingEvent,
-  ResearchSession,
-  Signal,
-} from '@/lib/types';
+import type { Entity, EntityRelation, ResearchSession } from '@/lib/types';
 import { useLang } from '@/lib/i18n';
 
 const PRINT_CSS = `
@@ -70,8 +64,6 @@ export default function SessionWorkspace({ id, view }: { id: string; view: View 
   // Sub-view datasets (lazy-loaded only when needed).
   const [papers, setPapers] = useState<Entity[]>([]);
   const [relations, setRelations] = useState<EntityRelation[]>([]);
-  const [funding, setFunding] = useState<FundingEvent[]>([]);
-  const [signals, setSignals] = useState<Signal[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -100,9 +92,6 @@ export default function SessionWorkspace({ id, view }: { id: string; view: View 
       api.get<EntityRelation[]>('/graph/relations?limit=5000').then(setRelations).catch(() => {});
     } else if (view === 'people') {
       api.get<EntityRelation[]>('/graph/relations?limit=5000').then(setRelations).catch(() => {});
-    } else if (view === 'industry') {
-      api.get<FundingEvent[]>('/funding?limit=50').then(setFunding).catch(() => setFunding([]));
-      api.get<Signal[]>('/signals?limit=30').then(setSignals).catch(() => setSignals([]));
     }
   }, [view]);
 
@@ -131,9 +120,7 @@ export default function SessionWorkspace({ id, view }: { id: string; view: View 
               <TrajectoryChart papers={papers} relations={relations} scope={session?.scope} />
             )}
             {view === 'people' && <PeopleGraph relations={relations} scope={session?.scope} />}
-            {view === 'industry' && (
-              <IndustryPanel industry={session?.industry} funding={funding} signals={signals} />
-            )}
+            {view === 'industry' && <IndustryPanel industry={session?.industry} />}
           </div>
         </main>
       </div>

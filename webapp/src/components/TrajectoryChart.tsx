@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { Move, ZoomIn, ZoomOut } from 'lucide-react';
 import type { Entity, EntityRelation, ResearchScope } from '@/lib/types';
 import { laneColor } from '@/lib/entityColors';
 
@@ -39,6 +40,28 @@ export default function TrajectoryChart({
   scope?: ResearchScope | null;
 }) {
   const highlightIds = useMemo(() => new Set(scope?.paper_ids ?? []), [scope?.paper_ids]);
+  // Horizontal spacing (px per year). Users widen this to declutter dense years.
+  const [pxPerYear, setPxPerYear] = useState(220);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const drag = useRef<{ startX: number; startScroll: number } | null>(null);
+  const [dragging, setDragging] = useState(false);
+
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    drag.current = { startX: e.clientX, startScroll: el.scrollLeft };
+    setDragging(true);
+    (e.target as Element).setPointerCapture?.(e.pointerId);
+  }, []);
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    const el = scrollRef.current;
+    if (!el || !drag.current) return;
+    el.scrollLeft = drag.current.startScroll - (e.clientX - drag.current.startX);
+  }, []);
+  const endDrag = useCallback(() => {
+    drag.current = null;
+    setDragging(false);
+  }, []);
 
   const nodes = useMemo<PaperNode[]>(() => {
     return papers
@@ -73,16 +96,17 @@ export default function TrajectoryChart({
   const laneH = 170;
   const bandH = 132;
   const padL = 130;
-  const padR = 40;
+  const padR = 60;
   const padT = 30;
   const padB = 54;
-  const width = 1180;
+  const span = Math.max(1, yMax - yMin);
+  const width = Math.max(960, padL + padR + span * pxPerYear);
   const height = padT + lanes.length * laneH + padB;
 
   const laneTop = (lane: string) => padT + lanes.indexOf(lane) * laneH + (laneH - bandH) / 2;
   const xOf = (year: number, quarter: number) => {
     const t = year + (quarter - 1) / 4;
-    const ratio = (t - yMin) / (yMax - yMin || 1);
+    const ratio = (t - yMin) / span;
     return padL + ratio * (width - padL - padR);
   };
 
@@ -118,7 +142,7 @@ export default function TrajectoryChart({
     }
     return map;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes, lanes, yMin, yMax]);
+  }, [nodes, lanes, yMin, yMax, pxPerYear]);
 
   const paperIdSet = useMemo(() => new Set(nodes.map((n) => n.id)), [nodes]);
   const edges = useMemo(
@@ -144,8 +168,40 @@ export default function TrajectoryChart({
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-      <svg width={width} height={height} className="min-w-full">
+    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="mb-3 flex items-center justify-between">
+        <span className="flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-500">
+          <Move className="h-3.5 w-3.5" /> 按住图表横向拖拽查看
+        </span>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => setPxPerYear((p) => Math.max(120, p - 60))}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50"
+            title="缩小间距"
+          >
+            <ZoomOut className="h-4 w-4" />
+          </button>
+          <span className="w-10 text-center text-xs tabular-nums text-gray-400">{Math.round((pxPerYear / 220) * 100)}%</span>
+          <button
+            type="button"
+            onClick={() => setPxPerYear((p) => Math.min(640, p + 60))}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50"
+            title="放大间距"
+          >
+            <ZoomIn className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+      <div
+        ref={scrollRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerLeave={endDrag}
+        className={`overflow-x-auto ${dragging ? 'cursor-grabbing select-none' : 'cursor-grab'}`}
+      >
+      <svg width={width} height={height} className="block">
         {/* lane bands */}
         {lanes.map((lane) => {
           const top = laneTop(lane);
@@ -240,6 +296,7 @@ export default function TrajectoryChart({
           );
         })}
       </svg>
+      </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-gray-500">
         {Object.values(REL_META).map((m) => (
