@@ -200,6 +200,9 @@ Submitting a question `router.push('/?id=<uuid>')` → progress renders in place
   route_categories, paper_categories}` — LLM maps question to existing `entity_type=topic`
   lanes/rows; entity IDs from KB hits + graph expansion. `core_people=[{id,name,org,wiki_url}]`
   covers **all** queried person entities (each is a core person; names resolved via fetch).
+  Authors are captured from **every** retrieved/expanded paper (`AUTHORED` expansion runs
+  unconditionally — NOT gated on topic classification — so thin/empty topic hits still yield
+  comprehensive core people).
   `route_categories=[{key,label}]` + `paper_categories={paper_id:key}` are **dynamically
   generated** by `_classify_routes` (count is data-driven, NOT hard-coded). The Trajectory
   chart uses these as its lanes (so they match report §2 sub-headings); People graph
@@ -215,6 +218,14 @@ Submitting a question `router.push('/?id=<uuid>')` → progress renders in place
 
 Report §4 产业追踪 is composed deterministically from `industry` (`_compose_industry_section`)
 so the report and the Industry page stay consistent.
+
+> **JSON parsing (do not regress):** every structured LLM step (topic classification,
+> `_classify_routes`, `_interpret_report_signals`, `_track_people_events`) relies on
+> `_extract_json`, which must select whichever of `{`/`[` appears **first** and scan for the
+> balanced close (honouring strings). Preferring `[` blindly truncates an object that merely
+> *contains* an array (e.g. `{"categories":[…],"assignments":{}}`) to its inner array, which
+> callers reject via `isinstance(parsed, dict)` — silently emptying route categories, tech
+> signals, industry impact and per-person capital/funding.
 
 **Frontend pages**: Trajectory chart supports drag-to-pan + spacing zoom (declutter dense
 years). Industry page links core people to their wiki via `NEXT_PUBLIC_WIKI_BASE_URL`

@@ -57,25 +57,71 @@ def _lang_clause(question: str) -> str:
     return "用中文撰写。" if _is_chinese(question) else "Write in English."
 
 
+def _scan_balanced(text: str, start: int) -> str | None:
+    """Return the complete JSON value (object/array) beginning at ``text[start]``
+    by scanning for the matching close bracket, honouring strings/escapes."""
+    open_ch = text[start]
+    close_ch = "}" if open_ch == "{" else "]"
+    depth = 0
+    in_str = False
+    esc = False
+    for i in range(start, len(text)):
+        ch = text[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == open_ch:
+            depth += 1
+        elif ch == close_ch:
+            depth -= 1
+            if depth == 0:
+                return text[start:i + 1]
+    return None
+
+
 def _extract_json(text: str):
-    """Best-effort JSON extraction from an LLM reply (handles ```json fences)."""
-    text = text.strip()
+    """Best-effort JSON extraction from an LLM reply (handles ```json fences).
+
+    IMPORTANT: pick whichever of ``{`` / ``[`` appears FIRST so that an object
+    which merely *contains* an array (e.g. ``{"categories":[...],"x":{}}``) is
+    parsed as the object, not mis-truncated to its inner array.
+    """
+    text = (text or "").strip()
     fence = re.search(r"```(?:json)?\s*(.*?)```", text, re.S)
     if fence:
         text = fence.group(1).strip()
-    start = text.find("[")
-    if start == -1:
-        start = text.find("{")
-    if start != -1:
-        text = text[start:]
+    obj_at = text.find("{")
+    arr_at = text.find("[")
+    candidates = [p for p in (obj_at, arr_at) if p != -1]
+    if not candidates:
+        return None
+    start = min(candidates)
+    # 1) Whole remainder (fast path for clean replies).
     try:
-        return json.loads(text)
+        return json.loads(text[start:])
     except Exception:
-        # last resort: grab the first [...] block
-        m = re.search(r"\[.*\]", text, re.S)
-        if m:
+        pass
+    # 2) Balanced-bracket extraction from the first opening bracket.
+    snippet = _scan_balanced(text, start)
+    if snippet:
+        try:
+            return json.loads(snippet)
+        except Exception:
+            pass
+    # 3) Last resort: try the other bracket type if present.
+    other = arr_at if start == obj_at else obj_at
+    if other != -1:
+        snippet = _scan_balanced(text, other)
+        if snippet:
             try:
-                return json.loads(m.group(0))
+                return json.loads(snippet)
             except Exception:
                 return None
     return None
@@ -572,7 +618,7 @@ async def _build_scope(
     for eid in hit_ids:
         _classify(eid)
 
-    # Expand via graph relations around selected topics (papers → authors → orgs).
+    # Expand papers via FOCUSES_ON to the classified topics (only when topics exist).
     focus_topic_ids = set(topic_ids) | set(lane_ids)
     if focus_topic_ids:
         for rel in relations:
@@ -581,34 +627,36 @@ async def _build_scope(
             obj = rel.get("object_entity") or {}
             subj_id, subj_type = subj.get("id"), subj.get("entity_type")
             obj_id, obj_type = obj.get("id"), obj.get("entity_type")
-
             if rtype == "FOCUSES_ON" and obj_id in focus_topic_ids and subj_type == "paper":
                 paper_ids.add(subj_id)
             if rtype == "FOCUSES_ON" and subj_id in focus_topic_ids and obj_type == "paper":
                 paper_ids.add(obj_id)
 
-        # Second pass: authors of the collected papers, then their orgs.
-        for rel in relations:
-            rtype = rel.get("relation_type")
-            subj = rel.get("subject") or {}
-            obj = rel.get("object_entity") or {}
-            subj_id, subj_type = subj.get("id"), subj.get("entity_type")
-            obj_id, obj_type = obj.get("id"), obj.get("entity_type")
-            if rtype == "AUTHORED":
-                if subj_type == "paper" and subj_id in paper_ids and obj_type == "person":
-                    person_ids.add(obj_id)
-                if obj_type == "paper" and obj_id in paper_ids and subj_type == "person":
-                    person_ids.add(subj_id)
+    # Author + org expansion runs ALWAYS (not gated on topic classification): every
+    # author of a retrieved/expanded paper is a core person, and their org is added.
+    # This is why "all queried sources" (e.g. paper authors) become core people even
+    # when topic classification is thin or empty.
+    for rel in relations:
+        if rel.get("relation_type") != "AUTHORED":
+            continue
+        subj = rel.get("subject") or {}
+        obj = rel.get("object_entity") or {}
+        subj_id, subj_type = subj.get("id"), subj.get("entity_type")
+        obj_id, obj_type = obj.get("id"), obj.get("entity_type")
+        if subj_type == "paper" and subj_id in paper_ids and obj_type == "person":
+            person_ids.add(obj_id)
+        if obj_type == "paper" and obj_id in paper_ids and subj_type == "person":
+            person_ids.add(subj_id)
 
-        for rel in relations:
-            if rel.get("relation_type") != "WORKS_AT":
-                continue
-            subj = rel.get("subject") or {}
-            obj = rel.get("object_entity") or {}
-            if subj.get("entity_type") == "person" and subj.get("id") in person_ids and obj.get("entity_type") == "organization":
-                org_ids.add(obj.get("id"))
-            if obj.get("entity_type") == "person" and obj.get("id") in person_ids and subj.get("entity_type") == "organization":
-                org_ids.add(subj.get("id"))
+    for rel in relations:
+        if rel.get("relation_type") != "WORKS_AT":
+            continue
+        subj = rel.get("subject") or {}
+        obj = rel.get("object_entity") or {}
+        if subj.get("entity_type") == "person" and subj.get("id") in person_ids and obj.get("entity_type") == "organization":
+            org_ids.add(obj.get("id"))
+        if obj.get("entity_type") == "person" and obj.get("id") in person_ids and subj.get("entity_type") == "organization":
+            org_ids.add(subj.get("id"))
 
     # person → org name (best-effort, from WORKS_AT) for richer "core people" cards.
     person_org: dict[str, str] = {}
