@@ -45,11 +45,16 @@ export function SourceEditModal({ open, source, onClose, onSaved }: Props) {
     api.get<Organization[]>('/organizations?limit=500').then(setAllOrgs).catch(() => {});
   }, [open]);
 
-  // Load existing experiences when editing a person source
+  // Load existing experiences when editing a person source. The list endpoint no
+  // longer embeds experiences (kept its payload small), so fetch them on demand.
   useEffect(() => {
     if (!open || !source || source.source_type !== 'person') { setExperiences([]); return; }
-    // Use experiences embedded in source (populated by API)
-    setExperiences(source.experiences ?? []);
+    if (source.experiences && source.experiences.length > 0) { setExperiences(source.experiences); return; }
+    let cancelled = false;
+    api.get<SourceExperience[]>(`/sources/${source.id}/experiences`)
+      .then((exps) => { if (!cancelled) setExperiences(exps); })
+      .catch(() => { if (!cancelled) setExperiences([]); });
+    return () => { cancelled = true; };
   }, [open, source]);
 
   // Initialise form when modal opens for a (different) source

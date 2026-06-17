@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from app.core.config import get_settings
@@ -26,6 +27,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Compress JSON responses — the DB lives in another region and the frontend is
+# served from an overseas edge, so every byte crosses a high-latency WAN. gzip
+# shrinks large list payloads (e.g. /sources ~600KB) by ~8x, cutting transfer time.
+app.add_middleware(GZipMiddleware, minimum_size=1024)
 
 prefix = settings.api_prefix
 

@@ -10,15 +10,21 @@ router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 
 @router.get("/stats")
 async def get_stats(db: AsyncSession = Depends(get_db)):
-    source_count = (await db.execute(select(func.count()).select_from(Source))).scalar_one()
-    signal_count = (await db.execute(select(func.count()).select_from(Signal))).scalar_one()
-    entity_count = (await db.execute(select(func.count()).select_from(Entity))).scalar_one()
-    relation_count = (await db.execute(select(func.count()).select_from(EntityRelation))).scalar_one()
+    # One round-trip instead of four — the DB is in another region (~120ms each),
+    # so collapsing the counts into a single scalar-subquery row is a 4x win.
+    row = (await db.execute(
+        select(
+            select(func.count()).select_from(Source).scalar_subquery(),
+            select(func.count()).select_from(Signal).scalar_subquery(),
+            select(func.count()).select_from(Entity).scalar_subquery(),
+            select(func.count()).select_from(EntityRelation).scalar_subquery(),
+        )
+    )).one()
     return {
-        "total_sources": source_count,
-        "total_signals": signal_count,
-        "total_entities": entity_count,
-        "total_relations": relation_count,
+        "total_sources": row[0],
+        "total_signals": row[1],
+        "total_entities": row[2],
+        "total_relations": row[3],
     }
 
 

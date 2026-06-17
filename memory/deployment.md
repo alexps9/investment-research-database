@@ -131,6 +131,17 @@ host while keeping the DB on Supabase and the frontend on Vercel. Artifacts live
     has ~1.4GB free and each LiteLLM worker ≈1GB, so a 2nd worker OOMs (no swap). LiteLLM
     is async, so one worker pipelines the throttled load; `num_retries: 2` + DeepSeek
     fallback absorb Bedrock bursts. Raise worker count only after a RAM upgrade.
+- **Latency root cause / perf**: the DB is **Supabase `aws-1-ap-south-1` (Mumbai)** while
+  the backend runs on **Tencent Cloud (CN)** — every DB round-trip is **~120ms**, so request
+  latency is dominated by *round-trip count*, not row volume (only ~350 sources). Measured
+  `/sources?limit=2000` at 4.4s before optimization. Mitigations in place: (1) **GZip**
+  middleware (`app/main.py`, ~6–8x smaller JSON over the WAN); (2) `/dashboard/stats`
+  collapses 4 COUNTs into **one** scalar-subquery round-trip; (3) the sources **list** drops
+  the `experiences` eager-load chain (uses `SourceListOut`; experiences fetched on demand in
+  the edit modal / wiki); (4) frontend `lib/api.ts` has a **60s in-memory GET cache + request
+  dedup**, cleared on any write — repeat navigation is instant. Re-measured `/sources` at
+  ~1.6s / 101KB on-wire. **Biggest remaining win = co-locating the DB with the backend**
+  (move Postgres onto Tencent or the backend to the DB's region); not yet done (infra call).
 - Embeddings stay on **SiliconFlow bge-m3 (1024 dims)** — reachable from CN directly.
 - ghcr/dockerhub pulls from CN: used the **NJU mirror** `ghcr.nju.edu.cn` for the
   litellm image (direct ghcr blob CDN stalls from China); dockerhub `ginuerzh/gost`

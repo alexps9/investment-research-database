@@ -110,7 +110,8 @@ export interface Source extends SourceExtended {
   organization?: Organization;
   accounts: SourceAccount[];
   source_tags: SourceTag[];
-  experiences: SourceExperience[];
+  // Omitted by the list endpoint (loaded on demand in the edit modal / wiki).
+  experiences?: SourceExperience[];
   created_at: string;
   updated_at: string;
 }

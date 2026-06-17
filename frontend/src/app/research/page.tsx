@@ -81,7 +81,7 @@ export default function ResearchPage() {
       );
       pollRef.current = setInterval(async () => {
         try {
-          const status = await api.get<ResearchJob>(`/research/status/${job_id}`);
+          const status = await api.get<ResearchJob>(`/research/status/${job_id}`, { cache: false });
           failsRef.current = 0;
           setJob(status);
           if (status.status === 'done' || status.status === 'failed') {

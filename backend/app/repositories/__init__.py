@@ -134,13 +134,16 @@ class SourceRepo:
         self.db = db
 
     async def list(self, skip: int = 0, limit: int = 100, source_type: Optional[str] = None) -> Sequence[Source]:
+        # List view doesn't render work history, so skip the experiences eager-load
+        # chain (experiences → org → org_tags). With the DB a region away (~120ms/
+        # round-trip) that drops up to 3 round-trips and shrinks the payload. The
+        # detail endpoint (`get`) still loads experiences. Serialized via SourceListOut.
         stmt = (
             select(Source)
             .options(
                 selectinload(Source.organization).selectinload(Organization.org_tags).selectinload(OrgTag.tag),
                 selectinload(Source.accounts),
                 selectinload(Source.source_tags).selectinload(SourceTag.tag),
-                selectinload(Source.experiences).selectinload(SourceExperience.organization).selectinload(Organization.org_tags),
             )
             .offset(skip)
             .limit(limit)

@@ -162,6 +162,18 @@ class SourceOut(SourceBase):
     updated_at: datetime
 
 
+class SourceListOut(SourceBase):
+    # Trimmed payload for the list view: omits `experiences` so the ORM lazy-load
+    # isn't triggered and the response stays small. Detail uses full SourceOut.
+    model_config = ConfigDict(from_attributes=True)
+    id: str
+    organization: Optional[OrganizationOut] = None
+    accounts: list[SourceAccountOut] = []
+    source_tags: list[SourceTagOut] = []
+    created_at: datetime
+    updated_at: datetime
+
+
 class SourceAccountCreate(BaseModel):
     platform: str
     handle: Optional[str] = None

@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.repositories import SourceRepo, OrganizationRepo
 from app.schemas import (
-    SourceOut, SourceCreate, SourceUpdate,
+    SourceOut, SourceListOut, SourceCreate, SourceUpdate,
     SourceAccountCreate, SourceAccountOut,
     SourceTagCreate, SourceTagOut,
     SourceExperienceCreate, SourceExperienceOut,
@@ -14,7 +14,7 @@ from app.schemas import (
 router = APIRouter(prefix="/sources", tags=["sources"])
 
 
-@router.get("", response_model=list[SourceOut])
+@router.get("", response_model=list[SourceListOut])
 async def list_sources(
     skip: int = 0,
     limit: int = 100,
