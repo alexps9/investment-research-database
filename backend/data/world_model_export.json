@@ -1,0 +1,7169 @@
+{
+  "_description": "World Model 论文数据库导出 — QiuTian",
+  "_exported_at": "2026-06-17",
+  "_stats": {
+    "total_papers": 186,
+    "lanes": 4,
+    "rows": 12,
+    "connections": 326
+  },
+  "lanes": [
+    {
+      "id": "video_gen",
+      "title": "Video-Generative",
+      "subtitle": "从观看中学习",
+      "color": "#2563EB"
+    },
+    {
+      "id": "rl_based",
+      "title": "RL-Based",
+      "subtitle": "在想象中训练",
+      "color": "#059669"
+    },
+    {
+      "id": "latent_space",
+      "title": "Latent-Space",
+      "subtitle": "抽象表示预测",
+      "color": "#7C3AED"
+    },
+    {
+      "id": "vla",
+      "title": "Policy",
+      "subtitle": "策略层：从理解到行动",
+      "color": "#EA580C"
+    }
+  ],
+  "rows": [
+    {
+      "id": "diffusion_video",
+      "lane": "video_gen",
+      "title": "Diffusion-based",
+      "subtitle": "Sora / Cosmos / Wan / Oasis / GameNGen"
+    },
+    {
+      "id": "autoregressive_video",
+      "lane": "video_gen",
+      "title": "Autoregressive",
+      "subtitle": "Emu3 / Genie 2 / LWM"
+    },
+    {
+      "id": "3dgs_nerf",
+      "lane": "video_gen",
+      "title": "3DGS / NeRF",
+      "subtitle": "Gaussian Splat / NeRF 3D World Modeling"
+    },
+    {
+      "id": "jepa_based",
+      "lane": "latent_space",
+      "title": "JEPA-based",
+      "subtitle": "I-JEPA / V-JEPA 2 / seq-JEPA"
+    },
+    {
+      "id": "dino_based",
+      "lane": "latent_space",
+      "title": "DINO-based",
+      "subtitle": "DINO-WM / DINO-World"
+    },
+    {
+      "id": "slot_based",
+      "lane": "latent_space",
+      "title": "Slot-based",
+      "subtitle": "SlotAttention / SlotFormer / Dyn-O"
+    },
+    {
+      "id": "rssm_based",
+      "lane": "rl_based",
+      "title": "RSSM-based",
+      "subtitle": "PlaNet / Dreamer V1-V3"
+    },
+    {
+      "id": "transformer_wm",
+      "lane": "rl_based",
+      "title": "Transformer WM",
+      "subtitle": "TD-MPC / TD-MPC2 / PWM"
+    },
+    {
+      "id": "diffusion_planning",
+      "lane": "rl_based",
+      "title": "Diffusion Planning",
+      "subtitle": "Diffuser / Decision Diffuser / PIVOT-R"
+    },
+    {
+      "id": "vla_llm",
+      "lane": "vla",
+      "title": "LLM/VLM + Action",
+      "subtitle": "RT-2 / Octo"
+    },
+    {
+      "id": "vla_diffusion",
+      "lane": "vla",
+      "title": "Diffusion Policy",
+      "subtitle": "π0 / Diffusion Policy"
+    },
+    {
+      "id": "vla_driving",
+      "lane": "vla",
+      "title": "Driving VLA",
+      "subtitle": "DriveVLA / GAIA-1"
+    }
+  ],
+  "papers": [
+    {
+      "id": "dreamer_v1",
+      "title": "Dreamer V1",
+      "full_title": "Dream to Control: Learning Behaviors by Latent Imagination",
+      "year": 2020,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "imagination_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google/Danijar",
+      "authors": [
+        "Danijar Hafner",
+        "Timothy Lillicrap",
+        "Jimmy Ba",
+        "Mohammad Norouzi"
+      ],
+      "arxiv_id": "1912.01603",
+      "doi": null,
+      "cited_by_count": 1926,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 91.7,
+      "impact_override": null,
+      "openalex_id": "W2992977009"
+    },
+    {
+      "id": "dreamer_v3",
+      "title": "Dreamer V3",
+      "full_title": "Mastering Diverse Domains through World Models",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "imagination_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google/Danijar",
+      "authors": [
+        "Danijar Hafner",
+        "Jurgis Pasukonis",
+        "Jimmy Ba",
+        "Timothy Lillicrap"
+      ],
+      "arxiv_id": "2301.04104",
+      "doi": null,
+      "cited_by_count": 1102,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 91.4,
+      "impact_override": null,
+      "openalex_id": "W4315706776"
+    },
+    {
+      "id": "dreamer_v2",
+      "title": "Dreamer V2",
+      "full_title": "Mastering Atari with Discrete World Models",
+      "year": 2021,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "imagination_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google/Danijar",
+      "authors": [
+        "Danijar Hafner",
+        "Timothy Lillicrap",
+        "Mohammad Norouzi",
+        "Jimmy Ba"
+      ],
+      "arxiv_id": "2010.02193",
+      "doi": null,
+      "cited_by_count": 1211,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 88.0,
+      "impact_override": null,
+      "openalex_id": "W3091507139"
+    },
+    {
+      "id": "planet",
+      "title": "PlaNet",
+      "full_title": "Learning Latent Dynamics for Planning from Pixels",
+      "year": 2019,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "rssm",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google",
+      "authors": [
+        "Danijar Hafner",
+        "Timothy Lillicrap",
+        "Ian Fischer",
+        "Ruben Villegas",
+        "David Ha",
+        "Honglak Lee"
+      ],
+      "arxiv_id": "1811.04551",
+      "doi": null,
+      "cited_by_count": 1838,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 87.8,
+      "impact_override": null,
+      "openalex_id": "W2900152462"
+    },
+    {
+      "id": "diffusion_policy",
+      "title": "Diffusion Policy",
+      "full_title": "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion",
+      "year": 2023,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "vla_diffusion",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Columbia/MIT",
+      "authors": [
+        "Cheng Chi",
+        "Zhenjia Xu",
+        "Siyuan Feng",
+        "Eric Cousineau",
+        "Benjamin Burchfiel",
+        "Shuran Song"
+      ],
+      "arxiv_id": "2303.04137",
+      "doi": null,
+      "cited_by_count": 3137,
+      "venue_tier": 1,
+      "institution_tier": 2,
+      "impact_score": 86.8,
+      "impact_override": null,
+      "openalex_id": "W4323651335"
+    },
+    {
+      "id": "sora",
+      "title": "Sora",
+      "full_title": "Sora: A Review on Background, Technology, Limitations, and Opportunities of Large Vision Models",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "OpenAI",
+      "authors": [
+        "Tim Brooks",
+        "Bill Peebles",
+        "Connor Holmes",
+        "Will DePue",
+        "Yufei Guo"
+      ],
+      "arxiv_id": "2402.17177",
+      "doi": null,
+      "cited_by_count": 622,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 84.6,
+      "impact_override": null,
+      "openalex_id": "W4392341509"
+    },
+    {
+      "id": "pi0",
+      "title": "π0",
+      "full_title": "$π_0$: A Vision-Language-Action Flow Model for General Robot Control",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "vla_diffusion",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Physical Intelligence",
+      "authors": [
+        "Kevin Black",
+        "Noah Brown",
+        "Danny Driess",
+        "Adnan Esmail",
+        "Michael Equi",
+        "Chelsea Finn"
+      ],
+      "arxiv_id": "2410.24164",
+      "doi": null,
+      "cited_by_count": 1679,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 82.0,
+      "impact_override": null,
+      "openalex_id": "W4404350116"
+    },
+    {
+      "id": "cosmos",
+      "title": "Cosmos",
+      "full_title": "Cosmos World Foundation Model Platform for Physical AI",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "NVIDIA Research"
+      ],
+      "arxiv_id": "2501.03575",
+      "doi": null,
+      "cited_by_count": 616,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 77.6,
+      "impact_override": null,
+      "openalex_id": "W4406191642"
+    },
+    {
+      "id": "unipi",
+      "title": "UniPi",
+      "full_title": "Learning Universal Policies via Text-Guided Video Generation",
+      "year": 2023,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google Brain",
+      "authors": [
+        "Sherry Yang",
+        "Yilun Du",
+        "Pieter Abbeel",
+        "Dale Schuurmans"
+      ],
+      "arxiv_id": "2302.00111",
+      "doi": null,
+      "cited_by_count": 511,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 75.8,
+      "impact_override": null,
+      "openalex_id": "W4319165322"
+    },
+    {
+      "id": "diffuser",
+      "title": "Diffuser",
+      "full_title": "Planning with Diffusion for Flexible Behavior Synthesis",
+      "year": 2022,
+      "quarter": 3,
+      "lane": "rl_based",
+      "row": "diffusion_planning",
+      "path": "trunk",
+      "paradigm": "diffusion_trajectory",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Michael Janner",
+        "Yilun Du",
+        "Joshua Tenenbaum",
+        "Sergey Levine"
+      ],
+      "arxiv_id": "2205.09991",
+      "doi": null,
+      "cited_by_count": 1155,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 74.5,
+      "impact_override": null,
+      "openalex_id": "W4281398962"
+    },
+    {
+      "id": "pi0_5",
+      "title": "π0.5",
+      "full_title": "$π_{0.5}$: a Vision-Language-Action Model with Open-World Generalization",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Physical Intelligence",
+      "authors": [
+        "Physical Intelligence"
+      ],
+      "arxiv_id": "2504.16054",
+      "doi": null,
+      "cited_by_count": 906,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 74.2,
+      "impact_override": null,
+      "openalex_id": "W4414674749"
+    },
+    {
+      "id": "slot_attention",
+      "title": "SlotAttention",
+      "full_title": "Object-Centric Learning with Slot Attention",
+      "year": 2020,
+      "quarter": 3,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "trunk",
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google",
+      "authors": [
+        "Francesco Locatello",
+        "Dirk Weissenborn",
+        "Thomas Unterthiner",
+        "Aravindh Mahendran",
+        "Georg Heigold",
+        "Jakob Uszkoreit",
+        "Alexey Dosovitskiy",
+        "Thomas Kipf"
+      ],
+      "arxiv_id": "2006.15055",
+      "doi": null,
+      "cited_by_count": 1127,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 72.6,
+      "impact_override": null,
+      "openalex_id": "W3037784242"
+    },
+    {
+      "id": "rt2",
+      "title": "RT-2",
+      "full_title": "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control",
+      "year": 2023,
+      "quarter": 3,
+      "lane": "vla",
+      "row": "vla_llm",
+      "path": "trunk",
+      "paradigm": "vla_llm",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google DeepMind",
+      "authors": [
+        "Anthony Brohan",
+        "Noah Brown",
+        "Justice Carbajal",
+        "Yevgen Chebotar",
+        "Xi Chen"
+      ],
+      "arxiv_id": "2307.15818",
+      "doi": null,
+      "cited_by_count": 3079,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 71.6,
+      "impact_override": null,
+      "openalex_id": "W4385473486"
+    },
+    {
+      "id": "i_jepa",
+      "title": "I-JEPA",
+      "full_title": "Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture",
+      "year": 2023,
+      "quarter": 2,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": "jepa_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Mahmoud Assran",
+        "Quentin Duval",
+        "Ishan Misra",
+        "Piotr Bojanowski",
+        "P. Vincent",
+        "Michael Rabbat",
+        "Yann LeCun",
+        "Nicolas Ballas"
+      ],
+      "arxiv_id": "2301.08243",
+      "doi": null,
+      "cited_by_count": 837,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 71.3,
+      "impact_override": null,
+      "openalex_id": "W4317672249"
+    },
+    {
+      "id": "tdmpc2",
+      "title": "TD-MPC2",
+      "full_title": "TD-MPC2: Scalable, Robust World Models for Continuous Control",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "model_based_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "MIT",
+      "authors": [
+        "Nicklas Hansen",
+        "Hao Su",
+        "Xiaolong Wang"
+      ],
+      "arxiv_id": "2310.16828",
+      "doi": null,
+      "cited_by_count": 426,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 70.1,
+      "impact_override": null,
+      "openalex_id": "W4387964172"
+    },
+    {
+      "id": "tdmpc",
+      "title": "TD-MPC",
+      "full_title": "Temporal Difference Learning for Model Predictive Control",
+      "year": 2022,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "model_based_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "MIT",
+      "authors": [
+        "Nicklas Hansen",
+        "Xiaolong Wang",
+        "Hao Su"
+      ],
+      "arxiv_id": "2203.04955",
+      "doi": null,
+      "cited_by_count": 408,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 69.9,
+      "impact_override": null,
+      "openalex_id": "W4221164079"
+    },
+    {
+      "id": "v_jepa2",
+      "title": "V-JEPA 2",
+      "full_title": "V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": "jepa_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Assran, Mido",
+        "Adrien Bardes",
+        "David P. Fan",
+        "Quentin Garrido",
+        "Russell Howes",
+        "Mojtaba",
+        "Komeili",
+        "Matthew J. Muckley"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 368,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 69.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "vista",
+      "title": "Vista",
+      "full_title": "Vista: A Generalizable Driving World Model with High Fidelity and Versatile Controllability",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "embodied",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "MIT",
+      "authors": [
+        "Ziyu Zhu",
+        "Xiaojian Ma",
+        "Yixin Chen"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 294,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 67.2,
+      "impact_override": null,
+      "openalex_id": "W4415796242"
+    },
+    {
+      "id": "drive_wm",
+      "title": "Drive-WM",
+      "full_title": "Driving into the Future: Multiview Visual Forecasting and Planning with World Model for Autonomous Driving",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "embodied",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "Yuqi Wang",
+        "Jiawei He",
+        "Lue Fan",
+        "Hongxin Li",
+        "Yuntao Chen",
+        "Zhaoxiang Zhang"
+      ],
+      "arxiv_id": "2311.17918",
+      "doi": null,
+      "cited_by_count": 314,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 67.1,
+      "impact_override": null,
+      "openalex_id": "W4389218154"
+    },
+    {
+      "id": "grounding_video",
+      "title": "Grounding Video",
+      "full_title": "Beyond Human Data: Scaling Self-Training for Problem-Solving with Language Models",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "embodied",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google DeepMind",
+      "authors": [
+        "Yongliang Wu",
+        "Xinting Hu",
+        "Yuyang Sun",
+        "Yizhou Zhou",
+        "Wenbo Zhu",
+        "Fengyun Rao",
+        "Bernt Schiele",
+        "Xu Yang"
+      ],
+      "arxiv_id": "2312.06585",
+      "doi": null,
+      "cited_by_count": 303,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 66.9,
+      "impact_override": null,
+      "openalex_id": "W4389649385"
+    },
+    {
+      "id": "slotformer",
+      "title": "SlotFormer",
+      "full_title": "SlotFormer: Unsupervised Visual Dynamics Simulation with Object-Centric Models",
+      "year": 2023,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "trunk",
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "Ziyi Wu",
+        "Nikita Dvornik",
+        "Klaus Greff",
+        "Thomas Kipf",
+        "Animesh Garg"
+      ],
+      "arxiv_id": "2210.05861",
+      "doi": null,
+      "cited_by_count": 143,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 66.6,
+      "impact_override": null,
+      "openalex_id": "W4306176903"
+    },
+    {
+      "id": "holodeck",
+      "title": "Holodeck",
+      "full_title": "Holodeck: Language Guided Generation of 3D Embodied AI Environments",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "llm_scene",
+      "layer": "sys",
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Yue Yang",
+        "Fan-Yun Sun",
+        "Luca Weihs",
+        "Eli VanderBilt",
+        "Alvaro Herrasti",
+        "Winson Han",
+        "Jiajun Wu",
+        "Nick Haber"
+      ],
+      "arxiv_id": "2312.09067",
+      "doi": null,
+      "cited_by_count": 251,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 66.1,
+      "impact_override": null,
+      "openalex_id": "W4389821092"
+    },
+    {
+      "id": "wan",
+      "title": "Wan",
+      "full_title": "Wan: Open and Advanced Large-Scale Video Generative Models",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Alibaba",
+      "authors": [
+        "Alibaba Group"
+      ],
+      "arxiv_id": "2503.20314",
+      "doi": null,
+      "cited_by_count": 1707,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 65.6,
+      "impact_override": null,
+      "openalex_id": "W4409092337"
+    },
+    {
+      "id": "spatial_memory_wm",
+      "title": "Spatial Memory WM",
+      "full_title": "Video World Models with Long-term Spatial Memory",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Stanford/NVIDIA",
+      "authors": [
+        "Yingxue Tian",
+        "Simon Fischer‐Baum"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 83,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 64.3,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "diamond",
+      "title": "Diamond",
+      "full_title": "Diffusion for World Modeling: Visual Details Matter in Atari",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "diffusion_planning",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Microsoft Research",
+      "authors": [
+        "Eloi Alonso",
+        "Adam Jelley",
+        "Vincent Micheli",
+        "Anssi Kanervisto",
+        "Amos Storkey",
+        "Tim Pearce",
+        "François Fleuret"
+      ],
+      "arxiv_id": "2405.12399",
+      "doi": null,
+      "cited_by_count": 230,
+      "venue_tier": 1,
+      "institution_tier": 1,
+      "impact_score": 63.7,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "gaia1",
+      "title": "GAIA-1",
+      "full_title": "GAIA-1: A Generative World Model for Autonomous Driving",
+      "year": 2023,
+      "quarter": 3,
+      "lane": "vla",
+      "row": "vla_driving",
+      "path": "trunk",
+      "paradigm": "vla_driving",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Wayve",
+      "authors": [
+        "Anthony Hu",
+        "Lloyd Russell",
+        "Hudson Yeo",
+        "Zak Murez",
+        "George Fedoseev"
+      ],
+      "arxiv_id": "2309.17080",
+      "doi": null,
+      "cited_by_count": 549,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 63.3,
+      "impact_override": null,
+      "openalex_id": "W4387294122"
+    },
+    {
+      "id": "gamenngen",
+      "title": "GameNGen",
+      "full_title": "Diffusion Models Are Real-Time Game Engines",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "game",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google",
+      "authors": [
+        "Dani Valevski",
+        "Yaniv Leviathan",
+        "Moab Arar",
+        "Shlomi Fruchter"
+      ],
+      "arxiv_id": "2408.14837",
+      "doi": null,
+      "cited_by_count": 216,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 63.0,
+      "impact_override": null,
+      "openalex_id": "W4402704721"
+    },
+    {
+      "id": "octo",
+      "title": "Octo",
+      "full_title": "Octo: An Open-Source Generalist Robot Policy",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "vla",
+      "row": "vla_llm",
+      "path": "trunk",
+      "paradigm": "vla_llm",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Dibya Ghosh",
+        "Homer Walke",
+        "Karl Pertsch",
+        "Kevin Black",
+        "Chelsea Finn",
+        "Sergey Levine"
+      ],
+      "arxiv_id": "2405.12213",
+      "doi": null,
+      "cited_by_count": 1276,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 61.8,
+      "impact_override": null,
+      "openalex_id": "W4398192846"
+    },
+    {
+      "id": "genie_envisioner",
+      "title": "Genie Envisioner",
+      "full_title": "Genie Envisioner: Building Generalizable Embodied World Models",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "paradigm": "ar_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google DeepMind",
+      "authors": [
+        "Boxiang Qiu",
+        "Liliang Chen",
+        "Yue Liao",
+        "Nan Wang",
+        "Lintao Wang",
+        "Jiayi Luo",
+        "Wenzhi Zhao",
+        "Shengcong Chen"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 68,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 61.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "storm",
+      "title": "STORM",
+      "full_title": "STORM: Efficient Stochastic Transformer based World Models for Reinforcement Learning",
+      "year": 2023,
+      "quarter": 4,
+      "lane": "rl_based",
+      "row": "transformer_wm",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NTU/Microsoft",
+      "authors": [
+        "Weipu Zhang",
+        "Haihao Zhang",
+        "Yonghong Song"
+      ],
+      "arxiv_id": "2310.09615",
+      "doi": null,
+      "cited_by_count": 123,
+      "venue_tier": 1,
+      "institution_tier": 2,
+      "impact_score": 59.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "physdreamer",
+      "title": "PhysDreamer",
+      "full_title": "PhysDreamer: Physics-Based Interaction with 3D Objects via Video Generation",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "diffusion",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "MIT",
+      "authors": [
+        "Tianyuan Zhang",
+        "Hong-Xing Yu",
+        "Rundi Wu",
+        "Brandon Y. Feng",
+        "Changxi Zheng",
+        "Noah Snavely",
+        "Jiajun Wu",
+        "William T. Freeman"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 177,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 59.5,
+      "impact_override": null,
+      "openalex_id": "W4395022805"
+    },
+    {
+      "id": "v_jepa",
+      "title": "V-JEPA",
+      "full_title": "Quick recipes for gravitational-wave selection effects",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": "jepa_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Assran, Mido",
+        "Adrien Bardes",
+        "David P. Fan",
+        "Quentin Garrido",
+        "Russell Howes",
+        "Mojtaba",
+        "Komeili",
+        "Matthew J. Muckley"
+      ],
+      "arxiv_id": "2404.16930",
+      "doi": null,
+      "cited_by_count": 5,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 59.0,
+      "impact_override": null,
+      "openalex_id": "W6929351270"
+    },
+    {
+      "id": "4d_fy",
+      "title": "4D-fy",
+      "full_title": "4D-fy: Text-to-4D Generation Using Hybrid Score Distillation Sampling",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "3dgs_nerf",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Sherwin Bahmani",
+        "Ivan Skorokhodov",
+        "Victor Rong",
+        "Gordon Wetzstein",
+        "Leonidas Guibas",
+        "Peter Wonka",
+        "Sergey Tulyakov",
+        "Jeong Joon Park"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 195,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 58.7,
+      "impact_override": null,
+      "openalex_id": "W4402716105"
+    },
+    {
+      "id": "gaia2",
+      "title": "GAIA-2",
+      "full_title": "GAIA-2: A Controllable Multi-View Generative World Model for Autonomous Driving",
+      "year": 2025,
+      "quarter": 4,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "square",
+      "org": "Wayve",
+      "authors": [
+        "Lloyd Russell",
+        "Anthony Hu",
+        "Lorenzo Bertoni",
+        "G. A. Fedoseev",
+        "Jamie Shotton",
+        "Elahe Arani",
+        "Gianluca Corrado"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 127,
+      "venue_tier": 3,
+      "institution_tier": 2,
+      "impact_score": 56.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "avid_wm",
+      "title": "AVID",
+      "full_title": "AVID: Adapting Video Diffusion Models to World Models",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Microsoft Research",
+      "authors": [
+        "Xinghua Pang",
+        "Zhaoliang Huang",
+        "Tingting Zhong",
+        "Peng Zhang",
+        "Zhongmin Maxwell Wang",
+        "Michelle Xia",
+        "Baiyong Li"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 25,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 56.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "wam_zero_shot",
+      "title": "WAM Zero-shot",
+      "full_title": "World Action Models are Zero-shot Policies",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA/Jim Fan",
+      "authors": [
+        "Taeyeon Kim",
+        "Woen-Sug Choi"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 71,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 56.1,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "gr1",
+      "title": "GR-1",
+      "full_title": "Unleashing Large-Scale Video Generative Pre-training for Visual Robot Manipulation",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "paradigm": "ar_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "ByteDance",
+      "authors": [
+        "Tian Huang",
+        "Hensong Cao",
+        "Shipeng Dai",
+        "Yonghua Zhu",
+        "Han-Yuan Liu",
+        "Shuxian Zhu",
+        "Zhengqing Lu",
+        "Chuan Liu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 327,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 54.4,
+      "impact_override": null,
+      "openalex_id": "W4390136276"
+    },
+    {
+      "id": "steve1",
+      "title": "STEVE-1",
+      "full_title": "STEVE-1: A Generative Model for Text-to-Behavior in Minecraft",
+      "year": 2023,
+      "quarter": 3,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "applications",
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Shalev Lifshitz",
+        "Keiran Paster",
+        "Harris Chan",
+        "Jimmy Ba",
+        "Sheila A. McIlraith"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 63,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 53.9,
+      "impact_override": null,
+      "openalex_id": "W4379357893"
+    },
+    {
+      "id": "wonderworld",
+      "title": "WonderWorld",
+      "full_title": "WonderWorld: Interactive 3D Scene Generation from a Single Image",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "3dgs_nerf",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Hong-Xing Yu",
+        "Haoyi Duan",
+        "Charles Herrmann",
+        "William T. Freeman",
+        "Jiajun Wu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 178,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 53.3,
+      "impact_override": null,
+      "openalex_id": "W4413145736"
+    },
+    {
+      "id": "pivot_r",
+      "title": "PIVOT-R",
+      "full_title": "PIVOT: Iterative Visual Prompting Elicits Actionable Knowledge for VLMs",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "rl_based",
+      "row": "diffusion_planning",
+      "path": "trunk",
+      "paradigm": "diffusion_trajectory",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google DeepMind",
+      "authors": [
+        "Kaidong Zhang",
+        "Pengzhen Ren",
+        "Bingqian Lin"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 215,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 52.9,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "dino_world",
+      "title": "DINO-World",
+      "full_title": "DINO-WM: World Models on Pre-trained Visual Features enable Zero-shot Planning",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "latent_space",
+      "row": "dino_based",
+      "path": "trunk",
+      "paradigm": "dino_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Shilong Liu",
+        "Zhaoyang Zeng",
+        "Tianhe Ren",
+        "Feng Li",
+        "Hao Zhang",
+        "Jie Yang",
+        "Jiang, Qing",
+        "Chunyuan Li"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 197,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 52.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "decision_diffuser",
+      "title": "Decision Diffuser",
+      "full_title": "Is Conditional Generative Modeling all you need for Decision-Making?",
+      "year": 2023,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "diffusion_planning",
+      "path": "trunk",
+      "paradigm": "diffusion_trajectory",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Microsoft",
+      "authors": [
+        "Anurag Ajay",
+        "Yilun Du",
+        "Abhi Gupta",
+        "Joshua Tenenbaum",
+        "Leslie Kaelbling",
+        "Pulkit Agrawal"
+      ],
+      "arxiv_id": "2211.15657",
+      "doi": null,
+      "cited_by_count": 606,
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "impact_score": 52.4,
+      "impact_override": null,
+      "openalex_id": "W4310430604"
+    },
+    {
+      "id": "vlaad",
+      "title": "VLAAD",
+      "full_title": "VLAAD: Vision and Language Assistant for Autonomous Driving",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "vla",
+      "row": "vla_driving",
+      "path": "trunk",
+      "paradigm": "vla_driving",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Seoul National Univ",
+      "authors": [
+        "SungYeon Park",
+        "Min Jae Lee",
+        "JiHyuk Kang",
+        "Hahyeon Choi",
+        "Yoonah Park",
+        "Juhwan Cho",
+        "Adam J. Lee",
+        "Dong‐Kyu Kim"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 68,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 52.4,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "ivideogpt",
+      "title": "iVideoGPT",
+      "full_title": "iVideoGPT: Interactive VideoGPTs are Scalable World Models",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "paradigm": "autoregressive_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "CMU",
+      "authors": [
+        "Ningya Feng",
+        "Jianye Hao",
+        "Xu He",
+        "Dong Li",
+        "Mingsheng Long",
+        "Jialong Wu",
+        "Shaofeng Yin"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 18,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 51.5,
+      "impact_override": null,
+      "openalex_id": "W4415797250"
+    },
+    {
+      "id": "thick",
+      "title": "THICK",
+      "full_title": "Interplay Between Neutrino Kicks and Hydrodynamic Kicks of Neutron Stars and Black Holes",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "hierarchical_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Danijar",
+      "authors": [
+        "Clemens Rosenbaum",
+        "Yael Niv",
+        "Marcel Binz",
+        "Eric Schulz"
+      ],
+      "arxiv_id": "2401.13817",
+      "doi": null,
+      "cited_by_count": 25,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 51.2,
+      "impact_override": null,
+      "openalex_id": "W4391272145"
+    },
+    {
+      "id": "text2room",
+      "title": "Text2Room",
+      "full_title": "Text2Room: Extracting Textured 3D Meshes from 2D Text-to-Image Models",
+      "year": 2023,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "3dgs_nerf",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "TU Munich",
+      "authors": [
+        "Lukas Höllein",
+        "Ang Cao",
+        "Andrew Owens",
+        "Justin Johnson",
+        "Matthias Nießner"
+      ],
+      "arxiv_id": "2303.11989",
+      "doi": null,
+      "cited_by_count": 298,
+      "venue_tier": 2,
+      "institution_tier": 4,
+      "impact_score": 51.0,
+      "impact_override": null,
+      "openalex_id": "W4360103906"
+    },
+    {
+      "id": "irasim",
+      "title": "IRASim",
+      "full_title": "IRASim: A Fine-Grained World Model for Robot Manipulation",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "embodied",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "ByteDance",
+      "authors": [
+        "Fangqi Zhu",
+        "Hongtao Wu",
+        "Song Guo",
+        "Yu-Xiao Liu",
+        "Chilam Cheang",
+        "Tao Kong"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 44,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 51.0,
+      "impact_override": null,
+      "openalex_id": "W4399912724"
+    },
+    {
+      "id": "gen2act",
+      "title": "Gen2Act",
+      "full_title": "Generative and Generalizable Robot Actions Through Large-Scale Video Generation",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google Brain",
+      "authors": [
+        "Homanga Bharadhwaj",
+        "Debidatta Dwibedi",
+        "Abhinav Gupta",
+        "Shubham Tulsiani"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 6,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 50.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "self_evolving_wm",
+      "title": "Self-evolving World Model",
+      "full_title": "Self-evolving World Model",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "rssm",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Wayne Xin Zhao",
+        "Kun Zhou",
+        "Junyi Li",
+        "Tianyi Tang",
+        "Xiaolei Wang",
+        "Yupeng Hou",
+        "Yingqian Min",
+        "Beichen Zhang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 32,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 49.2,
+      "impact_override": null,
+      "openalex_id": "W7162253192"
+    },
+    {
+      "id": "cosmos_policy",
+      "title": "Cosmos Policy",
+      "full_title": "Cosmos World Foundation Model Policy Learning",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "Moo Jin Kim",
+        "Yihuai Gao",
+        "Tsung-Yi Lin"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 3,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 48.6,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "drivedreamer4d",
+      "title": "DriveDreamer4D",
+      "full_title": "DriveDreamer4D: World Models Are Effective Data Machines for 4D Driving Scene Representation",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion",
+      "layer": "sys",
+      "shape": "circle",
+      "org": "CAS",
+      "authors": [
+        "Guosheng Zhao",
+        "Chaojun Ni",
+        "Xiaofeng Wang",
+        "Zheng Zhu",
+        "Xueyang Zhang",
+        "Yida Wang",
+        "Guan Huang",
+        "Xinze Chen"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 115,
+      "venue_tier": 3,
+      "institution_tier": 2,
+      "impact_score": 48.4,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "genie2",
+      "title": "Genie 2",
+      "full_title": "Nonequilibrium friction and free energy estimates for kinetic coarse-graining -- Driven particles in responsive media",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "paradigm": "autoregressive_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google DeepMind",
+      "authors": [
+        "DeepMind Research"
+      ],
+      "arxiv_id": "2501.18484",
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 48.2,
+      "impact_override": null,
+      "openalex_id": "W4407012510"
+    },
+    {
+      "id": "nitrogen",
+      "title": "NitroGen",
+      "full_title": "NitroGen: An Open Foundation Model for Generalist Gaming Agents",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "foundation",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "Tak Shun Fung",
+        "Keun Woo Ryu",
+        "Craig B. Thompson"
+      ],
+      "arxiv_id": "2601.02427",
+      "doi": null,
+      "cited_by_count": 12,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 48.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "worldmodelbench",
+      "title": "WorldModelBench",
+      "full_title": "WorldModelBench: Judging Video Generation Models As World Models",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NeurIPS",
+      "authors": [
+        "Tongtong Feng",
+        "Xiuli Wang",
+        "Yu–Gang Jiang",
+        "Wenwu Zhu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 66,
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "impact_score": 47.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "r3m",
+      "title": "R3M",
+      "full_title": "R3M: A Universal Visual Representation for Robot Manipulation",
+      "year": 2022,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "foundation",
+      "paradigm": null,
+      "layer": null,
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Suraj Nair",
+        "Aravind Rajeswaran",
+        "Vikash Kumar",
+        "Chelsea Finn",
+        "Abhinav Gupta"
+      ],
+      "arxiv_id": "2203.12601",
+      "doi": null,
+      "cited_by_count": 862,
+      "venue_tier": null,
+      "institution_tier": null,
+      "impact_score": 47.7,
+      "impact_override": null,
+      "openalex_id": "W4221159977"
+    },
+    {
+      "id": "emu3",
+      "title": "Emu3",
+      "full_title": "Emu3: Next-Token Prediction is All You Need",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "paradigm": "autoregressive_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "ByteDance",
+      "authors": [
+        "Xinlong Wang",
+        "Xiaosong Zhang",
+        "Zhengxiong Luo"
+      ],
+      "arxiv_id": "2409.18869",
+      "doi": null,
+      "cited_by_count": 685,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 47.5,
+      "impact_override": null,
+      "openalex_id": "W4403799526"
+    },
+    {
+      "id": "mp5",
+      "title": "MP5",
+      "full_title": "MP5: A Multi-modal Open-ended Embodied System in Minecraft",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "foundation",
+      "layer": "sys",
+      "shape": "circle",
+      "org": "Shanghai AI Lab",
+      "authors": [
+        "Yiran Qin",
+        "Enshen Zhou",
+        "Qichang Liu",
+        "Zhenfei Yin",
+        "Sheng Lu",
+        "Ruimao Zhang",
+        "Yu Qiao",
+        "Jing Shao"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 87,
+      "venue_tier": 3,
+      "institution_tier": 2,
+      "impact_score": 47.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "lwm",
+      "title": "LWM",
+      "full_title": "GhostWriter: Augmenting Collaborative Human-AI Writing Experiences Through Personalization and Agency",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "paradigm": "autoregressive_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Liu Hao",
+        "Wilson Yan",
+        "Matei Zaharia",
+        "Pieter Abbeel"
+      ],
+      "arxiv_id": "2402.08855",
+      "doi": null,
+      "cited_by_count": 42,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 47.1,
+      "impact_override": null,
+      "openalex_id": "W4391835422"
+    },
+    {
+      "id": "think2drive",
+      "title": "Think2Drive",
+      "full_title": "Think2Drive: Efficient Reinforcement Learning by Thinking with Latent World Model for Autonomous Driving (in CARLA-V2)",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_driving",
+      "path": "trunk",
+      "paradigm": "vla_driving",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Q. Z. Li",
+        "Xiaosong Jia",
+        "Shaobo Wang",
+        "Junchi Yan"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 54,
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "impact_score": 47.0,
+      "impact_override": null,
+      "openalex_id": "W4404654834"
+    },
+    {
+      "id": "dialogue_wm_alignment",
+      "title": "Dialogue World Model Alignment",
+      "full_title": "Chat-based Person Retrieval via Dialogue-Refined Cross-Modal Alignment",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "multi_agent",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UIUC",
+      "authors": [
+        "Wayne Xin Zhao",
+        "Kun Zhou",
+        "Junyi Li",
+        "Tianyi Tang",
+        "Xiaolei Wang",
+        "Yupeng Hou",
+        "Yingqian Min",
+        "Beichen Zhang"
+      ],
+      "arxiv_id": "2605.12920",
+      "doi": null,
+      "cited_by_count": 17,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 46.6,
+      "impact_override": null,
+      "openalex_id": "W4413145788"
+    },
+    {
+      "id": "harmonydream",
+      "title": "HarmonyDream",
+      "full_title": "HarmonyDream: Task Harmonization Inside World Models",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "imagination_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Haoyu Ma",
+        "Jialong Wu",
+        "Ningya Feng",
+        "Chenjun Xiao",
+        "Dong Li",
+        "Jianye Hao",
+        "Jungong Han",
+        "Depeng Jin"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 24,
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "impact_score": 46.5,
+      "impact_override": null,
+      "openalex_id": "W4387323447"
+    },
+    {
+      "id": "driveworld",
+      "title": "DriveWorld",
+      "full_title": "DriveWorld: 4D Pre-Trained Scene Understanding via World Models for Autonomous Driving",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Peking University",
+      "authors": [
+        "Chen Min",
+        "Dawei Zhao",
+        "Xiao Liang",
+        "Jian Zhao",
+        "Xinli Xu",
+        "Zheng Zhu",
+        "Lei Jin",
+        "Jianshu Li"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 45.7,
+      "impact_override": null,
+      "openalex_id": "W4402716059"
+    },
+    {
+      "id": "drivevla",
+      "title": "DriveVLA",
+      "full_title": "DriveVLA-W0: World Models Amplify Data Scaling Law in Autonomous Driving",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "vla",
+      "row": "vla_driving",
+      "path": "trunk",
+      "paradigm": "vla_driving",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Yingyan Li",
+        "Shuyao Shang",
+        "Weiwei Liu",
+        "Bing Zhan",
+        "Haochen Wang",
+        "Wang, Yuqi",
+        "Yuntao Chen",
+        "Xiaoman Wang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 58,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 44.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "dino_foresight",
+      "title": "DINO-Foresight",
+      "full_title": "DINO-Foresight: Looking into the Future with DINO",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "dino_based",
+      "path": "trunk",
+      "paradigm": "dino_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Efstathios Karypidis",
+        "Ioannis Kakogeorgiou",
+        "Spyros Gidaris",
+        "Nikos Komodakis"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 33,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 44.8,
+      "impact_override": null,
+      "openalex_id": "W4405470261"
+    },
+    {
+      "id": "vpt",
+      "title": "VPT",
+      "full_title": "Video PreTraining (VPT): Learning to Act by Watching Unlabeled Online Videos",
+      "year": 2022,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "foundation",
+      "paradigm": null,
+      "layer": null,
+      "shape": "circle",
+      "org": "OpenAI",
+      "authors": [
+        "Bowen Baker",
+        "Ilge Akkaya",
+        "Peter Zhokhov",
+        "Joost Huizinga",
+        "Jie Tang"
+      ],
+      "arxiv_id": "2206.11795",
+      "doi": null,
+      "cited_by_count": 407,
+      "venue_tier": null,
+      "institution_tier": null,
+      "impact_score": 44.5,
+      "impact_override": null,
+      "openalex_id": "W4283460722"
+    },
+    {
+      "id": "focus",
+      "title": "FOCUS",
+      "full_title": "Spatial Confinement Affects the Heterogeneity and Interactions Between Shoaling Fish",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "rssm_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Tom Haarnoja",
+        "Ankit Bhatia"
+      ],
+      "arxiv_id": "2312.09375",
+      "doi": null,
+      "cited_by_count": 2,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 44.4,
+      "impact_override": null,
+      "openalex_id": "W4389911454"
+    },
+    {
+      "id": "world_consistent_3d",
+      "title": "World-Consistent 3D",
+      "full_title": "World-consistent Video Diffusion with Explicit 3D Modeling",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "square",
+      "org": "Apple",
+      "authors": [
+        "Minghua Liu",
+        "Ruoxi Shi",
+        "Linghao Chen",
+        "Zhuoyang Zhang",
+        "Chao Xu",
+        "Xinyue Wei",
+        "Hansheng Chen",
+        "Chong Zeng"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 44,
+      "venue_tier": 3,
+      "institution_tier": 2,
+      "impact_score": 44.3,
+      "impact_override": null,
+      "openalex_id": "W4413158471"
+    },
+    {
+      "id": "dreamdojo",
+      "title": "DreamDojo",
+      "full_title": "DreamDojo: A Generalist Robot World Model from Large-Scale Human Videos",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "game",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA/Jim Fan",
+      "authors": [
+        "Shenyuan Gao",
+        "William Liang",
+        "Kaiyuan Zheng",
+        "Ayaan Malik",
+        "Seonghyeon Ye",
+        "Sihyun Yu",
+        "Wei‐Cheng Tseng",
+        "Yuzhu Dong"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 44.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "occsora",
+      "title": "OccSora",
+      "full_title": "OccSora: 4D Occupancy Generation Models as World Simulators for Autonomous Driving",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "square",
+      "org": "Tsinghua",
+      "authors": [
+        "Lening Wang",
+        "Wenzhao Zheng",
+        "Yilong Ren",
+        "Han Jiang",
+        "Zhiyong Cui",
+        "Hou–Yong Yu",
+        "Jiwen Lu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 44.1,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "robodreamer",
+      "title": "RoboDreamer",
+      "full_title": "RoboDreamer: Learning Compositional World Models for Robot Imagination",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "robotics",
+      "paradigm": "robot_imagination",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UCLA",
+      "authors": [
+        "Siyuan Zhou",
+        "Yilun Du",
+        "Jiaben Chen",
+        "Yandong Li",
+        "Li Fei-Fei",
+        "Chuang Gan"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 2,
+      "institution_tier": 2,
+      "impact_score": 43.8,
+      "impact_override": null,
+      "openalex_id": "W4394972242"
+    },
+    {
+      "id": "uwm",
+      "title": "UWM",
+      "full_title": "Unified World Models: Coupling Video and Action Diffusion",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "MIT",
+      "authors": [
+        "Sizhe Yang",
+        "Wenxuan Zhou",
+        "Shuang Li"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 99,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 43.3,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "flare",
+      "title": "FLARE",
+      "full_title": "Mori-Zwanzig latent space Koopman closure for nonlinear autoencoder",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": "joint_embedding",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "John S. Justeson",
+        "William M. Norman",
+        "Norman Hammond"
+      ],
+      "arxiv_id": "2310.10745",
+      "doi": null,
+      "cited_by_count": 22,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 43.1,
+      "impact_override": null,
+      "openalex_id": "W4387796592"
+    },
+    {
+      "id": "uniworld",
+      "title": "UniWorld",
+      "full_title": "Uniworld-V2: Reinforce Image Editing with Diffusion Negative-aware Finetuning and MLLM Implicit Feedback",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_driving",
+      "path": "trunk",
+      "paradigm": "vla_driving",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Wayve",
+      "authors": [
+        "Chen Min",
+        "Dawei Zhao",
+        "Liang Xiao",
+        "Yiming Nie",
+        "Bin Dai"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 54,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 42.4,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "wisa",
+      "title": "WISA",
+      "full_title": "WISA",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NeurIPS",
+      "authors": [
+        "Anonymous"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 61,
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "impact_score": 42.4,
+      "impact_override": null,
+      "openalex_id": "W2006631632"
+    },
+    {
+      "id": "tesseract",
+      "title": "TesserAct",
+      "full_title": "CoMapGS: Covisibility Map-based Gaussian Splatting for Sparse Novel View Synthesis",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "embodied",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "Animesh Garg",
+        "NVIDIA Research"
+      ],
+      "arxiv_id": "2503.20998",
+      "doi": null,
+      "cited_by_count": 11,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 42.1,
+      "impact_override": null,
+      "openalex_id": "W4415061595"
+    },
+    {
+      "id": "physical_principles",
+      "title": "Physical Principles",
+      "full_title": "Cluster GARCH",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Google",
+      "authors": [
+        "Roberto Alonso-Matilla",
+        "Paolo P. Provenzano",
+        "David J. Odde"
+      ],
+      "arxiv_id": "2406.06860",
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 42.1,
+      "impact_override": null,
+      "openalex_id": "W4399598173"
+    },
+    {
+      "id": "pi0_7",
+      "title": "π0.7",
+      "full_title": "π0.7: a Steerable Generalist Robotic Foundation Model with Emergent Capabilities",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Physical Intelligence",
+      "authors": [
+        "Wenbo Zhang",
+        "Jianxiong Li",
+        "Shuai Yang",
+        "Sijin Chen",
+        "Jiajun Liu",
+        "Lingqiao Liu",
+        "Xiao Ma"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 17,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 42.1,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "long_horizon_q",
+      "title": "Long-Horizon Q-Learning",
+      "full_title": "Long-Horizon Q-Learning: Accurate Value Learning via n-Step Inequalities",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "rl_planning",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Yee Whye Teh"
+      ],
+      "arxiv_id": "2605.05812",
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 42.0,
+      "impact_override": null,
+      "openalex_id": "W7160727235"
+    },
+    {
+      "id": "orv",
+      "title": "ORV",
+      "full_title": "ORV: 4D Occupancy-centric Robot Video Generation",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "applications",
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "Fulai Yao",
+        "Pengliang Zuo",
+        "Tao Luan",
+        "Chao Lu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 16,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 41.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "imagined_autocurricula",
+      "title": "Imagined Autocurricula",
+      "full_title": "Imagined Autocurricula",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "imagination",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UCL/DeepMind",
+      "authors": [
+        "Ahmet H. Güzel",
+        "Matthew Thomas Jackson",
+        "Jarek Luca Liesen",
+        "Tim Rocktäschel",
+        "Jakob Foerster",
+        "Ilija Bogunovic",
+        "Jack Parker-Holder"
+      ],
+      "arxiv_id": "2509.13341",
+      "doi": null,
+      "cited_by_count": 2,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 41.8,
+      "impact_override": null,
+      "openalex_id": "W4416259085"
+    },
+    {
+      "id": "dreamvla",
+      "title": "DreamVLA",
+      "full_title": "DreamVLA: Vision-Language-Action with World Model Imagination",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Wenyao Zhang",
+        "Liu, Hongsi",
+        "Zekun Qi",
+        "Yunnan Wang",
+        "Xinqiang Yu",
+        "Jiazhao Zhang",
+        "Runpei Dong",
+        "Jiawei He"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 122,
+      "venue_tier": null,
+      "institution_tier": null,
+      "impact_score": 41.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "fast_wam",
+      "title": "Fast-WAM",
+      "full_title": "Fast World Action Models for Real-Time Control",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Unknown",
+      "authors": [
+        "Tianyuan Yuan",
+        "Zibin Dong",
+        "Yicheng Liu",
+        "Hang Zhao"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 24,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 41.1,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "hieros",
+      "title": "Hieros",
+      "full_title": "From Explicit CoT to Implicit CoT: Learning to Internalize CoT Step by Step",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "hierarchical_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Uni Tubingen",
+      "authors": [
+        "Daniel Guo",
+        "Danijar Hafner"
+      ],
+      "arxiv_id": "2405.14838",
+      "doi": null,
+      "cited_by_count": 176,
+      "venue_tier": 2,
+      "institution_tier": 4,
+      "impact_score": 40.8,
+      "impact_override": null,
+      "openalex_id": "W4398886776"
+    },
+    {
+      "id": "daydreamer",
+      "title": "DayDreamer",
+      "full_title": "DayDreamer: World Models for Physical Robot Learning",
+      "year": 2022,
+      "quarter": 3,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "foundation",
+      "paradigm": null,
+      "layer": null,
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Philipp Wu",
+        "Alejandro Escontrela",
+        "Danijar Hafner",
+        "Pieter Abbeel",
+        "Ken Goldberg"
+      ],
+      "arxiv_id": "2206.14176",
+      "doi": null,
+      "cited_by_count": 481,
+      "venue_tier": null,
+      "institution_tier": null,
+      "impact_score": 40.2,
+      "impact_override": null,
+      "openalex_id": "W4283721947"
+    },
+    {
+      "id": "dino_wm",
+      "title": "DINO-WM",
+      "full_title": "DINO-WM",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "dino_based",
+      "path": "trunk",
+      "paradigm": "dino_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Gaoyue Zhou",
+        "Pan, Hengkai",
+        "Yann LeCun",
+        "Lerrel Pinto"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 39.6,
+      "impact_override": null,
+      "openalex_id": "W7113722948"
+    },
+    {
+      "id": "unisim",
+      "title": "UniSim",
+      "full_title": "Learning Interactive Real-World Simulators",
+      "year": 2023,
+      "quarter": 4,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "foundation",
+      "paradigm": null,
+      "layer": null,
+      "shape": "circle",
+      "org": "Google DeepMind",
+      "authors": [
+        "Mengjiao Yang",
+        "Yilun Du",
+        "Dale Schuurmans",
+        "Pieter Abbeel",
+        "Ofir Nachum"
+      ],
+      "arxiv_id": "2310.06114",
+      "doi": null,
+      "cited_by_count": 422,
+      "venue_tier": null,
+      "institution_tier": null,
+      "impact_score": 39.6,
+      "impact_override": null,
+      "openalex_id": "W4387560742"
+    },
+    {
+      "id": "vla_jepa",
+      "title": "VLA-JEPA",
+      "full_title": "VLA-JEPA: Joint-Embedding Predictive Architecture for Vision-Language-Action",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Jingwen Sun",
+        "Wenyao Zhang",
+        "Zekun Qi",
+        "Shaojie Ren",
+        "Zezhi Liu",
+        "Hanxin Zhu",
+        "Guangzhong Sun",
+        "Xin Jin"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 27,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 39.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "vid2world",
+      "title": "Vid2World",
+      "full_title": "Vid2World: Crafting Video Diffusion Models to Interactive World Models",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "embodied",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Huang Siqiao",
+        "Jialong Wu",
+        "Qixing Zhou"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 38,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 39.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "rebot",
+      "title": "ReBot",
+      "full_title": "ReBot: Scaling Robot Learning with Real-to-Sim-to-Real",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "sim2real",
+      "layer": "sys",
+      "shape": "circle",
+      "org": "UNC",
+      "authors": [
+        "Fang Yu",
+        "Yue Yang",
+        "Xinghao Zhu",
+        "Kaiyuan Zheng",
+        "Gedas Bertasius",
+        "Daniel Szafır",
+        "Mingyu Ding"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 27,
+      "venue_tier": 4,
+      "institution_tier": 2,
+      "impact_score": 39.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "world_reasoning_arena",
+      "title": "World Reasoning Arena",
+      "full_title": "World Reasoning Arena",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": "benchmark",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UCSD",
+      "authors": [
+        "PAN Team",
+        "Qiyue Gao",
+        "Kun Zhou",
+        "Jiannan Xiang",
+        "Zihan Liu",
+        "Dequan Yang",
+        "Junrong Chen",
+        "Arif Ahmad"
+      ],
+      "arxiv_id": "2603.25887",
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 3,
+      "institution_tier": 2,
+      "impact_score": 38.8,
+      "impact_override": null,
+      "openalex_id": "W7143428014"
+    },
+    {
+      "id": "navmorph",
+      "title": "NavMorph",
+      "full_title": "NavMorph: A Self-Evolving World Model for Vision-and-Language Navigation in Continuous Environments",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "robotics",
+      "paradigm": "navigation_rssm",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Xuan Yao",
+        "Junyu Gao",
+        "Changsheng Xu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 32,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 38.4,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "teleworld",
+      "title": "TeleWorld",
+      "full_title": "TeleWorld: Towards Dynamic Multimodal Synthesis with a 4D World Model",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "game",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "Yabo Chen",
+        "Yuanzhi Liang",
+        "Jiepeng Wang",
+        "Tingxi Chen",
+        "Junfei Cheng",
+        "Zixiao Gu",
+        "Yuyang Huang",
+        "Zicheng Jiang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 6,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 38.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "dreamzero",
+      "title": "DreamZero/WAM",
+      "full_title": "Finite Free Convolution: Infinitesimal Distributions",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Seonghyeon Ye",
+        "Yunhao Ge",
+        "Kaiyuan Zheng",
+        "Shenyuan Gao",
+        "Sihyun Yu",
+        "George Kurian",
+        "Suneel Indupuru",
+        "You Liang Tan"
+      ],
+      "arxiv_id": "2505.01705",
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 38.0,
+      "impact_override": null,
+      "openalex_id": "W4415028380"
+    },
+    {
+      "id": "sana_wm",
+      "title": "SANA-WM",
+      "full_title": "SANA-WM: Efficient Minute-Scale World Modeling",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "Haoyi Zhu",
+        "Haozhe Liu",
+        "Yuyang Zhao",
+        "Tian Ye",
+        "Junsong Chen",
+        "Jincheng Yu",
+        "Tong He",
+        "Song Han"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 37.6,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "iq_mpc",
+      "title": "IQ-MPC",
+      "full_title": "Nonlinear Terminal-Free MPC on Multitype Bend Tracking With Discontinuous Reference Paths for Autonomous Vehicles",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "model_based_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Nicklas Hansen",
+        "Hao Su",
+        "Xiaolong Wang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 23,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 37.1,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "open_h_embodiment",
+      "title": "Open-H-Embodiment",
+      "full_title": "Open-H-Embodiment: A Large-Scale Dataset for Enabling Foundation Models in Medical Robotics",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_llm",
+      "path": "trunk",
+      "paradigm": "data",
+      "layer": "sys",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Open-H-Embodiment Consortium",
+        ":",
+        "Nigel Nelson",
+        "Juo-Tung Chen",
+        "Jesse Haworth",
+        "Xinhao Chen",
+        "Lukas Zbinden",
+        "Dianye Huang"
+      ],
+      "arxiv_id": "2604.21017",
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 37.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "ogpo",
+      "title": "OGPO",
+      "full_title": "OGPO: Sample Efficient Full-Finetuning of Generative Control Policies",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion",
+      "layer": "train",
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Sarvesh Patil",
+        "Mitsuhiko Nakamoto",
+        "Manan Agarwal",
+        "Shashwat Saxena",
+        "Jesse Zhang",
+        "Giri Anantharaman",
+        "Cleah Winston",
+        "Chaoyi Pan"
+      ],
+      "arxiv_id": "2605.03065",
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 2,
+      "institution_tier": 1,
+      "impact_score": 37.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "wm_survey_abbeel",
+      "title": "World Model for Robot Learning Survey",
+      "full_title": "World Model for Robot Learning: A Comprehensive Survey",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "survey",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Chen Tang",
+        "Ben Abbatematteo",
+        "Jiaheng Hu",
+        "Rohan Chandra",
+        "Roberto Martín-Martín",
+        "Peter Stone"
+      ],
+      "arxiv_id": "2605.00080",
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 37.0,
+      "impact_override": null,
+      "openalex_id": "W7160360414"
+    },
+    {
+      "id": "pwm",
+      "title": "PWM",
+      "full_title": "A Zero Common Mode Voltage PWM Scheme With Minimum Zero-Sequence Circulating Current for Two-Parallel Three-Phase Two-Level Converters",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "model_based_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Apple",
+      "authors": [
+        "Nicklas Hansen",
+        "Yann LeCun",
+        "Hao Su",
+        "Xiaolong Wang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 27,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 36.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "seq_jepa",
+      "title": "seq-JEPA",
+      "full_title": "seq-JEPA: Autoregressive Predictive Learning of Invariant-Equivariant World Models",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": "jepa_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Hafez Ghaemi",
+        "Eilif Müller",
+        "Shahab Bakhtiari"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 4,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 36.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "dreamgen",
+      "title": "DreamGen",
+      "full_title": "DreamGen: Unlocking Generalization in Robot Learning through Video World Models",
+      "year": 2025,
+      "quarter": 4,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "embodied",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Joel Jang",
+        "Seonghyeon Ye",
+        "Zongyu Lin",
+        "Jiannan Xiang",
+        "Johan Björck",
+        "Yu Fang",
+        "Fengyuan Hu",
+        "Huang, Spencer"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 80,
+      "venue_tier": 4,
+      "institution_tier": 4,
+      "impact_score": 36.4,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "pcm",
+      "title": "PCM",
+      "full_title": "Advances in battery thermal management for electric vehicles: A comprehensive review of hybrid PCM-metal foam and immersion cooling technologies",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "generalization",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Shanghai AI Lab",
+      "authors": [
+        "Nicklas Hansen",
+        "Yixin Lin",
+        "Hao Su",
+        "Xiaolong Wang",
+        "Vikash Kumar",
+        "Aravind Rajeswaran"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 81,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 36.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "gr2",
+      "title": "GR-2",
+      "full_title": "GR-2: Generative Robotic Manipulation with Video Generation",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "ByteDance",
+      "authors": [
+        "Chilam Cheang",
+        "Guangzeng Chen",
+        "Ya Jing",
+        "Tao Kong",
+        "Hang Li",
+        "Yifeng Li",
+        "Yu-Xiao Liu",
+        "Hongtao Wu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 232,
+      "venue_tier": null,
+      "institution_tier": null,
+      "impact_score": 35.9,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "prelar",
+      "title": "PreLAR",
+      "full_title": "PreLAR: World Model Pre-training with Learnable Action Representations",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "rssm",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "CAS",
+      "authors": [
+        "Lixuan Zhang",
+        "Meina Kan",
+        "Shiguang Shan",
+        "Xilin Chen"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 10,
+      "venue_tier": 4,
+      "institution_tier": 2,
+      "impact_score": 35.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "mead",
+      "title": "MEAD",
+      "full_title": "Mead production and quality: A review of chemical and sensory mead quality evaluation with a focus on analytical methods.",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "rssm_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "MIT",
+      "authors": [
+        "Madan Mohan Satpathi",
+        "Sourav Das"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 14,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 35.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "dreamsmooth",
+      "title": "DreamSmooth",
+      "full_title": "DreamSmooth: Improving Model-based Reinforcement Learning via Reward Smoothing",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "imagination_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "KAIST",
+      "authors": [
+        "Vint Lee",
+        "Pieter Abbeel",
+        "Youngwoon Lee"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 10,
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "impact_score": 34.9,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "lda_1b",
+      "title": "LDA-1B",
+      "full_title": "LDA-1B: A Large Diffusion Action Model for Generalist Robotic Manipulation",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Peking Uni",
+      "authors": [
+        "Jiangran Lyu",
+        "Kai Liu",
+        "Xuheng Zhang",
+        "Haoran Liao",
+        "Yusen Feng",
+        "Wenxuan Zhu",
+        "Tianyu Shen",
+        "Jiayi Chen"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 8,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 34.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "wristworld",
+      "title": "WristWorld",
+      "full_title": "WristWorld: Generating Wrist-Views via 4D World Models for Robotic Manipulation",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "embodied",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Qian, Zezhong",
+        "Xiaowei Chi",
+        "Yuming Li",
+        "Shizun Wang",
+        "Zhiyuan Qin",
+        "Xiaozhu Ju",
+        "Sirui Han",
+        "Shanghang Zhang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 12,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 34.4,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "mosim",
+      "title": "MoSim",
+      "full_title": "MOSim: bulk and single-cell multilayer regulatory network simulator",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "simulation",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "NVIDIA",
+      "authors": [
+        "MoSim Authors"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 2,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 34.3,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "lmpath",
+      "title": "LMPath",
+      "full_title": "LMPath: Language Model-Guided UAV Semantic Search Path Generation",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_llm",
+      "path": "trunk",
+      "paradigm": "llm_planning",
+      "layer": "sys",
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Jonathan A. Diller",
+        "Fernando Cladera",
+        "Camillo J. Taylor",
+        "Vijay Kumar"
+      ],
+      "arxiv_id": "2605.13782",
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 34.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "latent_reuse_theory",
+      "title": "Latent Reuse Reliability",
+      "full_title": "On the Reliability of Latent Space Reuse in Diffusion Models under Distribution Shift",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": "theory",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Karen Moesker",
+        "Martijn Wiarda"
+      ],
+      "arxiv_id": "2605.13448",
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 3,
+      "institution_tier": 1,
+      "impact_score": 34.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "vidman",
+      "title": "VidMan",
+      "full_title": "VidMan: Exploiting Implicit Dynamics from Video Diffusion Model for Effective Robot Manipulation",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "ByteDance",
+      "authors": [
+        "Youpeng Wen",
+        "Junfan Lin",
+        "Yi Zhu",
+        "Jianhua Han",
+        "Hang Xu",
+        "Shen Zhao",
+        "Xiaodan Liang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 48,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 33.9,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "vipra",
+      "title": "ViPRA",
+      "full_title": "ViPRA: Video Prediction for Robot Actions",
+      "year": 2025,
+      "quarter": 4,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "robotics",
+      "paradigm": "video_prediction_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Anonymous"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 9,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 33.3,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "genflowrl",
+      "title": "GenFlowRL",
+      "full_title": "GenFlowRL: Shaping Rewards with Generative Object-Centric Flow",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "trunk",
+      "paradigm": "object_centric",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UMD",
+      "authors": [
+        "Kelin Yu",
+        "Sheng Zhang",
+        "Harshit Soora",
+        "Furong Huang",
+        "Heng Huang",
+        "Pratap Tokekar",
+        "Ruohan Gao"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 6,
+      "venue_tier": 4,
+      "institution_tier": 2,
+      "impact_score": 33.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "mc_jepa",
+      "title": "MC-JEPA",
+      "full_title": "RadZero3D: Bridging Self-Supervised Video Models and Medical Vision-Language Alignment for Zero-Shot Chest CT Interpretation",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": "jepa_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Meta",
+      "authors": [
+        "Adrien Bardes",
+        "Jean Ponce",
+        "Yann LeCun"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 32.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "learning_4d_ewm",
+      "title": "Learning 4D EWM",
+      "full_title": "Learning 4D Embodied World Models",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "embodied_4d",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UMass",
+      "authors": [
+        "Junhong Qiu",
+        "Yuduan Lin",
+        "Jiaqing Wu",
+        "Yuhui Xiao",
+        "Honghao Cai",
+        "Hui Ni"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 5,
+      "venue_tier": 4,
+      "institution_tier": 2,
+      "impact_score": 32.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "wm_safety",
+      "title": "WM Safety Perspective",
+      "full_title": "World Models: The Safety Perspective",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "safety",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Huawei",
+      "authors": [
+        "Daniel Merenstein",
+        "Bruno Pot",
+        "Gregory Leyer",
+        "Arthur C. Ouwehand",
+        "Geoffrey A. Preidis",
+        "Christopher A. Elkins",
+        "Colin Hill",
+        "Zachery T. Lewis"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 5,
+      "venue_tier": 4,
+      "institution_tier": 2,
+      "impact_score": 32.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "imagine2drive",
+      "title": "Imagine-2-Drive",
+      "full_title": "Imagine-2-Drive: Leveraging High-Fidelity World Models for Autonomous Driving",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "driving",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "IIT",
+      "authors": [
+        "Anant Garg",
+        "K. Madhava Krishna"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 5,
+      "venue_tier": 4,
+      "institution_tier": 2,
+      "impact_score": 32.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "maskgwm",
+      "title": "MaskGWM",
+      "full_title": "MaskGWM: A Generalizable Driving World Model with Video Mask Reconstruction",
+      "year": 2025,
+      "quarter": 4,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Jingwen Ni",
+        "Yuxin Guo",
+        "Yichen Liu",
+        "Rui Chen",
+        "Lewei Lu",
+        "Zehuan Wu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 31,
+      "venue_tier": 4,
+      "institution_tier": 4,
+      "impact_score": 32.4,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "dyn_o",
+      "title": "Dyn-O",
+      "full_title": "Dyn-O: Building Structured World Models with Object-Centric Representations",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "trunk",
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "MIT",
+      "authors": [
+        "Zizhao Wang",
+        "Kaixin Wang",
+        "Li Zhao",
+        "Peter Stone",
+        "Jiang Bian"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 7,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 32.3,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "vidarc",
+      "title": "Vidarc",
+      "full_title": "Vidarc: Video as Auto-Regressive Controller",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Alibaba",
+      "authors": [
+        "Yao Feng",
+        "Chendong Xiang",
+        "Xinyi Mao",
+        "Hengkai Tan",
+        "Zuyue Zhang",
+        "Shuhe Huang",
+        "Kaiwen Zheng",
+        "Haitian Liu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 30,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 31.9,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "dima",
+      "title": "DIMA",
+      "full_title": "DiMA: An LLM-Powered Ride-Hailing Assistant at DiDi",
+      "year": 2025,
+      "quarter": 4,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "multi_agent_wm",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "CMU",
+      "authors": [
+        "Anonymous"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 6,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 31.7,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "rl_token",
+      "title": "RL Token",
+      "full_title": "RL Token: Bootstrapping Online RL with Vision-Language-Action Models",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_llm",
+      "path": "trunk",
+      "paradigm": "vla_llm",
+      "layer": "train",
+      "shape": "circle",
+      "org": "UC Berkeley/Levine",
+      "authors": [
+        "Charles Xu",
+        "Jost Tobias Springenberg",
+        "Michael Equi",
+        "Ali Amin",
+        "A. Esmail",
+        "Sergey Levine",
+        "Liyiming Ke"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 6,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 31.7,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "r2i",
+      "title": "R2I",
+      "full_title": "R2I-Bench: Benchmarking Reasoning-Driven Text-to-Image Generation",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "memory_augmented",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Uni Tubingen",
+      "authors": [
+        "Mingxuan Li",
+        "Yaning Li",
+        "Yingbin Zheng",
+        "Hao Ye",
+        "Lanqing Guo"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 19,
+      "venue_tier": 2,
+      "institution_tier": 4,
+      "impact_score": 31.3,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "gigaworld_policy",
+      "title": "GigaWorld-Policy",
+      "full_title": "GigaWorld-Policy: An Efficient Action-Centered World--Action Model",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "极佳视界",
+      "authors": [
+        "Angen Ye",
+        "Boyuan Wang",
+        "Chaojun Ni",
+        "Guan Huang",
+        "Guosheng Zhao",
+        "Hao Li",
+        "Hengtao Li",
+        "Jie Li (15030)"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 17,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 31.3,
+      "impact_override": null,
+      "openalex_id": "W7139144001"
+    },
+    {
+      "id": "ge_act",
+      "title": "GE-Act",
+      "full_title": "Towards Generalizable Robotic Policies via Action Chunking with Mixture of Experts",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "AgibotTech",
+      "authors": [
+        "Song Yang",
+        "Liangliang Fan",
+        "Lijia Yin",
+        "Yueming Zhao",
+        "Wenjing Li",
+        "Ronghua Zhao",
+        "Xuxia Jia",
+        "Fusong Dong"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 25,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 31.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "crssm",
+      "title": "cRSSM",
+      "full_title": "Dreaming of Many Worlds: Learning Contextual World Models Aids Zero-Shot Generalization",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "zero_shot",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Uni Tubingen",
+      "authors": [
+        "Sai Prasanna",
+        "Karim Farid",
+        "Raghu Rajan"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 18,
+      "venue_tier": 2,
+      "institution_tier": 4,
+      "impact_score": 31.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "gen3_alpha",
+      "title": "Gen-3 Alpha",
+      "full_title": "Prospects of Generative Video Technology in the Field of Chinese Classical Literature: Exploring Female Education Through the Reimagining of Chinese Poetic Imagery Using Runway ML Gen-3 Alpha",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Runway",
+      "authors": [
+        "Runway Research"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 3,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 31.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "planvwm",
+      "title": "PlanVWM",
+      "full_title": "PlanVWM: Autonomous Vehicle Planning Method Based on Video World Model",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "driving",
+      "layer": "sys",
+      "shape": "circle",
+      "org": "Tsinghua-Berkeley",
+      "authors": [
+        "Zhong Chen",
+        "Yuying Chen",
+        "Junan Chen",
+        "Zhifeng Gu",
+        "Siyuan Cheng",
+        "Yinuo Wang",
+        "Hongbo Zhang",
+        "Xueqian Wang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 4,
+      "institution_tier": 1,
+      "impact_score": 31.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "video2act",
+      "title": "Video2Act",
+      "full_title": "Video2Act: Bridging Video Generation and Robot Action",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Yueru Jia",
+        "Jiaming Liu",
+        "Sheng Liu",
+        "Rui Zhou",
+        "Wenhao Yu",
+        "Yan, Yuyang",
+        "Xiaowei Chi",
+        "Yandong Guo"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 14,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 30.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "dream_to_drive",
+      "title": "Dream to Drive",
+      "full_title": "Dream to Drive With Predictive Individual World Model",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion",
+      "layer": "arch",
+      "shape": "square",
+      "org": "FZI",
+      "authors": [
+        "Yinfeng Gao",
+        "Qichao Zhang",
+        "Da‐Wei Ding",
+        "Dongbin Zhao"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 14,
+      "venue_tier": 4,
+      "institution_tier": 3,
+      "impact_score": 30.3,
+      "impact_override": null,
+      "openalex_id": "W4399399455"
+    },
+    {
+      "id": "copilotd4",
+      "title": "CopilotD4",
+      "full_title": null,
+      "year": 2024,
+      "quarter": 3,
+      "lane": "vla",
+      "row": "vla_driving",
+      "path": "trunk",
+      "paradigm": "vla_driving",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Anonymous"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 20,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 30.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "lejepa",
+      "title": "LeJEPA",
+      "full_title": "Linear Identifiability of World Models via Latent JEPA",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Meta/NYU",
+      "authors": [
+        "Yann LeCun"
+      ],
+      "arxiv_id": "2605.26379",
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 1,
+      "impact_score": 29.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "latent_particle_wm",
+      "title": "Latent Particle WM",
+      "full_title": "Latent Particle World Models: Self-supervised Object-centric Stochastic Dynamics Modeling",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "trunk",
+      "paradigm": "slot",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "CMU/Deepak Pathak",
+      "authors": [
+        "Qianli Ma",
+        "Yuchen Liang",
+        "Chuanshuo Wang",
+        "Yang Liu",
+        "Xiaofang Lv",
+        "Shidong Zhou"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 3,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 29.3,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "flowdreamer",
+      "title": "FlowDreamer",
+      "full_title": "FlowDreamer: A RGB-D World Model With Flow-Based Motion Representations for Robot Manipulation",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "robotics",
+      "paradigm": "flow_motion_wm",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Jun Guo",
+        "Xiaojian Ma",
+        "Yikai Wang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 14,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 28.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "lidarcrafter",
+      "title": "LiDARCrafter",
+      "full_title": "LiDARCrafter: Dynamic 4D World Modeling from LiDAR Sequences",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "3dgs_nerf",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Waymo",
+      "authors": [
+        "Ao Liang",
+        "Youquan Liu",
+        "Yang Yu",
+        "Dongyue Lu",
+        "Linfeng Li",
+        "Lingdong Kong",
+        "Huaici Zhao",
+        "Wei Tsang Ooi"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 14,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 28.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "carformer",
+      "title": "CarFormer",
+      "full_title": "CarFormer: Self-Driving with Learned Object-Centric Representations",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "applications",
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Waymo",
+      "authors": [
+        "Shadi Hamdan",
+        "Fatma Güney"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 12,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 28.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "adaptive_wm",
+      "title": "Adaptive WM",
+      "full_title": "Sub-ppb Methane Detection via EMD–Wavelet Adaptive Thresholding in Wavelength Modulation TDLAS: A Hybrid Denoising Approach for Trace Gas Sensing",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "robotics",
+      "paradigm": "non_stationary",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Anonymous"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 2,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 28.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "spmem",
+      "title": "SPMem",
+      "full_title": "Minimization of the cogging torque in stator-PM high-speed flywheel electrical machine",
+      "year": 2024,
+      "quarter": 3,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "rssm_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Norman P. Jouppi",
+        "George Thomas Kurian",
+        "Sheng Li",
+        "Peter Ma",
+        "Rahul Nagarajan",
+        "Lifeng Nai",
+        "Nishant Patil",
+        "Suvinay Subramanian"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 2,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 28.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "coworld",
+      "title": "CoWorld",
+      "full_title": "Making Offline RL Online: Collaborative World Models for Offline Visual Reinforcement Learning",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "collaborative_wm",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Qi Wang",
+        "Junming Yang",
+        "Yunbo Wang",
+        "Xiaokang Yang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 11,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 27.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "causal_world",
+      "title": "CausalWorld",
+      "full_title": "Designing Robotic Manipulation: Exploring Knowledge Transfer in CausalWorld",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "applications",
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "ETH Zurich",
+      "authors": [
+        "Xinrui Wang",
+        "Yan Jin"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 2,
+      "institution_tier": 3,
+      "impact_score": 27.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "cola_world",
+      "title": "CoLA-World",
+      "full_title": "Soda Science: Making the World Safe for Coca-Cola",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "rssm_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Peking Uni",
+      "authors": [
+        "Hilary A. Smith"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 9,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 27.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "fusdreamer",
+      "title": "FusDreamer",
+      "full_title": "FusDreamer: Label-Efficient Remote Sensing World Model",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "rssm",
+      "layer": "sys",
+      "shape": "square",
+      "org": "Guangdong",
+      "authors": [
+        "Jinping Wang",
+        "Weiwei Song",
+        "Hao Chen",
+        "Jinchang Ren",
+        "Huimin Zhao"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 6,
+      "venue_tier": 4,
+      "institution_tier": 3,
+      "impact_score": 27.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "worldeval",
+      "title": "WorldEval",
+      "full_title": "WorldEval: Evaluating Robot Policies via Video World Model Rollouts",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Yaxuan Li",
+        "Zhu, Yichen",
+        "Junjie Wen",
+        "Chaomin Shen",
+        "Yi Xu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 35,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 26.3,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "wm_robot_survey",
+      "title": "WM Robot Survey",
+      "full_title": "World Model for Robot Learning: A Comprehensive Survey",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "rssm",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Pieter Abbeel",
+      "authors": [
+        "Janne Kauttonen",
+        "Rebekah Rousi",
+        "Ari Alamäki"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 26.3,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "vla_mbpo",
+      "title": "VLA-MBPO",
+      "full_title": "VLA-MBPO: Model-Based Policy Optimization with VLA World Model",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "vla",
+      "row": "vla_driving",
+      "path": "trunk",
+      "paradigm": "vlm",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Zhilong Zhang",
+        "Haoxiang Ren",
+        "Yihao Sun",
+        "Yifei Sheng",
+        "Haonan Wang",
+        "Haoxin Lin",
+        "Zhichao Wu",
+        "Pierre-Luc Bacon"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 34,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 26.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "wmpo",
+      "title": "WMPO",
+      "full_title": "World Model Policy Optimization",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Fangqi Zhu",
+        "Yan, Zhengyang",
+        "Zicong Hong",
+        "Q. Y. Shou",
+        "Xiao Ma",
+        "Guo, Song"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 34,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 26.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "pigdreamer",
+      "title": "PIGDreamer",
+      "full_title": "PIGDreamer: Privileged Information Guided World Models for Safe Partially Observable Reinforcement Learning",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "robotics",
+      "paradigm": "imagination_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Chao Feng",
+        "Xinrun Wang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 6,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 25.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "x_mobility",
+      "title": "X-Mobility",
+      "full_title": "Suppressed lattice oxygen mobility on Ag/FeOx catalyst enhances the sulfur selectivity of H2S selective oxidation.",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "vla_diffusion",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tencent",
+      "authors": [
+        "Wei Liu",
+        "Zhao, Huihua",
+        "Chenran Li",
+        "Joydeep Biswas",
+        "Billy Okal",
+        "Pulkit Goyal",
+        "Yan Chang",
+        "Soha Pouya"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 6,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 25.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "fioc_wm",
+      "title": "FIOC-WM",
+      "full_title": "Learning Interactive World Model for Object-Centric Reinforcement Learning",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "applications",
+      "paradigm": "slot_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Feng, Fan",
+        "Lippe, Phillip",
+        "Magliacane, Sara"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 6,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 25.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "muvo",
+      "title": "MUVO",
+      "full_title": "MUVO: A Multimodal Generative World Model for Autonomous Driving",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "FZI",
+      "authors": [
+        "Daniel Bogdoll",
+        "Yitian Yang",
+        "Tim Joseph",
+        "Melih Yazgan",
+        "J. Marius Zöllner"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 4,
+      "venue_tier": 4,
+      "institution_tier": 3,
+      "impact_score": 25.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "rem",
+      "title": "REM",
+      "full_title": "From mechanisms to future therapy: a synopsis of isolated REM sleep behavior disorder as early synuclein-related disease",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "tokenized_wm",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Uni Tubingen",
+      "authors": [
+        "Hyoungseok Kim",
+        "Jaekyeom Kim",
+        "Youngwoon Lee",
+        "Pieter Abbeel"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 26,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 25.1,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "blitzgs",
+      "title": "BlitzGS",
+      "full_title": "BlitzGS: Distributed 3D Gaussian Splatting for City-Scale",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "3dgs",
+      "layer": "sys",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "Zhongtao Wang",
+        "Huishan Au",
+        "Yilong Li",
+        "Mai Su",
+        "Haojie Jin",
+        "Yisong Chen",
+        "Meng Gai",
+        "Fei Zhu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 25.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "leq",
+      "title": "LEQ",
+      "full_title": "Exploring solutions to specific class of fractional differential equations of order \n \n \n \n \n 3\n <\n \n u\n ˆ\n \n ≤\n 4\n \n $3<\\hat{u}\\leq 4$\n",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "offline_model_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Mila",
+      "authors": [
+        "Michael Janner",
+        "Sergey Levine"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 5,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 24.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "rola",
+      "title": "ROLA",
+      "full_title": "ROLA: Real-world Object-centric Learning with Attention",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "slot_based",
+      "path": "trunk",
+      "paradigm": "object_centric",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Beijing AI",
+      "authors": [
+        "Galina N. Veremeichik",
+        "Taisia O. Solomatina",
+        "Anastasia A. Khopta",
+        "Evgenia V. Brodovskaya",
+        "Tatiana Y. Gorpenchenko",
+        "Valeria P. Grigorchuk",
+        "Dmitry V. Bulgakov",
+        "Victor P. Bulgakov"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 4,
+      "institution_tier": 2,
+      "impact_score": 24.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "worldgym",
+      "title": "WorldGym",
+      "full_title": "WorldGym: Training Robots with World Model Imagination",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Hussain Kahil",
+        "Shiva Sharma",
+        "Petri Välisuo",
+        "Mohammed Elmusrati"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 18,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 23.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "unified_wm_vidact",
+      "title": "Unified World Models",
+      "full_title": "StoryWeaver: A Unified World Model for Knowledge-Enhanced Story Character Customization",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Chuning Zhu",
+        "Raymond Yu",
+        "Siyuan Feng",
+        "Benjamin Burchfiel",
+        "Paarth Shah",
+        "Abhishek Gupta"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 3,
+      "venue_tier": 4,
+      "institution_tier": 4,
+      "impact_score": 23.3,
+      "impact_override": null,
+      "openalex_id": "W4409366101"
+    },
+    {
+      "id": "waker",
+      "title": "WAKER",
+      "full_title": "WAKER EXPERIMENTS AT FERMILAB RECYCLER RING",
+      "year": 2024,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "extensions",
+      "paradigm": "curriculum_learning",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UC Berkeley",
+      "authors": [
+        "Danijar Hafner"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 23.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "rap",
+      "title": "RAP",
+      "full_title": "RAPPOR",
+      "year": 2024,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "mpc_based",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "UCLA",
+      "authors": [
+        "Chengwei Xing",
+        "Mingchen Li",
+        "Liyuan Liu",
+        "Rong Lu",
+        "Ning Liu",
+        "Wangjie Wu",
+        "Dongdong Yuan"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 23.2,
+      "impact_override": null,
+      "openalex_id": "W1981029888"
+    },
+    {
+      "id": "wam_survey",
+      "title": "WAM Survey",
+      "full_title": "World Action Models: The Next Frontier in Embodied AI",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Mike Zheng Shou",
+      "authors": [
+        "Yunfei Chen",
+        "Ziyu Fan",
+        "D. Gregory",
+        "Xiaoyao Zhou",
+        "Ronak Rabbani"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 23.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "realtime_vla_flash",
+      "title": "VLA FLASH",
+      "full_title": "Realtime-VLA FLASH: Speculative Inference for Diffusion-Based VLA",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "infer",
+      "shape": "circle",
+      "org": "Stanford",
+      "authors": [
+        "Jiahui Niu",
+        "Kefan Gu",
+        "Yucheng Zhao",
+        "Shengwen Liang",
+        "Tiancai Wang",
+        "Xing Hu",
+        "Ying Wang",
+        "Huawei Li"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 2,
+      "impact_score": 23.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "worldrft",
+      "title": "WorldRFT",
+      "full_title": "WorldRFT: Latent World Model Planning with Reinforcement Fine-Tuning for Driving",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Pengxuan Yang",
+        "Bin Lu",
+        "Zhongpu Xia",
+        "Chao Han",
+        "Yinfeng Gao",
+        "Teng Zhang",
+        "Kun Zhan",
+        "Xianpeng Lang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 11,
+      "venue_tier": 4,
+      "institution_tier": 4,
+      "impact_score": 23.1,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "self_forcing",
+      "title": "Self-Forcing",
+      "full_title": "Self-Forcing: Bridging the Train-Test Gap in Autoregressive Video Generation",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "foundation",
+      "paradigm": null,
+      "layer": null,
+      "shape": "circle",
+      "org": null,
+      "authors": [
+        "Mathias Driesse",
+        "Gustav Uhre Jakobsen",
+        "Gustav Mogull",
+        "Jan Plefka",
+        "Benjamin Sauer",
+        "Johann Usovitsch"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 11,
+      "venue_tier": null,
+      "institution_tier": null,
+      "impact_score": 23.1,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "dreamworld",
+      "title": "DreamWorld",
+      "full_title": "Dreamworld and Catastrophe",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Caroline Porter"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 9,
+      "venue_tier": 4,
+      "institution_tier": 4,
+      "impact_score": 22.3,
+      "impact_override": null,
+      "openalex_id": "W4252006145"
+    },
+    {
+      "id": "dymodreamer",
+      "title": "DyMoDreamer",
+      "full_title": "DyMoDreamer: World Modeling with Dynamic Modulation",
+      "year": 2025,
+      "quarter": 4,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "robotics",
+      "paradigm": "imagination_rl",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Shanghai AI Lab",
+      "authors": [
+        "Boxuan Zhang",
+        "Runqing Wang",
+        "Wei Xiao",
+        "Weipu Zhang",
+        "Jian Sun",
+        "Gao Huang",
+        "Jie Chen",
+        "Gang Wang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 2,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 21.8,
+      "impact_override": null,
+      "openalex_id": "W4415337502"
+    },
+    {
+      "id": "oasis",
+      "title": "Oasis",
+      "full_title": "MFF-FTNet: Multi-scale Feature Fusion across Frequency and Temporal Domains for Time Series Forecasting",
+      "year": 2024,
+      "quarter": 4,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "game",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Decart",
+      "authors": [
+        "Decart AI",
+        "Ethan Sutin",
+        "Michael Luo"
+      ],
+      "arxiv_id": "2411.17382",
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 21.8,
+      "impact_override": null,
+      "openalex_id": "W4404988742"
+    },
+    {
+      "id": "dit4dit",
+      "title": "DiT4DiT",
+      "full_title": "DiT4DiT: Mixture-of-Transformers for Video World Models and Robot Control",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Teli Ma",
+        "Jia Zheng",
+        "Zifan Wang",
+        "Jiang, Chunli",
+        "Andy Cui",
+        "Junwei Liang",
+        "Shuo Yang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 21.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "ar_dit",
+      "title": "AR-DiT",
+      "full_title": "AR-DiT: Autoregressive Diffusion Transformer for Video Generation",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "foundation",
+      "paradigm": null,
+      "layer": null,
+      "shape": "circle",
+      "org": null,
+      "authors": [
+        "Prabesh Khatiwada",
+        "Ujjwal Rimal",
+        "Zhengyang Han",
+        "Lirim Shemshedini"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 8,
+      "venue_tier": null,
+      "institution_tier": null,
+      "impact_score": 21.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "falconwing",
+      "title": "FalconWing",
+      "full_title": "FalconWing: An Open-Source Platform for Ultra-Light Fixed-Wing Aircraft Research",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "3dgs_nerf",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Samsung",
+      "authors": [
+        "Yan Miao",
+        "Shen, Will",
+        "Hang Cui",
+        "Sayan Mitra"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 20.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "frappe",
+      "title": "FRAPPE",
+      "full_title": "FRAppE",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "dino_based",
+      "path": "trunk",
+      "paradigm": "feature_world_model",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Sanket Ribadiya"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 18.7,
+      "impact_override": null,
+      "openalex_id": "W2094432159"
+    },
+    {
+      "id": "tc_idm",
+      "title": "TC-IDM",
+      "full_title": "TC-IDM: Temporal-Consistent Inverse Dynamics Model",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Weishi Mi",
+        "Yong Bao",
+        "Xiaowei Chi",
+        "Xiaozhu Ju",
+        "Zhiyuan Qin",
+        "Kuangzhi Ge",
+        "Kai Tang",
+        "Peidong Jia"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 18.7,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "uva",
+      "title": "UVA",
+      "full_title": "The silent UVA",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Yangmin Xia",
+        "Hao Zhang",
+        "Xiangyi Wu",
+        "Ye Xu",
+        "Qian Tan"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 5,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 18.5,
+      "impact_override": null,
+      "openalex_id": "W4396936628"
+    },
+    {
+      "id": "wm_rl_driving",
+      "title": "WM-RL Driving",
+      "full_title": "World model-based reinforcement learning for autonomous driving",
+      "year": 2025,
+      "quarter": 1,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "driving_rl",
+      "layer": "sys",
+      "shape": "square",
+      "org": "Dalian Maritime",
+      "authors": [
+        "Dechen Gao",
+        "Shuangyu Cai",
+        "Hanchu Zhou",
+        "Hang Wang",
+        "Iman Soltani",
+        "Junshan Zhang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 4,
+      "institution_tier": 3,
+      "impact_score": 18.5,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "gigabrain",
+      "title": "GigaBrain-0.5M",
+      "full_title": "GigaBrain-0.5M",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "极佳视界",
+      "authors": [
+        "GigaBrain Team",
+        "Boyuan Wang",
+        "Li, Bohan",
+        "Ni, Chaojun",
+        "Huang, Guan",
+        "Hao Li",
+        "Jie Li",
+        "Li, Jie"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 4,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 17.7,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "video_policy",
+      "title": "VideoPolicy",
+      "full_title": "VideoPolicy: Learning to Act by Watching Videos",
+      "year": 2025,
+      "quarter": 3,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Kirsi Cheas"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 4,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 17.7,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "causal_forcing_pp",
+      "title": "Causal Forcing++",
+      "full_title": "System as a causal force",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "autoregressive_video",
+      "path": "trunk",
+      "paradigm": "autoregressive",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Tsinghua",
+      "authors": [
+        "Yang Jiang",
+        "Jing Zhou",
+        "Yan Huang",
+        "Yuming Bai",
+        "Xiaobo Chen",
+        "Liping Huang"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 17.0,
+      "impact_override": null,
+      "openalex_id": "W1990036621"
+    },
+    {
+      "id": "motubrain",
+      "title": "MotuBrain",
+      "full_title": "MotuBrain: An Advanced World Action Model for Robot Control",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "circle",
+      "org": "Tsinghua",
+      "authors": [
+        "MotuBrain Team",
+        "Chendong Xiang",
+        "Fan Bao",
+        "Haitian Liu",
+        "Hengkai Tan",
+        "Hongzhe Bi",
+        "James Li",
+        "Jiabao Liu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 3,
+      "impact_score": 17.0,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "dial",
+      "title": "DIAL",
+      "full_title": "DIAL: Diffusion-Informed Action Learning in Latent Space",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "latent_space",
+      "row": "jepa_based",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Moussa Souare",
+        "Frank Merat",
+        "Christos Papachristou"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 3,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 16.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "shareverse",
+      "title": "ShareVerse",
+      "full_title": "ShareVerse: Multi-Agent Consistent Video Generation for Shared World Models",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Jiayi Zhu",
+        "Jianing Zhang",
+        "Yiying Yang",
+        "Wei Cheng",
+        "Xiaoyun Yuan"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 4,
+      "institution_tier": 4,
+      "impact_score": 15.3,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "diwa",
+      "title": "DiWA",
+      "full_title": "DIWA Resources",
+      "year": 2025,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Eldrin Jan D. Cabilin"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 13.8,
+      "impact_override": null,
+      "openalex_id": "W7160679411"
+    },
+    {
+      "id": "anyflow",
+      "title": "AnyFlow",
+      "full_title": "AnyFlow: Flow Map based Any-Step Video Diffusion Distillation",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "train",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Yuchao Gu",
+        "Guian Fang",
+        "Yuxin Jiang",
+        "Weijia Mao",
+        "Song Han",
+        "Han Cai",
+        "Mike Zheng Shou"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 1,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 13.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "phyworld",
+      "title": "PhyWorld",
+      "full_title": "PhyWorld: Physics-Faithful World Model for Video Generation",
+      "year": 2026,
+      "quarter": 1,
+      "lane": "video_gen",
+      "row": "diffusion_video",
+      "path": "trunk",
+      "paradigm": null,
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Pu Zhao",
+        "Juyi Lin",
+        "Timothy Rupprecht",
+        "Arash Akbari",
+        "Chence Yang",
+        "Rahul Chowdhury",
+        "Elaheh Motamedi",
+        "Arman Akbari"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 4,
+      "institution_tier": 4,
+      "impact_score": 12.2,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "harmowam",
+      "title": "HarmoWAM",
+      "full_title": "HarmoWAM: Adaptive World Action Models",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "rl_based",
+      "row": "rssm_based",
+      "path": "trunk",
+      "paradigm": "mpc",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Qi Feng",
+        "Jiale Yu",
+        "Jiaming Liu",
+        "Yueru Jia",
+        "Zhuangzhe Wu",
+        "Hao Chen",
+        "Zezhong Qian",
+        "Shuo Gu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 10.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "attena_plus",
+      "title": "AttenA+",
+      "full_title": "AttenA+: Velocity-Driven Action Attention for VLA/WAM",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "vla",
+      "row": "vla_diffusion",
+      "path": "trunk",
+      "paradigm": "diffusion_video",
+      "layer": "train",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Daojie Peng",
+        "Fulong Ma",
+        "Jiahang Cao",
+        "Qiang Zhang",
+        "Xupeng Xie",
+        "Jian Guo",
+        "Ping Luo",
+        "Andrew F. Luo"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 10.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "omnilidar",
+      "title": "OmniLiDAR",
+      "full_title": "OmniLiDAR: Unified Cross-Domain LiDAR Scene Generation",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "3dgs",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Youquan Liu",
+        "Weidong Yang",
+        "Ao Liang",
+        "Xiang Xu",
+        "Lingdong Kong",
+        "Yang Wu",
+        "Dekai Zhu",
+        "Xin Li"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 10.8,
+      "impact_override": null,
+      "openalex_id": null
+    },
+    {
+      "id": "hetscene",
+      "title": "HetScene",
+      "full_title": "HetScene: Heterogeneous Two-Stage Diffusion for Dense Indoor Scene Generation",
+      "year": 2026,
+      "quarter": 2,
+      "lane": "video_gen",
+      "row": "3dgs_nerf",
+      "path": "trunk",
+      "paradigm": "3dgs",
+      "layer": "arch",
+      "shape": "square",
+      "org": "Unknown",
+      "authors": [
+        "Zini Chen",
+        "Junming Huang",
+        "Rong Zhang",
+        "Jiamin Xu",
+        "Cheng Peng",
+        "Chi Wang",
+        "Weiwei Xu"
+      ],
+      "arxiv_id": null,
+      "doi": null,
+      "cited_by_count": 0,
+      "venue_tier": 5,
+      "institution_tier": 4,
+      "impact_score": 10.8,
+      "impact_override": null,
+      "openalex_id": null
+    }
+  ],
+  "connections": [
+    {
+      "source_id": "dreamsmooth",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamsmooth",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "harmonydream",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "harmonydream",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "thick",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "crssm",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "pigdreamer",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "pigdreamer",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dymodreamer",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dymodreamer",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "robodreamer",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "flowdreamer",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "navmorph",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "navmorph",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "adaptive_wm",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "adaptive_wm",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "hieros",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "coworld",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "coworld",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "pwm",
+      "target_id": "tdmpc2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "iq_mpc",
+      "target_id": "tdmpc",
+      "type": "inherits"
+    },
+    {
+      "source_id": "iq_mpc",
+      "target_id": "tdmpc2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "decision_diffuser",
+      "target_id": "diffuser",
+      "type": "inherits"
+    },
+    {
+      "source_id": "pivot_r",
+      "target_id": "diffuser",
+      "type": "inherits"
+    },
+    {
+      "source_id": "seq_jepa",
+      "target_id": "v_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dino_wm",
+      "target_id": "v_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dino_world",
+      "target_id": "v_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "slotformer",
+      "target_id": "slot_attention",
+      "type": "inherits"
+    },
+    {
+      "source_id": "octo",
+      "target_id": "rt2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "pi0",
+      "target_id": "diffusion_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "mc_jepa",
+      "target_id": "v_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dino_foresight",
+      "target_id": "dino_wm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "frappe",
+      "target_id": "tesseract",
+      "type": "inherits"
+    },
+    {
+      "source_id": "frappe",
+      "target_id": "dino_wm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vla_mbpo",
+      "target_id": "pi0",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fast_wam",
+      "target_id": "dreamzero",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vla_jepa",
+      "target_id": "v_jepa2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vla_jepa",
+      "target_id": "v_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dial",
+      "target_id": "pi0",
+      "type": "inherits"
+    },
+    {
+      "source_id": "gr2",
+      "target_id": "gr1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wam_survey",
+      "target_id": "dreamzero",
+      "type": "inherits"
+    },
+    {
+      "source_id": "motubrain",
+      "target_id": "pi0",
+      "type": "inherits"
+    },
+    {
+      "source_id": "harmowam",
+      "target_id": "dreamzero",
+      "type": "inherits"
+    },
+    {
+      "source_id": "pi0_7",
+      "target_id": "pi0",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wam_zero_shot",
+      "target_id": "dreamzero",
+      "type": "inherits"
+    },
+    {
+      "source_id": "latent_particle_wm",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "realtime_vla_flash",
+      "target_id": "pi0",
+      "type": "inherits"
+    },
+    {
+      "source_id": "rl_token",
+      "target_id": "pi0",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamer_v1",
+      "target_id": "planet",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamer_v2",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamer_v3",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "tdmpc2",
+      "target_id": "tdmpc",
+      "type": "inherits"
+    },
+    {
+      "source_id": "gen3_alpha",
+      "target_id": "sora",
+      "type": "competes"
+    },
+    {
+      "source_id": "wan",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "cosmos",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "oasis",
+      "target_id": "gamenngen",
+      "type": "competes"
+    },
+    {
+      "source_id": "gamenngen",
+      "target_id": "oasis",
+      "type": "competes"
+    },
+    {
+      "source_id": "gamenngen",
+      "target_id": "genie2",
+      "type": "competes"
+    },
+    {
+      "source_id": "gamenngen",
+      "target_id": "sora",
+      "type": "borrows"
+    },
+    {
+      "source_id": "vista",
+      "target_id": "drive_wm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "tesseract",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "tesseract",
+      "target_id": "diffusion_policy",
+      "type": "borrows"
+    },
+    {
+      "source_id": "vid2world",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "emu3",
+      "target_id": "sora",
+      "type": "competes"
+    },
+    {
+      "source_id": "lwm",
+      "target_id": "sora",
+      "type": "competes"
+    },
+    {
+      "source_id": "genie2",
+      "target_id": "gamenngen",
+      "type": "competes"
+    },
+    {
+      "source_id": "v_jepa",
+      "target_id": "i_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "v_jepa2",
+      "target_id": "v_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "teleworld",
+      "target_id": "gamenngen",
+      "type": "inherits"
+    },
+    {
+      "source_id": "irasim",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wristworld",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "grounding_video",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "unipi",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vidarc",
+      "target_id": "wan",
+      "type": "inherits"
+    },
+    {
+      "source_id": "cosmos_policy",
+      "target_id": "cosmos",
+      "type": "inherits"
+    },
+    {
+      "source_id": "cosmos_policy",
+      "target_id": "pi0",
+      "type": "borrows"
+    },
+    {
+      "source_id": "uwm",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "uwm",
+      "target_id": "cosmos",
+      "type": "borrows"
+    },
+    {
+      "source_id": "ge_act",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ge_act",
+      "target_id": "genie_envisioner",
+      "type": "borrows"
+    },
+    {
+      "source_id": "gigabrain",
+      "target_id": "wan",
+      "type": "inherits"
+    },
+    {
+      "source_id": "gr1",
+      "target_id": "genie2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "genie_envisioner",
+      "target_id": "genie2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "genie_envisioner",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "genie_envisioner",
+      "target_id": "pi0",
+      "type": "borrows"
+    },
+    {
+      "source_id": "pi0_5",
+      "target_id": "pi0",
+      "type": "inherits"
+    },
+    {
+      "source_id": "gen2act",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "video2act",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "tc_idm",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamzero",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamzero",
+      "target_id": "cosmos",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamzero",
+      "target_id": "pi0",
+      "type": "competes"
+    },
+    {
+      "source_id": "uva",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "video_policy",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "lda_1b",
+      "target_id": "wan",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dit4dit",
+      "target_id": "cosmos",
+      "type": "inherits"
+    },
+    {
+      "source_id": "diwa",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wmpo",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "worldeval",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "worldgym",
+      "target_id": "cosmos",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vidman",
+      "target_id": "genie2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "gigaworld_policy",
+      "target_id": "genie_envisioner",
+      "type": "inherits"
+    },
+    {
+      "source_id": "physical_principles",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "worldmodelbench",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "spatial_memory_wm",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wisa",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "sana_wm",
+      "target_id": "cosmos",
+      "type": "inherits"
+    },
+    {
+      "source_id": "causal_forcing_pp",
+      "target_id": "wan",
+      "type": "inherits"
+    },
+    {
+      "source_id": "pi0_7",
+      "target_id": "pi0_5",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamdojo",
+      "target_id": "cosmos",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamdojo",
+      "target_id": "dreamer_v3",
+      "type": "borrows"
+    },
+    {
+      "source_id": "anyflow",
+      "target_id": "wan",
+      "type": "inherits"
+    },
+    {
+      "source_id": "blitzgs",
+      "target_id": "cosmos",
+      "type": "inherits"
+    },
+    {
+      "source_id": "rem",
+      "target_id": "harmonydream",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vla_mbpo",
+      "target_id": "drivevla",
+      "type": "inherits"
+    },
+    {
+      "source_id": "video2act",
+      "target_id": "wan",
+      "type": "inherits"
+    },
+    {
+      "source_id": "tc_idm",
+      "target_id": "cosmos_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "uva",
+      "target_id": "irasim",
+      "type": "inherits"
+    },
+    {
+      "source_id": "video_policy",
+      "target_id": "irasim",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dit4dit",
+      "target_id": "cosmos_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "diwa",
+      "target_id": "irasim",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wmpo",
+      "target_id": "irasim",
+      "type": "inherits"
+    },
+    {
+      "source_id": "worldeval",
+      "target_id": "irasim",
+      "type": "inherits"
+    },
+    {
+      "source_id": "worldgym",
+      "target_id": "irasim",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vla_jepa",
+      "target_id": "world_reasoning_arena",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dial",
+      "target_id": "world_reasoning_arena",
+      "type": "inherits"
+    },
+    {
+      "source_id": "gr2",
+      "target_id": "pi0",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamvla",
+      "target_id": "pi0_5",
+      "type": "inherits"
+    },
+    {
+      "source_id": "causal_forcing_pp",
+      "target_id": "genie_envisioner",
+      "type": "inherits"
+    },
+    {
+      "source_id": "harmowam",
+      "target_id": "long_horizon_q",
+      "type": "inherits"
+    },
+    {
+      "source_id": "anyflow",
+      "target_id": "sana_wm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "attena_plus",
+      "target_id": "fast_wam",
+      "type": "inherits"
+    },
+    {
+      "source_id": "omnilidar",
+      "target_id": "blitzgs",
+      "type": "inherits"
+    },
+    {
+      "source_id": "hetscene",
+      "target_id": "blitzgs",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fusdreamer",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dream_to_drive",
+      "target_id": "oasis",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_rl_driving",
+      "target_id": "pwm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "world_consistent_3d",
+      "target_id": "irasim",
+      "type": "inherits"
+    },
+    {
+      "source_id": "unified_wm_vidact",
+      "target_id": "irasim",
+      "type": "inherits"
+    },
+    {
+      "source_id": "shareverse",
+      "target_id": "worldmodelbench",
+      "type": "inherits"
+    },
+    {
+      "source_id": "phyworld",
+      "target_id": "physical_principles",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamworld",
+      "target_id": "spatial_memory_wm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "maskgwm",
+      "target_id": "spatial_memory_wm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "occsora",
+      "target_id": "dreamdojo",
+      "type": "inherits"
+    },
+    {
+      "source_id": "gaia2",
+      "target_id": "cosmos_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "worldrft",
+      "target_id": "dreamdojo",
+      "type": "inherits"
+    },
+    {
+      "source_id": "steve1",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dyn_o",
+      "target_id": "robodreamer",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dyn_o",
+      "target_id": "tdmpc2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dyn_o",
+      "target_id": "focus",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dyn_o",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dyn_o",
+      "target_id": "slotformer",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dyn_o",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dyn_o",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "carformer",
+      "target_id": "slotformer",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "tesseract",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "unified_wm_vidact",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "gaia2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "grounding_video",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "avid_wm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "gen2act",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "irasim",
+      "type": "competes"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "occsora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "vista",
+      "type": "borrows"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "ivideogpt",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "robodreamer",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "genie2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "orv",
+      "target_id": "gaia1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "v_jepa2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "focus",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "pi0_5",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "gaia2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "dino_wm",
+      "type": "borrows"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "robodreamer",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "tdmpc2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "gaia1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "unipi",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "tdmpc",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "fioc_wm",
+      "target_id": "planet",
+      "type": "inherits"
+    },
+    {
+      "source_id": "genflowrl",
+      "target_id": "ivideogpt",
+      "type": "inherits"
+    },
+    {
+      "source_id": "genflowrl",
+      "target_id": "diffusion_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "diffuser",
+      "target_id": "gr1",
+      "type": "borrows"
+    },
+    {
+      "source_id": "diffuser",
+      "target_id": "diffusion_policy",
+      "type": "competes"
+    },
+    {
+      "source_id": "diffuser",
+      "target_id": "unipi",
+      "type": "inherits"
+    },
+    {
+      "source_id": "tdmpc",
+      "target_id": "planet",
+      "type": "competes"
+    },
+    {
+      "source_id": "long_horizon_q",
+      "target_id": "diffusion_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "long_horizon_q",
+      "target_id": "pi0_5",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vipra",
+      "target_id": "dreamgen",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vipra",
+      "target_id": "gr1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vipra",
+      "target_id": "diffusion_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vipra",
+      "target_id": "unipi",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vipra",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "vipra",
+      "target_id": "planet",
+      "type": "inherits"
+    },
+    {
+      "source_id": "r2i",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "gigaworld_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "fast_wam",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "v_jepa2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "dit4dit",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "frappe",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "wam_zero_shot",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "lda_1b",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "vla_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "driveworld",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "dreamdojo",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "tc_idm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "cosmos_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "video2act",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "drivevla",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "genie_envisioner",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "diffusion_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_robot_survey",
+      "target_id": "dreamvla",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "gigaworld_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "fast_wam",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "v_jepa2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "dit4dit",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "frappe",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "wam_zero_shot",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "lda_1b",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "vla_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "driveworld",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "dreamdojo",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "tc_idm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "cosmos_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "video2act",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "drivevla",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "genie_envisioner",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "diffusion_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_survey_abbeel",
+      "target_id": "dreamvla",
+      "type": "inherits"
+    },
+    {
+      "source_id": "nitrogen",
+      "target_id": "genie2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "nitrogen",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "imagined_autocurricula",
+      "target_id": "genie2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "imagined_autocurricula",
+      "target_id": "dreamer_v2",
+      "type": "competes"
+    },
+    {
+      "source_id": "imagined_autocurricula",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "imagined_autocurricula",
+      "target_id": "planet",
+      "type": "inherits"
+    },
+    {
+      "source_id": "mp5",
+      "target_id": "steve1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "mp5",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "self_evolving_wm",
+      "target_id": "driveworld",
+      "type": "inherits"
+    },
+    {
+      "source_id": "self_evolving_wm",
+      "target_id": "holodeck",
+      "type": "inherits"
+    },
+    {
+      "source_id": "self_evolving_wm",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "self_evolving_wm",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "self_evolving_wm",
+      "target_id": "planet",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_safety",
+      "target_id": "driveworld",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_safety",
+      "target_id": "genie2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_safety",
+      "target_id": "gaia1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_safety",
+      "target_id": "uniworld",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_safety",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_safety",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_safety",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wm_safety",
+      "target_id": "planet",
+      "type": "inherits"
+    },
+    {
+      "source_id": "wonderworld",
+      "target_id": "text2room",
+      "type": "inherits"
+    },
+    {
+      "source_id": "lidarcrafter",
+      "target_id": "maskgwm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "lidarcrafter",
+      "target_id": "occsora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "lidarcrafter",
+      "target_id": "gaia1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "physdreamer",
+      "target_id": "4d_fy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "holodeck",
+      "target_id": "text2room",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ivideogpt",
+      "target_id": "genie2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ivideogpt",
+      "target_id": "tdmpc2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ivideogpt",
+      "target_id": "harmonydream",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ivideogpt",
+      "target_id": "diffusion_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ivideogpt",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ivideogpt",
+      "target_id": "tdmpc",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ivideogpt",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ivideogpt",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ivideogpt",
+      "target_id": "planet",
+      "type": "inherits"
+    },
+    {
+      "source_id": "sora",
+      "target_id": "gen3_alpha",
+      "type": "inherits"
+    },
+    {
+      "source_id": "drivedreamer4d",
+      "target_id": "vista",
+      "type": "inherits"
+    },
+    {
+      "source_id": "drivedreamer4d",
+      "target_id": "gaia1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "muvo",
+      "target_id": "occsora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "muvo",
+      "target_id": "vista",
+      "type": "inherits"
+    },
+    {
+      "source_id": "muvo",
+      "target_id": "genie2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "muvo",
+      "target_id": "gaia1",
+      "type": "competes"
+    },
+    {
+      "source_id": "muvo",
+      "target_id": "uniworld",
+      "type": "inherits"
+    },
+    {
+      "source_id": "muvo",
+      "target_id": "focus",
+      "type": "inherits"
+    },
+    {
+      "source_id": "muvo",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "muvo",
+      "target_id": "tdmpc",
+      "type": "inherits"
+    },
+    {
+      "source_id": "avid_wm",
+      "target_id": "irasim",
+      "type": "inherits"
+    },
+    {
+      "source_id": "avid_wm",
+      "target_id": "robodreamer",
+      "type": "inherits"
+    },
+    {
+      "source_id": "avid_wm",
+      "target_id": "genie2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "avid_wm",
+      "target_id": "gaia1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "avid_wm",
+      "target_id": "diffuser",
+      "type": "inherits"
+    },
+    {
+      "source_id": "avid_wm",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "avid_wm",
+      "target_id": "gen3_alpha",
+      "type": "inherits"
+    },
+    {
+      "source_id": "imagine2drive",
+      "target_id": "diffusion_policy",
+      "type": "inherits"
+    },
+    {
+      "source_id": "imagine2drive",
+      "target_id": "vista",
+      "type": "competes"
+    },
+    {
+      "source_id": "imagine2drive",
+      "target_id": "think2drive",
+      "type": "inherits"
+    },
+    {
+      "source_id": "imagine2drive",
+      "target_id": "gaia1",
+      "type": "borrows"
+    },
+    {
+      "source_id": "imagine2drive",
+      "target_id": "dreamer_v3",
+      "type": "competes"
+    },
+    {
+      "source_id": "imagine2drive",
+      "target_id": "diffuser",
+      "type": "borrows"
+    },
+    {
+      "source_id": "imagine2drive",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "imagine2drive",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "imagine2drive",
+      "target_id": "planet",
+      "type": "inherits"
+    },
+    {
+      "source_id": "diffusion_policy",
+      "target_id": "diffuser",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ogpo",
+      "target_id": "pi0_5",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ogpo",
+      "target_id": "diffusion_policy",
+      "type": "competes"
+    },
+    {
+      "source_id": "rebot",
+      "target_id": "robodreamer",
+      "type": "inherits"
+    },
+    {
+      "source_id": "rebot",
+      "target_id": "unipi",
+      "type": "inherits"
+    },
+    {
+      "source_id": "drivevla",
+      "target_id": "gaia1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "gaia1",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "gaia1",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "think2drive",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "think2drive",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "think2drive",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "think2drive",
+      "target_id": "planet",
+      "type": "inherits"
+    },
+    {
+      "source_id": "daydreamer",
+      "target_id": "dreamer_v2",
+      "type": "inherits"
+    },
+    {
+      "source_id": "daydreamer",
+      "target_id": "dreamer_v1",
+      "type": "inherits"
+    },
+    {
+      "source_id": "daydreamer",
+      "target_id": "planet",
+      "type": "inherits"
+    },
+    {
+      "source_id": "r3m",
+      "target_id": "vpt",
+      "type": "competes"
+    },
+    {
+      "source_id": "unisim",
+      "target_id": "r3m",
+      "type": "inherits"
+    },
+    {
+      "source_id": "unisim",
+      "target_id": "dreamer_v2",
+      "type": "borrows"
+    },
+    {
+      "source_id": "unisim",
+      "target_id": "sora",
+      "type": "borrows"
+    },
+    {
+      "source_id": "ar_dit",
+      "target_id": "cosmos",
+      "type": "inherits"
+    },
+    {
+      "source_id": "ar_dit",
+      "target_id": "sora",
+      "type": "inherits"
+    },
+    {
+      "source_id": "self_forcing",
+      "target_id": "dreamer_v3",
+      "type": "borrows"
+    },
+    {
+      "source_id": "self_forcing",
+      "target_id": "genie2",
+      "type": "borrows"
+    },
+    {
+      "source_id": "self_forcing",
+      "target_id": "cosmos",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamgen",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamgen",
+      "target_id": "avid_wm",
+      "type": "inherits"
+    },
+    {
+      "source_id": "dreamgen",
+      "target_id": "cosmos",
+      "type": "borrows"
+    },
+    {
+      "source_id": "lejepa",
+      "target_id": "i_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "lejepa",
+      "target_id": "v_jepa",
+      "type": "inherits"
+    },
+    {
+      "source_id": "storm",
+      "target_id": "dreamer_v3",
+      "type": "inherits"
+    },
+    {
+      "source_id": "diamond",
+      "target_id": "dreamer_v3",
+      "type": "borrows"
+    },
+    {
+      "source_id": "diamond",
+      "target_id": "storm",
+      "type": "competes"
+    }
+  ]
+}

@@ -73,11 +73,16 @@ Thumbs.db
 .claude/settings.local.json
 .claude/hooks.json
 .claude/skills/
-.claude/docs/knowledge/lark/连接信息.md
+.claude/docs/knowledge/
+.claude/docs/design/
+.claude/docs/specs/
 .claude/docs/z-meetings context/
 
 # SQLite databases
 backend/data/*.db
+backend/app/data/*.db
+backend/app/data/embeddings/
+!backend/data/world_model_export.json
 
 # Logs
 *.log
