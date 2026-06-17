@@ -88,6 +88,13 @@ knowledge subgraph), **产业追踪** (industry signals/impact/talent/capital).
 **Topology**: `http://110.40.131.38:8081` (nginx, static Next export) → browser calls
 `http://110.40.131.38:8000/api/*` directly (same as the CN mirror on :8080).
 
+> **Static-export routing**: all session views live on the index route `/` via query
+> params (`/?id=<uuid>`, `/?id=<uuid>&view=trajectory|people|industry`). Dynamic
+> `/s/[id]` routes were removed because `output: 'export'` doesn't prerender their RSC
+> payloads, so hard-loading or client-navigating to an arbitrary id fell back to the
+> home page (symptom: history sessions wouldn't open, progress never showed). nginx's
+> `/index.html` fallback + query params work for both hard load and client nav.
+
 **Backend**: `POST/GET/DELETE /api/research/sessions` persists runs in `research_sessions`
 (migration `0010` / `migration_0010.sql`). Creating a session starts an agent job and stores
 `agent_job_id`; polling `GET /api/research/sessions/{id}` syncs progress/result (report,

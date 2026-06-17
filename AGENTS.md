@@ -168,15 +168,23 @@ curl http://localhost:9000/research/status/<job_id>
 
 ## Research Studio (`webapp/`)
 
-A **separate** Next.js app (does not touch `frontend/`). Four pages:
+A **separate** Next.js app (does not touch `frontend/`). To stay safe under
+`output: 'export'` (dynamic `/s/[id]` routes break on hard-load/client-nav because
+their RSC payloads aren't prerendered), **all views live on the index route `/`
+driven by query params**. nginx falls back to `/index.html`, so deep links and
+sidebar history work on both hard load and client navigation.
 
-| Route | Purpose |
+| Route (query param) | Purpose |
 |-------|---------|
-| `/` | Google-style search + ChatGPT-like session sidebar |
-| `/s/[id]` | Markdown report (3 mandatory H2 sections) + PDF export + links to sub-pages |
-| `/s/[id]/trajectory` | Paper timeline by `metadata.year`/`lane`, edges `BUILT_ON`/`RELATED_TO`/`COMPETES_WITH`; scope papers highlighted |
-| `/s/[id]/people` | `react-force-graph-2d` subgraph; scope entity IDs highlighted, rest dimmed |
-| `/s/[id]/industry` | Renders `session.industry` + live `/api/funding` + `/api/signals` |
+| `/` | Google-style search + ChatGPT-like session sidebar (`SearchHome`) |
+| `/?id=<uuid>` | `SessionWorkspace`: live progress (`ResearchProgress`) → markdown report (3 mandatory H2 sections) + PDF export + sub-view links |
+| `/?id=<uuid>&view=trajectory` | Paper timeline by `metadata.year`/`lane`, edges `BUILT_ON`/`RELATED_TO`/`COMPETES_WITH`; scope papers highlighted |
+| `/?id=<uuid>&view=people` | `react-force-graph-2d` subgraph; scope entity IDs highlighted, rest dimmed |
+| `/?id=<uuid>&view=industry` | Renders `session.industry` + live `/api/funding` + `/api/signals` |
+
+`app/page.tsx` reads `useSearchParams()` (inside a `<Suspense>` boundary required
+by static export) and renders `SearchHome` when no `id`, else `SessionWorkspace`.
+Submitting a question `router.push('/?id=<uuid>')` → progress renders in place.
 
 **Sessions API** (`backend/app/routers/research_sessions.py`):
 - `POST /api/research/sessions` — create row, start agent job, return `{id,…}`
