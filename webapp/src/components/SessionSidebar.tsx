@@ -88,7 +88,7 @@ export default function SessionSidebar({
             {sessions.map((s) => (
               <li key={s.id}>
                 <Link
-                  href={`/s/${s.id}`}
+                  href={`/?id=${s.id}`}
                   className={clsx(
                     'group flex items-start gap-2.5 rounded-lg px-3 py-2.5 text-sm transition',
                     activeId === s.id
