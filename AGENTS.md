@@ -196,14 +196,21 @@ Submitting a question `router.push('/?id=<uuid>')` → progress renders in place
 - `DELETE /api/research/sessions/{id}`
 
 **Agent output extensions** (in addition to `report`/`kb_sources`/`sources`):
-- `scope`: `{topic_ids, lane_ids, paper_ids, person_ids, org_ids, core_people}` — LLM maps
-  question to existing `entity_type=topic` lanes/rows; entity IDs from KB hits + graph
-  expansion. `core_people=[{id,name,org,wiki_url}]` are the DB persons (link to their wiki).
+- `scope`: `{topic_ids, lane_ids, paper_ids, person_ids, org_ids, core_people,
+  route_categories, paper_categories}` — LLM maps question to existing `entity_type=topic`
+  lanes/rows; entity IDs from KB hits + graph expansion. `core_people=[{id,name,org,wiki_url}]`
+  covers **all** queried person entities (each is a core person; names resolved via fetch).
+  `route_categories=[{key,label}]` + `paper_categories={paper_id:key}` are **dynamically
+  generated** by `_classify_routes` (count is data-driven, NOT hard-coded). The Trajectory
+  chart uses these as its lanes (so they match report §2 sub-headings); People graph
+  highlights only **person** nodes (others dimmed).
 - `industry`: derived **after** the report — `{core_people, tech_signals, impact_md,
   person_signals, capital, funding, sources}`. `tech_signals`+`impact_md` come from ONE LLM
   interpretation of the generated report (`_interpret_report_signals`); `person_signals`/
-  `capital`/`funding` come from a per-core-person web search of recent (~last month) events
-  (`_track_people_events`), each item carrying `person_id`+`wiki_url`. Persisted in the
+  `capital`/`funding` come from a per-core-person web search (`_track_people_events`, two
+  query angles/person), each item carrying `person_id`+`wiki_url`. It prefers recent events
+  but **widens the window** (months → 1–2 years) and aims for **≥3 capital/funding events**
+  so the page is rarely empty; lists are date-sorted desc. Persisted in the
   `research_sessions.industry` JSON (the DB) and rendered on the Industry page.
 
 Report §4 产业追踪 is composed deterministically from `industry` (`_compose_industry_section`)

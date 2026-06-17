@@ -23,6 +23,12 @@ const LANE_LABELS: Record<string, string> = {
   other: '其他',
 };
 
+// Palette for dynamically generated (research-derived) route categories.
+const CATEGORY_PALETTE = [
+  '#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
+  '#06b6d4', '#ec4899', '#14b8a6', '#f97316', '#3b82f6',
+];
+
 const REL_META: Record<string, { color: string; label: string }> = {
   BUILT_ON: { color: '#6366f1', label: '基于 / 继承' },
   RELATED_TO: { color: '#94a3b8', label: '相关' },
@@ -63,28 +69,60 @@ export default function TrajectoryChart({
     setDragging(false);
   }, []);
 
+  // Research-derived dynamic route categories (preferred). When present, lanes and
+  // their labels come from the deep-research classification (matching report §2),
+  // not from the papers' static `metadata.lane` field.
+  const dynamicCats = scope?.route_categories?.length ? scope.route_categories : null;
+  const paperCat = scope?.paper_categories ?? null;
+
+  const labelMap = useMemo(() => {
+    const m: Record<string, string> = {};
+    if (dynamicCats) for (const c of dynamicCats) m[c.key] = c.label;
+    return m;
+  }, [dynamicCats]);
+  const colorMap = useMemo(() => {
+    const m: Record<string, string> = {};
+    if (dynamicCats) dynamicCats.forEach((c, i) => { m[c.key] = CATEGORY_PALETTE[i % CATEGORY_PALETTE.length]; });
+    return m;
+  }, [dynamicCats]);
+
+  const labelOf = useCallback(
+    (key: string) => (dynamicCats ? labelMap[key] ?? key : LANE_LABELS[key] ?? key),
+    [dynamicCats, labelMap],
+  );
+  const colorOf = useCallback(
+    (key: string) => (dynamicCats ? colorMap[key] ?? '#94a3b8' : laneColor(key)),
+    [dynamicCats, colorMap],
+  );
+
   const nodes = useMemo<PaperNode[]>(() => {
     return papers
       .map((p) => {
         const m = p.metadata || {};
+        const lane = dynamicCats && paperCat ? paperCat[p.id] : (m.lane as string) || 'other';
         return {
           id: p.id,
           name: (m.short_title as string) || p.name,
           year: Number(m.year) || 2020,
           quarter: Number(m.quarter) || 1,
-          lane: (m.lane as string) || 'other',
+          lane: lane || '',
           impact: Number(m.impact_score) || 1,
           highlighted: highlightIds.has(p.id),
         };
       })
-      .filter((n) => n.year >= 2018);
-  }, [papers, highlightIds]);
+      // In dynamic mode only show papers the research actually classified.
+      .filter((n) => n.year >= 2018 && (!dynamicCats || (n.lane && labelMap[n.lane])));
+  }, [papers, highlightIds, dynamicCats, paperCat, labelMap]);
 
   const lanes = useMemo(() => {
+    if (dynamicCats) {
+      const present = new Set(nodes.map((n) => n.lane));
+      return dynamicCats.map((c) => c.key).filter((k) => present.has(k));
+    }
     const keys = Array.from(new Set(nodes.map((n) => n.lane)));
     const order = ['rl_based', 'video_gen', 'latent_space', 'vla', 'other'];
     return keys.sort((a, b) => order.indexOf(a) - order.indexOf(b));
-  }, [nodes]);
+  }, [nodes, dynamicCats]);
 
   const [yMin, yMax] = useMemo(() => {
     if (!nodes.length) return [2019.5, 2026.5];
@@ -212,12 +250,12 @@ export default function TrajectoryChart({
                 y={top}
                 width={width - padL - padR + 8}
                 height={bandH}
-                fill={laneColor(lane)}
+                fill={colorOf(lane)}
                 opacity={0.1}
                 rx={14}
               />
               <text x={14} y={top + bandH / 2} dominantBaseline="middle" className="fill-gray-700 text-xs font-semibold">
-                {LANE_LABELS[lane] ?? lane}
+                {labelOf(lane)}
               </text>
             </g>
           );
@@ -268,7 +306,7 @@ export default function TrajectoryChart({
           const pos = nodePos[n.id];
           if (!pos) return null;
           const r = radius(n.impact, n.highlighted);
-          const fill = laneColor(n.lane);
+          const fill = colorOf(n.lane);
           const showLabel = n.highlighted || n.impact >= 3;
           return (
             <g key={n.id}>
@@ -298,7 +336,18 @@ export default function TrajectoryChart({
       </svg>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-gray-500">
+      {lanes.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-gray-600">
+          {lanes.map((lane) => (
+            <span key={lane} className="flex items-center gap-1.5">
+              <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: colorOf(lane) }} />
+              {labelOf(lane)}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-gray-500">
         {Object.values(REL_META).map((m) => (
           <span key={m.label} className="flex items-center gap-1.5">
             <span className="inline-block h-0.5 w-5 rounded" style={{ backgroundColor: m.color }} />

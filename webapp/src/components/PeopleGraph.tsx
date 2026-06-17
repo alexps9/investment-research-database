@@ -30,13 +30,20 @@ export default function PeopleGraph({
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 800, h: 560 });
 
-  const highlightIds = useMemo(() => {
+  // All scope entities define which subgraph to show; only PEOPLE are highlighted.
+  const scopeIds = useMemo(() => {
     const s = new Set<string>();
     for (const id of scope?.topic_ids ?? []) s.add(id);
     for (const id of scope?.lane_ids ?? []) s.add(id);
     for (const id of scope?.paper_ids ?? []) s.add(id);
     for (const id of scope?.person_ids ?? []) s.add(id);
     for (const id of scope?.org_ids ?? []) s.add(id);
+    return s;
+  }, [scope]);
+
+  const personIds = useMemo(() => {
+    const s = new Set<string>(scope?.person_ids ?? []);
+    for (const p of scope?.core_people ?? []) s.add(p.id);
     return s;
   }, [scope]);
 
@@ -48,6 +55,9 @@ export default function PeopleGraph({
       'AUTHORED', 'FOCUSES_ON', 'WORKS_AT', 'SUBTOPIC_OF', 'BUILT_ON', 'RELATED_TO',
       'CO_AUTHOR', 'CO_WORK', 'FOCUSES_ON',
     ]);
+
+    // A person is "highlighted" when it's a person entity in scope (core person).
+    const isHighlighted = (id: string, type: string) => type === 'person' && personIds.has(id);
 
     for (const r of relations) {
       if (!focusRels.has(r.relation_type)) continue;
@@ -61,7 +71,7 @@ export default function PeopleGraph({
           id: subj.id,
           name: subj.name,
           type: subj.entity_type,
-          highlighted: highlightIds.has(subj.id),
+          highlighted: isHighlighted(subj.id, subj.entity_type),
         });
       }
       if (!nodeMap.has(obj.id)) {
@@ -69,7 +79,7 @@ export default function PeopleGraph({
           id: obj.id,
           name: obj.name,
           type: obj.entity_type,
-          highlighted: highlightIds.has(obj.id),
+          highlighted: isHighlighted(obj.id, obj.entity_type),
         });
       }
       linkList.push({
@@ -79,22 +89,23 @@ export default function PeopleGraph({
       });
     }
 
-    // Keep nodes that are highlighted or connected to highlighted
+    // Build the subgraph around all scope entities (so highlighted people keep their
+    // context), then highlight only the people.
     const connected = new Set<string>();
     for (const l of linkList) {
-      if (highlightIds.has(l.source) || highlightIds.has(l.target)) {
+      if (scopeIds.has(l.source) || scopeIds.has(l.target)) {
         connected.add(l.source);
         connected.add(l.target);
       }
     }
     const filteredNodes = Array.from(nodeMap.values()).filter(
-      (n) => n.highlighted || connected.has(n.id),
+      (n) => n.highlighted || scopeIds.has(n.id) || connected.has(n.id),
     );
     const keep = new Set(filteredNodes.map((n) => n.id));
     const filteredLinks = linkList.filter((l) => keep.has(l.source) && keep.has(l.target));
 
     return { nodes: filteredNodes.slice(0, 200), links: filteredLinks.slice(0, 400) };
-  }, [relations, highlightIds]);
+  }, [relations, scopeIds, personIds]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -107,7 +118,17 @@ export default function PeopleGraph({
   }, []);
 
   return (
-    <div ref={containerRef} className="h-[calc(100vh-12rem)] min-h-[480px] w-full rounded-xl border border-gray-200 bg-gray-50">
+    <div ref={containerRef} className="relative h-[calc(100vh-12rem)] min-h-[480px] w-full overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+      <div className="pointer-events-none absolute left-3 top-3 z-10 rounded-lg bg-white/85 px-3 py-2 text-xs text-gray-500 shadow-sm backdrop-blur">
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-3 w-3 rounded-full border-2 border-blue-800" style={{ backgroundColor: entityColor('person') }} />
+          核心人物（高亮）
+        </span>
+        <span className="mt-1 flex items-center gap-1.5">
+          <span className="inline-block h-3 w-3 rounded-full bg-gray-300" />
+          其他实体（论文 / 组织 / 主题，暗显）
+        </span>
+      </div>
       {nodes.length > 0 ? (
         <ForceGraph2D
           width={size.w}

@@ -75,7 +75,7 @@ export default function IndustryPanel({ industry }: { industry?: IndustryData | 
         <h2 className="mb-1 flex items-center gap-2 text-lg font-semibold text-gray-900">
           <Activity className="h-5 w-5 text-blue-600" /> {t('industry.signals_live')}
         </h2>
-        <p className="mb-4 text-xs text-gray-400">基于网络搜索的核心人物近一个月动态</p>
+        <p className="mb-4 text-xs text-gray-400">基于网络搜索的核心人物近期动态</p>
         {personSignals.length ? (
           <div className="grid gap-3 md:grid-cols-2">
             {personSignals.map((s, i) => (
@@ -98,7 +98,7 @@ export default function IndustryPanel({ industry }: { industry?: IndustryData | 
             ))}
           </div>
         ) : (
-          <EmptyCard text="近一个月暂未捕捉到核心人物的实时信号" />
+          <EmptyCard text="暂未捕捉到核心人物的实时信号" />
         )}
       </section>
 
@@ -170,7 +170,7 @@ export default function IndustryPanel({ industry }: { industry?: IndustryData | 
           <h2 className="mb-1 flex items-center gap-2 text-base font-semibold text-gray-900">
             <Banknote className="h-4 w-4 text-amber-600" /> {t('industry.capital')}
           </h2>
-          <p className="mb-3 text-xs text-gray-400">核心人物近一个月的资本介入</p>
+          <p className="mb-3 text-xs text-gray-400">核心人物近期的资本介入（优先最新）</p>
           {capital.length ? (
             <ul className="space-y-2">
               {capital.map((c, i) => (
@@ -195,7 +195,7 @@ export default function IndustryPanel({ industry }: { industry?: IndustryData | 
               ))}
             </ul>
           ) : (
-            <EmptyCard text="近一个月暂无资本介入事件" />
+            <EmptyCard text="暂无资本介入事件" />
           )}
         </section>
 
@@ -203,7 +203,7 @@ export default function IndustryPanel({ industry }: { industry?: IndustryData | 
           <h2 className="mb-1 flex items-center gap-2 text-base font-semibold text-gray-900">
             <Banknote className="h-4 w-4 text-violet-600" /> {t('industry.funding')}
           </h2>
-          <p className="mb-3 text-xs text-gray-400">核心人物近一个月的融资事件</p>
+          <p className="mb-3 text-xs text-gray-400">核心人物近期的融资事件（优先最新）</p>
           {funding.length ? (
             <ul className="space-y-2">
               {funding.map((f, i) => (
@@ -227,7 +227,7 @@ export default function IndustryPanel({ industry }: { industry?: IndustryData | 
               ))}
             </ul>
           ) : (
-            <EmptyCard text="近一个月暂无融资事件" />
+            <EmptyCard text="暂无融资事件" />
           )}
         </section>
       </div>

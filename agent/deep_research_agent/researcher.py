@@ -268,25 +268,35 @@ async def _write_exec_summary(question: str, brief: str, findings_digest: str,
 
 async def _write_route_section(question: str, findings_digest: str, scope: dict,
                                src_text: str) -> str:
-    scope_text = json.dumps({
-        "topic_ids": scope.get("topic_ids"),
-        "lane_ids": scope.get("lane_ids"),
-        "paper_count": len(scope.get("paper_ids") or []),
-    }, ensure_ascii=False)
+    categories = [c.get("label") for c in (scope.get("route_categories") or []) if c.get("label")]
+    if categories:
+        cat_lines = "\n".join(f"{i + 1}. {lab}" for i, lab in enumerate(categories))
+        category_clause = (
+            "Organise the section into numbered sub-sections, ONE per technology-route "
+            "category below, IN THIS ORDER, using these EXACT names as the sub-section "
+            "titles (e.g. '### 2.1 <category>'):\n" + cat_lines + "\n"
+            "These categories are the same ones shown on the Technology-Trajectory page, "
+            "so they must match. Assign each work/finding to its category. Omit a "
+            "category only if it has no relevant content; do not invent new categories.\n"
+        )
+    else:
+        category_clause = (
+            "Group the technical approaches into numbered sub-sections "
+            "'### 2.1 <route name>', '### 2.2 <route name>', … one per route or major "
+            "technical theme.\n"
+        )
     system = (
         "You are an expert analyst writing the '技术路线' section of a deep-research "
-        "report. Start with the exact heading '## 2. 技术路线'. Group the technical "
-        "approaches into numbered sub-sections '### 2.1 <route name>', "
-        "'### 2.2 <route name>', … (one per route or major technical theme). Fold ALL "
-        "relevant technical findings into these sub-sections: how each route evolved "
-        "over time, representative works/models with dates, and the relationships and "
-        "trade-offs between routes. Cite inline as [n]. Do NOT create any other "
-        "top-level '##' heading and do NOT write an executive summary, people or "
-        "industry section here. " + _lang_clause(question)
+        "report. Start with the exact heading '## 2. 技术路线'. " + category_clause +
+        "Fold ALL relevant technical findings into these sub-sections: how each route "
+        "evolved over time, representative works/models with dates, and the "
+        "relationships and trade-offs between routes. Cite inline as [n]. Do NOT create "
+        "any other top-level '##' heading and do NOT write an executive summary, people "
+        "or industry section here. " + _lang_clause(question)
     )
     user = (
-        f"Question:\n{question}\n\nDB topic scope:\n{scope_text}\n\n"
-        f"Findings:\n{findings_digest}\n\nNumbered sources:\n{src_text}\n\n"
+        f"Question:\n{question}\n\nFindings:\n{findings_digest}\n\n"
+        f"Numbered sources:\n{src_text}\n\n"
         "Write the '## 2. 技术路线' section with numbered sub-headings."
     )
     return await _chat("report", system, user, temperature=0.3, max_tokens=SECTION_MAX_TOKENS * 2)
@@ -385,7 +395,7 @@ def _compose_industry_section(industry: dict) -> str:
                 line += f" [链接]({url})"
             lines.append(line)
     else:
-        lines.append("_最近一个月未发现明确的资本介入或融资事件。_")
+        lines.append("_暂未发现明确的资本介入或融资事件。_")
     lines.append("")
     return "\n".join(lines)
 
@@ -408,6 +418,48 @@ async def _write_report(question: str, brief: str, blocks: list[dict], scope: di
 
 
 # ── Research Studio: scope + industry + mandatory sections ───────────────────
+
+async def _classify_routes(question: str, brief: str, papers: list[dict]) -> tuple[list[dict], dict]:
+    """Group the scope papers into technology-route categories — derived from the
+    works themselves (count is data-driven, NOT a fixed list). Returns
+    ``(categories=[{key,label}], assignments={paper_id: key})``.
+
+    Both the report's §2 sub-headings and the Trajectory page's lanes use these, so
+    the two always agree and the labels are never hard-coded."""
+    if not papers:
+        return [], {}
+    listing = json.dumps(papers, ensure_ascii=False)[:11000]
+    system = (
+        "You are a technology-taxonomy expert. Group the listed academic works into "
+        "the main TECHNOLOGY ROUTES for this research question. Derive the routes from "
+        "the works themselves and choose however many distinct routes best fit the data "
+        "(do NOT force a fixed number). Return JSON ONLY: "
+        '{"categories":[{"key":"snake_case_id","label":"简短类别名"}],'
+        '"assignments":{"<paper_id>":"<category_key>"}}. '
+        "Assign EVERY paper to exactly one existing category key. Keep labels short and "
+        "human-readable. " + _lang_clause(question)
+    )
+    user = f"Question: {question}\n\nBrief: {brief}\n\nWorks (id + title):\n{listing}"
+    raw = await _chat("research", system, user, temperature=0.1, max_tokens=1600)
+    parsed = _extract_json(raw)
+    if not isinstance(parsed, dict):
+        return [], {}
+    cats: list[dict] = []
+    seen: set[str] = set()
+    for c in parsed.get("categories") or []:
+        key = str((c or {}).get("key") or "").strip()
+        label = str((c or {}).get("label") or "").strip()
+        if key and label and key not in seen:
+            seen.add(key)
+            cats.append({"key": key, "label": label})
+    valid_keys = {c["key"] for c in cats}
+    assignments: dict[str, str] = {}
+    for pid, key in (parsed.get("assignments") or {}).items():
+        k = str(key or "").strip()
+        if k in valid_keys:
+            assignments[str(pid)] = k
+    return cats, assignments
+
 
 async def _build_scope(
     question: str,
@@ -474,6 +526,7 @@ async def _build_scope(
     # so we can classify KB/semantic hits without a per-id fetch.
     type_index: dict[str, str] = {}
     name_index: dict[str, str] = {}
+    paper_lane: dict[str, str] = {}  # paper_id → lane key (for route categories)
     for rel in relations:
         for ent in (rel.get("subject") or {}, rel.get("object_entity") or {}):
             eid, et = ent.get("id"), ent.get("entity_type")
@@ -481,6 +534,10 @@ async def _build_scope(
                 type_index[eid] = et
                 if ent.get("name"):
                     name_index[eid] = ent["name"]
+                if et == "paper":
+                    lane = (ent.get("metadata") or {}).get("lane")
+                    if lane:
+                        paper_lane[eid] = lane
 
     paper_ids: set[str] = set()
     person_ids: set[str] = set()
@@ -510,6 +567,8 @@ async def _build_scope(
         for ent in fetched:
             if ent and ent.get("id") and ent.get("entity_type"):
                 type_index[ent["id"]] = ent["entity_type"]
+                if ent.get("name"):
+                    name_index[ent["id"]] = ent["name"]
     for eid in hit_ids:
         _classify(eid)
 
@@ -563,7 +622,17 @@ async def _build_scope(
         if obj.get("entity_type") == "person" and subj.get("entity_type") == "organization":
             person_org.setdefault(obj.get("id"), subj.get("name") or "")
 
-    person_list = [i for i in person_ids if i][:80]
+    person_list = [i for i in person_ids if i][:120]
+
+    # Resolve names for any person still missing one, so core_people can cover ALL
+    # the persons we found (every queried person source is a core person).
+    missing_names = [pid for pid in person_list if not name_index.get(pid)]
+    if missing_names:
+        fetched = await asyncio.gather(*[fetch_entity(pid) for pid in missing_names])
+        for ent in fetched:
+            if ent and ent.get("id") and ent.get("name"):
+                name_index[ent["id"]] = ent["name"]
+
     core_people = [
         {
             "id": pid,
@@ -573,15 +642,26 @@ async def _build_scope(
         }
         for pid in person_list
         if name_index.get(pid)
-    ][:12]
+    ]
+
+    paper_list = [i for i in paper_ids if i][:120]
+
+    # Dynamic technology-route categories (shared by report §2 + trajectory lanes).
+    papers_for_cat = [
+        {"id": pid, "title": name_index.get(pid) or "", "lane_hint": paper_lane.get(pid, "")}
+        for pid in paper_list if name_index.get(pid)
+    ][:90]
+    route_categories, paper_categories = await _classify_routes(question, brief, papers_for_cat)
 
     return {
         "topic_ids": list(dict.fromkeys(topic_ids)),
         "lane_ids": list(dict.fromkeys(lane_ids)),
-        "paper_ids": [i for i in paper_ids if i][:120],
+        "paper_ids": paper_list,
         "person_ids": person_list,
         "org_ids": [i for i in org_ids if i][:60],
         "core_people": core_people,
+        "route_categories": route_categories,
+        "paper_categories": paper_categories,
         "topic_catalog": topic_catalog,
     }
 
@@ -611,51 +691,65 @@ async def _interpret_report_signals(question: str, report_body: str) -> dict:
 
 
 async def _track_people_events(question: str, core_people: list[dict]) -> dict:
-    """Web-search each core person for their recent (≈ last month) real-time
-    signals, capital involvement and funding events; structure into JSON."""
-    people = [p for p in core_people if p.get("name")][:6]
+    """Web-search each core person for their real-time signals, capital involvement
+    and funding events; structure into JSON. Prefer recent events but widen the
+    window when nothing fresh exists so the page is never empty."""
+    people = [p for p in core_people if p.get("name")][:8]
     sources: list[dict] = []
     seen: set[str] = set()
     if not people:
         return {"person_signals": [], "capital": [], "funding": [], "sources": []}
 
-    async def _search_person(p: dict) -> tuple[dict, dict]:
+    async def _search_person(p: dict) -> tuple[dict, list[dict]]:
         org = p.get("org") or ""
-        q = f"{p['name']} {org} funding investment round latest news 2026"
-        bundle = await search_and_read(q, max_results=6, read_top=2)
-        return p, bundle
+        # Two angles per person: investment/funding and general recent activity.
+        queries = [
+            f"{p['name']} {org} funding investment round raised acquisition",
+            f"{p['name']} {org} latest news 2026 2025 announcement",
+        ]
+        bundles = await asyncio.gather(*[
+            search_and_read(q, max_results=6, read_top=2) for q in queries
+        ])
+        return p, bundles
 
     results = await asyncio.gather(*[_search_person(p) for p in people])
     notes: list[str] = []
-    for p, bundle in results:
-        for s in bundle.get("sources", []):
-            if s.get("url") and s["url"] not in seen:
-                seen.add(s["url"])
-                sources.append(s)
-        chunk = [
-            f"[{r.get('title')}]({r.get('url')})\n{r['content'][:2000]}"
-            for r in bundle.get("results", []) if r.get("content")
-        ]
+    for p, bundles in results:
+        chunks: list[str] = []
+        for bundle in bundles:
+            for s in bundle.get("sources", []):
+                if s.get("url") and s["url"] not in seen:
+                    seen.add(s["url"])
+                    sources.append(s)
+            for r in bundle.get("results", []):
+                if r.get("content"):
+                    chunks.append(f"[{r.get('title')}]({r.get('url')})\n{r['content'][:2000]}")
         notes.append(
             f"### PERSON {p['name']} (id={p['id']}, org={p.get('org', '')})\n"
-            + "\n\n".join(chunk)[:5000]
+            + "\n\n".join(chunks)[:6000]
         )
-    joined = "\n\n---\n\n".join(notes)[:14000]
+    joined = "\n\n---\n\n".join(notes)[:16000]
 
     system = (
         "You are an industry analyst tracking specific researchers/founders. From the "
-        "per-person web notes, extract ONLY recent events (roughly the LAST MONTH; "
-        "ignore older items). Return JSON ONLY with keys: "
+        "per-person web notes, extract their capital-involvement and funding events and "
+        "notable signals. Prefer the MOST RECENT events; widen the time window as needed "
+        "(last months, then last 1–2 years) so you do not return empty results. Sort "
+        "every list by date DESCENDING (most recent first) and include a 'date' "
+        "(YYYY-MM or YYYY-MM-DD) whenever known. IMPORTANT: across capital + funding "
+        "combined, return AT LEAST 3 events whenever the notes contain any plausible "
+        "investment/funding/partnership/acquisition information for these people or "
+        "their organisations; only return fewer if the notes truly contain none. "
+        "Return JSON ONLY with keys: "
         '"person_signals":[{"person_id","person","title","summary","url","date"}], '
         '"capital":[{"person_id","person","target","round","amount","investors","url","date"}], '
         '"funding":[{"person_id","person","company","round","amount","url","date"}]. '
-        "person_signals = notable recent activity/news; capital = investments the "
-        "person/their org made or received; funding = funding rounds. Always set "
-        "person_id to the id shown for that person. If nothing recent, return empty "
-        "arrays. Do not invent. " + _lang_clause(question)
+        "person_signals = notable activity/news; capital = investments the person/their "
+        "org made or received; funding = funding rounds. Always set person_id to the id "
+        "shown for that person. Do not fabricate; only use the notes. " + _lang_clause(question)
     )
     user = f"Question: {question}\n\nPer-person web notes:\n{joined}"
-    raw = await _chat("report", system, user, temperature=0.2, max_tokens=2600)
+    raw = await _chat("report", system, user, temperature=0.2, max_tokens=2800)
     parsed = _extract_json(raw)
     if not isinstance(parsed, dict):
         parsed = {}

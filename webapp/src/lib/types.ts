@@ -33,6 +33,8 @@ export interface ResearchScope {
   person_ids?: string[];
   org_ids?: string[];
   core_people?: CorePerson[];
+  route_categories?: Array<{ key: string; label: string }>;
+  paper_categories?: Record<string, string>;
   topic_catalog?: Array<{
     id: string;
     name: string;
