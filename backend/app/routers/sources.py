@@ -10,8 +10,19 @@ from app.schemas import (
     SourceExperienceCreate, SourceExperienceOut,
     OrganizationOut, OrganizationCreate,
 )
+from app.services.wiki_sync import sync_source_to_entity
 
 router = APIRouter(prefix="/sources", tags=["sources"])
+
+
+async def _sync_wiki(db: AsyncSession, source) -> None:
+    """Auto-create / refresh the source's wiki entity (best-effort)."""
+    try:
+        await sync_source_to_entity(db, source)
+    except Exception:
+        # Never let wiki mirroring break source CRUD; the graph sync job will
+        # reconcile any source that slipped through.
+        await db.rollback()
 
 
 @router.get("", response_model=list[SourceListOut])
@@ -28,7 +39,9 @@ async def list_sources(
 @router.post("", response_model=SourceOut, status_code=status.HTTP_201_CREATED)
 async def create_source(data: SourceCreate, db: AsyncSession = Depends(get_db)):
     repo = SourceRepo(db)
-    return await repo.create(data)
+    source = await repo.create(data)
+    await _sync_wiki(db, source)
+    return source
 
 
 @router.get("/{source_id}", response_model=SourceOut)
@@ -46,7 +59,9 @@ async def update_source(source_id: str, data: SourceUpdate, db: AsyncSession = D
     source = await repo.get(source_id)
     if not source:
         raise HTTPException(status_code=404, detail="Source not found")
-    return await repo.update(source, data)
+    updated = await repo.update(source, data)
+    await _sync_wiki(db, updated)
+    return updated
 
 
 @router.delete("/{source_id}", status_code=status.HTTP_204_NO_CONTENT)

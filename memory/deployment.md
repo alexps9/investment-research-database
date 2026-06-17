@@ -108,6 +108,36 @@ Run in the Supabase SQL editor when schema changes:
 - `migration_0004.sql` — daily_digests + funding_events tables.
 - `set_embedding_dim.sql` — set `embeddings.vector` dimension to match the model.
 
+## World-model papers import (one-off, idempotent)
+
+`backend/data/world_model_export.json` (186 papers + 4 lanes + 12 rows + 326
+connections) is imported into the entity graph by
+`backend/scripts/import_world_model_papers.py`. No new schema — papers are just a
+new `entity_type="paper"` (no PDF; name + authors + arXiv/DOI url + metadata). Run
+it **inside the backend container** (reuses the Supabase creds) after deploying the
+backend with the new data file/script:
+
+```bash
+ssh hh-server "cd ~/hh-research/deploy && \
+  sudo docker compose -f docker-compose.server.yml exec -T backend \
+    python scripts/import_world_model_papers.py --reindex"
+```
+
+It creates lane/row `topic` entities, `paper` entities, author `person` entities
+(existing people reused by exact name; add `--vector-match` to also match via
+embeddings), and relations `AUTHORED` / `FOCUSES_ON` / `SUBTOPIC_OF` /
+`BUILT_ON|RELATED_TO|COMPETES_WITH`. `--reindex` rebuilds entity embeddings so the
+papers are searchable (deep-research DB-first retrieval + graph semantic locate).
+Re-running is safe (dedupes by `(canonical_name, entity_type)` and relation triple).
+
+## Wiki auto-sync (sources → entities)
+
+Creating/updating a **person/organization** source now auto-creates/refreshes its
+mirror entity (and thus its wiki page) via `backend/app/services/wiki_sync.py`
+(best-effort, called from `sources.py`). No deploy step beyond shipping the new
+backend code; brand-new wiki deep-links on the **static** CN mirror still need a
+frontend rebuild (in-app navigation works immediately).
+
 ## Agent (`agent/`)
 
 Runs locally or on any host; not a deployed service. Needs `LLM_API_KEY` and
@@ -155,6 +185,14 @@ host while keeping the DB on Supabase and the frontend on Vercel. Artifacts live
   services (`litellm,backend,mcp,agent,proxy`) in `NO_PROXY` so LLM/KB calls stay
   direct. httpx auto-uses these env proxies (`trust_env`). Research jobs are in-memory
   (lost on agent restart). Verified e2e on the server (~2–4 min/run, real sources).
+  - **DB-first + sectioned report (current)**: each sub-topic is grounded in the KB
+    (`deep_research_agent/kb.py` → `GET /api/ai/search`, direct to `backend:8000`,
+    `trust_env=False`) before the web (web only supplements when KB is thin). The final
+    report is written section-by-section (no single `max_tokens` can drop a "big point"),
+    and references are appended in code — KB entities (linking to `/wiki/entities/{id}`)
+    above external links. Result dict gains `kb_sources`; `/research` page adds **PDF
+    export** (browser print of `#research-report`). Needs embeddings configured on the
+    backend for the DB-first half (degrades to web-only otherwise).
   - **Concurrency**: one async agent worker carries many runs; the gate is two global
     semaphores — `LLM_MAX_CONCURRENCY=8` (in-flight LLM calls) and
     `SEARCH_MAX_CONCURRENCY=6` (search+fetch bundles). Run admission is generous

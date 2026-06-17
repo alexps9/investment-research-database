@@ -5,15 +5,24 @@ import remarkGfm from 'remark-gfm';
 import { api } from '@/lib/api';
 import { useLang } from '@/lib/i18n';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { Microscope, Send, Loader2, AlertCircle, ExternalLink, Sparkles, FileText } from 'lucide-react';
+import { Microscope, Send, Loader2, AlertCircle, Sparkles, FileText, Download, Database } from 'lucide-react';
 
 interface Source { title: string; url: string }
+interface KbSource {
+  object_type: string;
+  object_id: string;
+  name: string;
+  description?: string | null;
+  score?: number | null;
+  wiki_url?: string | null;
+}
 interface ResearchResult {
   question: string;
   brief: string;
   subtopics: string[];
   report: string;
   sources: Source[];
+  kb_sources?: KbSource[];
 }
 interface ResearchJob {
   status: 'running' | 'done' | 'failed';
@@ -33,6 +42,32 @@ const POLL_MS = 3000;
 const MAX_POLL_FAILS = 8;
 const START_RETRIES = 3;
 
+// Print only the report container (browser "Save as PDF" — renders CJK natively
+// and keeps selectable text + working links, unlike canvas-based exporters).
+const PRINT_CSS = `
+@media print {
+  body * { visibility: hidden !important; }
+  #research-report, #research-report * { visibility: visible !important; }
+  #research-report { position: absolute; left: 0; top: 0; width: 100%; padding: 0 8mm; box-shadow: none !important; border: 0 !important; }
+  .no-print { display: none !important; }
+  a { color: #1d4ed8 !important; text-decoration: none; }
+}`;
+
+// Render internal wiki links in-app and external links in a new tab. `node` is
+// react-markdown internal metadata and must not be forwarded to the DOM.
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const mdComponents = {
+  a: ({ node: _node, href, children, ...props }: any) => {
+    const isExternal = !!href && /^https?:\/\//i.test(href);
+    return (
+      <a href={href} {...(isExternal ? { target: '_blank', rel: 'noreferrer' } : {})} {...props}>
+        {children}
+      </a>
+    );
+  },
+};
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 async function withRetry<T>(fn: () => Promise<T>, retries: number): Promise<T> {
   let lastErr: unknown;
   for (let i = 0; i <= retries; i++) {
@@ -49,7 +84,7 @@ async function withRetry<T>(fn: () => Promise<T>, retries: number): Promise<T> {
 export default function ResearchPage() {
   const { t } = useLang();
   const [question, setQuestion] = useState('');
-  const [maxSubtopics, setMaxSubtopics] = useState(4);
+  const [maxSubtopics, setMaxSubtopics] = useState(5);
   const [searchesPerTopic, setSearchesPerTopic] = useState(2);
   const [job, setJob] = useState<ResearchJob | null>(null);
   const [running, setRunning] = useState(false);
@@ -198,32 +233,52 @@ export default function ResearchPage() {
             </div>
           )}
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex justify-end">
+            <button
+              onClick={() => window.print()}
+              className="no-print flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+              title={t('research.export_pdf')}
+            >
+              <Download size={15} /> {t('research.export_pdf')}
+            </button>
+          </div>
+
+          {/* The printable report: body (exec summary + sections + conclusion) and
+              the references block (DB sources w/ wiki links above external links)
+              are produced by the agent and live inside result.report. */}
+          <div id="research-report" className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h1 className="mb-1 text-2xl font-bold text-gray-900">{result.question}</h1>
+            <p className="mb-4 text-xs text-gray-400">{t('research.title')} · {new Date().toLocaleDateString()}</p>
             <div className="prose prose-sm prose-blue max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-a:text-blue-600 prose-h1:text-xl prose-h2:text-lg">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{result.report}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>{result.report}</ReactMarkdown>
             </div>
           </div>
 
-          {result.sources?.length > 0 && (
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
-                {t('research.sources')} ({result.sources.length})
+          {/* Quick-access database sources that jump to their wiki entry. */}
+          {result.kb_sources && result.kb_sources.length > 0 && (
+            <div className="no-print rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <h2 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <Database size={13} /> {t('research.kb_sources')} ({result.kb_sources.length})
               </h2>
-              <ul className="space-y-1.5">
-                {result.sources.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs">
-                    <span className="mt-0.5 shrink-0 text-gray-400">[{i + 1}]</span>
-                    <a href={s.url} target="_blank" rel="noreferrer"
-                      className="flex items-start gap-1 text-blue-600 hover:underline">
-                      {s.title || s.url} <ExternalLink size={11} className="mt-0.5 shrink-0" />
+              <div className="flex flex-wrap gap-2">
+                {result.kb_sources.map((s, i) => (
+                  s.wiki_url ? (
+                    <a key={i} href={s.wiki_url}
+                      className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs text-blue-700 hover:bg-blue-100">
+                      {s.name}
                     </a>
-                  </li>
+                  ) : (
+                    <span key={i} className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-500">
+                      {s.name}
+                    </span>
+                  )
                 ))}
-              </ul>
+              </div>
             </div>
           )}
         </div>
       )}
+      <style>{PRINT_CSS}</style>
     </div>
   );
 }

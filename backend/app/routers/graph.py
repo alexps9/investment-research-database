@@ -69,7 +69,7 @@ async def _load_relation_triples(db: AsyncSession) -> set[tuple[str, str, str]]:
 
 
 @router.get("/relations", response_model=list[EntityRelationOut])
-async def get_all_relations(limit: int = 500, db: AsyncSession = Depends(get_db)):
+async def get_all_relations(limit: int = 5000, db: AsyncSession = Depends(get_db)):
     repo = EntityRepo(db)
     return await repo.get_all_relations(limit=limit)
 

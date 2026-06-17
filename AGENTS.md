@@ -124,11 +124,22 @@ curl http://localhost:9000/research/status/<job_id>
   `migration_0004.sql` tables; otherwise those endpoints return errors while the
   rest of the API keeps working.
 - **Deep Research agent** (`agent/deep_research_agent/`): an open_deep_research-style
-  pipeline — **brief → plan (sub-topics) → parallel web research (search + read +
-  reflect) → compress → final report**. All LLM calls go through the LiteLLM gateway
-  (`llm.py`, roles map to optional `*_MODEL` env overrides); web search uses the free
-  DuckDuckGo `tools/websearch` + an HTML→text page fetcher (`search.py`). Bounded by
-  design (≤6 sub-topics, ≤4 searches/topic, concurrency 3) so a run is ~2–4 min.
+  pipeline — **brief → plan (sub-topics) → per-topic research → final report**. It is
+  **database-first**: each sub-topic is first grounded in the project's own KB via
+  `deep_research_agent/kb.py` (`GET /api/ai/search`, `KB_API_BASE_URL`); the open web
+  only **supplements** when KB coverage is thin (`KB_MIN_HITS`/`KB_SUFFICIENT_CHARS`),
+  else a single web round adds recency. The **final report is written section-by-section**
+  (exec summary + one section per sub-topic + conclusion, each on its own `max_tokens`
+  budget) so no single token cap can drop a whole "big point" — the failure mode the old
+  single-shot writer had. **References are appended in code**: KB hits first (entities link
+  to their `/wiki/entities/{id}` page) above external web links; the result dict carries
+  both `sources` (web) and `kb_sources` (`{object_type,object_id,name,wiki_url,…}`). The
+  `/research` page renders the Markdown report and offers **PDF export via browser print**
+  (`window.print()` + a print stylesheet scoped to `#research-report` — native CJK, real
+  links). All LLM calls go through the LiteLLM gateway (`llm.py`, roles map to optional
+  `*_MODEL` env overrides); web search uses the free DuckDuckGo `tools/websearch` + an
+  HTML→text page fetcher (`search.py`). Bounded by design (≤6 sub-topics, ≤4 searches/topic,
+  concurrency 3) so a run is ~2–4 min.
   Exposed as **async jobs**: agent `POST /research/start` + `GET /research/status/{id}`
   (in-memory job dict with `phase`/`pct`/`message` progress), proxied by the backend.
   **Concurrency model** (research is I/O-bound, so one async worker carries many runs;
@@ -185,6 +196,23 @@ curl http://localhost:9000/research/status/<job_id>
   remount); "全部" resets.
 - **Static-export gotcha**: with `output: 'export'`, a dynamic route's
   `generateStaticParams()` must return a non-empty array (see `wiki/entities/[id]`).
+- **Papers entity type**: the knowledge graph includes `paper` entities (amber, label
+  "论文" via `entityColors.ts`). The world-model paper dataset
+  (`backend/data/world_model_export.json`, 186 papers) is imported by the idempotent
+  `backend/scripts/import_world_model_papers.py` (run inside the backend container):
+  it creates `paper` entities (name/arXiv url/metadata, **no PDF**), lane/row `topic`
+  entities, and relations `AUTHORED` (paper→person, authors matched to existing people
+  by name, optionally via `--vector-match`), `FOCUSES_ON` (paper→topic), `SUBTOPIC_OF`,
+  and paper↔paper `BUILT_ON`/`RELATED_TO`/`COMPETES_WITH` (from dataset connections).
+  `/graph/relations` is fetched with `limit=5000` to fit the larger graph.
+- **Wiki = entity-centric, auto-maintained**: `GET /api/wiki/entities/{id}` aggregates
+  entity + infobox metadata + relations (grouped by type) + signals + linked source.
+  Creating/updating a **person/organization Source** auto-creates/refreshes its mirror
+  entity (and thus its wiki) via `backend/app/services/wiki_sync.py`
+  (`sync_source_to_entity`, called best-effort from the sources router; links by a stable
+  `source_id` in entity metadata so renames are handled). `WikiEntityClient.tsx` renders a
+  Wikipedia-style layout (lead + infobox sidebar + categorised relations + references +
+  "see also" + categories).
 
 ## Where to look
 

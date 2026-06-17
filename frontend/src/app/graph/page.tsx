@@ -37,7 +37,7 @@ export default function GraphPage() {
   const [inferResult, setInferResult] = useState<{ created: number; skipped: number } | null>(null);
 
   useEffect(() => {
-    api.get<EntityRelation[]>('/graph/relations?limit=1000').then(setRelations).catch(console.error).finally(() => setLoading(false));
+    api.get<EntityRelation[]>('/graph/relations?limit=5000').then(setRelations).catch(console.error).finally(() => setLoading(false));
     api.get<AIStatus>('/ai/status').then(setAiStatus).catch(() => setAiStatus(null));
   }, []);
 
@@ -141,7 +141,7 @@ export default function GraphPage() {
       const res = await api.post<{ created: number; skipped: number }>('/graph/sync', {});
       setSyncResult(res);
       // Reload relations
-      const rels = await api.get<typeof relations>('/graph/relations?limit=1000');
+      const rels = await api.get<typeof relations>('/graph/relations?limit=5000');
       setRelations(rels);
     } catch (err) {
       alert(`同步失败: ${String(err)}`);
@@ -156,7 +156,7 @@ export default function GraphPage() {
     try {
       const res = await api.post<{ created: number; skipped: number }>('/graph/infer', {});
       setInferResult(res);
-      const rels = await api.get<typeof relations>('/graph/relations?limit=1000');
+      const rels = await api.get<typeof relations>('/graph/relations?limit=5000');
       setRelations(rels);
     } catch (err) {
       alert(`推断失败: ${String(err)}`);
