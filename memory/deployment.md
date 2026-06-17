@@ -64,8 +64,12 @@ NEXT_BUILD_STATIC=true NEXT_PUBLIC_API_URL=http://110.40.131.38:8000 npm run bui
 tar -czf ../deploy/frontend-out.tgz -C out .
 scp ../deploy/frontend-out.tgz hh-server:~/hh-research/deploy/
 ssh hh-server "cd ~/hh-research/deploy && rm -rf frontend-out && mkdir frontend-out && \
-  tar -xzf frontend-out.tgz -C frontend-out && docker compose -f docker-compose.server.yml up -d frontend"
+  tar -xzf frontend-out.tgz -C frontend-out && docker compose -f docker-compose.server.yml restart frontend"
 ```
+> Use `restart frontend` (not just `up -d frontend`): `rm -rf frontend-out` replaces the
+> bind-mount source **inode**, and `up -d` won't recreate the container when compose
+> config is unchanged, so it keeps serving the deleted dir (403). A restart re-resolves
+> the mount.
 `generateStaticParams` fetches all entities at build time to pre-render per-entity wiki
 pages; brand-new entities need a rebuild for deep-links (in-app nav works regardless).
 
