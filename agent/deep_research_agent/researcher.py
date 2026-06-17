@@ -334,8 +334,19 @@ async def _build_scope(
     kb_sources: list[dict],
     blocks: list[dict],
 ) -> dict:
-    """Map the research to existing DB topic lanes/rows and collect related entity IDs."""
-    topics = await fetch_entities_by_type("topic", limit=50)
+    """Map the research to existing DB topic lanes/rows and collect related entity IDs.
+
+    Optimised for the cross-region backend: topics, the full relation graph and the
+    extra semantic search run *concurrently*, and entity types are read from the
+    relations' nested subject/object payloads (an in-memory id→type index) instead
+    of one HTTP round-trip per hit — which previously added minutes per run.
+    """
+    # Kick off the three independent network calls at once.
+    topics_task = asyncio.create_task(fetch_entities_by_type("topic", limit=50))
+    relations_task = asyncio.create_task(fetch_graph_relations(limit=5000))
+    extra_hits_task = asyncio.create_task(kb_search(question, types="entity", limit=12))
+
+    topics = await topics_task
     topic_catalog = []
     for t in topics:
         meta = t.get("metadata") or {}
@@ -361,6 +372,7 @@ async def _build_scope(
         f"Question: {question}\n\nBrief: {brief}\n\nSubtopics: {subtopics}\n\n"
         f"Available topics:\n{catalog_text}"
     )
+    # The classification LLM call overlaps the still-running relations/extra-hits fetches.
     raw = await _chat("research", classify_sys, classify_user, temperature=0.1, max_tokens=800)
     parsed = _extract_json(raw)
     topic_ids: list[str] = []
@@ -373,29 +385,52 @@ async def _build_scope(
     topic_ids = [i for i in topic_ids if i in valid_ids]
     lane_ids = [i for i in lane_ids if i in valid_ids]
 
-    # Collect entity IDs from KB hits + topic neighborhood in the graph.
+    relations = await relations_task
+    extra_hits = await extra_hits_task
+
+    # Build an id→entity_type index from the relations' nested entities, so we can
+    # classify KB/semantic hits without a per-id fetch.
+    type_index: dict[str, str] = {}
+    for rel in relations:
+        for ent in (rel.get("subject") or {}, rel.get("object_entity") or {}):
+            eid, et = ent.get("id"), ent.get("entity_type")
+            if eid and et:
+                type_index[eid] = et
+
     paper_ids: set[str] = set()
     person_ids: set[str] = set()
     org_ids: set[str] = set()
 
-    entity_hits = [h for h in kb_sources if h.get("object_type") == "entity" and h.get("object_id")]
-    for h in entity_hits:
-        ent = await fetch_entity(h["object_id"])
-        if not ent:
-            continue
-        et = ent.get("entity_type")
-        eid = ent.get("id")
-        if et == "paper" and eid:
+    def _classify(eid: str | None) -> None:
+        if not eid:
+            return
+        et = type_index.get(eid)
+        if et == "paper":
             paper_ids.add(eid)
-        elif et == "person" and eid:
+        elif et == "person":
             person_ids.add(eid)
-        elif et == "organization" and eid:
+        elif et == "organization":
             org_ids.add(eid)
 
-    # Expand via graph relations around selected topics.
+    # KB + semantic hits: resolve via the index first; only fetch the few unknowns
+    # (concurrently) so we never serialize round-trips.
+    hit_ids = {
+        h.get("object_id")
+        for h in (list(kb_sources) + list(extra_hits))
+        if h.get("object_type") == "entity" and h.get("object_id")
+    }
+    unknown = [eid for eid in hit_ids if eid and eid not in type_index]
+    if unknown:
+        fetched = await asyncio.gather(*[fetch_entity(eid) for eid in unknown])
+        for ent in fetched:
+            if ent and ent.get("id") and ent.get("entity_type"):
+                type_index[ent["id"]] = ent["entity_type"]
+    for eid in hit_ids:
+        _classify(eid)
+
+    # Expand via graph relations around selected topics (papers → authors → orgs).
     focus_topic_ids = set(topic_ids) | set(lane_ids)
     if focus_topic_ids:
-        relations = await fetch_graph_relations(limit=5000)
         for rel in relations:
             rtype = rel.get("relation_type")
             subj = rel.get("subject") or {}
@@ -405,42 +440,38 @@ async def _build_scope(
 
             if rtype == "FOCUSES_ON" and obj_id in focus_topic_ids and subj_type == "paper":
                 paper_ids.add(subj_id)
-            if rtype == "AUTHORED" and subj_type == "paper" and subj_id in paper_ids:
-                if obj_type == "person" and obj_id:
-                    person_ids.add(obj_id)
             if rtype == "FOCUSES_ON" and subj_id in focus_topic_ids and obj_type == "paper":
                 paper_ids.add(obj_id)
-            if rtype == "AUTHORED" and obj_type == "paper" and obj_id in paper_ids:
-                if subj_type == "person" and subj_id:
-                    person_ids.add(subj_id)
-            if rtype == "WORKS_AT":
-                if subj_type == "person" and subj_id in person_ids and obj_type == "organization":
-                    org_ids.add(obj_id)
-                if obj_type == "person" and obj_id in person_ids and subj_type == "organization":
-                    org_ids.add(subj_id)
 
-    # Supplement papers via semantic search on the main question.
-    extra_hits = await kb_search(question, types="entity", limit=12)
-    for h in extra_hits:
-        if h.get("object_type") != "entity":
-            continue
-        ent = await fetch_entity(h.get("object_id", ""))
-        if not ent:
-            continue
-        et, eid = ent.get("entity_type"), ent.get("id")
-        if et == "paper" and eid:
-            paper_ids.add(eid)
-        elif et == "person" and eid:
-            person_ids.add(eid)
-        elif et == "organization" and eid:
-            org_ids.add(eid)
+        # Second pass: authors of the collected papers, then their orgs.
+        for rel in relations:
+            rtype = rel.get("relation_type")
+            subj = rel.get("subject") or {}
+            obj = rel.get("object_entity") or {}
+            subj_id, subj_type = subj.get("id"), subj.get("entity_type")
+            obj_id, obj_type = obj.get("id"), obj.get("entity_type")
+            if rtype == "AUTHORED":
+                if subj_type == "paper" and subj_id in paper_ids and obj_type == "person":
+                    person_ids.add(obj_id)
+                if obj_type == "paper" and obj_id in paper_ids and subj_type == "person":
+                    person_ids.add(subj_id)
+
+        for rel in relations:
+            if rel.get("relation_type") != "WORKS_AT":
+                continue
+            subj = rel.get("subject") or {}
+            obj = rel.get("object_entity") or {}
+            if subj.get("entity_type") == "person" and subj.get("id") in person_ids and obj.get("entity_type") == "organization":
+                org_ids.add(obj.get("id"))
+            if obj.get("entity_type") == "person" and obj.get("id") in person_ids and subj.get("entity_type") == "organization":
+                org_ids.add(subj.get("id"))
 
     return {
         "topic_ids": list(dict.fromkeys(topic_ids)),
         "lane_ids": list(dict.fromkeys(lane_ids)),
-        "paper_ids": list(paper_ids)[:120],
-        "person_ids": list(person_ids)[:80],
-        "org_ids": list(org_ids)[:60],
+        "paper_ids": [i for i in paper_ids if i][:120],
+        "person_ids": [i for i in person_ids if i][:80],
+        "org_ids": [i for i in org_ids if i][:60],
         "topic_catalog": topic_catalog,
     }
 
@@ -560,12 +591,13 @@ async def run_deep_research(
             except Exception:
                 pass
 
-    progress("brief", "正在理解问题并撰写研究简报…", 5)
+    progress("brief", "正在理解问题、明确研究范围并撰写研究简报…", 5)
     brief = await _write_brief(question)
 
-    progress("plan", "正在拆解研究子主题…", 15)
+    progress("plan", "正在把问题拆解为可独立检索的研究子主题…", 15)
     subtopics = await _plan_subtopics(question, brief, max_subtopics)
-    progress("plan", f"已规划 {len(subtopics)} 个子主题", 20)
+    preview = "、".join(s[:20] for s in subtopics[:5])
+    progress("plan", f"已规划 {len(subtopics)} 个子主题：{preview}", 22)
 
     # Research sub-topics in parallel (bounded concurrency).
     sem = asyncio.Semaphore(MAX_CONCURRENCY)
@@ -573,11 +605,12 @@ async def run_deep_research(
 
     async def _guarded(st: str) -> dict:
         async with sem:
-            progress("research", f"正在研究：{st}", 25)
+            progress("research", f"正在检索知识库与网络：{st[:40]}", 25 + done_count["n"] * 2)
             res = await _research_subtopic(st, question, searches_per_topic)
             done_count["n"] += 1
-            pct = 25 + int(55 * done_count["n"] / max(1, len(subtopics)))
-            progress("research", f"完成子主题 {done_count['n']}/{len(subtopics)}", pct)
+            pct = 25 + int(52 * done_count["n"] / max(1, len(subtopics)))
+            n_src = len(res.get("sources") or []) + len(res.get("kb_hits") or [])
+            progress("research", f"完成子主题 {done_count['n']}/{len(subtopics)}（{n_src} 条来源）", pct)
             return res
 
     blocks = await asyncio.gather(*[_guarded(st) for st in subtopics])
@@ -602,17 +635,18 @@ async def run_deep_research(
                 kb_map[key] = h
     kb_sources = sorted(kb_map.values(), key=lambda h: h.get("score") or 0, reverse=True)
 
-    progress("scope", "正在归纳技术路线类别并收集知识库实体…", 78)
-    scope = await _build_scope(question, brief, subtopics, kb_sources, blocks)
-
-    progress("industry", "正在进行产业追踪分析…", 82)
-    industry = await _industry_analysis(question, brief, blocks)
-
-    progress("report", "正在综合撰写最终报告…", 85)
+    # Scope mapping, industry analysis and the core report are independent given the
+    # researched blocks — run them concurrently to cut tail latency (the report write
+    # is the longest leg, so overlapping scope/industry with it is ~free).
+    progress("synthesis", "正在归纳技术路线类别、产业信号并综合撰写报告…", 80)
     src_text = _numbered_sources(kb_sources, all_sources)
-    report_core = await _write_report(question, brief, blocks, all_sources, kb_sources)
+    scope, industry, report_core = await asyncio.gather(
+        _build_scope(question, brief, subtopics, kb_sources, blocks),
+        _industry_analysis(question, brief, blocks),
+        _write_report(question, brief, blocks, all_sources, kb_sources),
+    )
 
-    progress("report", "正在撰写技术路线/核心人物/产业追踪板块…", 92)
+    progress("report", "正在撰写技术路线 / 核心人物 / 产业追踪三大板块…", 92)
     studio_sections = await _write_studio_sections(
         question, blocks, scope, industry, src_text,
     )

@@ -8,7 +8,7 @@ const TRANS: Record<Lang, Record<string, string>> = {
   zh: {
     'app.title': 'Research Studio',
     'app.tagline': '深度研究 · 技术路线 · 核心人物 · 产业追踪',
-    'home.placeholder': '输入研究问题…',
+    'home.placeholder': '提一个问题，如【世界模型的主流技术路线和重要的人是谁？】',
     'home.search': '开始研究',
     'sidebar.new': '新会话',
     'sidebar.history': '历史会话',
@@ -35,7 +35,7 @@ const TRANS: Record<Lang, Record<string, string>> = {
   en: {
     'app.title': 'Research Studio',
     'app.tagline': 'Deep research · Trajectory · People · Industry',
-    'home.placeholder': 'Ask a research question…',
+    'home.placeholder': 'Ask a question, e.g. "What are the main world-model routes and who matters?"',
     'home.search': 'Research',
     'sidebar.new': 'New session',
     'sidebar.history': 'History',

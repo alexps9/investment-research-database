@@ -19,6 +19,7 @@ deploy/frontend-out/
 deploy/frontend-out.tgz
 deploy/webapp-out/
 deploy/webapp-out.tgz
+deploy/_sync.tgz
 
 # Python
 __pycache__/
