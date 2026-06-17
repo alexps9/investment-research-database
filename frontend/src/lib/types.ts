@@ -237,6 +237,8 @@ export interface WikiEntityProfile {
   outgoing_relations: EntityRelation[];
   incoming_relations: EntityRelation[];
   related_entities: Entity[];
+  /** Linked signal-source (person/org entities mirror a Source by name). */
+  source?: Source | null;
 }
 
 export interface AIStatus {

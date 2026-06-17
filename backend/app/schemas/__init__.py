@@ -411,6 +411,10 @@ class WikiEntityProfile(BaseModel):
     outgoing_relations: list[EntityRelationOut] = []
     incoming_relations: list[EntityRelationOut] = []
     related_entities: list[EntityOut] = []
+    # Linked signal-source record (person/organization entities mirror a Source
+    # by name); surfaces homepage/Twitter/GitHub/Scholar/role/org filled in the
+    # Sources page so they show on the wiki page.
+    source: Optional[SourceOut] = None
 
 
 # ── Daily Digest (Daily Boost) ────────────────────────────────────────────────

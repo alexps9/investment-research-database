@@ -167,6 +167,25 @@ class SourceRepo:
         )
         return result.scalar_one_or_none()
 
+    async def get_by_name_type(self, name: str, source_type: str) -> Optional[Source]:
+        """Find a source by exact (case-insensitive) name + type, fully eager-loaded.
+
+        Used by the wiki to mirror a person/organization entity back to its
+        source record so contact links / role / org show on the entity page.
+        """
+        result = await self.db.execute(
+            select(Source)
+            .where(Source.name.ilike(name.strip()), Source.source_type == source_type)
+            .options(
+                selectinload(Source.organization).selectinload(Organization.org_tags).selectinload(OrgTag.tag),
+                selectinload(Source.accounts),
+                selectinload(Source.source_tags).selectinload(SourceTag.tag),
+                selectinload(Source.experiences).selectinload(SourceExperience.organization).selectinload(Organization.org_tags),
+            )
+            .limit(1)
+        )
+        return result.scalars().first()
+
     async def get_experiences(self, source_id: str) -> Sequence[SourceExperience]:
         result = await self.db.execute(
             select(SourceExperience)

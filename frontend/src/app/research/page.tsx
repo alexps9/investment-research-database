@@ -25,7 +25,26 @@ interface ResearchJob {
   error: string | null;
 }
 
-const POLL_MS = 2500;
+const POLL_MS = 3000;
+// The China-hosted backend is reachable through Vercel's edge but the cross-border
+// hop occasionally drops a request (502 ROUTER_EXTERNAL_TARGET_CONNECTION_ERROR).
+// A research run polls for minutes, so tolerate transient failures instead of
+// aborting on the first one.
+const MAX_POLL_FAILS = 8;
+const START_RETRIES = 3;
+
+async function withRetry<T>(fn: () => Promise<T>, retries: number): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      if (i < retries) await new Promise((r) => setTimeout(r, 1200 * (i + 1)));
+    }
+  }
+  throw lastErr;
+}
 
 export default function ResearchPage() {
   const { t } = useLang();
@@ -36,6 +55,7 @@ export default function ResearchPage() {
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const failsRef = useRef(0);
 
   useEffect(() => () => { if (pollRef.current) clearInterval(pollRef.current); }, []);
 
@@ -49,15 +69,20 @@ export default function ResearchPage() {
     setError(null);
     setJob(null);
     setRunning(true);
+    failsRef.current = 0;
     try {
-      const { job_id } = await api.post<{ job_id: string }>('/research/start', {
-        question: question.trim(),
-        max_subtopics: maxSubtopics,
-        searches_per_topic: searchesPerTopic,
-      });
+      const { job_id } = await withRetry(
+        () => api.post<{ job_id: string }>('/research/start', {
+          question: question.trim(),
+          max_subtopics: maxSubtopics,
+          searches_per_topic: searchesPerTopic,
+        }),
+        START_RETRIES,
+      );
       pollRef.current = setInterval(async () => {
         try {
           const status = await api.get<ResearchJob>(`/research/status/${job_id}`);
+          failsRef.current = 0;
           setJob(status);
           if (status.status === 'done' || status.status === 'failed') {
             stopPolling();
@@ -65,9 +90,14 @@ export default function ResearchPage() {
             if (status.status === 'failed') setError(status.error || '研究失败');
           }
         } catch (err) {
-          stopPolling();
-          setRunning(false);
-          setError(String(err));
+          // Tolerate transient cross-border edge failures; only give up after
+          // several consecutive misses so the long-running job isn't dropped.
+          failsRef.current += 1;
+          if (failsRef.current >= MAX_POLL_FAILS) {
+            stopPolling();
+            setRunning(false);
+            setError(`网络连接不稳定，已停止轮询：${String(err)}`);
+          }
         }
       }, POLL_MS);
     } catch (err) {

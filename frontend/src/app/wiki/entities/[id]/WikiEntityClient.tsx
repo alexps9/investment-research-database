@@ -46,7 +46,24 @@ export default function WikiEntityClient({ id }: { id: string }) {
     );
   }
 
-  const { entity, aliases, related_signals, outgoing_relations, incoming_relations, related_entities } = profile;
+  const { entity, aliases, related_signals, outgoing_relations, incoming_relations, related_entities, source } = profile;
+
+  // Contact / profile links carried on the linked signal-source record.
+  const sourceLinks: { label: string; url?: string }[] = source
+    ? [
+        { label: 'Homepage', url: source.personal_url },
+        { label: 'Twitter', url: source.twitter_url },
+        { label: 'GitHub', url: source.github_url },
+        { label: 'Scholar', url: source.scholar_url },
+        { label: 'OpenAlex', url: source.openalex_url },
+        { label: 'arXiv', url: source.arxiv_homepage_url },
+        { label: 'ORCID', url: source.orcid ? (source.orcid.startsWith('http') ? source.orcid : `https://orcid.org/${source.orcid}`) : undefined },
+      ].filter((l) => l.url)
+    : [];
+  const hasSourceDetails = !!source && (
+    sourceLinks.length > 0 || !!source.role_title || !!source.organization || !!source.description ||
+    (source.experiences?.length ?? 0) > 0
+  );
 
   return (
     <div className="p-8 max-w-4xl">
@@ -77,6 +94,52 @@ export default function WikiEntityClient({ id }: { id: string }) {
       </div>
 
       <div className="space-y-6">
+        {hasSourceDetails && source && (
+          <Card>
+            <CardHeader><CardTitle>资料 / Profile</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              {(source.role_title || source.organization) && (
+                <p className="text-sm text-gray-700">
+                  {source.role_title}
+                  {source.role_title && source.organization ? ' · ' : ''}
+                  {source.organization && (
+                    <span className="font-medium text-gray-800">{source.organization.name}</span>
+                  )}
+                </p>
+              )}
+              {source.description && !entity.introduction && (
+                <p className="text-sm text-gray-600">{source.description}</p>
+              )}
+              {sourceLinks.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {sourceLinks.map((l) => (
+                    <a key={l.label} href={l.url} target="_blank" rel="noreferrer"
+                      className="flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-blue-600 hover:border-blue-300 hover:bg-blue-50">
+                      {l.label} <ExternalLink size={11} />
+                    </a>
+                  ))}
+                </div>
+              )}
+              {source.experiences && source.experiences.length > 0 && (
+                <div>
+                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">经历 / Experience</p>
+                  <ul className="space-y-1.5">
+                    {source.experiences.map((exp) => (
+                      <li key={exp.id} className="text-sm text-gray-700">
+                        <span className="font-medium">{exp.organization?.name ?? exp.org_name_raw ?? '—'}</span>
+                        {exp.role_title && <span className="text-gray-500"> · {exp.role_title}</span>}
+                        <span className="ml-1 text-xs text-gray-400">
+                          ({exp.start_date ?? '?'} — {exp.is_current ? '至今' : (exp.end_date ?? '?')})
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         {(outgoing_relations.length > 0 || incoming_relations.length > 0) && (
           <Card>
             <CardHeader>
