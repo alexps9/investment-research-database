@@ -250,78 +250,123 @@ async def _write_exec_summary(question: str, brief: str, findings_digest: str,
                               src_text: str) -> str:
     system = (
         "You are an expert analyst. Write ONLY the opening of a deep-research "
-        "report: a single Markdown H1 title line, then a 2–4 paragraph executive "
-        "summary capturing the most important findings and the bottom line. Cite "
-        "inline as [n] using the numbered Sources where relevant. Do not write any "
-        "other sections. Do not invent facts beyond the findings. " + _lang_clause(question)
+        "report: a single Markdown H1 title line (the report title), then on the "
+        "next line the exact heading '## 1. 执行摘要', then a 3–5 paragraph executive "
+        "summary that distils the bottom line — the main technology routes, the key "
+        "people/teams, and the industry & capital picture. Cite inline as [n] using "
+        "the numbered Sources where relevant. Do NOT write any other section or any "
+        "'##' heading besides '## 1. 执行摘要'. Do not invent facts beyond the "
+        "findings. " + _lang_clause(question)
     )
     user = (
         f"Question:\n{question}\n\nBrief:\n{brief}\n\n"
         f"Key findings digest:\n{findings_digest}\n\nSources:\n{src_text}\n\n"
-        "Write the title + executive summary."
+        "Write the H1 title + '## 1. 执行摘要' section."
     )
-    return await _chat("report", system, user, temperature=0.3, max_tokens=1400)
+    return await _chat("report", system, user, temperature=0.3, max_tokens=1500)
 
 
-async def _write_section(question: str, block: dict, src_text: str) -> str:
-    if not block.get("findings"):
-        return ""
+async def _write_route_section(question: str, findings_digest: str, scope: dict,
+                               src_text: str) -> str:
+    scope_text = json.dumps({
+        "topic_ids": scope.get("topic_ids"),
+        "lane_ids": scope.get("lane_ids"),
+        "paper_count": len(scope.get("paper_ids") or []),
+    }, ensure_ascii=False)
     system = (
-        "You are an expert analyst writing ONE section of a larger deep-research "
-        "report. Write an in-depth, well-structured section in Markdown that "
-        "starts with a '## ' heading naming the theme. Use sub-headings, concrete "
-        "evidence, numbers and names from the findings. Cite inline as [n] using "
-        "the numbered Sources. Cover the theme thoroughly — do not summarise to "
-        "fit a length; this section stands on its own. Do not invent facts beyond "
-        "the findings. Do NOT write an executive summary or conclusion here. "
-        + _lang_clause(question)
+        "You are an expert analyst writing the '技术路线' section of a deep-research "
+        "report. Start with the exact heading '## 2. 技术路线'. Group the technical "
+        "approaches into numbered sub-sections '### 2.1 <route name>', "
+        "'### 2.2 <route name>', … (one per route or major technical theme). Fold ALL "
+        "relevant technical findings into these sub-sections: how each route evolved "
+        "over time, representative works/models with dates, and the relationships and "
+        "trade-offs between routes. Cite inline as [n]. Do NOT create any other "
+        "top-level '##' heading and do NOT write an executive summary, people or "
+        "industry section here. " + _lang_clause(question)
     )
     user = (
-        f"Overall question:\n{question}\n\nThis section's theme:\n{block['subtopic']}\n\n"
-        f"Findings for this theme:\n{block['findings'][:16000]}\n\n"
-        f"Numbered sources:\n{src_text}\n\nWrite this section."
+        f"Question:\n{question}\n\nDB topic scope:\n{scope_text}\n\n"
+        f"Findings:\n{findings_digest}\n\nNumbered sources:\n{src_text}\n\n"
+        "Write the '## 2. 技术路线' section with numbered sub-headings."
+    )
+    return await _chat("report", system, user, temperature=0.3, max_tokens=SECTION_MAX_TOKENS * 2)
+
+
+async def _write_people_section(question: str, findings_digest: str, scope: dict,
+                                industry: dict, src_text: str) -> str:
+    people_hint = json.dumps({
+        "person_count": len(scope.get("person_ids") or []),
+        "org_count": len(scope.get("org_ids") or []),
+        "industry_top_people": industry.get("top_people") or [],
+    }, ensure_ascii=False)[:3000]
+    system = (
+        "You are an expert analyst writing the '核心人物' section of a deep-research "
+        "report. Start with the exact heading '## 3. 核心人物'. Use numbered "
+        "sub-sections '### 3.1 <person or team>', '### 3.2 …' covering the key "
+        "researchers/teams/organisations, their affiliations, signature "
+        "contributions, and how they relate to each other and the technology routes. "
+        "Fold all people/org findings here. Cite inline as [n]. Do NOT create any "
+        "other top-level '##' heading. " + _lang_clause(question)
+    )
+    user = (
+        f"Question:\n{question}\n\nKey people hints:\n{people_hint}\n\n"
+        f"Findings:\n{findings_digest}\n\nNumbered sources:\n{src_text}\n\n"
+        "Write the '## 3. 核心人物' section with numbered sub-headings."
     )
     return await _chat("report", system, user, temperature=0.3, max_tokens=SECTION_MAX_TOKENS)
 
 
-async def _write_conclusion(question: str, findings_digest: str, src_text: str) -> str:
+async def _write_industry_section(question: str, findings_digest: str, industry: dict,
+                                  src_text: str) -> str:
+    industry_text = json.dumps({
+        "tech_signals": industry.get("tech_signals"),
+        "top_people": industry.get("top_people"),
+        "capital": industry.get("capital"),
+        "impact_md": (industry.get("impact_md") or "")[:2500],
+    }, ensure_ascii=False)[:6000]
     system = (
-        "You are an expert analyst. Write ONLY the closing of a deep-research "
-        "report: a '## 结论与展望 / Conclusion' section giving a balanced synthesis, "
-        "implications and open questions. Cite inline as [n] where relevant. Do not "
-        "repeat earlier sections verbatim. " + _lang_clause(question)
+        "You are an expert analyst writing the '产业追踪' section of a deep-research "
+        "report. Start with the exact heading '## 4. 产业追踪'. Use numbered "
+        "sub-sections, e.g. '### 4.1 技术信号', '### 4.2 产业影响', "
+        "'### 4.3 关键团队与人才分布', '### 4.4 资本介入'. Fold the industry signals, "
+        "impact analysis, talent locations and capital/funding involvement here. Cite "
+        "inline as [n]. Do NOT create any other top-level '##' heading. "
+        + _lang_clause(question)
     )
     user = (
-        f"Question:\n{question}\n\nFindings digest:\n{findings_digest}\n\n"
-        f"Sources:\n{src_text}\n\nWrite the conclusion."
+        f"Question:\n{question}\n\nIndustry analysis:\n{industry_text}\n\n"
+        f"Supporting findings:\n{findings_digest}\n\nNumbered sources:\n{src_text}\n\n"
+        "Write the '## 4. 产业追踪' section with numbered sub-headings."
     )
-    return await _chat("report", system, user, temperature=0.3, max_tokens=1400)
+    return await _chat("report", system, user, temperature=0.3, max_tokens=SECTION_MAX_TOKENS)
 
 
-async def _write_report(question: str, brief: str, blocks: list[dict],
-                        web_sources: list[dict], kb_sources: list[dict]) -> str:
+async def _write_report(question: str, brief: str, blocks: list[dict], scope: dict,
+                        industry: dict, web_sources: list[dict],
+                        kb_sources: list[dict]) -> str:
+    """Assemble the report body with EXACTLY four top-level sections:
+
+    1. 执行摘要  2. 技术路线  3. 核心人物  4. 产业追踪
+
+    All scattered sub-topic findings are folded into these four sections; finer
+    points become numbered sub-headings (2.1, 2.2, 3.1, …).
+    """
     src_text = _numbered_sources(kb_sources, web_sources)
     active = [b for b in blocks if b.get("findings")]
-    digest = "\n\n".join(f"### {b['subtopic']}\n{b['findings']}" for b in active)[:8000]
+    digest = "\n\n".join(f"### {b['subtopic']}\n{b['findings']}" for b in active)[:12000]
 
-    # Executive summary first, then all sections in parallel (bounded), preserving
-    # sub-topic order; finally the conclusion.
-    exec_summary = await _write_exec_summary(question, brief, digest, src_text)
+    # Exec summary + technology routes need no industry/scope-heavy context, so run
+    # all four section writers concurrently.
+    exec_summary, routes, people, industry_sec = await asyncio.gather(
+        _write_exec_summary(question, brief, digest, src_text),
+        _write_route_section(question, digest, scope, src_text),
+        _write_people_section(question, digest, scope, industry, src_text),
+        _write_industry_section(question, digest, industry, src_text),
+    )
 
-    sem = asyncio.Semaphore(MAX_CONCURRENCY)
-
-    async def _guarded_section(b: dict) -> str:
-        async with sem:
-            return await _write_section(question, b, src_text)
-
-    sections = await asyncio.gather(*[_guarded_section(b) for b in active])
-    conclusion = await _write_conclusion(question, digest, src_text) if active else ""
-
-    body_parts = [exec_summary.strip()]
-    body_parts += [s.strip() for s in sections if s.strip()]
-    if conclusion.strip():
-        body_parts.append(conclusion.strip())
-    body = "\n\n".join(body_parts)
+    body = "\n\n".join(
+        p.strip() for p in (exec_summary, routes, people, industry_sec) if p.strip()
+    )
     return body + _build_references(kb_sources, web_sources)
 
 
@@ -528,52 +573,6 @@ async def _industry_analysis(question: str, brief: str, blocks: list[dict]) -> d
     }
 
 
-async def _write_studio_sections(
-    question: str,
-    blocks: list[dict],
-    scope: dict,
-    industry: dict,
-    src_text: str,
-) -> str:
-    """Write the three mandatory Research Studio sections."""
-    findings = "\n\n".join(
-        f"### {b['subtopic']}\n{b.get('findings', '')}" for b in blocks if b.get("findings")
-    )[:10000]
-    scope_text = json.dumps({
-        "topic_ids": scope.get("topic_ids"),
-        "lane_ids": scope.get("lane_ids"),
-        "paper_count": len(scope.get("paper_ids") or []),
-        "person_count": len(scope.get("person_ids") or []),
-    }, ensure_ascii=False)
-    industry_text = json.dumps({
-        "tech_signals": industry.get("tech_signals"),
-        "top_people": industry.get("top_people"),
-        "capital": industry.get("capital"),
-        "impact_md": (industry.get("impact_md") or "")[:2000],
-    }, ensure_ascii=False)
-
-    system = (
-        "You are an expert analyst writing THREE mandatory sections for a "
-        "deep-research report. Write ONLY these three Markdown sections, each "
-        "starting with the exact heading shown:\n"
-        "## 技术路线演进\n"
-        "## 核心人物\n"
-        "## 产业追踪\n"
-        "Cover: (1) how the technology routes evolved and which topic categories "
-        "apply; (2) key people/orgs and their roles; (3) industry signals, impact, "
-        "top talent locations, and capital involvement. Cite inline as [n] where "
-        "relevant. Do not write other sections. " + _lang_clause(question)
-    )
-    user = (
-        f"Question: {question}\n\nFindings:\n{findings}\n\n"
-        f"Scope (DB topics/entities):\n{scope_text}\n\n"
-        f"Industry analysis:\n{industry_text}\n\n"
-        f"Numbered sources:\n{src_text}\n\n"
-        "Write the three sections."
-    )
-    return await _chat("report", system, user, temperature=0.3, max_tokens=SECTION_MAX_TOKENS * 2)
-
-
 # ── public entrypoint ────────────────────────────────────────────────────────
 
 async def run_deep_research(
@@ -635,32 +634,17 @@ async def run_deep_research(
                 kb_map[key] = h
     kb_sources = sorted(kb_map.values(), key=lambda h: h.get("score") or 0, reverse=True)
 
-    # Scope mapping, industry analysis and the core report are independent given the
-    # researched blocks — run them concurrently to cut tail latency (the report write
-    # is the longest leg, so overlapping scope/industry with it is ~free).
-    progress("synthesis", "正在归纳技术路线类别、产业信号并综合撰写报告…", 80)
-    src_text = _numbered_sources(kb_sources, all_sources)
-    scope, industry, report_core = await asyncio.gather(
+    # Scope + industry first (the report sections fold these in), then assemble the
+    # four-section report.
+    progress("synthesis", "正在归纳技术路线类别与产业信号…", 80)
+    scope, industry = await asyncio.gather(
         _build_scope(question, brief, subtopics, kb_sources, blocks),
         _industry_analysis(question, brief, blocks),
-        _write_report(question, brief, blocks, all_sources, kb_sources),
     )
 
-    progress("report", "正在撰写技术路线 / 核心人物 / 产业追踪三大板块…", 92)
-    studio_sections = await _write_studio_sections(
-        question, blocks, scope, industry, src_text,
-    )
-
-    # Insert studio sections before references (strip trailing refs from core if any,
-    # then append studio sections + fresh references).
-    ref_marker = "\n\n---\n\n## 参考来源"
-    if ref_marker in report_core:
-        report_body = report_core.split(ref_marker)[0].rstrip()
-    else:
-        report_body = report_core.rstrip()
-    report = (
-        report_body + "\n\n" + studio_sections.strip()
-        + _build_references(kb_sources, all_sources)
+    progress("report", "正在撰写报告四大板块：执行摘要 / 技术路线 / 核心人物 / 产业追踪…", 90)
+    report = await _write_report(
+        question, brief, blocks, scope, industry, all_sources, kb_sources,
     )
 
     progress("done", "研究完成", 100)

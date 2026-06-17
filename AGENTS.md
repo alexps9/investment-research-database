@@ -132,10 +132,13 @@ curl http://localhost:9000/research/status/<job_id>
   **database-first**: each sub-topic is first grounded in the project's own KB via
   `deep_research_agent/kb.py` (`GET /api/ai/search`, `KB_API_BASE_URL`); the open web
   only **supplements** when KB coverage is thin (`KB_MIN_HITS`/`KB_SUFFICIENT_CHARS`),
-  else a single web round adds recency. The **final report is written section-by-section**
-  (exec summary + one section per sub-topic + conclusion, each on its own `max_tokens`
-  budget) so no single token cap can drop a whole "big point" — the failure mode the old
-  single-shot writer had. **References are appended in code**: KB hits first (entities link
+  else a single web round adds recency. The **final report has exactly four top-level
+  sections** — `## 1. 执行摘要`, `## 2. 技术路线`, `## 3. 核心人物`, `## 4. 产业追踪` — written
+  by four concurrent writers (`_write_exec_summary` / `_write_route_section` /
+  `_write_people_section` / `_write_industry_section` in `researcher.py`). All scattered
+  sub-topic findings are **folded into these four**, with finer points as numbered
+  sub-headings (`### 2.1`, `### 2.2`, `### 3.1`, …). Each writer has its own `max_tokens`
+  budget so no single cap drops a whole "big point". **References are appended in code**: KB hits first (entities link
   to their `/wiki/entities/{id}` page) above external web links; the result dict carries
   both `sources` (web) and `kb_sources` (`{object_type,object_id,name,wiki_url,…}`). The
   `/research` page renders the Markdown report and offers **PDF export via browser print**
@@ -177,7 +180,7 @@ sidebar history work on both hard load and client navigation.
 | Route (query param) | Purpose |
 |-------|---------|
 | `/` | Google-style search + ChatGPT-like session sidebar (`SearchHome`) |
-| `/?id=<uuid>` | `SessionWorkspace`: live progress (`ResearchProgress`) → markdown report (3 mandatory H2 sections) + PDF export + sub-view links |
+| `/?id=<uuid>` | `SessionWorkspace`: live progress (`ResearchProgress`) → markdown report (4 fixed H2 sections: 执行摘要/技术路线/核心人物/产业追踪) + PDF export + sub-view links |
 | `/?id=<uuid>&view=trajectory` | Paper timeline by `metadata.year`/`lane`, edges `BUILT_ON`/`RELATED_TO`/`COMPETES_WITH`; scope papers highlighted |
 | `/?id=<uuid>&view=people` | `react-force-graph-2d` subgraph; scope entity IDs highlighted, rest dimmed |
 | `/?id=<uuid>&view=industry` | Renders `session.industry` + live `/api/funding` + `/api/signals` |
