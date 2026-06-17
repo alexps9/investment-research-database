@@ -42,6 +42,38 @@ Endpoint: `https://Alexps9yyy-hh-research-mcp.hf.space/mcp`.
 > Note: the `mcp` SDK enables DNS-rebinding protection when bound to `0.0.0.0`,
 > which 421s behind a proxy. We pass `TransportSecuritySettings(enable_dns_rebinding_protection=False)`.
 
+## Frontend → domestic mirror (CN users) + Vercel (overseas)
+
+**Why**: `*.vercel.app` is GFW-throttled in mainland China — from a CN client the TLS
+handshake to the Vercel edge often never completes (`code=000`), so both the app and
+its API (proxied via the Vercel rewrite) load slowly/flakily. The backend, by contrast,
+is ~1ms from CN users (domestic). So CN users are served a **static mirror hosted on the
+Tencent box itself**, calling the backend directly.
+
+**Topology**: `http://110.40.131.38:8080` (nginx, static Next export) → browser calls
+`http://110.40.131.38:8000/api/*` **directly** (both plain HTTP → no mixed-content;
+backend CORS allows it). No Vercel, no cross-border hop.
+
+**Compose**: `frontend` service (nginx:alpine) in `docker-compose.server.yml` mounts
+`./frontend-out` (the build) + `./frontend.nginx.conf`, publishes `8080:80`.
+
+**Redeploy the CN frontend** (run locally, then ship — bundle is generated, gitignored):
+```bash
+cd frontend
+NEXT_BUILD_STATIC=true NEXT_PUBLIC_API_URL=http://110.40.131.38:8000 npm run build   # -> out/
+tar -czf ../deploy/frontend-out.tgz -C out .
+scp ../deploy/frontend-out.tgz hh-server:~/hh-research/deploy/
+ssh hh-server "cd ~/hh-research/deploy && rm -rf frontend-out && mkdir frontend-out && \
+  tar -xzf frontend-out.tgz -C frontend-out && docker compose -f docker-compose.server.yml up -d frontend"
+```
+`generateStaticParams` fetches all entities at build time to pre-render per-entity wiki
+pages; brand-new entities need a rebuild for deep-links (in-app nav works regardless).
+
+**REQUIRED one-time step**: open **TCP 8080** inbound in the **Tencent Cloud security
+group** (only 8000/8765 were open). Verified: nginx serves 200 on `localhost:8080`,
+docker binds `0.0.0.0:8080`, `ufw` inactive — external access is blocked solely by the
+security group until 8080 is allowed.
+
 ## Frontend → Vercel  (live: https://investment-research-database.vercel.app/)
 
 The `public` repo is connected to **Vercel**, which auto-deploys on every push to

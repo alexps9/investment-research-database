@@ -14,6 +14,10 @@ id_ed25519
 # Credential notes (contain raw API keys) — NEVER commit
 resource.md
 
+# Built frontend bundle shipped to the CN server (generated; not source)
+deploy/frontend-out/
+deploy/frontend-out.tgz
+
 # Python
 __pycache__/
 *.py[cod]
