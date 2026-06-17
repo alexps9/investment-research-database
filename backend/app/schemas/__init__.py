@@ -515,6 +515,37 @@ class TokenResponse(BaseModel):
     user: UserOut
 
 
+# ── Research Studio sessions ───────────────────────────────────────────────────
+
+class ResearchSessionCreate(BaseModel):
+    question: str = Field(min_length=3, max_length=4000)
+    max_subtopics: int = Field(default=5, ge=1, le=6)
+    searches_per_topic: int = Field(default=2, ge=1, le=4)
+
+
+class ResearchSessionListOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: str
+    question: str
+    status: str
+    phase: Optional[str] = None
+    pct: int = 0
+    created_at: datetime
+    updated_at: datetime
+
+
+class ResearchSessionOut(ResearchSessionListOut):
+    brief: Optional[str] = None
+    subtopics: list = []
+    report: Optional[str] = None
+    sources: list = []
+    kb_sources: list = []
+    scope: Optional[dict] = None
+    industry: Optional[dict] = None
+    error: Optional[str] = None
+    agent_job_id: Optional[str] = None
+
+
 # ── Pagination ────────────────────────────────────────────────────────────────
 
 class PaginatedResponse(BaseModel):

@@ -18,6 +18,7 @@ multi-agent system all talk to it over `/api/*`.
 ```
 backend/      FastAPI app — the ONLY component that touches the database
 frontend/     Next.js 14 app (deployed on Vercel) — merged Data Hub + Explore pages
+webapp/       Research Studio — standalone Next.js deep-research UI (4 pages, :8081 CN mirror)
 mcp_server/   MCP (Model Context Protocol) wrapper over the backend REST API
 agent/        LangGraph multi-agent system — ingestion/analysis/entity/alert/digest/data
 tools/        Atomic KB tools — one package per domain (sources/signals/…/notify/websearch)
@@ -69,6 +70,9 @@ uvicorn app.main:app --reload                # http://localhost:8000  (/docs, /h
 
 # Frontend
 cd frontend && npm install && npm run dev     # http://localhost:3000
+
+# Research Studio (standalone webapp)
+cd webapp && npm install && npm run dev       # http://localhost:3001
 
 # MCP server (needs backend running)
 cd mcp_server && pip install -r requirements.txt
@@ -161,6 +165,32 @@ curl http://localhost:9000/research/status/<job_id>
   egresses search/fetch through the overseas proxy** (`HTTP(S)_PROXY=proxy:8118`,
   internal services in `NO_PROXY`) because DuckDuckGo is blocked from CN — without it
   `sources` come back empty and the report is LLM-only.
+
+## Research Studio (`webapp/`)
+
+A **separate** Next.js app (does not touch `frontend/`). Four pages:
+
+| Route | Purpose |
+|-------|---------|
+| `/` | Google-style search + ChatGPT-like session sidebar |
+| `/s/[id]` | Markdown report (3 mandatory H2 sections) + PDF export + links to sub-pages |
+| `/s/[id]/trajectory` | Paper timeline by `metadata.year`/`lane`, edges `BUILT_ON`/`RELATED_TO`/`COMPETES_WITH`; scope papers highlighted |
+| `/s/[id]/people` | `react-force-graph-2d` subgraph; scope entity IDs highlighted, rest dimmed |
+| `/s/[id]/industry` | Renders `session.industry` + live `/api/funding` + `/api/signals` |
+
+**Sessions API** (`backend/app/routers/research_sessions.py`):
+- `POST /api/research/sessions` — create row, start agent job, return `{id,…}`
+- `GET /api/research/sessions?limit=50` — sidebar history
+- `GET /api/research/sessions/{id}` — full session; if `running`, polls agent and persists result
+- `DELETE /api/research/sessions/{id}`
+
+**Agent output extensions** (in addition to `report`/`kb_sources`/`sources`):
+- `scope`: `{topic_ids, lane_ids, paper_ids, person_ids, org_ids}` — LLM maps question to
+  existing `entity_type=topic` lanes/rows; entity IDs from KB hits + graph expansion.
+- `industry`: `{tech_signals, impact_md, top_people, capital}` — web search + LLM structuring.
+
+Deploy: CN static mirror on **:8081** (`deploy/webapp.nginx.conf`); optional second Vercel
+project (Root Directory `webapp`). See [`memory/deployment.md`](memory/deployment.md).
 
 ## Deployment & frontend notes
 

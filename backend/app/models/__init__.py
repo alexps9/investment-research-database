@@ -526,3 +526,34 @@ class FundingEvent(Base):
         Index("ix_funding_round", "round"),
         Index("ix_funding_sector", "sector"),
     )
+
+
+class ResearchSession(Base):
+    """Persisted deep-research session for Research Studio (webapp)."""
+    __tablename__ = "research_sessions"
+
+    id: Mapped[str] = mapped_column(UUID(as_uuid=False), primary_key=True, default=gen_uuid)
+    question: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(
+        String(20), nullable=False, server_default="running"
+    )  # running | done | failed
+    phase: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    pct: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+    agent_job_id: Mapped[str | None] = mapped_column(Text, nullable=True)
+    brief: Mapped[str | None] = mapped_column(Text, nullable=True)
+    subtopics: Mapped[list] = mapped_column(JSONB, nullable=False, server_default="[]")
+    report: Mapped[str | None] = mapped_column(Text, nullable=True)
+    sources: Mapped[list] = mapped_column(JSONB, nullable=False, server_default="[]")
+    kb_sources: Mapped[list] = mapped_column(JSONB, nullable=False, server_default="[]")
+    scope: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    industry: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+    __table_args__ = (
+        Index("ix_research_sessions_created_at", "created_at"),
+        Index("ix_research_sessions_status", "status"),
+    )

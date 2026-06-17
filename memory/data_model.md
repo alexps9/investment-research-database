@@ -81,6 +81,16 @@ model_name, created_at, updated_at`
 amount_raw, currency, investors(jsonb), sector, announced_at, source_url,
 description, extracted_by, created_at, updated_at`
 
+## research_sessions  (Research Studio)
+`id, question, status (running|done|failed), phase, pct, agent_job_id,
+brief, subtopics(jsonb), report, sources(jsonb), kb_sources(jsonb),
+scope(jsonb), industry(jsonb), error, created_at, updated_at`
+- Persisted deep-research runs for the standalone `webapp/` frontend.
+- `scope`: `{topic_ids, lane_ids, paper_ids, person_ids, org_ids, topic_catalog}` —
+  LLM-mapped DB topic categories + related entity IDs for trajectory/people views.
+- `industry`: `{tech_signals, impact_md, top_people, capital, sources}` — web-grounded
+  industry tracking output.
+
 ## pipeline_runs
 Audit log of pipeline stages. `id, run_type, status, started_at, finished_at,
 total_items, success_items, failed_items, error_message, metadata`
@@ -89,5 +99,6 @@ total_items, success_items, failed_items, error_message, metadata`
 Alembic lives in `backend/alembic/`. Because the DB is hosted on Supabase, the
 SQL is applied **manually** in the Supabase SQL editor:
 - `migration_0004.sql` — creates `daily_digests` + `funding_events`.
+- `migration_0010.sql` — creates `research_sessions` (Research Studio).
 - `set_embedding_dim.sql` — changes the `embeddings.vector` dimension when the
   embedding model changes (truncates existing vectors).

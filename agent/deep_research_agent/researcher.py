@@ -21,7 +21,12 @@ import os
 import re
 from typing import Awaitable, Callable, Optional
 
-from .kb import kb_search
+from .kb import (
+    fetch_entities_by_type,
+    fetch_entity,
+    fetch_graph_relations,
+    kb_search,
+)
 from .llm import ainvoke, make_llm
 from .search import search_and_read
 
@@ -320,6 +325,224 @@ async def _write_report(question: str, brief: str, blocks: list[dict],
     return body + _build_references(kb_sources, web_sources)
 
 
+# ── Research Studio: scope + industry + mandatory sections ───────────────────
+
+async def _build_scope(
+    question: str,
+    brief: str,
+    subtopics: list[str],
+    kb_sources: list[dict],
+    blocks: list[dict],
+) -> dict:
+    """Map the research to existing DB topic lanes/rows and collect related entity IDs."""
+    topics = await fetch_entities_by_type("topic", limit=50)
+    topic_catalog = []
+    for t in topics:
+        meta = t.get("metadata") or {}
+        topic_catalog.append({
+            "id": t.get("id"),
+            "name": t.get("name"),
+            "level": meta.get("level"),
+            "lane_key": meta.get("lane_key"),
+            "row_key": meta.get("row_key"),
+            "color": meta.get("color"),
+        })
+
+    catalog_text = json.dumps(topic_catalog, ensure_ascii=False)[:12000]
+    classify_sys = (
+        "You are a technology taxonomy expert. Given a research question and the "
+        "available topic categories from our knowledge base, select the most "
+        "relevant topic IDs. Return ONLY JSON: "
+        '{"topic_ids":["uuid",...],"lane_ids":["uuid",...],"rationale":"..."} '
+        "topic_ids = row-level topics; lane_ids = lane-level topics. "
+        "Pick 1-6 total across both lists."
+    )
+    classify_user = (
+        f"Question: {question}\n\nBrief: {brief}\n\nSubtopics: {subtopics}\n\n"
+        f"Available topics:\n{catalog_text}"
+    )
+    raw = await _chat("research", classify_sys, classify_user, temperature=0.1, max_tokens=800)
+    parsed = _extract_json(raw)
+    topic_ids: list[str] = []
+    lane_ids: list[str] = []
+    if isinstance(parsed, dict):
+        topic_ids = [str(x) for x in (parsed.get("topic_ids") or []) if x]
+        lane_ids = [str(x) for x in (parsed.get("lane_ids") or []) if x]
+
+    valid_ids = {t["id"] for t in topic_catalog if t.get("id")}
+    topic_ids = [i for i in topic_ids if i in valid_ids]
+    lane_ids = [i for i in lane_ids if i in valid_ids]
+
+    # Collect entity IDs from KB hits + topic neighborhood in the graph.
+    paper_ids: set[str] = set()
+    person_ids: set[str] = set()
+    org_ids: set[str] = set()
+
+    entity_hits = [h for h in kb_sources if h.get("object_type") == "entity" and h.get("object_id")]
+    for h in entity_hits:
+        ent = await fetch_entity(h["object_id"])
+        if not ent:
+            continue
+        et = ent.get("entity_type")
+        eid = ent.get("id")
+        if et == "paper" and eid:
+            paper_ids.add(eid)
+        elif et == "person" and eid:
+            person_ids.add(eid)
+        elif et == "organization" and eid:
+            org_ids.add(eid)
+
+    # Expand via graph relations around selected topics.
+    focus_topic_ids = set(topic_ids) | set(lane_ids)
+    if focus_topic_ids:
+        relations = await fetch_graph_relations(limit=5000)
+        for rel in relations:
+            rtype = rel.get("relation_type")
+            subj = rel.get("subject") or {}
+            obj = rel.get("object_entity") or {}
+            subj_id, subj_type = subj.get("id"), subj.get("entity_type")
+            obj_id, obj_type = obj.get("id"), obj.get("entity_type")
+
+            if rtype == "FOCUSES_ON" and obj_id in focus_topic_ids and subj_type == "paper":
+                paper_ids.add(subj_id)
+            if rtype == "AUTHORED" and subj_type == "paper" and subj_id in paper_ids:
+                if obj_type == "person" and obj_id:
+                    person_ids.add(obj_id)
+            if rtype == "FOCUSES_ON" and subj_id in focus_topic_ids and obj_type == "paper":
+                paper_ids.add(obj_id)
+            if rtype == "AUTHORED" and obj_type == "paper" and obj_id in paper_ids:
+                if subj_type == "person" and subj_id:
+                    person_ids.add(subj_id)
+            if rtype == "WORKS_AT":
+                if subj_type == "person" and subj_id in person_ids and obj_type == "organization":
+                    org_ids.add(obj_id)
+                if obj_type == "person" and obj_id in person_ids and subj_type == "organization":
+                    org_ids.add(subj_id)
+
+    # Supplement papers via semantic search on the main question.
+    extra_hits = await kb_search(question, types="entity", limit=12)
+    for h in extra_hits:
+        if h.get("object_type") != "entity":
+            continue
+        ent = await fetch_entity(h.get("object_id", ""))
+        if not ent:
+            continue
+        et, eid = ent.get("entity_type"), ent.get("id")
+        if et == "paper" and eid:
+            paper_ids.add(eid)
+        elif et == "person" and eid:
+            person_ids.add(eid)
+        elif et == "organization" and eid:
+            org_ids.add(eid)
+
+    return {
+        "topic_ids": list(dict.fromkeys(topic_ids)),
+        "lane_ids": list(dict.fromkeys(lane_ids)),
+        "paper_ids": list(paper_ids)[:120],
+        "person_ids": list(person_ids)[:80],
+        "org_ids": list(org_ids)[:60],
+        "topic_catalog": topic_catalog,
+    }
+
+
+async def _industry_analysis(question: str, brief: str, blocks: list[dict]) -> dict:
+    """Web-grounded industry tracking: signals, impact, top people, capital."""
+    findings = "\n\n".join(
+        f"### {b['subtopic']}\n{b.get('findings', '')}" for b in blocks if b.get("findings")
+    )[:8000]
+
+    queries = [
+        f"{question} industry adoption funding startup 2024 2025",
+        f"{question} leading researchers companies investment",
+    ]
+    notes: list[str] = []
+    sources: list[dict] = []
+    seen: set[str] = set()
+    for q in queries:
+        bundle = await search_and_read(q, max_results=5, read_top=2)
+        for s in bundle.get("sources", []):
+            if s.get("url") and s["url"] not in seen:
+                seen.add(s["url"])
+                sources.append(s)
+        for r in bundle.get("results", []):
+            if r.get("content"):
+                notes.append(f"[{r.get('title')}]({r.get('url')})\n{r['content'][:3000]}")
+
+    joined = "\n\n---\n\n".join(notes)[:10000]
+    system = (
+        "You are an industry analyst. From the research question, brief, findings "
+        "and web notes, produce a structured industry-tracking JSON. Return ONLY "
+        "valid JSON with keys: "
+        "tech_signals (array of {title, summary, url}), "
+        "impact_md (markdown string: industry impact analysis), "
+        "top_people (array of {name, org, why, url?}), "
+        "capital (array of {round, target, amount, investors?, url?}). "
+        "Be factual; use the notes; if uncertain, say so briefly. "
+        + _lang_clause(question)
+    )
+    user = (
+        f"Question: {question}\n\nBrief: {brief}\n\nFindings:\n{findings}\n\n"
+        f"Web notes:\n{joined}"
+    )
+    raw = await _chat("report", system, user, temperature=0.2, max_tokens=2400)
+    parsed = _extract_json(raw)
+    if not isinstance(parsed, dict):
+        parsed = {}
+    return {
+        "tech_signals": parsed.get("tech_signals") or [],
+        "impact_md": parsed.get("impact_md") or "",
+        "top_people": parsed.get("top_people") or [],
+        "capital": parsed.get("capital") or [],
+        "sources": sources,
+    }
+
+
+async def _write_studio_sections(
+    question: str,
+    blocks: list[dict],
+    scope: dict,
+    industry: dict,
+    src_text: str,
+) -> str:
+    """Write the three mandatory Research Studio sections."""
+    findings = "\n\n".join(
+        f"### {b['subtopic']}\n{b.get('findings', '')}" for b in blocks if b.get("findings")
+    )[:10000]
+    scope_text = json.dumps({
+        "topic_ids": scope.get("topic_ids"),
+        "lane_ids": scope.get("lane_ids"),
+        "paper_count": len(scope.get("paper_ids") or []),
+        "person_count": len(scope.get("person_ids") or []),
+    }, ensure_ascii=False)
+    industry_text = json.dumps({
+        "tech_signals": industry.get("tech_signals"),
+        "top_people": industry.get("top_people"),
+        "capital": industry.get("capital"),
+        "impact_md": (industry.get("impact_md") or "")[:2000],
+    }, ensure_ascii=False)
+
+    system = (
+        "You are an expert analyst writing THREE mandatory sections for a "
+        "deep-research report. Write ONLY these three Markdown sections, each "
+        "starting with the exact heading shown:\n"
+        "## 技术路线演进\n"
+        "## 核心人物\n"
+        "## 产业追踪\n"
+        "Cover: (1) how the technology routes evolved and which topic categories "
+        "apply; (2) key people/orgs and their roles; (3) industry signals, impact, "
+        "top talent locations, and capital involvement. Cite inline as [n] where "
+        "relevant. Do not write other sections. " + _lang_clause(question)
+    )
+    user = (
+        f"Question: {question}\n\nFindings:\n{findings}\n\n"
+        f"Scope (DB topics/entities):\n{scope_text}\n\n"
+        f"Industry analysis:\n{industry_text}\n\n"
+        f"Numbered sources:\n{src_text}\n\n"
+        "Write the three sections."
+    )
+    return await _chat("report", system, user, temperature=0.3, max_tokens=SECTION_MAX_TOKENS * 2)
+
+
 # ── public entrypoint ────────────────────────────────────────────────────────
 
 async def run_deep_research(
@@ -379,8 +602,32 @@ async def run_deep_research(
                 kb_map[key] = h
     kb_sources = sorted(kb_map.values(), key=lambda h: h.get("score") or 0, reverse=True)
 
+    progress("scope", "正在归纳技术路线类别并收集知识库实体…", 78)
+    scope = await _build_scope(question, brief, subtopics, kb_sources, blocks)
+
+    progress("industry", "正在进行产业追踪分析…", 82)
+    industry = await _industry_analysis(question, brief, blocks)
+
     progress("report", "正在综合撰写最终报告…", 85)
-    report = await _write_report(question, brief, blocks, all_sources, kb_sources)
+    src_text = _numbered_sources(kb_sources, all_sources)
+    report_core = await _write_report(question, brief, blocks, all_sources, kb_sources)
+
+    progress("report", "正在撰写技术路线/核心人物/产业追踪板块…", 92)
+    studio_sections = await _write_studio_sections(
+        question, blocks, scope, industry, src_text,
+    )
+
+    # Insert studio sections before references (strip trailing refs from core if any,
+    # then append studio sections + fresh references).
+    ref_marker = "\n\n---\n\n## 参考来源"
+    if ref_marker in report_core:
+        report_body = report_core.split(ref_marker)[0].rstrip()
+    else:
+        report_body = report_core.rstrip()
+    report = (
+        report_body + "\n\n" + studio_sections.strip()
+        + _build_references(kb_sources, all_sources)
+    )
 
     progress("done", "研究完成", 100)
     return {
@@ -390,4 +637,6 @@ async def run_deep_research(
         "report": report,
         "sources": all_sources,
         "kb_sources": kb_sources,
+        "scope": scope,
+        "industry": industry,
     }

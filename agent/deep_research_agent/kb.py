@@ -28,24 +28,28 @@ def wiki_url(object_type: str, object_id: str) -> str | None:
     return None
 
 
+async def _get(path: str, params: dict | None = None) -> object | None:
+    url = f"{KB_BASE}{KB_PREFIX}{path}"
+    try:
+        async with httpx.AsyncClient(timeout=KB_TIMEOUT, trust_env=False) as client:
+            resp = await client.get(url, params=params or {})
+    except Exception:
+        return None
+    if resp.status_code >= 400:
+        return None
+    try:
+        return resp.json()
+    except Exception:
+        return None
+
+
 async def kb_search(query: str, *, types: str = "entity,signal,source", limit: int = 8) -> list[dict]:
     """Vector search over the knowledge base. Returns ranked hits, or [] on any
     failure (embeddings off / backend down / 4xx). Each hit:
     ``{object_type, object_id, name, description, score, wiki_url}``."""
     if not query or not query.strip():
         return []
-    url = f"{KB_BASE}{KB_PREFIX}/ai/search"
-    try:
-        async with httpx.AsyncClient(timeout=KB_TIMEOUT, trust_env=False) as client:
-            resp = await client.get(url, params={"q": query.strip(), "types": types, "limit": limit})
-    except Exception:
-        return []
-    if resp.status_code >= 400:
-        return []
-    try:
-        hits = resp.json()
-    except Exception:
-        return []
+    hits = await _get("/ai/search", {"q": query.strip(), "types": types, "limit": limit})
     out: list[dict] = []
     for h in hits if isinstance(hits, list) else []:
         out.append({
@@ -57,3 +61,21 @@ async def kb_search(query: str, *, types: str = "entity,signal,source", limit: i
             "wiki_url": wiki_url(h.get("object_type", ""), h.get("object_id", "")),
         })
     return out
+
+
+async def fetch_entities_by_type(entity_type: str, *, limit: int = 200) -> list[dict]:
+    """List entities of a given type from the backend."""
+    data = await _get("/entities", {"entity_type": entity_type, "limit": limit})
+    return data if isinstance(data, list) else []
+
+
+async def fetch_entity(entity_id: str) -> dict | None:
+    """Fetch a single entity by id."""
+    data = await _get(f"/entities/{entity_id}")
+    return data if isinstance(data, dict) else None
+
+
+async def fetch_graph_relations(*, limit: int = 5000) -> list[dict]:
+    """Fetch the full relation list (with nested subject/object entities)."""
+    data = await _get("/graph/relations", {"limit": limit})
+    return data if isinstance(data, list) else []

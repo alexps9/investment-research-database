@@ -79,6 +79,14 @@ are under the `/api` prefix. Interactive docs at `/docs`.
 - Backend just proxies to the agent (`agent_base_url` → `http://agent:9000`); jobs are
   in-memory on the agent (lost on restart). Agent unreachable → **502**.
 
+## Research Studio sessions  (persisted in `research_sessions`)
+- `POST /api/research/sessions` `{question, max_subtopics?=5, searches_per_topic?=2}`
+  → `ResearchSessionOut` (201). Creates DB row, starts agent job, stores `agent_job_id`.
+- `GET /api/research/sessions?limit=50` → list `[{id, question, status, phase, pct, created_at}]`.
+- `GET /api/research/sessions/{id}` → full session; if `status=running`, polls agent and
+  persists `report`, `scope`, `industry`, `kb_sources`, `sources` when done.
+- `DELETE /api/research/sessions/{id}` → 204.
+
 ## Daily Boost
 - `GET /api/daily?limit=` · `GET /api/daily/latest` · `GET /api/daily/{date}`
 - `POST /api/daily/generate?digest_date=&window_days=&limit=`

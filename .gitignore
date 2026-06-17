@@ -17,6 +17,8 @@ resource.md
 # Built frontend bundle shipped to the CN server (generated; not source)
 deploy/frontend-out/
 deploy/frontend-out.tgz
+deploy/webapp-out/
+deploy/webapp-out.tgz
 
 # Python
 __pycache__/

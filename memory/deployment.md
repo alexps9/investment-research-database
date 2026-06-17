@@ -23,8 +23,8 @@ For login auth set `JWT_SECRET` (long random) and optionally `SEED_USERS`
 (`user:pass,...`, default seeds the bootstrap accounts on first start).
 URL: `https://Alexps9yyy-hh-research-api.hf.space` (health at `/health`).
 
-> Auth/schema note: migrations 0008 (`users`) + 0009 (relation dedupe) are
-> applied by `alembic upgrade head` (HF `start.sh`). The server compose skips
+> Auth/schema note: migrations 0008 (`users`) + 0009 (relation dedupe) + 0010
+> (`research_sessions`) are applied by `alembic upgrade head` (HF `start.sh`). The server
 > alembic, so run `docker compose ... run --rm backend alembic upgrade head`
 > once after pulling new migrations. Users are seeded on startup (idempotent),
 > so deploying any one backend populates the shared Supabase DB.
@@ -77,6 +77,42 @@ pages; brand-new entities need a rebuild for deep-links (in-app nav works regard
 group** (only 8000/8765 were open). Verified: nginx serves 200 on `localhost:8080`,
 docker binds `0.0.0.0:8080`, `ufw` inactive — external access is blocked solely by the
 security group until 8080 is allowed.
+
+## Research Studio (`webapp/`) — separate frontend
+
+A **standalone** Next.js app at `webapp/` (does **not** modify `frontend/`). Google-style
+deep-research home + ChatGPT-like session sidebar; report page with PDF export and three
+interactive sub-pages: **技术路线演进** (trajectory timeline), **核心人物** (highlighted
+knowledge subgraph), **产业追踪** (industry signals/impact/talent/capital).
+
+**Topology**: `http://110.40.131.38:8081` (nginx, static Next export) → browser calls
+`http://110.40.131.38:8000/api/*` directly (same as the CN mirror on :8080).
+
+**Backend**: `POST/GET/DELETE /api/research/sessions` persists runs in `research_sessions`
+(migration `0010` / `migration_0010.sql`). Creating a session starts an agent job and stores
+`agent_job_id`; polling `GET /api/research/sessions/{id}` syncs progress/result (report,
+`scope`, `industry`, `kb_sources`, `sources`) into the DB when done.
+
+**Agent extensions**: `run_deep_research` now also returns `scope` (topic lane/row mapping +
+entity IDs from KB + graph) and `industry` (web-grounded tech signals, impact, top people,
+capital). The report always includes `## 技术路线演进`, `## 核心人物`, `## 产业追踪`.
+
+**Redeploy the CN webapp** (run locally):
+```bash
+cd webapp
+NEXT_BUILD_STATIC=true NEXT_PUBLIC_API_URL=http://110.40.131.38:8000 npm run build   # -> out/
+tar -czf ../deploy/webapp-out.tgz -C out .
+scp ../deploy/webapp-out.tgz hh-server:~/hh-research/deploy/
+ssh hh-server "cd ~/hh-research/deploy && rm -rf webapp-out && mkdir webapp-out && \
+  tar -xzf webapp-out.tgz -C webapp-out && docker compose -f docker-compose.server.yml up -d webapp"
+```
+> After `rm -rf webapp-out`, use `up -d webapp` or `restart webapp` so nginx re-binds the mount.
+
+**Vercel (second project)**: create a new Vercel project with Root Directory = `webapp`.
+`webapp/vercel.json` rewrites `/api/*` → Tencent backend. No `NEXT_BUILD_STATIC` on Vercel.
+
+**One-time**: open **TCP 8081** in the Tencent security group; run migration 0010 on Supabase
+(or `docker compose ... run --rm backend alembic upgrade head` on the server).
 
 ## Frontend → Vercel  (live: https://investment-research-database.vercel.app/)
 
