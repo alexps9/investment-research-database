@@ -28,7 +28,9 @@ model_list:
 litellm_settings:
   drop_params: true          # silently drop params Bedrock doesn't accept
   request_timeout: 120
-  num_retries: 1
+  # Under multi-user bursts, transient Bedrock 429/5xx retry then fall back to
+  # DeepSeek-V4 — spreads load across two providers instead of failing the run.
+  num_retries: 2
   # If the primary Claude model errors (proxy down / Bedrock geo-block / 5xx),
   # automatically retry the request against DeepSeek-V4.
   fallbacks:

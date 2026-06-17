@@ -8,9 +8,31 @@ to use a cheaper model for summarization, etc.
 """
 from __future__ import annotations
 
+import asyncio
 import os
 
 from langchain_openai import ChatOpenAI
+
+# Global throttle on concurrent in-flight LLM calls across ALL research runs.
+# This decouples "how many research jobs are in progress" from "how much load
+# hits the shared LiteLLM gateway", so we can run many jobs concurrently while
+# keeping the single gateway worker + Bedrock account from being overwhelmed.
+_LLM_MAX_CONCURRENCY = int(os.getenv("LLM_MAX_CONCURRENCY", "8"))
+_llm_sem: asyncio.Semaphore | None = None
+
+
+def _llm_semaphore() -> asyncio.Semaphore:
+    # Lazily created so it binds to the running event loop.
+    global _llm_sem
+    if _llm_sem is None:
+        _llm_sem = asyncio.Semaphore(_LLM_MAX_CONCURRENCY)
+    return _llm_sem
+
+
+async def ainvoke(llm: ChatOpenAI, messages):
+    """Invoke an LLM through the global concurrency gate."""
+    async with _llm_semaphore():
+        return await llm.ainvoke(messages)
 
 
 def _base_url() -> str:

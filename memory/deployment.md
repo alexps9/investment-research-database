@@ -123,6 +123,14 @@ host while keeping the DB on Supabase and the frontend on Vercel. Artifacts live
   services (`litellm,backend,mcp,agent,proxy`) in `NO_PROXY` so LLM/KB calls stay
   direct. httpx auto-uses these env proxies (`trust_env`). Research jobs are in-memory
   (lost on agent restart). Verified e2e on the server (~2–4 min/run, real sources).
+  - **Concurrency**: one async agent worker carries many runs; the gate is two global
+    semaphores — `LLM_MAX_CONCURRENCY=8` (in-flight LLM calls) and
+    `SEARCH_MAX_CONCURRENCY=6` (search+fetch bundles). Run admission is generous
+    (`RESEARCH_MAX_CONCURRENT=6`, queue up to `RESEARCH_MAX_PENDING=30`, else 429).
+    Verified 3 simultaneous runs OK. **Keep `LITELLM_NUM_WORKERS=1`**: the 3.4GB host
+    has ~1.4GB free and each LiteLLM worker ≈1GB, so a 2nd worker OOMs (no swap). LiteLLM
+    is async, so one worker pipelines the throttled load; `num_retries: 2` + DeepSeek
+    fallback absorb Bedrock bursts. Raise worker count only after a RAM upgrade.
 - Embeddings stay on **SiliconFlow bge-m3 (1024 dims)** — reachable from CN directly.
 - ghcr/dockerhub pulls from CN: used the **NJU mirror** `ghcr.nju.edu.cn` for the
   litellm image (direct ghcr blob CDN stalls from China); dockerhub `ginuerzh/gost`

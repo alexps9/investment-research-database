@@ -20,7 +20,7 @@ import json
 import re
 from typing import Awaitable, Callable, Optional
 
-from .llm import make_llm
+from .llm import ainvoke, make_llm
 from .search import search_and_read
 
 ProgressCb = Callable[[str, str, int], None]
@@ -66,7 +66,7 @@ def _extract_json(text: str):
 async def _chat(role: str, system: str, user: str, *, temperature: float = 0.0,
                 max_tokens: int | None = None) -> str:
     llm = make_llm(role, temperature=temperature, max_tokens=max_tokens)
-    resp = await llm.ainvoke([("system", system), ("user", user)])
+    resp = await ainvoke(llm, [("system", system), ("user", user)])
     return (resp.content or "").strip() if isinstance(resp.content, str) else str(resp.content)
 
 

@@ -27,13 +27,14 @@ _jobs: dict[str, dict[str, Any]] = {}
 _research_jobs: dict[str, dict[str, Any]] = {}
 
 # ── Deep-research multi-user controls ────────────────────────────────────────
-# The whole pipeline funnels into one LiteLLM worker + one Bedrock account + one
-# proxy node, so cap how many runs execute at once and queue the rest. A run that
-# can't get a slot stays "queued" (status still "running" so the frontend keeps
-# polling) until one frees up. RESEARCH_MAX_PENDING bounds running+queued so a
-# burst can't blow up memory / the gateway.
-RESEARCH_MAX_CONCURRENT = int(os.getenv("RESEARCH_MAX_CONCURRENT", "2"))
-RESEARCH_MAX_PENDING = int(os.getenv("RESEARCH_MAX_PENDING", "12"))
+# Research is I/O-bound, so a single async worker can carry many runs at once;
+# actual gateway pressure is bounded precisely by the global LLM/search
+# semaphores (LLM_MAX_CONCURRENCY / SEARCH_MAX_CONCURRENCY) inside the agent
+# package, not by the number of runs. So we allow many runs to progress and only
+# queue beyond RESEARCH_MAX_CONCURRENT; RESEARCH_MAX_PENDING bounds running+queued
+# so a burst can't blow up memory.
+RESEARCH_MAX_CONCURRENT = int(os.getenv("RESEARCH_MAX_CONCURRENT", "6"))
+RESEARCH_MAX_PENDING = int(os.getenv("RESEARCH_MAX_PENDING", "30"))
 # Drop finished (done/failed) jobs this many seconds after they end so the
 # in-memory store stays bounded.
 RESEARCH_JOB_TTL = int(os.getenv("RESEARCH_JOB_TTL", "3600"))

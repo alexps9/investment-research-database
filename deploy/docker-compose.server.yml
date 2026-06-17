@@ -40,7 +40,11 @@ services:
         condition: service_started
     volumes:
       - ./litellm.config.yaml:/app/config.yaml:ro
-    command: ["--config", "/app/config.yaml", "--port", "4000", "--num_workers", "1"]
+    # Keep 1 worker on this small (3.4GB) host: each LiteLLM worker costs ~1GB and
+    # a 2nd leaves <350MB free (no swap) → OOM risk. LiteLLM is async, so one worker
+    # already pipelines many concurrent I/O-bound calls; the agent's global LLM
+    # semaphore is the real concurrency gate. Raise LITELLM_NUM_WORKERS after a RAM upgrade.
+    command: ["--config", "/app/config.yaml", "--port", "4000", "--num_workers", "${LITELLM_NUM_WORKERS:-1}"]
     ports:
       - "4000:4000"
     healthcheck:
@@ -108,11 +112,17 @@ services:
       HTTP_PROXY: ${BEDROCK_PROXY_URL:-}
       HTTPS_PROXY: ${BEDROCK_PROXY_URL:-}
       NO_PROXY: localhost,127.0.0.1,backend,mcp,agent,litellm,proxy
-      # Deep-research multi-user limits (one LiteLLM worker + one proxy is the
-      # bottleneck): max runs executing at once, max running+queued, finished-job TTL.
-      RESEARCH_MAX_CONCURRENT: ${RESEARCH_MAX_CONCURRENT:-2}
-      RESEARCH_MAX_PENDING: ${RESEARCH_MAX_PENDING:-12}
+      # Deep-research multi-user limits. Run cap is generous (research is I/O-bound);
+      # the real gateway/proxy pressure is bounded by the global LLM/search
+      # semaphores below. RESEARCH_MAX_PENDING bounds running+queued (else 429);
+      # finished jobs are pruned after RESEARCH_JOB_TTL seconds.
+      RESEARCH_MAX_CONCURRENT: ${RESEARCH_MAX_CONCURRENT:-6}
+      RESEARCH_MAX_PENDING: ${RESEARCH_MAX_PENDING:-30}
       RESEARCH_JOB_TTL: ${RESEARCH_JOB_TTL:-3600}
+      # Global throttles protecting the shared LiteLLM gateway + proxy node:
+      # max concurrent in-flight LLM calls and search+fetch bundles across ALL runs.
+      LLM_MAX_CONCURRENCY: ${LLM_MAX_CONCURRENCY:-8}
+      SEARCH_MAX_CONCURRENCY: ${SEARCH_MAX_CONCURRENCY:-6}
     ports:
       - "9000:9000"
     depends_on:

@@ -131,11 +131,19 @@ curl http://localhost:9000/research/status/<job_id>
   design (≤6 sub-topics, ≤4 searches/topic, concurrency 3) so a run is ~2–4 min.
   Exposed as **async jobs**: agent `POST /research/start` + `GET /research/status/{id}`
   (in-memory job dict with `phase`/`pct`/`message` progress), proxied by the backend.
-  **Multi-user controls** (one LiteLLM worker + one proxy is the bottleneck): a global
-  semaphore caps concurrent runs (`RESEARCH_MAX_CONCURRENT`, default 2) and queues the
-  rest (job stays `running`/phase `queued`); `RESEARCH_MAX_PENDING` (default 12) bounds
+  **Concurrency model** (research is I/O-bound, so one async worker carries many runs;
+  the shared LiteLLM gateway + single proxy node are the real ceiling): the precise
+  gates are two *global* semaphores — `LLM_MAX_CONCURRENCY` (default 8) caps in-flight
+  LLM calls across all runs (`deep_research_agent/llm.py:ainvoke`), and
+  `SEARCH_MAX_CONCURRENCY` (default 6) caps concurrent search+fetch bundles
+  (`deep_research_agent/search.py:search_and_read`). Run admission is generous:
+  `RESEARCH_MAX_CONCURRENT` (default 6) caps runs executing at once and queues the rest
+  (job stays `running`/phase `queued`); `RESEARCH_MAX_PENDING` (default 30) bounds
   running+queued (else 429); finished jobs are pruned after `RESEARCH_JOB_TTL` (1h).
   HTML→text parsing runs via `asyncio.to_thread` so it doesn't stall the event loop.
+  LiteLLM stays at **1 worker** (`LITELLM_NUM_WORKERS`) — each worker costs ~1GB and a
+  2nd OOMs the 3.4GB host; it's async so one worker pipelines the throttled load fine.
+  Burst 429/5xx from Bedrock retry (`num_retries: 2`) then fall back to DeepSeek-V4.
   Proxied by the backend at `/api/research/*` (`backend/app/routers/research.py`, `agent_base_url` →
   `http://agent:9000`). The frontend `/research` page polls status and renders the
   Markdown report (react-markdown + `@tailwindcss/typography`). **The agent container

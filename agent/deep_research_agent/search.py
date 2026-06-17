@@ -8,6 +8,7 @@ can't sink a research run.
 from __future__ import annotations
 
 import asyncio
+import os
 import re
 from typing import Any
 from urllib.parse import parse_qs, unquote, urlparse
@@ -19,6 +20,19 @@ from tools.websearch import search_web
 FETCH_TIMEOUT = 12.0
 MAX_PAGE_CHARS = 6000
 _UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+
+# Global throttle on concurrent search+fetch bundles across ALL research runs —
+# DuckDuckGo + page fetches share one overseas proxy node, so cap total load to
+# avoid getting rate-limited / blocked under concurrency.
+_SEARCH_MAX_CONCURRENCY = int(os.getenv("SEARCH_MAX_CONCURRENCY", "6"))
+_search_sem: asyncio.Semaphore | None = None
+
+
+def _search_semaphore() -> asyncio.Semaphore:
+    global _search_sem
+    if _search_sem is None:
+        _search_sem = asyncio.Semaphore(_SEARCH_MAX_CONCURRENCY)
+    return _search_sem
 
 _TAG_RE = re.compile(r"<(script|style|noscript)[^>]*>.*?</\1>", re.S | re.I)
 _ANGLE_RE = re.compile(r"<[^>]+>")
@@ -73,7 +87,13 @@ async def search_and_read(query: str, *, max_results: int = 5, read_top: int = 3
     """Run a web search, then fetch the top results' content concurrently.
 
     Returns ``{"query", "results": [{title, url, content}], "sources": [{title, url}]}``.
+    Gated by a global semaphore so concurrent runs don't overload the shared proxy.
     """
+    async with _search_semaphore():
+        return await _search_and_read(query, max_results=max_results, read_top=read_top)
+
+
+async def _search_and_read(query: str, *, max_results: int, read_top: int) -> dict[str, Any]:
     hits = (await search_web(query, max_results=max_results)).get("results", [])
     for h in hits:
         h["url"] = _normalize_url(h.get("url", ""))
