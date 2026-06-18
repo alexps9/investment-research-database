@@ -26,6 +26,7 @@ from .kb import (
     fetch_entity,
     fetch_graph_relations,
     kb_search,
+    search_entities,
 )
 from .llm import ainvoke, make_llm
 from .search import search_and_read
@@ -618,6 +619,51 @@ async def _build_scope(
     for eid in hit_ids:
         _classify(eid)
 
+    # Source-type person hits (the signal-source registry, e.g. researchers cited
+    # as "(source)" — Fei-Fei Li, Pieter Abbeel, …) carry a `source` id, not an
+    # entity id, so they were never core people. Resolve each to its knowledge-graph
+    # person ENTITY by name so prominent retrieved figures join 核心人物 with a wiki
+    # link + graph node. Keep their source description as an org/title fallback.
+    src_desc: dict[str, str] = {}          # name(lower) → description
+    source_names: list[str] = []
+    seen_src: set[str] = set()
+    for h in (list(kb_sources) + list(extra_hits)):
+        if h.get("object_type") != "source":
+            continue
+        nm = (h.get("name") or "").strip()
+        if not nm or nm.lower() in seen_src:
+            continue
+        seen_src.add(nm.lower())
+        source_names.append(nm)
+        if h.get("description"):
+            src_desc[nm.lower()] = str(h["description"]).strip()
+    source_person_ids: list[str] = []
+    source_org: dict[str, str] = {}        # entity_id → org/title from source desc
+    if source_names:
+        resolved = await asyncio.gather(
+            *[search_entities(nm, entity_type="person", limit=3) for nm in source_names]
+        )
+        for nm, ents in zip(source_names, resolved):
+            match = None
+            for e in ents or []:
+                if (e.get("name") or "").strip().lower() == nm.lower():
+                    match = e
+                    break
+            if match is None and ents:
+                match = ents[0]
+            if not (match and match.get("id")):
+                continue
+            eid = match["id"]
+            person_ids.add(eid)
+            type_index[eid] = "person"
+            if match.get("name"):
+                name_index[eid] = match["name"]
+            if eid not in source_person_ids:
+                source_person_ids.append(eid)
+            desc = src_desc.get(nm.lower())
+            if desc:
+                source_org[eid] = desc
+
     # Expand papers via FOCUSES_ON to the classified topics (only when topics exist).
     focus_topic_ids = set(topic_ids) | set(lane_ids)
     if focus_topic_ids:
@@ -670,13 +716,17 @@ async def _build_scope(
         if obj.get("entity_type") == "person" and subj.get("entity_type") == "organization":
             person_org.setdefault(obj.get("id"), subj.get("name") or "")
 
-    # Order so the most query-relevant persons come first: direct KB/semantic hits
-    # (e.g. a prominent figure surfaced by the question) ahead of graph-expanded
-    # co-authors. _track_people_events only web-searches the head of this list, so
-    # ordering decides whose recent capital/funding events get surfaced.
-    hit_persons = [i for i in hit_ids if i and i in person_ids]
-    _hit_set = set(hit_persons)
-    person_list = (hit_persons + [i for i in person_ids if i and i not in _hit_set])[:120]
+    # Order so the most query-relevant persons come first: explicitly-retrieved
+    # source people (prominent figures cited as "(source)") and direct KB/semantic
+    # entity hits ahead of graph-expanded co-authors. _track_people_events only
+    # web-searches the head of this list, so ordering decides whose recent
+    # capital/funding events get surfaced.
+    priority = list(dict.fromkeys(
+        [i for i in source_person_ids if i in person_ids]
+        + [i for i in hit_ids if i and i in person_ids]
+    ))
+    _prio_set = set(priority)
+    person_list = (priority + [i for i in person_ids if i and i not in _prio_set])[:120]
 
     # Resolve names for any person still missing one, so core_people can cover ALL
     # the persons we found (every queried person source is a core person).
@@ -691,7 +741,7 @@ async def _build_scope(
         {
             "id": pid,
             "name": name_index.get(pid) or "",
-            "org": person_org.get(pid) or "",
+            "org": person_org.get(pid) or source_org.get(pid) or "",
             "wiki_url": f"/wiki/entities/{pid}",
         }
         for pid in person_list

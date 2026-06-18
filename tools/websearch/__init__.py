@@ -38,30 +38,78 @@ CITED_SOURCE_MAP = {
 }
 
 
+_BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://duckduckgo.com/",
+}
+
+# DuckDuckGo serves several no-API-key HTML front-ends; their markup differs and
+# any one of them can rate-limit / block a given server IP, so we try them in
+# order and parse with several patterns. The first endpoint that yields hits wins.
+_DDG_ENDPOINTS = (
+    "https://html.duckduckgo.com/html/",
+    "https://lite.duckduckgo.com/lite/",
+    "https://duckduckgo.com/html/",
+)
+
+# Multiple link patterns covering the html (result__a) and lite (result-link /
+# bare anchor) layouts.
+_RESULT_PATTERNS = (
+    re.compile(r'<a[^>]*class="result__a"[^>]*href="([^"]+)"[^>]*>(.*?)</a>', re.S | re.I),
+    re.compile(r'<a[^>]*class="result-link"[^>]*href="([^"]+)"[^>]*>(.*?)</a>', re.S | re.I),
+    re.compile(r'<a[^>]+href="(//duckduckgo\.com/l/\?uddg=[^"]+)"[^>]*>(.*?)</a>', re.S | re.I),
+)
+
+
+def _parse_ddg(html: str, max_results: int) -> list[dict[str, str]]:
+    results: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for pattern in _RESULT_PATTERNS:
+        for m in pattern.finditer(html):
+            url = m.group(1)
+            title = re.sub(r"<[^>]+>", "", m.group(2)).strip()
+            if not url or url in seen:
+                continue
+            # skip DDG's own ad/redirect chrome that has no real title
+            if not title:
+                continue
+            seen.add(url)
+            results.append({"title": title, "url": url})
+            if len(results) >= max_results:
+                return results
+        if results:
+            break
+    return results
+
+
 async def search_web(query: str, max_results: int = 8) -> dict[str, Any]:
-    """Free DuckDuckGo HTML search. Returns ``{"results": [{title, url}, ...]}``."""
+    """Free DuckDuckGo HTML search (multi-endpoint, multi-pattern, never raises).
+
+    Returns ``{"results": [{title, url}, ...]}``. Tries each DDG front-end until
+    one returns hits so a single blocked/rate-limited endpoint doesn't zero out
+    web research."""
     if not query or not query.strip():
         return {"results": []}
-    try:
-        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-            resp = await client.post(
-                "https://html.duckduckgo.com/html/",
-                data={"q": query},
-                headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"},
-            )
-    except httpx.RequestError as exc:
-        return {"error": "search_unreachable", "detail": str(exc), "results": []}
-
-    results: list[dict[str, str]] = []
-    for m in re.finditer(
-        r'<a rel="nofollow" class="result__a" href="([^"]+)"[^>]*>(.*?)</a>',
-        resp.text,
-    ):
-        title = re.sub(r"<[^>]+>", "", m.group(2))
-        results.append({"title": title, "url": m.group(1)})
-        if len(results) >= max_results:
-            break
-    return {"results": results}
+    last_err: str | None = None
+    async with httpx.AsyncClient(timeout=TIMEOUT, follow_redirects=True) as client:
+        for endpoint in _DDG_ENDPOINTS:
+            try:
+                resp = await client.post(endpoint, data={"q": query}, headers=_BROWSER_HEADERS)
+            except httpx.RequestError as exc:
+                last_err = str(exc)
+                continue
+            if resp.status_code != 200:
+                last_err = f"status_{resp.status_code}"
+                continue
+            results = _parse_ddg(resp.text, max_results)
+            if results:
+                return {"results": results}
+    return {"error": "search_no_results", "detail": last_err, "results": []}
 
 
 def _is_primary(url: str) -> bool:

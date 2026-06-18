@@ -75,6 +75,19 @@ async def fetch_entity(entity_id: str) -> dict | None:
     return data if isinstance(data, dict) else None
 
 
+async def search_entities(query: str, *, entity_type: str | None = None, limit: int = 5) -> list[dict]:
+    """Name search over entities (backend ILIKE on name). Used to resolve a
+    signal-source person (`sources` registry) to its knowledge-graph person
+    entity, so source-only people still become core people with a wiki link."""
+    if not query or not query.strip():
+        return []
+    params: dict = {"q": query.strip(), "limit": limit}
+    if entity_type:
+        params["entity_type"] = entity_type
+    data = await _get("/entities", params)
+    return data if isinstance(data, list) else []
+
+
 async def fetch_graph_relations(*, limit: int = 5000) -> list[dict]:
     """Fetch the full relation list (with nested subject/object entities)."""
     data = await _get("/graph/relations", {"limit": limit})

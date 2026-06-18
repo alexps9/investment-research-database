@@ -202,7 +202,11 @@ Submitting a question `router.push('/?id=<uuid>')` → progress renders in place
   covers **all** queried person entities (each is a core person; names resolved via fetch).
   Authors are captured from **every** retrieved/expanded paper (`AUTHORED` expansion runs
   unconditionally — NOT gated on topic classification — so thin/empty topic hits still yield
-  comprehensive core people).
+  comprehensive core people). People cited as **`(source)`** (the `sources` signal-registry,
+  e.g. Fei-Fei Li / Pieter Abbeel) carry a *source* id, not an entity id, so `_build_scope`
+  resolves each to its person **entity** by name (`search_entities`) and folds it into
+  `core_people` (gaining a `/wiki/entities/{id}` link + graph node). Source people + direct KB
+  hits are ordered **first**, so they are the ones `_track_people_events` web-searches.
   `route_categories=[{key,label}]` + `paper_categories={paper_id:key}` are **dynamically
   generated** by `_classify_routes` (count is data-driven, NOT hard-coded). The Trajectory
   chart uses these as its lanes (so they match report §2 sub-headings); People graph
