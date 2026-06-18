@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.hh-research.subscribe-listener</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/haolinguo/claude code/HH research/daily-digest/scripts/subscribe_listener.sh</string>
+    </array>
+
+    <!-- Long-running daemon: start at load, auto-restart on crash. -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <!-- Throttle: wait at least 60s between restart attempts to avoid hammering
+         lark-cli / event bus if there's a startup failure loop. -->
+    <key>ThrottleInterval</key>
+    <integer>60</integer>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/haolinguo/claude code/HH research/daily-digest</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/haolinguo/claude code/HH research/daily-digest/data/logs/cron/launchd_subscribe_listener.out</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/haolinguo/claude code/HH research/daily-digest/data/logs/cron/launchd_subscribe_listener.err</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>TZ</key>
+        <string>Asia/Shanghai</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>LANG</key>
+        <string>en_US.UTF-8</string>
+        <key>LARK_CLI_NO_PROXY</key>
+        <string>1</string>
+    </dict>
+</dict>
+</plist>

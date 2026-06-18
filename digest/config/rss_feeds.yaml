@@ -1,0 +1,108 @@
+# RSS feeds for company / lab official channels.
+# Used by src/hh_research/collectors/rss_collector.py.
+#
+# Each entry:
+#   - name: display name (used as author_name in signals)
+#   - url: feed URL
+#   - category: "company" | "university" | "other"
+#   - track: optional default track for items from this feed (overridden by extractor)
+#   - whitelist_name: optional. Maps this feed to a Bitable whitelist 名字 so its RSS
+#       signals get author_record_id and inherit that entry's tier bonus in headline
+#       scoring (daily_writer._headline_score). If omitted, falls back to `name`. (6-09)
+#
+# To add a feed: verify it returns 200 with RSS/Atom content via:
+#   curl -A "Mozilla/5.0" -L <url>
+# Then add an entry below.
+
+feeds:
+  # ---- Companies ----
+  - name: OpenAI
+    url: https://openai.com/news/rss.xml
+    category: company
+
+  - name: Google DeepMind
+    url: https://deepmind.google/blog/rss.xml
+    category: company
+
+  - name: Google Research
+    url: https://research.google/blog/rss/
+    category: company
+
+  - name: Meta Engineering
+    url: https://engineering.fb.com/feed/
+    category: company
+
+  - name: Microsoft Research
+    url: https://www.microsoft.com/en-us/research/feed/
+    category: company
+
+  - name: NVIDIA Blog
+    url: https://blogs.nvidia.com/feed/
+    category: company
+
+  - name: Apple ML Research
+    url: https://machinelearning.apple.com/rss.xml
+    category: company
+
+  - name: Together AI
+    url: https://www.together.ai/blog/rss.xml
+    category: company
+
+  - name: Sakana AI
+    url: https://sakana.ai/feed.xml
+    category: company
+
+  # ---- Universities & Labs ----
+  - name: Berkeley BAIR
+    url: https://bair.berkeley.edu/blog/feed.xml
+    category: university
+
+  - name: Stanford AI Lab
+    url: https://ai.stanford.edu/blog/feed.xml
+    category: university
+
+  - name: MIT News (AI topic)
+    url: https://news.mit.edu/rss/topic/artificial-intelligence2
+    category: university
+
+  - name: CMU ML Blog
+    url: https://blog.ml.cmu.edu/feed/
+    category: university
+
+  - name: Princeton NLP
+    url: https://princeton-nlp.github.io/feed.xml
+    category: university
+
+  # ---- 行业资讯 / 媒体（2026-06-09 新增，经 whitelist_name 映射白名单记录、吃 tier bonus）----
+  - name: SemiAnalysis
+    url: https://semianalysis.com/feed/
+    category: other
+    whitelist_name: SemiAnalysis
+  - name: Latent Space
+    url: https://www.latent.space/feed
+    category: other
+    whitelist_name: Latent Space
+  - name: 硅谷101
+    url: https://feeds.fireside.fm/sv101/rss
+    category: other
+    whitelist_name: 硅谷101
+  - name: Dwarkesh Patel
+    url: https://www.dwarkesh.com/feed
+    category: other
+    whitelist_name: Dwarkesh Patel
+
+  # ---- Capital / business news (2026-06-12 用户指示：资本动向信号源) ----
+  - name: TechCrunch
+    url: https://techcrunch.com/feed/
+    category: other
+    whitelist_name: TechCrunch  # Bitable 已有记录（X 同名账号），吃 tier 加权
+  - name: Crunchbase News
+    url: https://news.crunchbase.com/feed/
+    category: other
+
+# Notes (feeds confirmed unavailable as of 2026-04, skip):
+#   - Anthropic — no public RSS
+#   - Mistral, xAI, Reka — no RSS
+#   - MIT CSAIL News — 404
+#   - Meta AI Research blog — only Engineering subset works
+#   - HuggingFace Papers — 401 (auth required)

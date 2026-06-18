@@ -1,0 +1,897 @@
+<title>HH Research Daily · 2026-05-15</title>
+
+<h2>头条</h2>
+<ul>
+<li>Anthropic 携手 Gates Foundation，承诺 2 亿美元资助推动 AI 公益落地（产业全景·资本流向）</li>
+<li>Google I/O 将发布新 Gemini 模型，性能据称对标 GPT-5.5（行业应用·认知模型）</li>
+<li>前 OpenAI 团队发布 Interaction Model，200ms 粒度实时多模态交互打破对话轮次范式（行业应用·认知模型）</li>
+<li>微软 MinT 实现单基座模型百万级 LoRA adapter 托管，handoff 提速 18.3x（前沿研究·AI infra）</li>
+</ul>
+<hr/>
+
+<h4>Anthropic 与 Gates Foundation 达成 2 亿美元合作，Claude 进军全球公益领域</h4>
+<ul>
+<li><b>信号源</b>：Anthropic 官方</li>
+<li><b>链接</b>：<a href="https://x.com/AnthropicAI/status/2054941901900611787">Anthropic x Gates Foundation Partnership</a></li>
+</ul>
+<callout emoji="🌟">
+<p><b>Our Insights</b>：这相当于将一款前沿 AI 工具以"基础设施捐赠"的形式嵌入全球最大的公益网络——其战略意义不仅在慈善本身，更在于通过真实世界的高复杂度场景（流行病学、农业供应链、教育公平）为模型积累无法在实验室复现的部署经验与安全反馈。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Anthropic 与 Gates Foundation 达成战略合作，承诺提供 2 亿美元的资助、Claude credits 及技术支持，覆盖全球健康、生命科学、教育、农业和经济流动等领域。合作将通过直接技术接入和定制化部署，让全球发展组织能够利用 Claude 处理复杂研究与服务交付任务。</p>
+<p><b>产品定位</b></p>
+<p>面向全球公益基础设施的 AI 能力输出合作，以资金+API credits+技术支持三位一体模式，拓展 Claude 在非商业高影响力场景的应用覆盖。</p>
+
+<hr/>
+
+<h4>Google 将在 I/O 大会发布新 Gemini 模型，性能据称对标 GPT-5.5</h4>
+<ul>
+<li><b>信号源</b>：Rohan Paul（独立研究者，转述报道）</li>
+<li><b>链接</b>：<a href="https://x.com/rohanpaul_ai/status/2054952765278072915">Google to unveil new Gemini model at I/O, reportedly matching GPT-5.5</a></li>
+</ul>
+<callout emoji="🔥">
+<p><b>Our Insights</b>：顶级 frontier model 之间的性能差距从"代际领先"收窄到"同代持平"，意味着模型能力本身正从差异化壁垒转变为基础商品——未来竞争轴心将加速向分发生态、推理成本和垂直场景适配迁移。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>据报道 Google 将在即将举行的 I/O 大会上发布新一代 Gemini 模型，性能据称与 OpenAI 的 GPT-5.5 旗鼓相当。具体架构细节与 benchmark 数据尚未披露，但该消息进一步印证了顶尖模型厂商间的能力差距正在持续收窄的行业趋势。</p>
+<p><b>产品定位</b></p>
+<p>Google 下一代旗舰基础模型，面向全栈 AI 产品线（Search、Workspace、Android、Cloud）的核心引擎升级。</p>
+
+<hr/>
+
+<h4>前 OpenAI 团队创立 Thinking Machines Inc，发布 200ms 粒度实时多模态 Interaction Model</h4>
+<ul>
+<li><b>信号源</b>：Thinking Machines Inc · OpenAI（Carlos E. Perez 介绍）</li>
+<li><b>链接</b>：<a href="https://x.com/IntuitMachine/status/2054863141138284930">Thinking Machines Interaction Model</a></li>
+</ul>
+<callout emoji="🚀">
+<p><b>Our Insights</b>：传统对话系统的 turn-taking 机制本质上是把人类语言的连续流强行离散化为"你说完我再说"的半双工协议——Interaction Model 将感知窗口压缩到 200ms micro-turn，相当于把电话客服式的排队等待改造成面对面的自然对话节奏，这可能是 AI 助手从"工具"走向"同伴"的关键界面变革。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>前 OpenAI 成员创立的 Thinking Machines Inc 发布 Interaction Model，支持 200ms 粒度的实时多模态感知，打破传统 AI 对话的轮次限制，实现音频、视频、文本的真正并发协作交互。系统能够在用户说话过程中同步处理视觉输入并实时介入，而非等待完整 utterance 结束。</p>
+<p><b>产品定位</b></p>
+<p>面向下一代人机交互范式的实时多模态 AI 引擎，解决现有对话系统因 turn-taking 机制导致的延迟与不自然感问题。</p>
+
+<hr/>
+
+<h4>微软 MinT：单一 1T+ 基座模型托管百万级 LoRA adapter，切换提速 18.3x</h4>
+<ul>
+<li><b>信号源</b>：Microsoft（MindLab）</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13779v1">MinT: MindLab Toolkit for LoRA Post-Training and Online Serving</a></li>
+</ul>
+<callout emoji="✨">
+<p><b>Our Insights</b>：这本质上回答了"如何让一个昂贵的大模型底座同时服务百万个定制策略"的工程挑战——类比于一台主机通过热插拔模块支撑百万种配置而无需重启。它标志着 LoRA 部署从"单次微调-部署"向"持续策略目录管理"的平台化范式演进。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>微软提出 MinT（MindLab Toolkit），一套面向 LoRA 后训练与在线 serving 的托管基础设施，支持单一 1T+ 基础模型上管理百万级 LoRA adapter 策略。系统在三个维度扩展：Scale Up 兼容前沿 dense/MoE 架构，Scale Down 通过 rank-1 adapter 将传输开销压缩至 base model 的 1% 以下，Scale Out 实现策略地址空间与 GPU working set 的解耦。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：MinT 将 LoRA adapter 生命周期抽象为 rollout → update → export → evaluation → serving → rollback 的服务化流水线，base model 常驻显存不动，adapter 作为轻量制品流转</li>
+<li><b>技术细节</b>：Scale Down 路径只传输导出的 LoRA adapter 而非合并后完整 checkpoint，将 handoff 通信量压缩到极低水平；Scale Out 路径将 MoE 架构的 LoRA tensor packing 后存入引擎，冷加载视为可调度后台任务——类似 CDN 按需预热机制</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>adapter-only handoff 将模型切换在 4B dense 上提速 18.3x、30B MoE 上提速 2.85x，不增加峰值显存</li>
+<li>concurrent multi-policy GRPO 训练使 wall time 缩短 1.77x（dense）和 1.45x（MoE）</li>
+<li>tensor-parallel 部署支持 10^6 量级 addressable adapter 目录，packed MoE LoRA tensors 使引擎加载速度提升 8.5-8.7x</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13779v1]]</p>
+
+<hr/>
+<h2>一、前沿研究 (Research Frontier)</h2>
+<h3>认知模型 (Cognitive Models)</h3>
+
+<h4>XCount：基于代数决策图的决策树集成量化 Sensitivity 分析框架</h4>
+<ul>
+  <li><b>信号源</b>：University of Toronto · Vector Institute</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13830v1">Quantitative Sensitivity Analysis for Decision Tree Ensembles</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b>：传统决策树验证只回答"是否存在"敏感性漏洞，而本工作将问题升级为"有多少、占多大比例"——类似从"房子有没有漏水"升级到"哪些区域存在渗漏风险及其面积占比"，为安全关键场景提供更可操作的风险量化手段。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>针对决策树集成（DTE）的量化 sensitivity 分析框架，将输入空间离散化后编码为代数决策图（ADD），通过组合式子问题分解实现高效枚举。工具 XCount 在规模化 ensemble 基准上显著优于 model counter 基线方法，为 DTE 的安全性验证提供了从定性到定量的升级路径。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：将决策树集成的 sensitivity 问题离散化为对输入空间区域的枚举任务，整体编码为代数决策图（ADD）；利用 ADD 天然支持组合运算的特性，将大规模问题拆分为若干可独立求解的子问题，再组合得到最终计数结果，并附带 certified error 与 confidence bound。</li>
+  <li><b>技术细节</b>：ADD 相当于把决策树集成的所有路径压缩成一张共享结构的有向无环图，每个节点对应一个特征判断，叶节点存储计数权重。通过对 ADD 进行自底向上的组合式动态规划，XCount 可以避免对所有输入路径的穷举枚举，类似于用"因式分解"代替逐项求和，大幅降低运算量。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>将 DTE sensitivity 量化问题编码为代数决策图（ADD），支持组合式子问题分解，降低计算复杂度</li>
+  <li>提出 XCount 工具，在给定置信度与误差界内高效枚举输入空间中对 sensitivity 敏感的区域</li>
+  <li>实验表明 XCount 在不同规模 ensemble（树数量与深度）基准上显著优于 model counter 方法</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：XCount 在多规模 DTE 基准测试上对比 model counter 基线取得显著加速，并随 ensemble 规模增大保持良好可扩展性，同时提供有界误差保证。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13830v1]]</p>
+
+<hr/>
+
+<h4>AEvo：通过 Meta-Editing 驱动 Agentic Evolution 的搜索框架，超越最强 baseline 26%</h4>
+<ul>
+  <li><b>信号源</b>：独立研究者</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13821v1">AEvo: Agentic Evolution via Meta-Editing</a></li>
+</ul>
+<callout emoji="🧠">
+  <p><b>Our Insights</b>：AEvo 的核心洞察在于：与其让 agent 直接"答题"，不如让它修改"出题规则"——类似于教练不上场踢球而是不断调整战术手册。这标志着 agentic evolution 从"逐步试错"转向"自我修订搜索机制"的范式演化，让积累的失败与反馈真正成为可操作的元信息。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>AEvo 将 agentic evolution 形式化为交互式环境，meta-agent 通过编辑控制未来演化的 procedure 或 agent context（而非直接提出候选方案）来引导长期搜索。在 agentic/reasoning benchmark 上相比最强 baseline 提升 26%，并在三项开放式优化任务上达到 SOTA。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：AEvo 将 agentic evolution 建模为交互式环境：累积的候选方案、反馈、执行轨迹和失败记录构成 process-level state；meta-agent 观察该状态后，不直接生成下一个候选，而是对控制未来演化的 procedure（固定流程）或 agent context（提示/记忆）进行编辑，从而统一驾驭 procedure-based 和 agent-based 两类演化范式。</li>
+  <li><b>技术细节</b>：普通 evolution 方法像棋手每步走一步，而 AEvo 的 meta-agent 更像裁判修改棋规——它看着所有已经发生的对局记录，决定是否修改搜索流程本身（如调整采样策略、修改评估标准），从而让历史证据直接作用于未来的搜索轨迹，而非仅仅影响单次候选生成。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 AEvo meta-editing 框架，将演化上下文作为 process-level state，meta-agent 通过编辑 procedure/agent context 驱动未来搜索</li>
+  <li>在 agentic 与 reasoning benchmark 上超越 5 个 evolution baseline，相对最强 baseline 提升 26%</li>
+  <li>在三项开放式优化任务中超越 4 个 baseline 并在相同迭代预算下达到 SOTA</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：AEvo 在 agentic/reasoning benchmark 上相比最强 baseline 实现 26% 相对提升，并在三项开放式优化任务中同等迭代预算下达到 SOTA，验证了 meta-editing 对长期演化搜索的有效性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13821v1]]</p>
+
+<hr/>
+
+<h4>QLAM：将量子叠加引入 State-Space Model 隐状态，在序列分类上超越 Transformer</h4>
+<ul>
+  <li><b>信号源</b>：独立研究者</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13833v1">QLAM: Quantum Long-Attention Memory for State-Space Models</a></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>Our Insights</b>：传统 SSM 用加法叠加历史信息，本质上是"在单个容器里不断混合颜料"——信息互相覆盖；QLAM 改用量子态的振幅编码历史，让多个历史信息以叠加态共存。值得关注的深层问题是：这种量子优势在经典硬件上通过模拟实现时，是否仍具备真正的计算收益，还是仅为表达能力的重新参数化。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>QLAM 将量子叠加原理引入 state-space model（SSM）的隐状态表示，以参数化量子电路替代经典加性状态更新，在 sMNIST、sFashion-MNIST、sCIFAR-10 序列图像分类任务上优于 RNN 基线和 Transformer 模型，同时保持线性时间复杂度。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：QLAM 将 SSM 的经典隐状态替换为量子态，其振幅编码历史 token 的叠加信息。状态通过参数化量子电路（conditioned on input）进行酉变换演化，避免了加性/线性更新的信息压缩限制。任务相关信息通过查询依赖的量子测量（query-dependent measurement）提取，整体保持线性时间复杂度。</li>
+  <li><b>技术细节</b>：每个时间步，输入 token 驱动一组可学习的量子门参数，对当前量子隐状态施加酉变换；不同于经典 GRU/S4 的加法更新，量子幺正变换保持态的范数并允许振幅间的相消/相长干涉——类似于用棱镜折射而非调色板混色来保留原始频率信息。输出通过对量子态做参数化测量得到，等价于一个依赖查询向量的内积投影。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 QLAM 混合量子-经典记忆机制，用量子叠加态编码序列历史，保持 SSM 线性时间复杂度</li>
+  <li>隐状态通过输入条件化的参数化量子电路演化，支持非经典全局依赖捕获</li>
+  <li>在 sMNIST、sFashion-MNIST、sCIFAR-10 上均优于 RNN 基线和 Transformer 模型</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13833v1]]</p>
+
+<hr/>
+
+<h4>Pinductor：LLM 先验驱动的 POMDP 世界模型归纳，无需隐状态访问即匹配特权方法</h4>
+<ul>
+  <li><b>信号源</b>：University of Oxford（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13740v1">Pinductor: POMDP Induction from Observation-Action Trajectories via LLM Priors</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>Our Insights</b>：与其让智能体通过大量试错来摸索环境规律，不如借助语言模型已有的世界知识"猜出"一个大致合理的环境模型再微调——类似新员工入职时用行业经验快速推断公司运作规则。这一范式表明，partial observability 这一经典难题或许可以通过语言先验绕过大量探索，而非依赖更复杂的算法。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Oxford 提出 Pinductor（POMDP-inductor）：利用 LLM 先验从少量 observation-action 轨迹中归纳候选 POMDP 世界模型，并通过基于 belief 的似然分数迭代优化。在不依赖隐状态特权信息的情况下，匹配需要隐状态访问的 LLM-POMDP 方法性能，同时显著超越 tabular POMDP baseline 的样本效率。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：Pinductor 分两步：首先让 LLM 从少量 observation-action 轨迹中生成候选 POMDP 模型（包括状态空间、转移函数、观测函数等）；然后通过计算 belief-based likelihood 分数对候选模型进行迭代优化，使模型更好地拟合观测数据，整个过程无需访问环境的隐状态。</li>
+  <li><b>技术细节</b>：在迭代优化阶段，LLM 根据当前模型与观测数据之间的似然差距生成改进建议，类似于一位侦探反复修正对案件的推断，每次根据新证据调整自己的心理模型，直到它能解释所有观测到的线索。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>Pinductor 在仅使用少量轨迹的情况下，性能与需要隐状态特权访问的 LLM-POMDP 方法持平，同时大幅提升样本效率</li>
+  <li>性能随 LLM 能力提升而提升，且在环境语义信息被隐去时表现优雅退化，显示出良好鲁棒性</li>
+  <li>方法完全基于 observation-action 轨迹，不需要隐状态标注，更贴近真实部署场景</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：Pinductor 在多个 POMDP 环境上匹配特权方法性能，且样本效率显著优于 tabular baseline；代码已开源于 GitHub。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13740v1]]</p>
+
+<hr/>
+
+<h4>TFlow：用 LoRA 权重扰动替代自然语言消息，Multi-Agent 通信 token 减少 83%、加速 4.6 倍</h4>
+<ul>
+  <li><b>信号源</b>：独立研究者</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13839v1">TFlow: Thought Flow via Transient LoRA for Multi-Agent Communication</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b>：这项工作回答了"agent 之间除了语言以外还能用什么媒介传递思想"的问题——把自然语言通信类比为"口头传递命令"，而将权重扰动类比为"直接修改接收者的神经回路"。这标志着 multi-agent 协作范式从 token 级信息交换转向参数空间级知识注入，可能根本性地改变 agent 通信的带宽瓶颈。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>TFlow（Thought Flow）框架将 multi-agent LLM 的通信方式从自然语言消息改为将 sender 隐状态编译成 LoRA 低秩权重扰动直接作用于 receiver。在五个 benchmark 上以三个 Qwen3-4B 为 agent 时精度提升最高 8.5 点，总处理 token 减少最高 83.27%，推理墙钟时间加速最高 4.6 倍。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：TFlow 由三类组件构成：冻结的 role-prompted sender agents 对输入进行推理并提取内部隐状态；learned parameter generator 将 sender 激活映射为低秩 LoRA 扰动；receiver 在生成时临时融合这些扰动。整个流程无需改变 receiver 的文本上下文。</li>
+  <li><b>技术细节</b>：Parameter generator 以多个 sender 的激活作为输入，输出针对 receiver 各 transformer 模块的 LoRA 矩阵（低秩分解 A、B 矩阵），在每个 query 的 receiver 前向过程中临时叠加到对应权重上，生成结束后丢弃——类似于给接收者"临时戴上耳机并接受心灵感应"，而不是让他读一段文字后再回答。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>TFlow 将 sender 的内部激活通过 learned parameter generator 映射为针对 receiver 的 transient LoRA 扰动，仅在生成阶段融合应用，不永久改变模型参数</li>
+  <li>与纯文本三 agent 基线相比，总处理 token 减少最高 83.27%，推理墙钟时间加速最高 4.6 倍，在五个 benchmark 中四个上保持竞争力</li>
+  <li>相比单独 receiver 基线，TFlow 在五个 benchmark 上精度提升最高 8.5 个百分点，同时 processed tokens 减少最高 32.69%</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13839v1]]</p>
+
+<hr/>
+
+<h4>EconAI：清华提出首个统一宏微观经济环境的 LLM Agent 仿真框架</h4>
+<ul>
+  <li><b>信号源</b>：Tsinghua University</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13762v1">EconAI: A Unified LLM Agent Framework for Macro-Micro Economic Simulation</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>Our Insights</b>：传统经济 agent 模拟依赖静态规则，而 EconAI 让 LLM agent 像真实经济人一样"有情绪、有记忆、有目标"。这延续了 LLM-in-the-loop 仿真的范式，但将行为经济学中"个人心理信念"量化为可调参数植入 agent 建模，本质上在回答如何让 AI agent 的决策过程从单次优化跃升为动态演化的问题。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>清华大学提出 EconAI 框架，通过 economic sentiment indexing (ESI)、memory weighting 和动态决策机制，使 LLM 驱动的 agent 在经济模拟中同时兼顾短期优化与长期规划，声称是首个统一宏微观经济环境的 LLM 仿真系统。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：EconAI 以 LLM 为 agent 核心，叠加三层机制：ESI 量化市场情绪与个体经济信念；memory weighting 动态调整历史信息权重；动态决策模块将工作行为与消费行为相关联，构成统一的宏微观经济仿真框架。</li>
+  <li><b>技术细节</b>：ESI 类似于给每个 agent 设置一个"经济体温计"，实时反映市场信号对其主观预期的影响；memory weighting 则像记忆的"遗忘曲线"，让 agent 对近期事件赋予更高权重，对久远数据逐渐淡化，从而模拟人类决策中的锚定效应与适应性调整。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 economic sentiment indexing (ESI) 机制，将经济信念量化以驱动 agent 决策行为</li>
+  <li>引入 memory weighting 模块，动态调整历史数据对当前决策的影响权重</li>
+  <li>实验显示 EconAI 更准确复现真实世界就业-消费周期，并提升决策鲁棒性</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：EconAI 在经济响应稳定性、就业-消费周期复现及决策鲁棒性上均优于传统静态 agent 基准，展现出更接近真实人类行为的宏微观经济模拟能力。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13762v1]]</p>
+<h3>多模态智能 (Multimodal Intelligence)</h3>
+
+<h4>Omnimodal LLM 的"表征-行为鸿沟"：模型感知到冲突却不拒绝虚假前提</h4>
+<ul>
+  <li><b>信号源</b>：学术预印本（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13737v1">IMAVB: Investigating the Representation-Action Gap in Omnimodal LLMs</a></li>
+</ul>
+<callout emoji="🧠">
+  <p><b>Our Insights</b>：模型"感知到了"但"说不出来"——这揭示了多模态大模型的核心短板不在感官输入的编码，而在将内部表征转化为输出行为的翻译层。类似于目击者明明看见了证据却在作证时附和了虚假陈述，问题不是眼睛，而是表达机制。Representation-Action Gap 的量化为未来对齐研究提供了新的诊断维度。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>研究者提出 IMAVB 基准（500 条长影片片段），测试 omnimodal LLM 在文本前提与视听感知矛盾时的冲突检测能力。在 8 个开源模型及 Gemini 3.1 Pro 上发现 Representation-Action Gap：隐层状态能可靠编码感知-前提冲突，但模型输出几乎不拒绝虚假前提。进一步提出 PGLA 探针引导 logit 调整方案改善拒绝行为。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：IMAVB 采用 2×2 实验设计：目标模态（视觉 vs. 音频）× 前提条件（标准 vs. 误导性），通过长影片片段构造文本前提与实际视听内容相矛盾的问题，从而将冲突检测能力与常规多模态理解能力解耦测量。</li>
+  <li><b>技术细节</b>：PGLA（Probe-Guided Logit Adjustment）通过线性探针提取模型中间层对感知-前提不匹配的编码信号，并在解码阶段将该信号直接调整 logit 分布，引导模型拒绝与自身感知矛盾的文本前提——类似于在模型的"嘴边"安装一个感知校正器，让内心已知的事实能被说出来。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 IMAVB 基准，2×2 设计交叉目标模态（视觉/音频）与前提条件（标准/误导性），500 条长片段</li>
+  <li>发现 Representation-Action Gap：隐层状态可靠编码感知-前提不匹配，但模型输出拒绝率极低</li>
+  <li>音频 grounding 显著落后于视觉 grounding，且该差距对 7 种 prompt 变体均有抵抗性</li>
+  <li>提出 PGLA，将隐层冲突信号注入解码过程，持续改善拒绝行为</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：多模态 LLM 的内部表征已具备冲突检测能力，但行为层面缺乏对应拒绝机制；PGLA 证明可通过探针桥接这一鸿沟，为未来对齐干预提供了轻量化路径。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13737v1]]</p>
+
+<hr/>
+
+<h4>SPA：用 Optimal Transport 对齐 Patch-语义实现 CLIP 增量学习 SOTA</h4>
+<ul>
+  <li><b>信号源</b>：学术预印本（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13835v1">SPA: Semantic-guided Patch-level Alignment for Class-Incremental Learning</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b>：当前 CLIP-based CIL 方法只使用全局 [CLS] token，本质上是在用"一句话概括全书"来做增量学习。SPA 的核心洞察是：局部 patch 特征（兔子的长耳朵、蓬松尾巴）比全局嵌入更具判别性——将细粒度视觉线索与语义描述结构化对齐，标志着 CLIP-based 持续学习范式从全局语义对齐向局部-语义联合对齐的演化。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 SPA（Semantic-guided Patch-level Alignment）方法用于基于 CLIP 的 Class-Incremental Learning，利用 GPT-4/5 生成类别语义描述，通过 optimal transport 对齐判别性 patch token 与语义 token，并结合 Gaussian 伪特征重放缓解灾难性遗忘，在多个 CIL benchmark 上达到 state-of-the-art。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：SPA 整体分三步：(1) 对每个类别构建代表性视觉样本，送入 GPT 生成 class-wise 语义描述；(2) 以语义描述为引导筛选判别性 patch token，再通过 optimal transport 将 patch token 与语义 token 进行结构化对齐；(3) 引入 task-specific projectors 适配下游增量任务，并从存储的类别 Gaussian 分布中采样伪特征校准旧类表示。</li>
+  <li><b>技术细节</b>：Optimal transport 在这里的作用类似于"最优货物调度"：将 patch 特征空间中的"货物"（局部视觉线索）按最小成本运送到语义空间中的"仓库"（语义描述 token），使二者形成有意义的一一对应，而非简单地做全局池化或平均。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 SPA 方法，通过 optimal transport 实现 patch-level 视觉特征与类别语义描述 token 的结构化跨模态对齐</li>
+  <li>使用 GPT 生成 class-wise 语义描述指导判别性 patch 筛选，挖掘 CLIP encoder 中被忽视的局部表示</li>
+  <li>引入 task-specific projectors 与 Gaussian 统计伪特征重放，缓解增量学习中的灾难性遗忘</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13835v1]]</p>
+
+<hr/>
+
+<h4>MMProLong：5B token 预算将 VLM 上下文从 32K 扩至 128K，泛化到 512K</h4>
+<ul>
+  <li><b>信号源</b>：学术预印本（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13831v1">MMProLong: Systematic Investigation of Long-Context Continual Pre-training for Large Vision-Language Models</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>Our Insights</b>：这项工作本质上回答了"如何用最少数据代价让 VLM 学会处理超长上下文"的工程配方问题——发现关键信息检索能力而非推理本身才是长上下文的真正瓶颈，类似于图书馆馆员最需要的是快速定位书目的能力而非深度阅读能力。均衡长度分布数据胜过堆砌最大长度数据，揭示了长上下文泛化能力的形成规律。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>系统研究 LVLM 长上下文持续预训练方法，将 Qwen2.5-VL-7B 从 32K 扩展至 128K context，仅需 5B token 预算。长文档 VQA 分数提升 7.1%，无需额外训练可泛化至 256K/512K context，同时保持短上下文能力不退化。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：提出 LongPT 训练方案：在 Qwen2.5-VL-7B 基础上进行长上下文持续预训练，数据混合策略上以长文档 VQA 为主，配以少量推理数据保持任务多样性，总预算仅 5B token。通过大量消融实验确定序列长度分布、数据类型配比和短上下文保持策略。</li>
+  <li><b>技术细节</b>：训练数据构建上采用不同长度区间均匀分布采样（而非堆砌 128K 最大长度样本），类似于给游泳选手在各种水深的泳池中训练而非只在深水区训练；检索密集型数据优先配比以攻克检索瓶颈，指令格式的长文档数据本身已能保住短上下文能力，无需专门混入短数据。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>长文档 VQA 训练效果显著优于 OCR 转录，成为更有效的数据形式</li>
+  <li>均衡序列长度分布的数据混合优于以目标长度（128K）为主的数据，泛化更好</li>
+  <li>MMProLong 在 128K 训练窗口外的 256K/512K context 上仍保持强性能，无需额外训练</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：MMProLong 在长文档 VQA 上提升 7.1%，并在无任务专项监督下自然泛化至网页多模态检索、长上下文视觉-文本压缩和长视频理解任务，同时保持短上下文能力。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13831v1]]</p>
+<h3>世界模型 (World Model)</h3>
+
+<h4>LMPath：语言模型驱动语义先验，UAV 搜索路径从几何覆盖升级为推理引导</h4>
+<ul>
+  <li><b>信号源</b>：Ross Taylor（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13782v1">LMPath</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b>：LMPath 本质上回答了一个问题：如何让无人机"理解"要找什么，而不只是机械地扫遍每个格子。这标志着 UAV 路径规划从几何覆盖转向语义引导，类似于把地毯式搜查升级为有线索的侦探推理——语言模型充当"地理常识顾问"角色，将搜索效率的瓶颈从硬件续航转移到先验知识质量上。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 LMPath，一种结合生成式语言模型与卫星图像 foundation vision model 的 UAV 搜索路径生成 pipeline，通过语义先验替代传统几何覆盖路径，在真实 UAV 飞行与仿真中验证了对目标定位效率的提升。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：LMPath 由两个主要阶段组成：(1) 语义先验生成——输入地理围栏和目标物体文本 prompt，由生成式语言模型推断环境中目标存在的高概率语义区域，再用 foundation vision model 对卫星图像进行子区域分割；(2) 路径规划——基于上述先验根据不同优化目标生成 UAV 飞行路径。</li>
+  <li><b>技术细节</b>：语言模型类似一个"地理常识库"，根据目标类型（如迷路人员、特定车辆）推断其最可能出现的地貌或功能区域（如树林边缘、停车场附近）；视觉 foundation model 则在卫星图像上把这些语义区域落地为可飞行的多边形子区域，再交给路径规划模块处理。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>利用生成式语言模型推断目标物体可能出现的语义区域，结合卫星图像分割生成探索先验</li>
+  <li>基于探索先验支持多种路径优化目标：最小化期望定位时间、最大化有限距离内发现概率或缩减搜索子区域</li>
+  <li>在真实 UAV 大尺度环境飞行及仿真中，LMPath 路径优于传统几何路径规划方法</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：真实 UAV 飞行实验与仿真均表明，LMPath 生成的语义引导路径在目标搜索效率上显著优于传统几何覆盖路径规划方法。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13782v1]]</p>
+
+<hr/>
+
+<h4>AnyFlow：基于 flow map 的 any-step 视频扩散蒸馏，步数越多质量越好</h4>
+<ul>
+  <li><b>信号源</b>：（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13724v1">AnyFlow</a></li>
+</ul>
+<callout emoji="🧠">
+  <p><b>Our Insights</b>：一致性蒸馏让模型"跳着走"却牺牲了步数增加带来的质量增益；AnyFlow 本质上在回答：如何在保留 ODE 轨迹优化路径的前提下同时享受蒸馏提速——让测试时算力可以真正转化为生成质量的单调提升，而非在某个步数后进入饱和平台。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 AnyFlow，首个基于 flow map 的 any-step 视频扩散蒸馏框架，将蒸馏目标从端点一致性映射转为任意时间区间的 flow-map transition，并通过 Flow Map Backward Simulation 分解完整 Euler rollout 实现 on-policy 蒸馏，支持 1.3B 至 14B 参数规模的双向与因果架构。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：AnyFlow 以 flow map 为核心，将蒸馏目标重新定义为任意时间区间 [t, r] 上的 flow-map transition 学习，而非经典一致性蒸馏的全区间端点映射。训练时通过 Flow Map Backward Simulation 将完整 Euler rollout 分解为多段 shortcut flow-map 转换，形成 on-policy 蒸馏信号。</li>
+  <li><b>技术细节</b>：Flow Map Backward Simulation 类似于把一段长路程拆成若干段"短途接力"：每段用当前已蒸馏的 flow map 执行一步过渡，再将各段拼回完整轨迹作为监督信号。这样模型在训练时始终"走在自己会走的路上"（on-policy），避免了 exposure bias。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>将蒸馏目标从端点一致性映射 (z_t→z_0) 改为任意时间区间的 flow-map transition (z_t→z_r)，保留完整 ODE 轨迹优化能力</li>
+  <li>提出 Flow Map Backward Simulation，将完整 Euler rollout 分解为 shortcut flow-map 转换，有效减少离散化误差与 causal 生成中的 exposure bias</li>
+  <li>在 1.3B 至 14B 参数规模下，少步 regime 性能匹配或超越一致性蒸馏对照，同时随采样步数增加持续提升</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13724v1]]</p>
+
+<hr/>
+
+<h4>R-DMesh：解决视频引导 3D 动画中 mesh 姿态不对齐问题，构建 50 万+ 动态序列数据集</h4>
+<ul>
+  <li><b>信号源</b>：（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13838v1">R-DMesh</a></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>Our Insights</b>：视频引导动画领域长期假设输入模型姿态与参考视频天然对齐，但现实中这几乎不可能。R-DMesh 通过显式建模"姿态跳变偏移"将两者对接，类似于先自动帮演员换上与剧本第一幕匹配的服装和站位再开始动作捕捉——将一个被默认忽略的工程约束转化为可学习的数学对象。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 R-DMesh 框架，解决视频引导 3D 动画中输入 mesh 初始姿态与参考视频首帧不对齐问题。核心设计包括 VAE 解耦 base mesh、相对运动轨迹与 rectification jump offset；Triflow Attention 机制处理顶点级几何特征；以及基于 Rectified Flow 的 Diffusion Transformer，条件化于预训练视频 latent。同时构建了包含 50 万以上动态 mesh 序列的 Video-RDMesh 数据集。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：R-DMesh 采用三阶段统一框架：(1) VAE 将输入解耦为 conditional base mesh、相对运动轨迹和 rectification jump offset 三个分量；(2) Triflow Attention 机制以顶点级几何特征为条件，同时建模 base mesh 流、运动流和偏移流三路正交流；(3) 基于 Rectified Flow 的 Diffusion Transformer 以预训练视频 latent 为条件进行 4D mesh 生成。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 rectification jump offset 机制，通过 VAE 显式学习输入 mesh 任意姿态到视频初始帧的对齐变换，解决 pose misalignment 问题</li>
+  <li>设计 Triflow Attention，利用顶点级几何特征调制三路正交流，保证动画过程中的物理一致性与局部刚性</li>
+  <li>构建 Video-RDMesh 数据集，包含超过 50 万条专门模拟姿态不对齐场景的动态 mesh 序列</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13838v1]]</p>
+
+<hr/>
+
+<h4>OmniLiDAR：单一 text-conditioned diffusion 模型统一 8 域 LiDAR 场景生成</h4>
+<ul>
+  <li><b>信号源</b>：（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13815v1">OmniLiDAR</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>Our Insights</b>：过去 LiDAR 生成模型"一个数据集配一个模型"的做法类似为每条公路设计专用导航系统。OmniLiDAR 用单一扩散模型统一不同传感条件和平台，本质上在回答"如何在分布高度异质的感知数据上学到共享生成表示"——这是具身智能数据扩增从定制化走向通用化的关键一步。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 OmniLiDAR，一个基于 text-conditioned diffusion 的统一 LiDAR 场景生成框架，覆盖 8 个域（恶劣天气、传感器配置变化、跨平台）的 range-image 生成，引入 CDTS、CDFM、DAFS 三项机制支持跨域训练，在语义分割和 3D 目标检测数据增强场景中取得一致性提升。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：OmniLiDAR 以 range-image 为统一中间表示，基于扩散模型进行文本条件化 LiDAR 生成。训练阶段通过 CDTS 在同一 mini-batch 中混合多域样本，以域标签作为条件引导生成；推断阶段可按需指定域类型（天气、光束数、平台）。</li>
+  <li><b>技术细节</b>：CDFM 模块专门对 range-image 沿方位角（azimuth）和俯仰角（elevation）两个轴捕捉方向依赖，反映 LiDAR 扫描的各向异性结构。DAFS 则作为轻量级缩放调制层，在去噪过程中补偿不同域间系统性的特征幅值偏移。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出统一的 text-conditioned diffusion 框架 OmniLiDAR，单一模型跨 8 个异质 LiDAR 域生成 range-image</li>
+  <li>设计 CDTS + CDFM + DAFS 三项机制协同解决跨域分布偏移</li>
+  <li>在 LiDAR 语义分割与 3D 目标检测的数据增强实验中，尤其在少标注数据场景下带来一致性性能提升</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13815v1]]</p>
+
+<hr/>
+
+<h4>BlitzGS：北大提出分布式 3DGS 框架，城市级场景训练加速约 10x</h4>
+<ul>
+  <li><b>信号源</b>：北京大学（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13794v1">BlitzGS</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b>：城市级 3DGS 训练慢的根本原因是 Gaussian 数量膨胀与跨 GPU 冗余可见性。BlitzGS 从索引奇偶分片替代空间块分割入手，打破了"空间局部性假设越强越好"的传统分布式渲染范式——好比把图书馆书架按编号奇偶分给管理员而非按楼层划区，使通信代价与场景规模解耦。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>北京大学提出 BlitzGS，一种分布式 3DGS 框架，在城市级场景重建中通过三层 Gaussian workload 削减机制（系统级 index parity 分片、模型级 importance scoring 剪枝、视图级 LOD + importance culling），实现数十分钟内完成城市级训练，相比现有 baseline 加速约一个数量级。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：BlitzGS 采用三层耦合 workload 管理：(1) 系统层以奇偶索引而非空间 block 将 Gaussian 分布到多 GPU，通过单次 all-to-all exchange 将 projected Gaussian 路由至各 tile 所属 GPU；(2) 模型层周期性执行 importance scoring pass，生成 visibility weight 引导 density control；(3) 视图层叠加 distance-based LOD gate 与 importance culling mask，裁剪低贡献 Gaussian。</li>
+  <li><b>技术细节</b>：传统空间 block 分片会使同一建筑或道路被多个 GPU 各自冗余存储并重复渲染。BlitzGS 改用 index parity（类似哈希分桶），让每个 Gaussian 归属确定性地落到某一 GPU。LOD 门控则进一步在远景相机下自动屏蔽过于精细的 Gaussian，避免计算浪费。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>通过 index parity 代替空间块划分 Gaussian，显著降低跨块可见性冗余，支持单次 cross-GPU exchange 完成渲染路由</li>
+  <li>引入 per-Gaussian visibility weight 与 per-view importance mask，指导 density control 偏向高贡献 primitive，压缩全局 Gaussian 总量</li>
+  <li>结合距离 LOD 门控与 importance culling，城市级基准上训练速度提升约 10x，渲染质量与 SOTA baseline 持平</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13794v1]]</p>
+
+<hr/>
+
+<h4>Realtime-VLA FLASH：中科院将 speculative decoding 移植到具身智能，diffusion VLA 推理加速 3x</h4>
+<ul>
+  <li><b>信号源</b>：中国科学院（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13778v1">Realtime-VLA FLASH</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>Our Insights</b>：这本质上是将 LLM speculative decoding 的"草稿-验证"范式移植到具身智能的动作生成循环中——类似于赛车团队先由副车手快速规划路线、主车手仅在必要时接管修正。它揭示了 diffusion-based VLA 从实验室走向低延迟工业部署的关键瓶颈不在模型能力，而在推理架构设计。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>中科院提出 Realtime-VLA FLASH，针对 diffusion-based VLA 推理高延迟问题，设计 speculative inference 框架：轻量 draft model 快速生成候选动作，由主模型 Action Expert 并行验证，辅以 phase-aware fallback 机制。在 LIBERO 基准上将全推理延迟从 58.0 ms 降至平均 19.1 ms，实现 3.04x 加速，并在真实传送带分拣任务中验证有效性。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：FLASH 包含三个核心组件：（1）轻量 draft model 快速生成候选动作序列；（2）主模型 Action Expert 对草稿进行并行验证，接受则跳过 full inference；（3）phase-aware fallback 机制检测高不确定性阶段并强制回退完整 diffusion 推理。</li>
+  <li><b>技术细节</b>：该框架的核心思路类似 LLM 中的 speculative decoding：大模型验证小模型输出比从头生成更快。draft model 负责低成本预测下一个动作块，Action Expert 负责并行打分验证。phase-aware fallback 是额外的安全阀，识别出需要精确推理的关键操作阶段（如抓取接触瞬间）时切回全推理。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 speculative inference 框架 FLASH，以轻量 draft model 替代大多数 full inference 调用，单轮推理低至 7.8 ms（vs 全推理 58.0 ms）</li>
+  <li>phase-aware fallback 机制在草稿验证失败时回退全推理，保持任务成功率基本不变</li>
+  <li>在 LIBERO 基准实现 3.04x 推理加速，并在真实传送带分拣场景验证实用性</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13778v1]]</p>
+<h3>AI infra</h3>
+
+<h4>KVServe：面向 Disaggregated LLM Serving 的自适应 KV Cache 通信压缩框架</h4>
+<ul>
+  <li><b>信号源</b>：arxiv:2605.13734v1</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13734v1">KVServe: Adaptive KV Cache Compression for Disaggregated LLM Serving</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b>：KV cache 在 PD 分离架构中从本地内存变为跨网络显式负载，固定压缩策略因工作负载动态波动而频繁失效——KVServe 的思路类似于自适应码率视频流（ABR），根据实时带宽和质量预算动态切换传输策略，本质上将"压缩策略"从静态配置提升为一项在线服务。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>KVServe 提出面向 disaggregated LLM serving 的自适应 KV cache 通信压缩框架。通过 Bayesian Profiling Engine 构建延迟-质量-带宽三维 Pareto 候选集（离线搜索开销降低 50×），并结合 bandit 在线控制器在运行时根据当前 SLO、带宽和负载混合动态选取压缩 profile，在 vLLM 上实现 PD 分离场景 JCT 加速最高 9.13×、KV disaggregation 场景 TTFT 降低最高 32.8×。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：KVServe 由三部分组成：(1) 统一 KV 压缩策略空间，将量化、稀疏化等方法模块化并支持跨方法重组；(2) Bayesian Profiling Engine，高效搜索策略空间并提炼出覆盖延迟-质量-带宽三维的 Pareto 候选集；(3) Service-Aware Online Controller，基于解析延迟模型与 bandit 算法，在运行时自适应选取压缩 profile。</li>
+  <li><b>技术细节</b>：Bayesian Profiling Engine 使用贝叶斯优化替代暴力网格搜索，将策略空间探索效率提升约 50 倍；Online Controller 的 bandit 组件负责持续修正离线 profiling 与真实在线环境之间的分布偏移，类似于在导航系统中叠加实时路况修正层，既保留离线规划的全局视野又能应对实时扰动。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出统一 KV 压缩的模块化策略空间，支持跨方法重组，形成 3D Pareto 候选集，离线搜索开销降低 50×</li>
+  <li>Service-Aware Online Controller 结合解析延迟模型与轻量 bandit，动态纠正离线到在线的分布偏差</li>
+  <li>集成至 vLLM，PD 分离场景 JCT 最高加速 9.13×，KV disaggregation 场景 TTFT 最高降低 32.8×</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：KVServe 将 KV cache 压缩从静态配置转变为在线自适应服务，在多种 disaggregated serving 场景下均取得数量级延迟改善，为大规模 LLM 推理部署提供了通用通信压缩基础设施。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13734v1]]</p>
+
+<hr/>
+
+<h4>Dithered Hadamard 量化理论：O(d log d) 复杂度达到稠密随机旋转等效压缩精度</h4>
+<ul>
+  <li><b>信号源</b>：EPFL</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13810v1">On the Theory of Vector Quantization with Randomized Hadamard Transform and Dithering</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b>：Randomized Hadamard transform 虽快但长期缺乏严格误差界保证，研究者通过引入随机标量偏移（dithering）弥合了这一理论空白——类似于给一把廉价高速的尺子加上误差校正机制使其在理论上精度等价于精密仪器。这标志着 KV cache 压缩、联邦学习等场景中的快速量化方案从"经验有效"转向"可证明有效"。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>本文针对 randomized Hadamard transform 搭配 dithered quantization 方案，严格证明该方法无偏且 MSE 渐近等同于稠密随机旋转矩阵，在 b 比特每坐标下达到 (π√3/2 + o(1))·4^{-b} 的误差界，计算复杂度仅 O(d log d)，较稠密旋转的 O(d²) 大幅降低。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：将输入向量先经 randomized Hadamard transform HD 旋转，再减去随机标量偏移（dithering），最后执行标量量化。额外的 dithering 噪声以极低代价注入随机性，使离散 Hadamard 结构的分析难点得以克服，从而推导出严格 MSE 上界。</li>
+  <li><b>技术细节</b>：核心技巧是将 dithering 与 Hadamard 矩阵的行列正交性结合，通过矩特征函数分析量化误差分布，将离散结构的相关性消去，最终归约到标准 lattice quantization 已知结论。随机抖动"打散"周期性系统误差，使误差在统计上趋近白噪声。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>证明 dithered RHD 量化方案无偏，MSE 渐近收敛至 (π√3/2 + o(1))·4^{-b}，与稠密随机旋转矩阵理论下界匹配</li>
+  <li>o(1) 余项对所有单位向量和所有维度均匀趋零，保证理论结论的普适性</li>
+  <li>dithered TurboQuant 以 O(d log d) 复杂度实现与 O(d²) 稠密旋转等效的压缩质量</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：本文为快速 Hadamard 量化方案提供了首个严格理论保证，证明其在渐近意义上与计算昂贵的稠密旋转方案精度等价，为 KV cache 压缩、分布式训练通信等实际场景的快速量化方案奠定了理论基础。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13810v1]]</p>
+
+<hr/>
+
+<h4>SPLIT：M/G/n 多服务器重尾队列首个强尾最优调度策略</h4>
+<ul>
+  <li><b>信号源</b>：arxiv:2605.13749v1</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13749v1">SPLIT: Strong Tail Optimality in the M/G/n Queue with Heavy-Tailed Job Sizes</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>Our Insights</b>：单服务器系统中"永远优先短任务"是最优策略，但多服务器场景下这一直觉失效——类似于多车道高速公路调度：单车道只能让最快的车先走，而多车道时若完全忽视慢速大车会导致车道阻塞。适度为大任务保留服务容量反而让整体尾延迟更低，揭示了多服务器排队论中一个长期开放问题的本质边界。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>本文研究 M/G/n 多服务器队列在重尾（regularly varying）任务大小分布下的渐近响应时间尾部优化问题，提出 SPLIT 调度策略，首次在完整稳定域内证明强尾最优性（strong tail optimality）。关键发现：与单服务器不同，多服务器场景中给大任务分配少量"sympathy"优先级是实现强尾最优的必要条件。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：SPLIT 策略将任务按大小分组，短任务享有高优先级（类似 SRPT），但保留一定服务资源给大任务（即"sympathy"），在渐近分析框架下证明响应时间尾部的强最优性。理论分析基于 M/G/n 排队模型与 regularly varying 分布的重尾渐近工具。</li>
+  <li><b>技术细节</b>：在多服务器系统中，若完全剥夺大任务的服务机会（如纯 SRPT），大任务长期积压造成服务器忙碌但空闲槽无法利用的"锁死"效应；SPLIT 通过为大任务分配一小部分服务容量打破僵局，使尾部渐近阶数达到最优。可类比于线程池中为低优先级任务保留"饥饿防止"槽位。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>首次给出 M/G/n 多服务器队列在重尾任务大小下的强尾最优调度策略 SPLIT</li>
+  <li>证明多服务器尾优化与单服务器存在本质差异：给大任务少量 sympathy 优先级是强尾最优的必要条件</li>
+  <li>在有无任务大小先验知识两种场景下均在完整稳定域内建立强（或任意接近强）尾最优性</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：SPLIT 策略在 M/G/n 重尾负载下首次实现强尾最优，并对已知/未知任务大小两种情形均给出可行方案，填补了多服务器重尾调度领域的核心理论空白，对 LLM 推理集群等多 GPU 调度场景具有直接理论指导意义。</li>
+</ul>
+<h3>ai4s (AI for Science)</h3>
+
+<h4>WARDEN：仅 6 小时标注音频实现濒危语言 Wardaman 的语音转写与翻译</h4>
+<ul>
+  <li><b>信号源</b>：全球学术界（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13846v1">WARDEN: Towards Transcription and Translation of Endangered Australian Aboriginal Languages</a></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>Our Insights</b>：当训练数据极度匮乏时，"分而治之"的两阶段流水线比端到端统一模型更鲁棒——这类似于医疗领域"先诊断再治疗"的分步逻辑。该工作本质上在回答一个更深层问题：当某类知识几乎无法被数据驱动方式习得时，如何将专家符号知识（词典、音素类比）注入神经系统。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>本文提出 WARDEN 系统，用仅 6 小时标注音频数据，对濒危澳大利亚原住民语言 Wardaman 实现语音转写与英语翻译。系统采用两阶段设计：先借助与 Wardaman 音素相似的 Sundanese 语言初始化 token 加速转写模型微调，再结合专家编写的 Wardaman-English 词典，通过 LLM 推理完成翻译。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：WARDEN 由两个独立模型组成：(1) 转写模型，将 Wardaman 音频转为音素文字，利用与 Wardaman 音素相近的 Sundanese 语言进行 token 初始化并微调；(2) 翻译模型，将音素转写输入 LLM，并附加专家编写的领域词典作为上下文知识，引导 LLM 推理生成英文译文。</li>
+  <li><b>技术细节</b>：转写阶段的核心技巧类似"跨语言嫁接"：找到一种与目标濒危语言音素高度重叠的有资源语言（Sundanese），把其 token embedding 作为 Wardaman 新 token 的初始权重，相当于给模型一个"发音参考声道"，从而大幅缩短在极少数据上的收敛时间。翻译阶段则把词典当成"活体注释层"塞入 LLM 的 prompt，让模型在有限参数知识之外仍能查阅精确词义。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>两阶段转写-翻译架构在极低资源（6小时音频）场景下显著优于端到端统一方法</li>
+  <li>利用 Sundanese 音素相似性初始化 Wardaman token，有效加速转写模型微调</li>
+  <li>引入专家编译的 Wardaman-English 词典辅助 LLM 推理，翻译质量超越更大规模的开源和商业模型</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：WARDEN 证明在极端低资源条件下，将音素跨语言迁移与符号知识注入相结合的模块化架构，可有效支撑濒危语言的数字化保护。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13846v1]]</p>
+
+<hr/>
+
+<h4>Hodge Spectral Duality：基于 Hodge 分解的神经算子隔离拓扑自由度提升物理场模拟精度</h4>
+<ul>
+  <li><b>信号源</b>：全球学术界（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13834v1">Hodge Spectral Duality for Neural Operator Learning on Geometric Graphs</a></li>
+</ul>
+<callout emoji="🔬">
+  <p><b>Our Insights</b>：物理场模拟中"可学习"部分与"不可学习"的拓扑自由度之间存在天然干扰——Hodge 正交性像一把滤波器，帮助模型只专注于自己真正能学的那部分，避免把固定的"背景噪声"也纳入训练。这本质上回答了神经算子为何在复杂拓扑网格上容易失准的底层挑战。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出基于 Hodge 分解的神经算子学习框架 Hodge Spectral Duality（HSD），将物理场方程的解算子分解为拓扑主导分量与几何动力学分量，通过 Hybrid Eulerian-Lagrangian 架构在几何图网格上提升精度与物理不变量保真度。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：HSD 框架将物理场方程的解算子按 Hodge 理论做算子分裂：用离散微分形式（discrete differential forms）捕捉拓扑主导分量，用正交辅助环境空间（orthogonal auxiliary ambient space）表征复杂局部动力学，两者叠加构成可加近似，整体架构兼顾欧拉视角（Eulerian）与拉格朗日视角（Lagrangian）。</li>
+  <li><b>技术细节</b>：类比电路中将信号分解为直流与交流分量：Hodge 分解先把场量拆成梯度场、旋度场和调和场三部分，拓扑固定的调和场部分跳过神经网络学习，剩余结构保留子空间才交给模型，相当于让神经算子只学"交流部分"，大幅降低谱干扰。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>揭示 Hodge 正交性可从根本上隔离不可学习的拓扑自由度，消除频谱干扰</li>
+  <li>推导算子级别的 Hodge 分解，构建具有代数归纳偏置的 Hybrid Eulerian-Lagrangian 架构</li>
+  <li>在几何图网格基准上实现精度与效率的提升，同时增强物理不变量保真度</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：HSD 在多个几何网格物理场基准上超越现有神经算子方法，在精度和计算效率上均有提升，并更好地维持物理守恒量等不变量。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13834v1]]</p>
+
+<hr/>
+
+<h4>Di-BiLPS：仅 3% 稀疏观测下 Latent Diffusion 求解正向/逆向 PDE 达到 SOTA</h4>
+<ul>
+  <li><b>信号源</b>：全球学术界（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13790v1">Di-BiLPS: Diffusion-Based Bidirectional Latent PDE Solver under Sparse Observation</a></li>
+</ul>
+<callout emoji="🧪">
+  <p><b>Our Insights</b>：大多数神经 PDE 求解器假设观测点足够密集，而现实中传感器稀疏是常态——Di-BiLPS 本质上回答了"当数据极度稀缺时如何让物理方程推理仍然可靠"这一底层挑战。将扩散模型引入 latent PDE 求解，类似于给求解器增加了一个"合理猜测+不确定性估计"的大脑，而非直接硬拟合稀疏数据。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>提出 Di-BiLPS 框架，结合 variational autoencoder、latent diffusion module 和 contrastive learning，在极稀疏观测（低至 3%）下求解正向和逆向 PDE 问题，支持 zero-shot super-resolution，在多个 PDE benchmark 上达到 SOTA。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：Di-BiLPS 由三个核心模块组成：(1) variational autoencoder 将高维 PDE 输入压缩为紧凑 latent 表示；(2) latent diffusion module 在 latent space 中建模不确定性并生成候选解；(3) contrastive learning 对齐正向/逆向问题的 latent 表示，使框架统一处理两类任务。推理阶段引入基于 variance-preserving 扩散过程的 PDE-informed 去噪步骤进一步加速收敛。</li>
+  <li><b>技术细节</b>：类比来说，这套框架像一个"看过大量物理规律的侦探"：先用 VAE 把稀疏线索压缩成摘要，再用 latent diffusion 在脑中生成多个合理的物理场景并去噪，最后用 PDE 约束筛掉不符合物理规律的答案——整个推理过程完全在压缩后的 latent 空间进行，因此比直接在高分辨率网格上操作快得多。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>在仅 3% 稀疏观测条件下，Di-BiLPS 在多个 PDE benchmark 上达到 SOTA 精度，远超现有神经方法</li>
+  <li>引入 variance-preserving 扩散过程的 PDE-informed 去噪算法，在提升精度的同时降低推理计算开销</li>
+  <li>框架在 latent space 中操作，支持 zero-shot super-resolution，可在连续时空域做任意分辨率预测</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：Di-BiLPS 在极稀疏输入（3%）下一致达到 SOTA 表现，计算开销显著低于基线；zero-shot super-resolution 能力允许在训练分辨率之外做连续时空预测。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13790v1]]</p>
+
+<hr/>
+
+<h4>PSR-NQS：并行扫描突破 RNN 量子态瓶颈，扩展至 52x52 二维自旋晶格</h4>
+<ul>
+  <li><b>信号源</b>：University of Toronto · Vector Institute（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13807v1">PSR-NQS: Parallel Scan Recurrent Neural Quantum States</a></li>
+</ul>
+<callout emoji="📊">
+  <p><b>Our Insights</b>：长期以来 RNN 因其顺序计算特性被认为无法与 transformer 竞争并行可扩展性，这项工作用并行前缀扫描打破了这一认知——本质上回答了"RNN 是否也能像 transformer 那样充分利用现代加速硬件"的问题。它标志着神经网络量子态的主流范式从"只有 transformer 才能扩展"转向"自回归循环架构同样可行"，且对计算资源要求更低。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Toronto/Vector Institute 提出 PSR-NQS，将并行扫描（parallel scan）技术引入循环神经网络量子态，实现 variational Monte Carlo 的高效训练；在二维自旋晶格上扩展至 52x52 格点，并与 quantum Monte Carlo 数据吻合。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：PSR-NQS 以自回归 RNN 波函数为 variational ansatz，将 modern parallelizable recurrence（parallel prefix scan）融入循环层，使序列依赖计算可在 GPU 上大规模并行展开；结合 variational Monte Carlo（VMC）框架进行能量优化，并采用迭代再训练策略逐步扩展晶格尺寸。</li>
+  <li><b>技术细节</b>：关键创新在于把 RNN 的逐步递推替换为 parallel scan（类似并行前缀求和），使每一层的隐状态可以像流水线一样同时计算，而非等待前一步完成——这在某种程度上类似于把单车道公路改造成多车道高速：数据流量不变，但吞吐大幅提升。迭代再训练则将小格点上收敛的参数迁移至更大格点，作为热启动初值。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 PSR-NQS 框架，利用 parallel scan 技术将 RNN 量子态的训练从本质顺序变为可并行，显著提升计算效率</li>
+  <li>在二维自旋晶格上通过迭代再训练（iterative retraining）扩展至 52x52 格点，是 RNN-NQS 的当前最大规模之一</li>
+  <li>基准测试结果与 quantum Monte Carlo 数据一致，证明精度未因并行化而损失</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：PSR-NQS 在 1D 和 2D 量子自旋模型上达到与 quantum Monte Carlo 相当的精度，并成功扩展至 52x52 二维格点，展示了在适度计算资源下 RNN 量子态的可扩展性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13807v1]]</p>
+
+<hr/>
+
+<h4>Force-Aware NTK：混合参数-坐标导数构建力场核函数，MLIP 主动学习效率与鲁棒性双升</h4>
+<ul>
+  <li><b>信号源</b>：University of Cambridge（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13788v1">Force-Aware Neural Tangent Kernel for Active Learning in Machine-Learned Interatomic Potentials</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>Our Insights</b>：将 Neural Tangent Kernel 从标量能量预测延伸到向量场（力场）预测，本质上回答了"如何在不依赖模型集成的情况下，让主动学习感知原子受力方向的不确定性"这一长期难题。这标志着 MLIP 主动学习从"能量驱动采样"走向"力感知采样"的范式演化，且单一预训练模型即可替代昂贵的 committee ensemble。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Cambridge 提出 Force-Aware Neural Tangent Kernel (NTK) 框架用于 MLIP 主动学习，通过混合参数-坐标导数构建 force NTK 与 joint energy-force NTK，配合线性复杂度的 chunked 后验方差 shortlisting，支持约 200k 结构的大规模筛选；在 OC20、T1x、PMechDB、RGD 等基准上优于 committee-based 方法且效率更高。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：框架分两层：第一层是 acquisition 效率层，采用 chunked feature-space 后验方差对候选池进行线性复杂度 shortlisting，避免存储完整候选集和训练集核矩阵；第二层是相似度度量层，通过对模型参数和原子坐标的混合偏导数构建 force NTK（向量场 NTK）及 joint energy-force NTK，为力场预测提供自然的核相似度量。</li>
+  <li><b>技术细节</b>：传统 NTK 只对模型参数求一阶导（雅可比矩阵），而 force 是能量对坐标的负梯度，因此 force NTK 需要对参数和坐标同时求混合导数——类比于"不仅测量地图的地形高度，还测量每个位置的坡度方向差异"。这使得核函数能捕捉两个结构在力预测上的相似性，而不仅仅是能量值的相似性。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 joint energy-force NTK，在 OC20 所有指标和分布切分上取得最低 energy/force MAE 和 RMSE</li>
+  <li>线性复杂度 chunked 后验方差 shortlisting 支持约 20 万结构在数小时内完成筛选，无需物化完整核矩阵</li>
+  <li>在候选池分布偏移的受控实验中，NTK 方法鲁棒性显著优于 committee-based 方法（方差更低）</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13788v1]]</p>
+
+<hr/>
+
+<h4>Gradient Boosting 产前预测妊娠相关血栓性微血管病，AUROC 达 0.872</h4>
+<ul>
+  <li><b>信号源</b>：北京大学（独立研究者）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.13786v1">Prenatal Prediction of Pregnancy-Associated Thrombotic Microangiopathy Using Machine Learning</a></li>
+</ul>
+<callout emoji="🔍">
+  <p><b>Our Insights</b>：该研究本质上回答了一个临床难题：在 P-TMA 症状尚未显现、实验室异常又被正常妊娠生理变化掩盖的时间窗口内，如何从常规检验数据中挖掘出风险信号。这标志着该领域从依赖单一阈值或规则判断转向从时间序列中提取潜在多维风险模式的范式演变。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>北京大学回顾性研究，使用 gradient boosting 对妊娠相关血栓性微血管病（P-TMA）进行产前预测，基于 146 个纵向常规检验指标，在 300 例样本中实现 AUROC 0.872、AUPRC 0.883，灵敏度 0.750，特异度 0.812，发现妊娠第 6 周 cystatin C 具有早期监测潜力。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：回顾性队列研究，300 例妊娠（142 P-TMA，158 对照），按 8:2 分层采样划分训练集与测试集。对 146 个纵向实验室预测变量评估五种算法（logistic regression、SVM-RBF、random forest、extra trees、gradient boosting），以交叉验证 AUROC 选模，最终模型在全训练集上重拟合后在留出测试集上单次评估。</li>
+  <li><b>技术细节</b>：Gradient boosting 通过集成大量弱决策树，逐步拟合前序残差来捕捉非线性、高维交互，相当于让模型在每轮迭代中"盯着犯错的样本"逐步修正。纵向检验数据被整合为时间点特征，使模型能感知妊娠不同阶段指标的动态变化，而非仅截面值。可解释性分析通过全局特征重要性与分布模式揭示关键预测变量。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>Gradient boosting 在留出测试集上 AUROC 达 0.872（95% CI: 0.769–0.952），AUPRC 达 0.883，优于其余四种算法</li>
+  <li>146 个纵向检验指标中，妊娠第 6 周 cystatin C 被识别为最具潜力的早期监测指标</li>
+  <li>纵向常规检验数据足以在症状出现前捕捉 P-TMA 的时间依赖性风险特征，单变量或规则方法难以实现此效果</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.13786v1]]</p>
+
+<hr/>
+<h2>二、行业应用 (Industry Application)</h2>
+<h3>认知模型 (产品/集成/Agentic 商业化)</h3>
+
+<h4>Perplexity Computer 接入 Snowflake 数据仓库，AI agent 直连企业实时数据</h4>
+<ul>
+  <li><b>信号源</b>：Perplexity 官方</li>
+  <li><b>链接</b>：<a href="https://x.com/perplexity_ai/status/2054945872451129506">Perplexity Computer × Snowflake Integration</a></li>
+</ul>
+<callout emoji="🎨">
+  <p><b>Our Insights</b>：这一集成本质上是把 AI agent 的工具调用能力延伸到结构化数据查询场景——类似于给 AI 配备了一个能直接读企业数据库的数据分析师助手，工具链完整性决定了 Agentic 产品能否真正落地企业工作流。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Perplexity 的 Computer 产品新增 Snowflake 数据仓库集成，支持用户直接对企业实时数据运行 SQL 查询、筛选和指标分析。这一能力将 Perplexity Computer 的 agent 工具调用从非结构化信息检索扩展至结构化数据处理，使企业用户无需离开 AI 交互界面即可完成端到端数据分析任务。</p>
+<p><b>产品定位</b></p>
+<p>Perplexity Computer 定位为 Agentic 信息处理平台，本次集成将其受众从个人搜索用户拓展至需要实时数据洞察的企业分析场景，与 Snowflake 的 data warehouse 生态形成互补。</p>
+<p>[[FIGURE:x:2054945872451129506]]</p>
+
+<hr/>
+
+<h4>单个神经元即可绕过 LLM Safety Alignment，揭示对齐机制结构性脆弱性</h4>
+<ul>
+  <li><b>信号源</b>：AK（独立研究者）</li>
+  <li><b>链接</b>：<a href="https://x.com/_akhaliq/status/2054916924501360812">A Single Neuron Is Sufficient to Bypass Safety Alignment in Large Language Models</a></li>
+</ul>
+<callout emoji="🛠️">
+  <p><b>Our Insights</b>：安全对齐若高度集中于极少数神经元，整个防护体系的鲁棒性便取决于最薄弱的那个节点——这更像是一道复杂安全门只靠一颗螺丝钉撑着，对当前主流"训练即对齐"范式的底层假设提出了严峻质疑。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>该研究发现，仅需修改 LLM 中的单个神经元即可绕过 safety alignment 防护，揭示当前对齐机制并非弥散于整个网络，而可能高度集中在极少数关键节点。这一发现对 RLHF、DPO 等主流对齐训练方法的安全性提出挑战，表明 jailbreak 攻击面可能远比预期更窄、更可利用。</p>
+<p><b>产品定位</b></p>
+<p>属于 LLM 安全评估与 red-teaming 领域的研究信号，直接影响企业级模型部署的风险评估框架以及对齐方法的工程设计取向。</p>
+<p>[[FIGURE:x:2054916924501360812]]</p>
+
+<hr/>
+
+<h4>Soumith Chintala 展示 Interaction Models：多 agent 协作 + 实时 Generative UI</h4>
+<ul>
+  <li><b>信号源</b>：Soumith Chintala @ Meta</li>
+  <li><b>链接</b>：<a href="https://x.com/soumithchintala/status/2054632560559259950">Interaction Models Multi-Agent Demo</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>Our Insights</b>：将多 agent 协作嵌入动态 UI 渲染流程，是对"AI 作为单一问答接口"范式的一次结构性突破——把多名专家协作的研讨会压缩进实时生成的交互界面，意味着 AI 产品的交互层本身也可以成为被 agent 编排的输出物。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Soumith Chintala 分享了 Interaction Models 的最新 demo，展示多 agent 系统协同完成系统设计、论文阅读和实时 fact-checking 任务，并配合 live generative UI 动态呈现中间过程与结果。该产品尝试将知识工作的多个环节分配给专职 agent 并行处理，同时以实时渲染的界面取代传统静态输出。</p>
+<p><b>产品定位</b></p>
+<p>Interaction Models 定位为面向知识工作者的多 agent 协作平台，核心差异化在于将 generative UI 作为 agent 输出的一阶公民，而非附加展示层，适用于需要多步推理与动态信息可视化的复杂任务场景。</p>
+<p>[[FIGURE:x:2054632560559259950]]</p>
+<h3>多模态 (生成/理解类产品)</h3>
+
+<h4>MulTaBench：首个覆盖文本与图像的多模态表格学习 benchmark</h4>
+<ul>
+  <li><b>信号源</b>：AK @ X</li>
+  <li><b>链接</b>：<a href="https://x.com/_akhaliq/status/2054914383218606530">MulTaBench</a></li>
+</ul>
+<callout emoji="🎨">
+  <p><b>Our Insights</b>：表格数据长期是多模态评测体系的"盲区"——现有 benchmark 要么只测纯文本，要么只测图文，真实业务中大量报表、财报、产品目录兼含结构化数值、文本描述与嵌入图像，MulTaBench 的出现意味着这一评测盲区正式被纳入议程，未来针对表格场景的多模态模型能力将有标准化参照。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>MulTaBench 是一个专为多模态表格学习设计的 benchmark，突破了传统表格 benchmark 仅依赖纯结构化数值数据的局限，将文本字段与嵌入图像同步纳入评测范围，支持联合理解与推理任务。该 benchmark 填补了多模态表格理解领域长期缺乏系统性评测标准的空白，为模型在真实世界复杂表格场景（如财报、产品目录、科学数据表）中的能力评估提供了基础设施。</p>
+<p><b>产品定位</b></p>
+<p>评测基础设施 / benchmark 工具；面向多模态大模型开发者与研究者，解决多模态表格理解任务缺乏统一评测标准的问题。</p>
+<p>[[FIGURE:x:2054914383218606530]]</p>
+<h3>世界模型 (Robotics / Embodied AI / 自动驾驶等)</h3>
+
+<h4>Figure 人形机器人连续作业近 24 小时，累计分拣超 28,000 个包裹</h4>
+<ul>
+  <li><b>信号源</b>：Figure AI（Brett Adcock）</li>
+  <li><b>链接</b>：<a href="https://x.com/adcock_brett/status/2054946098431881720">Brett Adcock on Figure humanoid robot continuous operation</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>Our Insights</b>：人形机器人的价值壁垒不在于单次演示的灵巧度，而在于能否在工业节奏下持续、稳定地运行——这次接近 24 小时的耐久测试，意味着 Figure 正在跨越从"概念验证"到"生产部署"之间最难跨越的那道门槛。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Figure AI 创始人 Brett Adcock 公布最新进展：Figure 人形机器人在真实物流场景中实现连续运行接近 24 小时，累计完成超过 28,000 个包裹的分拣任务。这是人形机器人在非结构化工业环境下长时间持续作业的重要里程碑，标志着其可靠性与耐久性正在向真实量产部署标准靠拢。</p>
+<p><b>产品定位</b></p>
+<p>面向物流、仓储场景的通用人形机器人，核心价值主张为替代人工完成高强度、重复性的分拣任务，目标是实现 7x24 小时不间断商业部署。</p>
+<p>[[FIGURE:x:2054946098431881720]]</p>
+
+<hr/>
+
+<h4>AnyFlow 提出任意步数视频 Diffusion 模型，基于 On-Policy Flow Map Distillation</h4>
+<ul>
+  <li><b>信号源</b>：AK（独立研究者）</li>
+  <li><b>链接</b>：<a href="https://x.com/_akhaliq/status/2054916297578660270">AnyFlow: Any-Step Video Diffusion Model via On-Policy Flow Map Distillation</a></li>
+</ul>
+<callout emoji="⚡">
+  <p><b>Our Insights</b>：现有视频 diffusion 模型往往对特定采样步数高度敏感，推理成本与质量之间难以灵活权衡。AnyFlow 的核心突破在于将"步数"从超参数变为运行时可调的自由维度，这对需要在端侧实时渲染或低延迟生成的具身 AI / 世界模型应用有直接的工程价值。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>AnyFlow 提出一种 Any-Step 视频 Diffusion 框架，核心技术为 On-Policy Flow Map Distillation：通过在线策略蒸馏的方式训练模型，使其能够在任意推理步数下均保持稳定的生成质量，而非只在固定步数（如 20 步或 50 步）下表现最佳。该方法兼顾了生成质量与推理效率的灵活平衡，适用于对延迟和算力预算敏感的下游部署场景。</p>
+<p><b>产品定位</b></p>
+<p>面向视频生成与世界模型应用的推理加速框架，解决现有 flow-based 视频扩散模型在步数适配性上的刚性问题，可作为下游具身 AI 仿真、视频预测等场景的生成后端。</p>
+<p>[[FIGURE:x:2054916297578660270]]</p>
+<h3>AI infra (推理框架/部署/硬件商业化)</h3>
+
+<h4>OpenAI 为 Codex coding agent 构建 Windows sandbox 安全执行环境</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI 官方</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2054735161166819377">Building Codex Windows Sandbox</a></li>
+</ul>
+<callout emoji="⚡">
+  <p><b>Our Insights</b>：让 coding agent 在 Windows 上安全运行，本质上是在解决"可信但受限的执行环境"这一老问题——类似于给承包商发一把只能进特定房间的门禁卡，而不是让他持有主人全套钥匙或每次进门都要主人亲自来开锁。agent 执行环境的权限粒度设计，将成为 agentic 时代基础设施的核心命题。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 发布技术博客，详细介绍如何为 Codex coding agent 构建 Windows sandbox 环境。该方案旨在安全隔离与开发者便利性之间取得平衡——无需在频繁授权提示和完整机器访问权限之间二选一，让 agent 能在受控沙箱内执行代码任务，同时避免对宿主系统造成不可控影响。</p>
+<p><b>产品定位</b></p>
+<p>面向开发者的 agent 执行基础设施，解决 coding agent 在本地 Windows 环境中安全落地的工程问题，属于 Codex 产品化链路中"安全可用的本地运行时"这一关键环节。</p>
+<p>📎 原文：<a href="https://openai.com/index/building-codex-windows-sandbox/">OpenAI Research</a></p>
+<p>[[FIGURE:x:2054735161166819377]]</p>
+<h3>ai4s (科研/医疗/材料类商业落地)</h3>
+
+<h4>Microsoft Research 发布 GridSFM：毫秒级 AC 最优潮流预测 foundation model</h4>
+<ul>
+  <li><b>信号源</b>：Microsoft Research 官方</li>
+  <li><b>链接</b>：<a href="https://x.com/MSFTResearch/status/2054607607650734504">GridSFM for AC Optimal Power Flow</a></li>
+</ul>
+<callout emoji="⚡">
+  <p><b>Our Insights</b>：GridSFM 将 foundation model 范式迁移至电力系统优化领域，把传统需要数分钟求解的最优潮流计算压缩至毫秒级——本质上回答了"能否用 AI 代替物理优化求解器来实时调度电网"这一工程难题，标志着 AI for energy systems 从辅助分析走向实时控制辅助。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Microsoft Research 发布 GridSFM，一个专为预测电网 AC optimal power flow 设计的小型 foundation model。该模型推理速度达毫秒级，相比传统物理求解器有数量级的速度提升，可为电网运营商提供拥塞状态、系统稳定性和整体健康状况的实时可视化，面向电力系统的实时运营调度场景。</p>
+<p><b>产品定位</b></p>
+<p>面向电网运营商的实时决策辅助工具，以 AI 推理引擎替代传统最优潮流（OPF）物理求解器，解决电网实时调度中计算延迟过高的瓶颈问题。</p>
+<p>📎 原文：<a href="https://msft.it/6018vucjs">Microsoft Research</a></p>
+<p>[[FIGURE:x:2054607607650734504]]</p>
+
+<hr/>
+<h2>折叠区</h2>
+<ul>
+  <li>TechCrunch @ 科技媒体：Spotify 宣布采用 Apple 的新视频播客技术，帮助内容创作者实现更便捷的跨平台分发（<a href="[https://x.com/TechCrunch/status/2054951683474760005](https://x.com/TechCrunch/status/2054951683474760005)">链接</a>）</li>
+  <li>Steven Sinofsky：Steven Sinofsky 分享一条关于某公司 Search 业务起源故事的链接，无实质技术内容（<a href="[https://x.com/stevesi/status/2054949210609365033](https://x.com/stevesi/status/2054949210609365033)">链接</a>）</li>
+  <li>Garry Tan：Brookings Institution 研究报告显示，单个大型数据中心落地后 5-6 年内，所在县新增 2,000-（<a href="[https://x.com/garrytan/status/2054947493839097926](https://x.com/garrytan/status/2054947493839097926)">链接</a>）</li>
+  <li>Garry Tan：Garry Tan 转发 PwC 2025 年报告：美国数据中心行业 2023 年共创造 470 万个就业岗位，就业乘数（<a href="[https://x.com/garrytan/status/2054947495613211081](https://x.com/garrytan/status/2054947495613211081)">链接</a>）</li>
+  <li>Scale AI 官方 @ Scale AI：Scale AI 发布一条仅含链接的推文，无实质文字内容（<a href="[https://x.com/scale_AI/status/2054947381314265125](https://x.com/scale_AI/status/2054947381314265125)">链接</a>）</li>
+  <li>Microsoft Research 官方：Microsoft Research 预告新发布，涉及 AI 驱动代码仓库管理与 verification-first （<a href="[https://x.com/MSFTResearch/status/2054946582894719062](https://x.com/MSFTResearch/status/2054946582894719062)">链接</a>）</li>
+  <li>Ian Crosby：Khosla Ventures 向 Ian Crosby（前 Bench 创始人）的新创业项目投资 1000 万美元，尽（<a href="[https://x.com/TechCrunch/status/2054946184180195595](https://x.com/TechCrunch/status/2054946184180195595)">链接</a>）</li>
+  <li>Perplexity 官方 @ Perplexity AI：Perplexity 宣传其与 Snowflake 数据集成功能，支持构建 dashboard 和自动化流程，用于 pi（<a href="[https://x.com/perplexity_ai/status/2054945874523095527](https://x.com/perplexity_ai/status/2054945874523095527)">链接</a>）</li>
+  <li>dex：用户 dex 发帖称 Hermes 项目无问题，问题出在 openclaws，内容为非正式社交评论，无实质技术信息（<a href="[https://x.com/dexhorthy/status/2054945857326494120](https://x.com/dexhorthy/status/2054945857326494120)">链接</a>）</li>
+  <li>Wolfram Ravenwolf：Wolfram Ravenwolf 分享 5 月 14 日 AI 新闻汇总，涵盖 Musk v Altman 审判、Me（<a href="[https://x.com/WolframRvnwlf/status/2054944875335106995](https://x.com/WolframRvnwlf/status/2054944875335106995)">链接</a>）</li>
+  <li>Garry Tan：Garry Tan 引用 Loudoun County BLS 数据，论证数据中心密集建设通过乘数效应带动 30,000（<a href="[https://x.com/garrytan/status/2054944244486623646](https://x.com/garrytan/status/2054944244486623646)">链接</a>）</li>
+  <li>Sierra AI 官方 @ Sierra Platform：Sierra AI 分享 Paychex 使用 AI voice agent 处理 24/7 薪资服务的案例，客户满意度（<a href="[https://x.com/SierraPlatform/status/2054943440681791712](https://x.com/SierraPlatform/status/2054943440681791712)">链接</a>）</li>
+  <li>dex：用户发布低质量玩笑性推文，询问如何购买 GPU，无实质内容（<a href="[https://x.com/dexhorthy/status/2054943158459597077](https://x.com/dexhorthy/status/2054943158459597077)">链接</a>）</li>
+  <li>dex：用户发布无实质内容的日常闲聊推文，无技术或研究信息（<a href="[https://x.com/dexhorthy/status/2054942973054661095](https://x.com/dexhorthy/status/2054942973054661095)">链接</a>）</li>
+  <li>TechCrunch 官方：TechCrunch 分享 Instagram 新功能 Instants 的关闭教程及误分享照片撤回方法，属普通产品使用（<a href="[https://x.com/TechCrunch/status/2054942631130792335](https://x.com/TechCrunch/status/2054942631130792335)">链接</a>）</li>
+  <li>Scale AI 官方：Scale AI 发布一条仅含链接的推文，无实质文字内容（<a href="[https://x.com/scale_AI/status/2054939873526833273](https://x.com/scale_AI/status/2054939873526833273)">链接</a>）</li>
+  <li>Shawn Wang：Shawn Wang 点评 Raycast 发布的技术栈文章，认为这是其职业生涯中见过最好的 tech stack wr（<a href="[https://x.com/swyx/status/2054938522034020816](https://x.com/swyx/status/2054938522034020816)">链接</a>）</li>
+  <li>Garry Tan：Garry Tan 就 Google 薪酬比率数据进行更正，批评旧金山 Prop D 税收政策公式混乱，并指责 KQED（<a href="[https://x.com/garrytan/status/2054938507609625043](https://x.com/garrytan/status/2054938507609625043)">链接</a>）</li>
+  <li>Alexis Ohanian：Alexis Ohanian 宣布 776 Foundation 总监 Garvin Lissie 正在休产假，无实质技（<a href="[https://x.com/alexisohanian/status/2054937655176200572](https://x.com/alexisohanian/status/2054937655176200572)">链接</a>）</li>
+  <li>Alexis Ohanian：Alexis Ohanian 宣布 776 Foundation fellowship 项目将于八月开放新一期申请，邀请（<a href="[https://x.com/alexisohanian/status/2054937656119976274](https://x.com/alexisohanian/status/2054937656119976274)">链接</a>）</li>
+  <li>Wolfram Ravenwolf：Wolfram Ravenwolf 发布活动提醒推文，无实质技术内容（<a href="[https://x.com/WolframRvnwlf/status/2054935474230239412](https://x.com/WolframRvnwlf/status/2054935474230239412)">链接</a>）</li>
+  <li>Alexis Ohanian：Alexis Ohanian 发推欢迎某个名为 Aria 的事物，分享一个旧版发布视频链接，无实质技术内容（<a href="[https://x.com/alexisohanian/status/2054934908964049155](https://x.com/alexisohanian/status/2054934908964049155)">链接</a>）</li>
+  <li>Scale AI 官方 @ Scale AI：Scale AI 发布一条仅含链接的推文，无实质文字内容（<a href="[https://x.com/scale_AI/status/2054932272718196875](https://x.com/scale_AI/status/2054932272718196875)">链接</a>）</li>
+  <li>Suhail：Suhail 评论中国集中分配 GPU 资源（10 家公司各获 72K GPU）的战略举措，认为中国追求算力自主的意愿超（<a href="[https://x.com/Suhail/status/2054931965061783802](https://x.com/Suhail/status/2054931965061783802)">链接</a>）</li>
+  <li>Marc Andreessen：Marc Andreessen 发布单词感叹，无实质内容（<a href="[https://x.com/pmarca/status/2054930917479547304](https://x.com/pmarca/status/2054930917479547304)">链接</a>）</li>
+  <li>Austen Allred：用户抱怨某日历应用在未通知用户的情况下，将 widget 更新机制改为仅在 app 打开时才刷新，无实质技术内容（<a href="[https://x.com/Austen/status/2054929482947969129](https://x.com/Austen/status/2054929482947969129)">链接</a>）</li>
+  <li>dex：用户对 Anthropic 某项决策表达不满，并批评所谓&quot;openclaw / Hermes&quot;薅推理羊毛的行为，认为廉价（<a href="[https://x.com/dexhorthy/status/2054929242446549366](https://x.com/dexhorthy/status/2054929242446549366)">链接</a>）</li>
+  <li>TechCrunch 官方：TechCrunch 报道：间谍软件调查员披露俄罗斯政府黑客试图劫持 Signal 账户（<a href="[https://x.com/TechCrunch/status/2054928068045856803](https://x.com/TechCrunch/status/2054928068045856803)">链接</a>）</li>
+  <li>TechCrunch @ 科技媒体：Cisco 裁员近 4,000 人，将资源重新投入 AI 领域，同期报告创季度营收纪录（<a href="[https://x.com/TechCrunch/status/2054927315948495037](https://x.com/TechCrunch/status/2054927315948495037)">链接</a>）</li>
+  <li>dex：用户 dex 发布一句口号式推文&quot;You cannot outsource the thinking&quot;，无实质内容（<a href="[https://x.com/dexhorthy/status/2054927184238977378](https://x.com/dexhorthy/status/2054927184238977378)">链接</a>）</li>
+</ul>
+
+<hr/>
+<p><i>本日报由 HH Research Pipeline 自动生成，由 Claude 抽取和撰写，以原文为准。<br/>处理信号 153 条 · 头条 6 条 · 高价值 56 条</i></p>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.hh-research.daily-pipeline-main</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/haolinguo/claude code/HH research/daily-digest/scripts/run_daily_pipeline_main.sh</string>
+    </array>
+
+    <!-- BJT 08:30 — user directive 2026-06-03: 正式采用 08:30 起跑/窗口(尽早出报)。
+         背景: arxiv announce = UTC 00:00 = BJT 08:00; 5.23 实测 8:30 时 arxiv 镜像可能未建好(0 candidates),
+         故脚本保留 arxiv=0 retry 兜底(每 15min 重试至 BJT 11:00)。5.26 曾折中 9:00, 6-03 改回 08:30。 -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>8</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/haolinguo/claude code/HH research/daily-digest</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/haolinguo/claude code/HH research/daily-digest/data/logs/cron/launchd_daily_main.out</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/haolinguo/claude code/HH research/daily-digest/data/logs/cron/launchd_daily_main.err</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>TZ</key>
+        <string>Asia/Shanghai</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>LANG</key>
+        <string>en_US.UTF-8</string>
+    </dict>
+
+    <!-- If laptop was asleep at fire time, run on wake. -->
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

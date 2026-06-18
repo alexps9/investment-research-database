@@ -1,0 +1,332 @@
+<title>HH Research Daily · 2026-04-27</title>
+
+<h2>今日 TL;DR</h2>
+<p>David Silver 离开 DeepMind 创立新公司并融资 11 亿美元，主攻无需人类数据的自主学习 AI（产业全景·资本）；OpenAI 与 Microsoft 宣布修订合作协议，为 OpenAI 商业结构重组铺路（产业全景·主要玩家）。</p>
+<hr/>
+<h2>头条</h2>
+<p><b>David Silver 融资 11 亿美元创立新公司，目标构建无需人类数据的自主学习 AI</b> · <a href="https://x.com/TechCrunch/status/2048816025995751472">TechCrunch report on David Silver's new AI startup</a></p>
+<p>DeepMind 研究员、AlphaGo 核心作者 David Silver 宣布离开 DeepMind 创业，融资 11 亿美元，目标是构建不依赖人类标注数据、通过自主与环境交互来学习的 AI 系统。</p>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p>David Silver 主攻不依赖人类标注数据的自主学习 AI——这在某种程度上类似于让 AI 像婴儿一样通过与环境互动来习得知识，而不是靠模仿人类已有的范例。</p>
+</callout>
+<hr/>
+<p><b>OpenAI 与 Microsoft 修订合作协议，简化架构并明确长期合作框架</b> · <a href="https://openai.com/index/next-phase-of-microsoft-partnership">The next phase of our Microsoft partnership</a></p>
+<p>OpenAI 与 Microsoft 宣布对现有战略合作协议进行修订，简化合作关系结构并提供长期明确性，为 OpenAI 未来商业结构重组（如转型营利性公司）铺路，支持大规模 AI 研发持续推进。</p>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+<p>此次调整旨在厘清双方长期权利义务关系——这在某种程度上类似于两家深度绑定的公司在业务发展到新阶段后重新签订合伙协议，以适应规模扩张带来的复杂性。</p>
+</callout>
+
+<hr/>
+<h2>一、前沿研究 (Research Frontier)</h2>
+<h3>认知模型 (Cognitive Models)</h3>
+<h4>Conductor：用 RL 训练 AI 自动编排 multi-agent prompt pipeline</h4>
+<ul>
+  <li><b>信号源</b>：hardmaru (David Ha) @ Sakana AI</li>
+  <li><b>链接</b>：<a href="https://x.com/hardmaru/status/2048778095935795338">Conductor — RL-trained multi-agent orchestration (ICLR 2026)</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：研究者训练了一个"指挥家"模型，用 RL 让它学会为一组异构 LLM 撰写最优指令并动态调度——相当于把人工 prompt engineering 这个岗位交给另一个 AI 来做。面对不同难度任务，Conductor 能自适应地从单模型查询升级为多角色流水线（规划、编码、验证），体现出"AI 管理 AI"的新范式。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Sakana AI 提出 Conductor 模型，通过强化学习训练一个元控制器，使其能够自动为模型池中的多个异构 LLM 编写自然语言 prompt 指令，并动态编排 multi-agent pipeline。Conductor 无需人工定义工作流即可完成任务分解与模型路由，在复杂编程任务上自主构建 planner-coder-verifier 链式流水线。该工作投稿 ICLR 2026，并与 TRINITY 论文共同支撑 Sakana AI 新发布的多智能体系统 Sakana Fugu。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：核心框架为 Conductor 模型：以 RL 为训练机制，Conductor 充当元控制器，观察任务输入并为模型池中的各个 LLM 生成自然语言指令（prompt）。训练信号来自下游任务执行质量，促使 Conductor 学会任务分解、模型路由与多阶段 pipeline 构建。</li>
+  <li><b>技术细节</b>：Conductor 的输出是自然语言指令而非结构化 API 调用，这类似于一位项目经理用备忘录向团队分配子任务。RL 奖励信号驱动 Conductor 从简单的单步路由逐步进化到 planner→coder→verifier 的链式编排，整个过程无需人工定义工作流。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>Conductor 模型通过 RL 训练，自动学会为异构 LLM 池生成高效自定义 prompt，无需人工设计</li>
+  <li>动态适应任务难度：简单问题调用单模型，复杂编程任务自主组建 planner-coder-verifier 流水线</li>
+  <li>该工作与 TRINITY 论文共同支撑 Sakana AI 新发布的多智能体系统 Sakana Fugu</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：Conductor 在复杂编程等高难度任务上能自主构建多角色 pipeline，展示出"AI 管理 AI"的 chain-of-command 范式，并已落地于 Sakana Fugu 多智能体系统。</li>
+</ul>
+<p>[[FIGURE:x:2048778095935795338]]</p>
+<h3>世界模型 (World Model)</h3>
+<h4>Flow-matching diffusion 模型可 grok 模块加法：采样轨迹中存在算法推理到视觉去噪的 phase transition</h4>
+<ul>
+  <li><b>信号源</b>：Jiatao Gu @ Penn Engineering</li>
+  <li><b>链接</b>：<a href="https://x.com/thoma_gu/status/2048690278328918302">Flow-matching diffusion models grok modular addition with Fourier representations</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：研究者发现 diffusion 模型在采样轨迹中并非始终做"去噪"，早期时间步实际上在执行类似算法推理的结构化计算，后期才转为视觉去噪，且这一 phase transition 在模型内部的 Fourier 结构中清晰可见。这在某种程度上类似于同一条流水线的前段是逻辑运算、后段才是画笔渲染。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Penn Engineering 研究者展示 flow-matching diffusion 模型能够 grok 模块加法并学习可解释的类 Fourier 周期表示。在采样过程中存在明显的 phase transition：早期时间步执行算法推理，后期时间步执行视觉去噪。这一发现提示 diffusion 模型具备沿连续生成轨迹实现结构化计算的能力，为理解生成模型的内部计算机制提供了新视角。</p>
+<p><b>实验成果</b></p>
+<ul>
+  <li>flow-matching diffusion 模型能够 grok 模块加法，并学习可解释的类 Fourier 周期表示</li>
+  <li>采样过程存在明显 phase transition：早期时间步执行算法推理，后期时间步执行视觉去噪</li>
+  <li>phase transition 在模型内部 Fourier 结构中清晰可见，提示 diffusion 模型具备沿连续生成轨迹实现结构化计算的能力</li>
+</ul>
+<p>[[FIGURE:x:2048690278328918302]]</p>
+<h3>AI infra</h3>
+<h4>FreeScale：256 块 H100 上减少 90.3% computational bubbles 的分布式推荐模型训练框架</h4>
+<ul>
+  <li><b>信号源</b>：Yi Zhang</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2604.24073v1">FreeScale: Unleashing the Scaling of Distributed Training for Sequential Recommendation Models</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：工业推荐模型的分布式训练因数据异构性导致大量 GPU 资源浪费，FreeScale 通过负载均衡采样、embedding 通信与计算 overlap、以及 SM-Free 技术消除资源竞争，三管齐下来提升训练效率——这类似于流水线工厂中同时解决工位速度不均、物料等待和机器争抢的问题。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>FreeScale 针对序列推荐模型分布式训练中的 straggler 问题和 blocking communication 开销，提出一套完整的优化框架。该方法从负载均衡输入采样、优先级 embedding 通信与计算 overlap、以及 SM-Free 通信卸载三个维度协同优化，在 256 块 H100 GPU 的真实工业负载上实现 computational bubbles 减少 90.3%，显著提升了大规模分布式训练的 GPU 利用率。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：FreeScale 从三个维度优化分布式推荐模型训练：（1）对输入样本进行精细负载均衡，缓解 straggler 造成的计算不均衡；（2）将 embedding 通信按优先级排序并与计算阶段 overlap，减少阻塞等待；（3）引入 SM-Free 技术，让通信操作绕开 GPU SM 资源，消除通信与计算重叠时的资源竞争。</li>
+  <li><b>技术细节</b>：SM-Free 技术的核心思想是将通信操作从 GPU 的 Streaming Multiprocessor（SM）上卸载，使计算 kernel 和通信操作可以在不争抢同一硬件资源的情况下真正并行执行——这类似于为快递员专门开辟一条不影响主干道的专用通道，让货物运输和正常交通互不干扰。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出负载均衡输入采样策略，有效缓解 straggler 问题，减少计算气泡</li>
+  <li>设计优先级 embedding 通信与计算 overlap 机制，最小化 blocking communication 开销</li>
+  <li>在 256 块 H100 GPU 真实负载测试中，computational bubbles 减少高达 90.3%</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：FreeScale 在 256 块 H100 GPU 的真实工业推荐模型训练中，computational bubbles 减少达 90.3%，显著提升了大规模分布式训练的资源利用率。</li>
+</ul>
+<p>[[FIGURE:arxiv:2604.24073v1]]</p>
+<h4>ARFBench：基于真实线上事故的时间序列问答 Benchmark</h4>
+<ul>
+  <li><b>信号源</b>：CMU ML Blog @ CMU / Datadog</li>
+  <li><b>链接</b>：<a href="https://blog.ml.cmu.edu/2026/04/27/arfbench/">ARFBench: A Time-Series QA Benchmark for Incident Response</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：ARFBench 将工程师在事故响应中面临的时间序列分析任务（如异常起始时间定位、多指标联合推理）形式化为 benchmark，发现现有前沿模型仍有显著差距，并提出 TSFM-VLM 混合架构可缩小该差距。这在某种程度上类似于为"AI 值班工程师"设计一套来自真实生产事故的考试题目。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>CMU 与 Datadog 联合推出 ARFBench，一个基于 Datadog 内部真实生产事故的时间序列问答（TSQA）benchmark。该 benchmark 涵盖异常检测、时间定位、多指标关联推理等子任务，分别以文本序列、折线图截图和原始时序向量三种形式输入 LLM、VLM 及 TSFM 进行评测。研究发现现有主流模型在此类任务上均表现不佳，而将 TSFM 与 VLM 结合的混合模型在整体性能上可与顶级 frontier 模型持平。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：ARFBench 从 Datadog 内部真实事故中提取 observability 时间序列数据，构造 TSQA 任务，涵盖异常检测、时间定位、多指标关联推理等子任务，用于评估 LLM、VLM 及 TSFM 在 SRE 场景下的能力。</li>
+  <li><b>技术细节</b>：混合模型将 TSFM（时间序列基础模型）与 VLM 结合，前者负责数值时序特征提取，后者负责跨模态推理与问答——类似于让一位既懂统计又懂图表解读的工程师来做诊断，通过融合两类模型的互补优势来提升整体 TSQA 性能。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>现有 LLM、VLM 和 TSFM 在 ARFBench 上均存在明显性能不足，说明时间序列问答仍是待突破的难题</li>
+  <li>混合 TSFM-VLM 模型综合性能可与顶级 frontier 模型持平</li>
+  <li>Benchmark 数据来源于 Datadog 真实内部事故遥测数据，具备较强实际工程代表性</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：混合 TSFM-VLM 模型在 ARFBench 上达到与顶级 frontier 模型相当的整体性能，而纯 LLM/VLM/TSFM 方案在真实事故场景下均表现欠佳，表明多模态混合架构是改进 TSQA 性能的有效方向。</li>
+</ul>
+<p>[[FIGURE:rss:e8ecf57392f7eaf4]]</p>
+
+<hr/>
+<h2>二、行业应用 (Industry Application)</h2>
+
+<h3>认知模型 (产品/集成/Agentic 商业化)</h3>
+
+<h4>OpenAI 发布 Symphony：将 issue tracker 改造为持续运行的 Codex Agent 编排系统</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI 官方博客</li>
+  <li><b>链接</b>：<a href="https://openai.com/index/open-source-codex-orchestration-symphony">Open-source Codex Orchestration: Symphony</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：Symphony 是一套将 issue tracker（如 GitHub Issues）转化为常驻 agent 工作队列的开源 orchestration 规范，让 Codex 能持续响应工程任务，减少人工上下文切换——这类似于为软件工程团队配置了一个永不下班的自动调度员，将待办工单自动路由给对应 agent 处理。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 正式发布开源编排规范 Symphony，将 GitHub Issues 等 issue tracker 直接对接 Codex agent 系统，使工程任务可被自动持续分配和执行。该规范旨在提升工程产出效率，并显著减少开发者在多工具间切换所产生的上下文碎片化问题。</p>
+<p><b>产品定位</b></p>
+<p>Symphony 是面向软件工程团队的开源 agent orchestration 规范，核心解决 Codex agent 与现有工程工作流（issue tracker）之间的接入断层问题，属于 Agentic 开发工具链的基础设施层组件。</p>
+<p>[[FIGURE:rss:5619431a721a9009]]</p>
+
+<h4>OpenAI 疑在研发 AI 手机：以 Agents 替代传统 App 作为核心交互范式</h4>
+<ul>
+  <li><b>信号源</b>：TechCrunch @ 科技媒体</li>
+  <li><b>链接</b>：<a href="https://x.com/TechCrunch/status/2048751671178858662">OpenAI reportedly considering an AI phone</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：这一传闻指向一种新的人机交互模式：用 AI agents 取代手机上的独立 App，让 AI 直接代替用户完成任务，而非通过多个 App 逐步操作。这在某种程度上类似于把"工具箱里的每件工具"换成"一个能处理所有任务的万能机器人助手"。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>据 TechCrunch 报道，OpenAI 正在考虑推出一款 AI 手机，其核心交互范式将以 AI agents 替代传统独立 App，用户无需在多个 App 之间切换，而是由 AI 直接完成任务调度与执行。目前该项目处于早期探索阶段，技术细节尚未披露。</p>
+<p><b>产品定位</b></p>
+<p>面向消费者的 AI-native 移动终端，试图重新定义智能手机的交互层——以 agent-first 范式替代 app-first 范式，解决多 App 割裂体验与任务执行效率低下的问题。</p>
+<p>[[FIGURE:x:2048751671178858662]]</p>
+
+<hr/>
+<h3>多模态 (生成/理解类产品)</h3>
+
+<h4>OpenAI 推出 gpt-realtime-1.5：语音驱动应用状态的实时交互新模型</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI Developers 官方账号 @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2048871260512473385">Introducing gpt-realtime-1.5</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：gpt-realtime-1.5 将实时语音理解能力与 app 状态管理深度结合，允许开发者通过语音输入直接驱动应用界面状态变化——这在某种程度上类似于用说话代替点击按钮来操控软件，为语音优先的交互应用开辟了新的开发路径。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 发布 gpt-realtime-1.5 模型，开发者可通过 Real-time API 接入，支持文本、图像、音频多模态输入，核心能力在于将语音指令实时映射到应用状态变化，可用于构建语音控制的交互式应用场景。</p>
+<p><b>产品定位</b></p>
+<p>面向开发者的实时语音交互基础模型，定位于 voice-first 应用开发工具链，解决传统语音识别与应用逻辑层之间的集成断层问题。</p>
+<p>[[FIGURE:x:2048871260512473385]]</p>
+
+<h4>Greg Brockman 展示 GPT Image 2 的学习辅助应用场景</h4>
+<ul>
+  <li><b>信号源</b>：Greg Brockman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/gdb/status/2048796696755212660">GPT Image 2 for learning anything</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：OpenAI 联合创始人 Greg Brockman 展示 GPT Image 2 在学习场景中的图像理解与生成能力，表明该模型具备辅助知识获取的实用潜力，但当前披露的技术细节有限。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Greg Brockman 通过个人账号分享了 GPT Image 2 用于辅助学习的案例，展示其在教育场景中处理图像相关内容的能力。具体技术参数及产品化路径尚未正式公布，属于早期信号披露。</p>
+<p><b>产品定位</b></p>
+<p>GPT Image 2 定位为多模态图像理解与生成模型，教育辅助是其潜在落地方向之一，解决传统学习工具在视觉内容理解方面的能力短板。</p>
+<p>[[FIGURE:x:2048796696755212660]]</p>
+
+<hr/>
+<h3>世界模型 (Robotics / Embodied AI / 自动驾驶等)</h3>
+
+<h4>Alibaba 发布 Wan2.7-Video：多模态输入驱动的叙事连贯视频生成模型</h4>
+<ul>
+  <li><b>信号源</b>：Alibaba Cloud 官方</li>
+  <li><b>链接</b>：<a href="https://x.com/alibaba_cloud/status/2048747482092355718">Wan2.7-Video: Multi-modal Video Generation</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：Wan2.7-Video 将文本、图像、视频、音频四类输入模态整合进视频生成流程，专注解决创作场景中跨镜头叙事不连贯的问题——这在某种程度上类似于给视频生成模型装上了"导演意识"，让多段镜头能够保持一致的叙事逻辑。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Alibaba Cloud 发布 Wan2.7-Video 视频生成模型，支持 text、image、video、audio 四类模态输入，主打多镜头一致性（multi-shot consistency）与叙事连贯性，目标用户为内容创作和影视制作领域的专业用户。</p>
+<p><b>产品定位</b></p>
+<p>面向创意内容生成的多模态视频生成模型，核心差异化在于跨镜头叙事连贯性控制，解决现有视频生成工具在长序列、多场景创作中叙事断裂的痛点。</p>
+<p>[[FIGURE:x:2048747482092355718]]</p>
+
+<h4>SMASH：让 Unitree G1 人形机器人仅凭自身视觉在户外打乒乓球</h4>
+<ul>
+  <li><b>信号源</b>：The Humanoid Hub @ X（Kinetix AI 合作论文）</li>
+  <li><b>链接</b>：<a href="https://x.com/TheHumanoidHub/status/2048837852067398090">SMASH: Egocentric Vision-based Humanoid Table Tennis</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：SMASH 将感知（双目板载相机 + Adaptive EKF + 物理预测器）与运动生成（Motion-VAE + task-conditioned motion matching + RL）整合为一个完整栈，使人形机器人在不依赖任何外部传感器的情况下完成户外乒乓球对打——这类似于让机器人"自己长眼睛"去打球，而非依赖场馆里的高速摄像机。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Kinetix AI 联合团队提出 SMASH 系统，使 Unitree G1 人形机器人仅依赖自身搭载的双目视觉相机，通过 Adaptive EKF 追踪球轨迹、物理模型预测落点，再结合 Motion-VAE 与 RL 生成全身敏捷动作，实现户外无外部传感器条件下的乒乓球对打。</p>
+<p><b>产品定位</b></p>
+<p>面向具身 AI 与人形机器人的全栈感知-运动控制系统，核心解决真实户外环境下机器人自主敏捷动作控制的端到端落地问题，是 Embodied AI 从实验室走向开放场景的典型案例。</p>
+<p>[[FIGURE:x:2048837852067398090]]</p>
+
+<hr/>
+<h3>AI infra (推理框架/部署/硬件商业化)</h3>
+
+<h4>Google 演示 Gemma 4 26B A4B 单 GPU 支持 10+ 并发会话的高并发 Serving 能力</h4>
+<ul>
+  <li><b>信号源</b>：Google AI Developers @ Google</li>
+  <li><b>链接</b>：<a href="https://x.com/googleaidevs/status/2048824378335641617">Gemma 4 High-Concurrency Serving Demo</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：Google 展示 Gemma 4 26B A4B（MoE 架构）在单张 GPU 上实现 10+ 并发复杂任务会话（含 SVG 生成）而不产生瓶颈，并配备实时负载均衡 dashboard——这类似于在一条公路上用智能调度系统同时跑多辆重型卡车而不堵车，大幅降低多卡部署门槛。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Google AI Developers 通过 demo 展示 Gemma 4 的 26B A4B 模型针对高并发 serving 场景的优化能力，单张 GPU 可同时处理 10 个以上复杂任务会话，支持 SVG 生成等计算密集型请求，并提供实时追踪 active slots、context sizes 及 token 生成速度的负载均衡 dashboard。</p>
+<p><b>产品定位</b></p>
+<p>面向开发者和企业的高效推理部署方案，Gemma 4 A4B（Attention-4-Bit）配合 MoE 架构，在保持模型能力的同时大幅降低单卡推理成本，解决中小规模团队在有限硬件上部署高性能模型的实际痛点。</p>
+<p>[[FIGURE:x:2048824378335641617]]</p>
+
+<h4>MIT 提出 EnergAIzer：秒级 AI 功耗估算方法助力数据中心资源调度</h4>
+<ul>
+  <li><b>信号源</b>：MIT News @ MIT</li>
+  <li><b>链接</b>：<a href="https://news.mit.edu/2026/faster-way-to-estimate-ai-power-consumption-0427">A faster way to estimate AI power consumption</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：EnergAIzer 是一种轻量级 AI 功耗估算框架，无需运行完整 profiling 即可在秒级时间内给出可靠的功耗预测结果——这在某种程度上类似于给数据中心装上了一块实时"电量仪表盘"，让运营者即时知道每个 AI 工作负载要"烧多少电"，从而做出更合理的资源分配决策。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>MIT 研究团队提出 EnergAIzer 方法，可在数秒内快速估算 AI 推理工作负载的功耗，为数据中心运营者提供实时能耗预测能力。相比传统完整 profiling 流程，EnergAIzer 大幅压缩了估算时间，有助于减少资源闲置和能源浪费，提升整体调度效率。</p>
+<p><b>产品定位</b></p>
+<p>面向数据中心运营与 AI 推理调度场景的轻量级能耗估算工具，核心解决现有功耗测量方法耗时过长、难以支撑实时调度决策的问题。</p>
+<p>[[FIGURE:rss:2ed8ca1004549d3e]]</p>
+
+<hr/>
+<h3>ai4s (科研/医疗/材料类商业落地)</h3>
+
+<h4>Google DeepMind 与韩国政府达成合作：将 Frontier AI 模型嵌入国家级科研基础设施</h4>
+<ul>
+  <li><b>信号源</b>：Google DeepMind 官方博客</li>
+  <li><b>链接</b>：<a href="https://deepmind.google/blog/announcing-our-partnership-with-the-republic-of-korea/">Announcing our partnership with the Republic of Korea</a></li>
+</ul>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p><b>认知提取</b>：Google DeepMind 与韩国政府达成官方合作，将 frontier AI 模型应用于科学研究加速领域。这类政府-AI 实验室合作模式，类似于将顶尖科研工具以国家合同形式嵌入公共科学基础设施，推动 ai4s 方向从学术研究走向国家战略落地。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Google DeepMind 正式宣布与韩国（Republic of Korea）政府建立合作伙伴关系，核心目标是将前沿 AI 模型（frontier AI models）应用于加速科学研究突破。此次合作涉及将 DeepMind 的 AI 能力对接韩国本地科研基础设施，是 ai4s 方向在国家战略层面的重要落地案例。</p>
+<p><b>产品定位</b></p>
+<p>政府级 AI for Science 合作项目，通过将 Google DeepMind 的 frontier AI 能力接入韩国国家科研体系，推动生命科学、材料科学等领域的研究加速，探索 AI 实验室与主权政府深度合作的商业化路径。</p>
+<p>[[FIGURE:rss:95fa76206d544fa9]]</p>
+
+<hr/>
+<h2>三、产业全景 (Industry Macro)</h2>
+
+<h3>资本流向 (Capital)</h3>
+
+<p><b>中国监管机构否决 Meta 以 20 亿美元收购 Manus</b> · <a href="https://x.com/TechCrunch/status/2048753931506041088">China blocks Meta's $2B acquisition of Manus</a></p>
+<p>中国监管当局在经过数月审查后正式叫停 Meta 对 AI 代理公司 Manus 的 20 亿美元收购交易，这也是近期跨国科技并购受地缘政治与反垄断审查阻断的典型案例。</p>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p>头部 AI 资产的跨境并购正面临愈发严格的主权监管审查，国家安全与技术控制逻辑正在重塑全球 AI 并购格局。</p>
+</callout>
+
+<h3>主要玩家 (Players)</h3>
+
+<p><b>OpenAI 与 Microsoft 更新合作协议：放开多云部署，绑定延续至 2032 年</b> · <a href="https://x.com/sama/status/2048755148361707946">OpenAI updates Microsoft partnership agreement</a></p>
+<p>OpenAI 与 Microsoft 重新签署合作协议：Microsoft 继续作为主要云合作伙伴，但 OpenAI 现可向所有云平台提供产品，不再对 Azure 独家绑定；模型与产品合作延续至 2032 年，收入分成安排延续至 2030 年。</p>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p>OpenAI 从"Azure 独家"转向"Azure 优先、多云并行"，标志着其在云基础设施层面获得更大的战略自主权，同时维持与 Microsoft 的长期收入分成安排。</p>
+</callout>
+
+<p><b>Google DeepMind 与韩国政府达成战略合作，推动 AI for Science 落地</b> · <a href="https://deepmind.google/blog/announcing-our-partnership-with-the-republic-of-korea/">Announcing our partnership with the Republic of Korea</a></p>
+<p>Google DeepMind 宣布与韩国政府建立合作伙伴关系，核心目标是将 frontier AI 模型引入韩国科研领域，加速科学研究突破；合作通常涵盖国家级科研基础设施共享、联合研发及本地化 AI 能力建设。</p>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p>顶尖 AI 实验室与主权国家的政府级科研合作正在成为新的战略布局方式，AI for Science 能力正逐步被纳入国家科研基础设施体系。</p>
+</callout>
+
+<h3>监管政策 (Regulation)</h3>
+
+<p><b>OpenAI 获 FedRAMP Moderate 授权，ChatGPT Enterprise 与 API 正式进入美国联邦政府采购体系</b> · <a href="https://openai.com/index/openai-available-at-fedramp-moderate">OpenAI available at FedRAMP Moderate</a></p>
+<p>OpenAI 完成 FedRAMP Moderate 合规认证，ChatGPT Enterprise 和 OpenAI API 现可供美国联邦政府机构在满足政府级数据安全标准的前提下正式采购和部署。</p>
+<callout emoji="💡" background-color="light-yellow" border-color="yellow">
+  <p>FedRAMP Moderate 是进入美国联邦云服务市场的关键准入门槛，OpenAI 取得此授权意味着其产品正式打开了规模庞大且具备高度稳定性的政府采购渠道。</p>
+</callout>
+
+<hr/>
+<h2>折叠区</h2>
+<ul>
+  <li>Sam Altman：Sam Altman 发推称 $20 套餐中的 Codex 性价比很高，无实质技术内容（<a href="[https://x.com/sama/status/2048913887614115857](https://x.com/sama/status/2048913887614115857)">链接</a>）</li>
+  <li>Amjad Masad：Amjad Masad 发推介绍一个项目：20 位开发者，8 周时间，目标是赚到第一笔收入（<a href="[https://x.com/amasad/status/2048912698583453933](https://x.com/amasad/status/2048912698583453933)">链接</a>）</li>
+  <li>Molson Hart：Molson Hart 评论某建筑造价4亿美元，认为即使在美国也偏高，无实质AI研究内容（<a href="[https://x.com/Molson_Hart/status/2048911671939510556](https://x.com/Molson_Hart/status/2048911671939510556)">链接</a>）</li>
+  <li>Molson Hart：Molson Hart 声称以约 200 万美元建造了与某 4 亿美元宴会厅同等建筑面积的建筑，无实质 AI 相关内容（<a href="[https://x.com/Molson_Hart/status/2048911662997295423](https://x.com/Molson_Hart/status/2048911662997295423)">链接</a>）</li>
+  <li>Amjad Masad：Replit CEO Amjad Masad 声称 Replit 是唯一具备完整 agent production is（<a href="[https://x.com/amasad/status/2048911624061522228](https://x.com/amasad/status/2048911624061522228)">链接</a>）</li>
+  <li>Sam Altman：Sam Altman 发布简短情感表达，无实质内容（<a href="[https://x.com/sama/status/2048910739784826966](https://x.com/sama/status/2048910739784826966)">链接</a>）</li>
+  <li>Ross Taylor：Ross Taylor 转发评论他人工作，称赞&quot;vintage models&quot;在科学发现及测量模型脱离训练数据分布方面的（<a href="[https://x.com/rosstaylor90/status/2048905739822059605](https://x.com/rosstaylor90/status/2048905739822059605)">链接</a>）</li>
+  <li>Paul Graham：Paul Graham 发表个人观点：跳过大学创业者需主动承担自我智识发展的责任，这在大多数初创公司中不会自然发生。（<a href="[https://x.com/paulg/status/2048903314759196893](https://x.com/paulg/status/2048903314759196893)">链接</a>）</li>
+  <li>Alexis Ohanian：Alexis Ohanian 发布简短感叹&quot;Never done!&quot;并附链接，无实质技术或研究内容（<a href="[https://x.com/alexisohanian/status/2048899243210133670](https://x.com/alexisohanian/status/2048899243210133670)">链接</a>）</li>
+  <li>Wolfram Ravenwolf：独立测评者在 WolfBench 上评估 GPT-5.5，声称其在多个 agent harness 中超越 Claude（<a href="[https://x.com/WolframRvnwlf/status/2048898904737956045](https://x.com/WolframRvnwlf/status/2048898904737956045)">链接</a>）</li>
+  <li>George Mack：George Mack 分享个人决策哲学&quot;idiot razor&quot;：在两个相当的选项中，选看起来&quot;愚蠢&quot;而非&quot;懦弱&quot;的那（<a href="[https://x.com/george__mack/status/2048897672136778186](https://x.com/george__mack/status/2048897672136778186)">链接</a>）</li>
+  <li>Jack Morris：Jack Morris 观点：美国约四家 AI 实验室正囤积数 petabytes 高质量数据，中国一旦意识到数据积累的（<a href="[https://x.com/jxmnop/status/2048887455328117153](https://x.com/jxmnop/status/2048887455328117153)">链接</a>）</li>
+  <li>Carlos E. Perez：科普推文：介绍一项新研究，认为量子效应 chirality-induced spin selectivity（CISS）（<a href="[https://x.com/IntuitMachine/status/2048887268467982694](https://x.com/IntuitMachine/status/2048887268467982694)">链接</a>）</li>
+  <li>OpenAI Developers @ OpenAI：OpenAI Developers 邀请开发者 fork 开源仓库、接入自定义工具并进行二次开发，未披露具体项目信息（<a href="[https://x.com/OpenAIDevs/status/2048871272231338455](https://x.com/OpenAIDevs/status/2048871272231338455)">链接</a>）</li>
+  <li>TechCrunch 官方：Letterboxd 电影社交平台据报道正在寻找新买家（<a href="[https://x.com/TechCrunch/status/2048864577111339316](https://x.com/TechCrunch/status/2048864577111339316)">链接</a>）</li>
+  <li>John Carmack：John Carmack 分享游轮电梯调度系统体验，指出 UI 反馈延迟过高导致用户错过电梯，并提出即时视听反馈的改进建（<a href="[https://x.com/ID_AA_Carmack/status/2048858397295206854](https://x.com/ID_AA_Carmack/status/2048858397295206854)">链接</a>）</li>
+  <li>Amjad Masad：Replit CEO Amjad Masad 发布关于 Replit 在加拿大的简短推文，无实质内容（<a href="[https://x.com/amasad/status/2048854724099915961](https://x.com/amasad/status/2048854724099915961)">链接</a>）</li>
+  <li>arxiv:2604.24954v1：NVIDIA 发布 Nemotron 3 Nano Omni，首个支持音频+文本+图像+视频的 Omni 多模态模型，基（<a href="[http://arxiv.org/abs/2604.24954v1](http://arxiv.org/abs/2604.24954v1)">链接</a>）</li>
+  <li>Alexis Ohanian：Alexis Ohanian 在 POSSIBLE 活动现场发布日常动态，无实质技术或研究内容（<a href="[https://x.com/alexisohanian/status/2048848438708617372](https://x.com/alexisohanian/status/2048848438708617372)">链接</a>）</li>
+  <li>François Chollet：François Chollet 发布一条指向外部链接的推文，原文内容极少，仅提示&quot;阅读发布说明&quot;，无法判断具体内容（<a href="[https://x.com/fchollet/status/2048847002889585150](https://x.com/fchollet/status/2048847002889585150)">链接</a>）</li>
+  <li>François Chollet：François Chollet 宣布 Keras Kinetic v0.0.2 alpha 发布，提供类似 Modal（<a href="[https://x.com/fchollet/status/2048846942294491573](https://x.com/fchollet/status/2048846942294491573)">链接</a>）</li>
+  <li>Austen Allred：Austen Allred 发推询问大型企业如何应对 SaaS 创业公司的销售攻势，无实质技术内容（<a href="[https://x.com/Austen/status/2048845716940808396](https://x.com/Austen/status/2048845716940808396)">链接</a>）</li>
+  <li>TechCrunch 官方：FTC 报告显示 2025 年消费者因社交媒体诈骗损失达 21 亿美元（<a href="[https://x.com/TechCrunch/status/2048843025900859464](https://x.com/TechCrunch/status/2048843025900859464)">链接</a>）</li>
+  <li>Xin Wang：Xin Wang 分享 LenVM 项目，来自 UCSB、Apple、lmsys、CMU、U Wisconsin-Mad（<a href="[https://x.com/xwang_lk/status/2048838948781478164](https://x.com/xwang_lk/status/2048838948781478164)">链接</a>）</li>
+  <li>The Humanoid Hub @ X：The Humanoid Hub 分享了一篇论文链接，无具体内容描述（<a href="[https://x.com/TheHumanoidHub/status/2048837853975884063](https://x.com/TheHumanoidHub/status/2048837853975884063)">链接</a>）</li>
+  <li>John Langford：John Langford 分享了关于 Agentic Coding 的个人使用心得笔记，建议有计算机兴趣的人关注（<a href="[https://x.com/JohnCLangford/status/2048836384979308597](https://x.com/JohnCLangford/status/2048836384979308597)">链接</a>）</li>
+  <li>Sierra AI 官方 @ Sierra Platform：Sierra AI 分享其 AI 在 Modern Animal 兽医诊所的应用案例，宣称帮助团队成员服务宠物主人的效率（<a href="[https://x.com/SierraPlatform/status/2048833478284935593](https://x.com/SierraPlatform/status/2048833478284935593)">链接</a>）</li>
+  <li>Joe Hudson：Joe Hudson 分享关于情绪智力（emotional intelligence）教学的个人使命宣言，无实质技术内容（<a href="[https://x.com/FU_joehudson/status/2048829053441081522](https://x.com/FU_joehudson/status/2048829053441081522)">链接</a>）</li>
+  <li>Joe Hudson：Joe Hudson 分享关于&quot;喜悦&quot;与情绪家族关系的个人观点，附带一篇情绪研究指南链接，无实质 AI 技术内容（<a href="[https://x.com/FU_joehudson/status/2048829041562841378](https://x.com/FU_joehudson/status/2048829041562841378)">链接</a>）</li>
+  <li>OpenAI Developers @ OpenAI：OpenAI Developers 发布一条仅含链接的推文，无可解析的实质内容（<a href="[https://x.com/OpenAIDevs/status/2048825022031302661](https://x.com/OpenAIDevs/status/2048825022031302661)">链接</a>）</li>
+</ul>
+
+<hr/>
+<p><i>本日报由 HH Research Pipeline 自动生成，由 Claude 抽取和撰写，以原文为准。<br/>处理信号 172 条 · 头条 41 条 · 高价值 53 条</i></p>

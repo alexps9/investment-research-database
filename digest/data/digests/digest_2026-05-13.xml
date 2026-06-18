@@ -1,0 +1,992 @@
+<title>HH Research Daily · 2026-05-13</title>
+
+<callout emoji="🌅">
+  <p><b>本日信号概览：</b>处理信号 152 条 · 头条候选 22 条 · 高价值 123 条</p>
+  <p>arxiv 论文 107 篇 · X 推文 45 条</p>
+</callout>
+
+<h2>今日 TL;DR</h2>
+<p>OpenAI 密集发布：成立 40 亿美元独立部署公司 OpenAI Deployment Company（产业全景·资本）；推出网络安全防御平台 Daybreak（行业应用·认知模型）；John Schulman 披露连续流式多模态模型 zero-shot 能力涌现（行业应用·多模态）。</p>
+<hr/>
+<h2>头条</h2>
+<p><b>OpenAI 成立独立部署公司，初始投资 40 亿美元、150 名驻场工程师</b> · <a href="https://x.com/gdb/status/2053884619695730745">Greg Brockman on OpenAI Deployment Company</a></p>
+<p>OpenAI 宣布成立 OpenAI Deployment Company，初始投资 40 亿美元、19 家合作伙伴，派驻 150 名 Forward Deployed Engineers 帮助企业最大化 AI 部署成效。</p>
+<callout emoji="🌟">
+<p>OpenAI 正式拆分出一个专注企业 AI 落地的独立部署公司，通过驻场工程师与大规模资本入局，将 AI 部署服务从卖 API 升级为"交钥匙工程"——这在某种程度上类似于咨询公司 + 系统集成商的结合体，但背靠 OpenAI 核心模型能力。</p>
+</callout>
+<hr/>
+<h4>OpenAI 发布 Daybreak 网络安全平台，整合旗舰模型与 Codex 武装防御方</h4>
+<ul>
+<li><b>信号源</b>：OpenAI 官方 · Greg Brockman · Sam Altman @ OpenAI</li>
+<li><b>链接</b>：<a href="https://x.com/OpenAI/status/2053939702110269822">OpenAI announces Daybreak</a></li>
+</ul>
+<callout emoji="🔥">
+<p><b>认知提取</b>：Daybreak 本质上是 OpenAI 将其最强模型能力与 Codex 代码能力打包为一个面向网络安全防御者的专项产品，核心思路是将前沿 AI 优先提供给防御方以抵消攻击者滥用风险——这在某种程度上类似于给守城方配备了一支永不疲倦的 AI 安全工程师团队。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 发布 Daybreak 网络安全平台，整合旗舰模型与 Codex 及安全合作伙伴，面向防御方加速漏洞修复与软件持续安全保障。Sam Altman 表示计划与尽可能多的企业合作，将 AI 能力延伸至 7×24 小时不间断的软件安全巡逻。</p>
+<p><b>产品定位</b></p>
+<p>防御导向的 AI 网络安全平台，利用 OpenAI 最强模型 + Codex 代码能力，为企业提供自动化漏洞扫描、修复建议与持续安全监控。</p>
+<p>[[FIGURE:x:2053939702110269822]]</p>
+<hr/>
+<h4>John Schulman：连续流式多模态模型实现后，实时翻译等任务 zero-shot 涌现</h4>
+<ul>
+<li><b>信号源</b>：John Schulman @ OpenAI</li>
+<li><b>链接</b>：<a href="https://x.com/johnschulman2/status/2053940940885332028">John Schulman on multimodal general models</a></li>
+</ul>
+<callout emoji="🚀">
+<p><b>认知提取</b>：一旦模型具备连续流式多模态 I/O（同时接收 audio + video + text 并实时输出），大量原本需要专门训练的任务会自动涌现为 zero-shot 能力——这在某种程度上类似于通用操作系统出现后，许多专用嵌入式系统的功能可以被软件替代。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>John Schulman 分享通用多模态模型进展：实现 continuous/simultaneous audio+video+text -&gt; audio+text 的 type signature 后，实时翻译、视频事件检测等任务均可 zero-shot instruction following，无需专用模型。</p>
+<p><b>产品定位</b></p>
+<p>OpenAI 下一代多模态通用模型的能力展示，指向流式多模态理解与生成的统一架构，取代大量垂直场景的专用 pipeline。</p>
+<p>[[FIGURE:x:2053940940885332028]]</p>
+
+<hr/>
+<h2>一、前沿研究 (Research Frontier)</h2>
+<h3>认知模型 (Cognitive Models)</h3>
+
+<h4>PRISM：具身智能分层诊断 Benchmark，定位 LLM Agent 认知瓶颈</h4>
+<ul>
+<li><b>信号源</b>：NUS</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11534v1">PRISM: A Structured Diagnostic Benchmark for Embodied AI Agents</a></li>
+</ul>
+<callout emoji="🔬">
+<p><b>认知提取</b>：PRISM 不再只问"任务成功了吗"，而是问"哪个能力模块导致了失败"，这在某种程度上类似于把体检从"是否健康"细化成分器官检查。实验发现 implicit intent resolution 是所有模型的核心瓶颈，而轻量模型在 long-horizon 任务中会产生"补偿性过度推理"——用更多 token 却实现更差效果。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>NUS 提出 PRISM，一个面向具身智能的结构化诊断 benchmark，将 300 个人工验证任务按 Basic / Reasoning / Long-horizon 三层能力架构组织，覆盖 5 个多房间光真实感公寓场景。通过可插拔的 probe 模块（如 oracle perception），PRISM 能将任务失败归因到具体认知模块，而非仅报告整体成功率。跨 7 个 LLM 的实验揭示 implicit intent resolution 是最主要瓶颈，轻量模型在 long-horizon 任务中成功率低至 20.0%。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：PRISM 在 5 个光真实感多房间公寓（每间 4-8 个房间）上构建三层能力结构：Basic Ability（感知到动作的基础接地）、Reasoning Ability（隐式意图解析）、Long-horizon Ability（持续多步骤协调）。提供 agent-agnostic 可执行 action API，支持 LLM agent、VLM agent、符号规划器、RL policy 等异构 agent 在统一协议下评测；并提供可选的感知、记忆、规划 probe 模块，支持受控组件级分析。</li>
+<li><b>技术细节</b>：与传统 benchmark 不同，PRISM 将任务失败分解到具体认知模块，通过可插拔的 probe 模块（如 oracle perception）隔离单一变量进行消融——这类似于流水线测试时逐段接入标准零件来定位故障位置。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 PRISM benchmark，含 300 个人工验证任务，分三层能力层级，覆盖 5 个多房间光真实感公寓场景</li>
+<li>跨 7 个 LLM 的实验显示 implicit intent resolution 是最主要瓶颈，轻量模型 long-horizon 任务成功率低至 20.0%</li>
+<li>轻量模型在 long-horizon 任务中消耗 token 数反而多于前沿模型，暴露补偿性过度推理而非真实规划能力</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在 oracle perception 条件下，空间接地并非主要失败源；implicit intent resolution 是所有模型家族的显著瓶颈；long-horizon 任务暴露能力断崖，轻量模型成功率最低至 20.0% 且伴随补偿性 token 浪费。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11534v1]]</p>
+
+<hr/>
+
+<h4>TOPPO：修复 PPO 在多任务 RL 中的 Critic 梯度病态问题</h4>
+<ul>
+<li><b>信号源</b>：UCSB</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11473v1">TOPPO: Tail-Optimized PPO for Multi-Task Reinforcement Learning</a></li>
+</ul>
+<callout emoji="📊">
+<p><b>认知提取</b>：该研究发现 PPO 在 MTRL 中失效的根本原因是 critic 端梯度病态（easy tasks 垄断 value function 更新、tail tasks 停滞），而非架构不足。TOPPO 通过 Critic Balancing 模块组修复这一优化瓶颈，证明 on-policy 方法在正确优化后可以媲美乃至超越 SAC 等 off-policy 方法——这在某种程度上类似于给一个多科目学生制定均衡复习计划，避免强科目挤占弱科目的练习时间。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>UCSB 提出 TOPPO（Tail-Optimized PPO），通过引入 Critic Balancing 模块组解决 PPO 在多任务强化学习中的 critic 端梯度病态问题。研究诊断发现 PPO 在 MTRL 中失败的根因是 easy tasks 垄断 value function 梯度更新导致 tail tasks 停滞，而非网络容量不足。TOPPO 无需复杂模块化架构或大模型，在 Meta-World+ benchmark 上以更少参数和环境步数超越 SAC-family 与 ARS-family 基线。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：TOPPO 在原始 PPO 框架基础上引入 Critic Balancing 模块集，针对多任务场景中 critic 端的梯度病态问题进行干预：通过改善跨任务梯度条件化和平衡各任务学习动态，解决 value function 更新被少数 easy tasks 主导的问题，无需改变基础网络结构或引入模块化架构。</li>
+<li><b>技术细节</b>：Critic Balancing 模块组对不同任务的 critic 梯度施加条件化约束，使得 tail tasks（困难/少数任务）的 value function 更新不被 easy tasks 淹没。这在某种程度上类似于多目标优化中的 loss reweighting，但直接作用于 critic 的梯度流，而非 actor 端或损失权重。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>诊断出 PPO 在 MTRL 中存在 critic-side gradient ill-conditioning 问题，导致 tail tasks 更新被 easy tasks 主导而停滞</li>
+<li>提出 TOPPO（Tail-Optimized PPO），引入 Critic Balancing 模块组，无需复杂模块化架构或大模型</li>
+<li>在 Meta-World+ 上 TOPPO 用更少参数和环境步数超越 SAC-family 与 ARS-family 基线，mean 和 tail-task 性能均更优</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：TOPPO 在 Meta-World+ benchmark 上早期训练即匹配强 SAC 基线，全训练预算下保持领先，参数量和环境采样量显著更少，消融实验验证了各模块的独立贡献。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11473v1]]</p>
+
+<hr/>
+
+<h4>RankQ：用自监督 Action Ranking 替代悲观惩罚的 Offline-to-Online RL</h4>
+<ul>
+<li><b>信号源</b>：arxiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11151v1">RankQ: Self-Supervised Action Ranking for Offline-to-Online Reinforcement Learning</a></li>
+</ul>
+<callout emoji="🧠">
+<p><b>认知提取</b>：RankQ 的核心思路是：与其像传统方法一样对所有未见过的动作打折扣，不如让 Q 函数学会动作之间的相对排名，从而引导策略梯度朝更优行为方向走——这在某种程度上类似于从"凡是陌生人都不信任"升级为"根据行为线索判断谁更可靠"。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>该研究提出 RankQ，一种 offline-to-online RL 方法，通过自监督 multi-term ranking loss 替代传统方法中对 OOD 动作的均匀悲观惩罚。RankQ 让 Q 函数学习动作之间的相对偏好排序结构，避免 behavior cloning anchor 阻碍在线策略改进。在 D4RL 稀疏奖励 benchmark 上达到或超越 7 种先验方法，在 VLA 机器人低数据场景下平均仿真成功率比次优方法高 42.7%，sim-to-real 迁移后真实 cube stacking 成功率从 43.1% 提升至 84.7%。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：RankQ 在标准 temporal-difference (TD) 学习目标基础上，增加一个多项 ranking loss，通过对比数据集内动作与 OOD 动作的相对质量来塑造 Q 函数的排序结构，而非统一下调 OOD 动作价值。整体框架兼容现有 offline-to-online RL 流程，支持预训练 VLA 模型的低数据量在线微调。</li>
+<li><b>技术细节</b>：ranking loss 由多个 pairwise 或 listwise 排序项组成，使得 Q 函数满足"数据集内高质量动作 &gt; 低质量动作 &gt; OOD 动作"的结构性约束。这在某种程度上类似于学习"相对好坏"的偏好模型（如 RLHF 中的 reward model），而非简单地给未见动作打低分。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 self-supervised multi-term ranking loss，让 Q 函数学习相对 action 偏好，避免传统悲观方法因 behavior cloning anchor 阻碍在线策略改进</li>
+<li>在稀疏奖励 D4RL benchmark 上与 7 种先验方法持平或超越</li>
+<li>在 VLA 机器人低数据场景下平均仿真成功率比次优方法高 42.7%，sim-to-real 迁移后真实 cube stacking 成功率从 43.1% 提升至 84.7%</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：RankQ 在 D4RL 稀疏奖励任务上达到 SOTA 水平，并在视觉机器人任务中实现强 sim-to-real 迁移，真实世界 cube stacking 成功率接近翻倍。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11151v1]]</p>
+
+<hr/>
+
+<h4>SkillSafetyBench：针对 LLM Agent 可复用 Skill 接口的安全攻击面评测</h4>
+<ul>
+<li><b>信号源</b>：北京大学</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12015v1">SkillSafetyBench: Evaluating the Safety of LLM Agents through Reusable Skill Interfaces</a></li>
+</ul>
+<callout emoji="🔍">
+<p><b>认知提取</b>：当 LLM agent 通过可复用 skill 模块扩展能力时，即便用户请求本身无害，skill 材料或本地工件也可能被恶意构造以诱导 agent 执行危险动作——这在某种程度上类似于给快递员一张"正规"的配送单，但单据内容被篡改以欺骗他进入禁区。该研究揭示 agent 安全不能只依赖模型对齐，还需关注 skill 解析与工作流信任机制。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>北大提出 SkillSafetyBench，针对 LLM agent 中可复用 skill 接口这一新攻击面设计安全评测基准。该 benchmark 包含 155 个对抗样例、47 项任务、6 个风险领域、30 个安全类别，每个案例配备专属规则验证器。核心发现是：在用户请求保持良性的前提下，通过篡改 skill 相关材料（工具描述、文件、内存、执行环境等）即可持续诱导多种 CLI agent 产生不安全行为，模型级对齐不足以保证 agent 整体安全。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：SkillSafetyBench 以"skill 接入面"为核心设计对抗场景：在用户请求保持良性的前提下，向 skill 相关材料（工具描述、文件、内存、执行环境等）注入对抗内容，构造 skill-mediated 攻击。评测流程使用可运行基准（runnable benchmark）结合 case-specific 规则验证器自动判定输出是否触发不安全行为。</li>
+<li><b>技术细节</b>：攻击面聚焦于 skill 包内的 procedural guidance 与本地工件，而非用户对话层面；这类似于在一个自动化流水线的"工具说明书"里埋入恶意指令，让操作员（agent）在不知情的情况下执行危险步骤。多个 CLI agent 框架与不同 model backend 的组合均被纳入测试，以考察 scaffold-model pairing 对安全性的交叉影响。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>SkillSafetyBench 构建 155 个对抗案例，覆盖 47 任务、6 风险域、30 安全类别，每案例配备专属规则验证器</li>
+<li>实验表明本地化非用户攻击（skill 材料/工件篡改）可持续诱导多种 CLI agent 产生不安全行为</li>
+<li>不同风险域、攻击方式及 scaffold-model 组合呈现差异化失败模式，模型级对齐不足以保证 agent 整体安全</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：多种 CLI agent 与模型后端组合在 skill-facing 攻击下均表现出稳定的不安全行为，证明现有模型级对齐对 skill 接入面攻击防御不足，agent 安全需额外考虑 skill 解析与执行环境信任机制。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12015v1]]</p>
+
+<hr/>
+
+<h4>ATD(λ)：用无似然密度比估计实现多智能体 RL 的自适应 TD(λ)</h4>
+<ul>
+<li><b>信号源</b>：arxiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11880v1">ATD(λ): Adaptive TD(λ) for Multi-Agent Reinforcement Learning via Likelihood-Free Density Ratio Estimation</a></li>
+</ul>
+<callout emoji="⚙️">
+<p><b>认知提取</b>：研究者将单智能体领域"自适应 λ 与策略分布挂钩"的思路引入多智能体设置：由于联合动作空间巨大、转移数据稀缺，直接统计策略分布不可行，因此用两个大小不同的 replay buffer 和密度比估计器代替统计计算，这在某种程度上类似于用两份"新旧日记本"的对比来推测当前习惯，而无需统计全部历史行为。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>该研究提出 ATD(λ) 方法，针对多智能体强化学习中策略分布难以统计计算的问题，用参数化无似然密度比估计器自适应调整 TD(λ) 值。在 SMAC 和 Gfootball 基准上分别集成进 QMIX 和 MAPPO，相比静态 λ 基线取得持续竞争性或更优表现，为 MARL 中偏差-方差权衡提供了动态调节手段。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：ATD(λ) 维护两个不同大小的 replay buffer，分别存储过去策略和当前策略的历史轨迹；通过参数化密度比估计器计算当前策略相对历史策略的似然比，进而为每个状态-动作对赋予自适应的 λ 值，最终无缝接入 value-based（QMIX）和 AC-based（MAPPO）框架。</li>
+<li><b>技术细节</b>：密度比估计器以两个 buffer 的样本作为正负例进行二分类训练，输出的比值近似当前策略与历史策略的密度比，从而替代无法直接统计的策略分布——这在某种程度上类似于用"新旧文本风格分类器"来判断一段话更像新版本还是旧版本的习惯，以此推断其在当前策略下的典型程度。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出参数化无似然密度比估计器，用双 replay buffer 替代统计法估算 MARL 中的策略分布，解决大联合动作空间下分布计算不可行的问题</li>
+<li>基于估计器为每个状态-动作对分配自适应 TD(λ) 值，依据当前策略稳态分布下的似然度动态调整偏差-方差权衡</li>
+<li>在 SMAC 和 Gfootball 基准上将 ATD(λ) 分别集成进 QMIX 和 MAPPO，相比静态 λ 基线持续取得竞争性或更优性能</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11880v1]]</p>
+
+<hr/>
+
+<h4>AgentDisCo：解耦探索与利用的 Deep Research Agent 框架</h4>
+<ul>
+<li><b>信号源</b>：arxiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11732v1">AgentDisCo: Disentangling Exploration and Exploitation in Deep Research Agents</a></li>
+</ul>
+<callout emoji="🧬">
+<p><b>认知提取</b>：AgentDisCo 将 deep research 过程拆解为"搜索策略批评者"与"内容生成者"两个相互博弈的 agent，类似于辩论式双人协作——一方不断挑剔 outline、优化检索，另一方据此更新内容，从而避免单一模块中探索与利用相互干扰的问题。GALA benchmark 则从用户真实浏览历史挖掘潜在研究需求，比现有 benchmark 更贴近实际使用场景。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>AgentDisCo 提出将 deep research agent 中的信息探索与利用解耦为 critic/generator 两个协作子 agent，通过对抗优化迭代细化 outline。框架引入 meta-optimization 机制，利用 Claude-Code/Codex 等代码生成 agent 自动探索 agent 配置并构建可复用 policy bank，实现框架自优化。同时发布基于用户历史浏览的 GALA benchmark，在 DeepResearchBench、DeepConsult、DeepResearchGym 三个已有 benchmark 上使用 Gemini-2.5-Pro 达到或超越主流闭源系统。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：AgentDisCo 由三层构成：（1）critic agent 评估当前 outline 并精炼 search query；（2）generator agent 根据检索结果更新 outline；（3）下游 report writer 综合最终 outline 生成完整研究报告。整体框架支持手工设计与 meta-optimization 自动发现两种 agent 配置策略，代码生成 agent（如 Claude-Code、Codex）系统性探索配置空间，构建 policy bank。</li>
+<li><b>技术细节</b>：meta-optimization 阶段中，generator agent 被复用为 scoring agent，对 critic 输出进行质量打分并生成训练信号——这在某种程度上类似于让同一名球员既当攻手又兼任裁判来评估战术效果，使框架在无大量人工干预的情况下自我优化。policy bank 则将探索到的优质设计策略持久化存储，供后续任务复用。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 critic-generator 解耦架构，将 deep research 建模为信息探索与利用的对抗优化问题，并支持迭代 outline 细化</li>
+<li>引入 meta-optimization harness，利用 Claude-Code/Codex 等代码生成 agent 自动探索 agent 配置并构建可复用 policy bank，实现框架自优化</li>
+<li>在 DeepResearchBench、DeepConsult、DeepResearchGym 三个 benchmark 上使用 Gemini-2.5-Pro 达到或超越主流闭源系统；新提出 GALA benchmark 基于用户浏览历史挖掘真实研究兴趣</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11732v1]]</p>
+<h3>多模态智能 (Multimodal Intelligence)</h3>
+
+<h4>SkyPart：基于轻量级 Patch 分组的跨视角地理定位新框架</h4>
+<ul>
+<li><b>信号源</b>：arxiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11654v1">SkyPart: Lightweight Patch Grouping Head for Cross-View Geo-Localization</a></li>
+</ul>
+<callout emoji="🔬">
+<p><b>认知提取</b>：SkyPart 的核心思路是把无人机视角与卫星图像的匹配问题分解为语义"部件"级别的对齐，而非将整幅图压缩为单一全局向量——这在某种程度上类似于对比两张城市地图时先对齐公园、道路、建筑等结构块，而不是整体比较纹理色彩。通过可学习原型竞争 patch token 并在训练时引入高度条件调制，推理时自动消除高度带来的尺度偏差。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>SkyPart 提出一种轻量级 patch 分组头，用于 cross-view geo-localization（CVGL）任务。该方法在 ViT 主干之上引入原型竞争机制、高度条件调制和 Kendall 不确定性加权损失，在 SUES-200、University-1652、DenseUAV 三个主流 benchmark 上均达到新 SOTA，整体仅 26.95M 参数 / 22.14 GFLOPs，且对多种天气扰动表现出显著鲁棒性。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：SkyPart 作为即插即用的 swappable head 附加在预训练 ViT 主干之上，包含四个模块：(1) 可学习原型通过单次 cosine assignment 竞争 patch token，实现软性语义部件分组；(2) 高度条件线性调制（FiLM 风格）仅在训练期注入无人机高度信息；(3) graph-attention readout 聚合活跃原型的上下文关系；(4) Kendall 不确定性加权多目标损失自动平衡各 loss 梯度量级。整体遵循 single-pass、无 re-ranking、无 TTA 推理协议。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 SkyPart 轻量头（26.95M 参数 / 22.14 GFLOPs），在 SUES-200、University-1652、DenseUAV 三项 CVGL benchmark 均刷新 SOTA</li>
+<li>引入 altitude-conditioned linear modulation，仅在训练时注入高度信息，推理 embedding 完全与高度解耦，缓解无人机高度变化带来的尺度方差</li>
+<li>采用 Kendall 不确定性加权多目标损失，理论证明其驻点满足 Pareto-stationary，避免手工调节 loss 权重；在 10 种天气扰动（WeatherPrompt）下优势比晴天条件更显著</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11654v1]]</p>
+
+<hr/>
+
+<h4>FM-Speech：面向细粒度多维语音理解的数据-基准-模型三位一体框架</h4>
+<ul>
+<li><b>信号源</b>：arxiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12036v1">FM-Speech: Fine-grained Multi-dimensional Speech Understanding</a></li>
+</ul>
+<callout emoji="🧠">
+<p><b>认知提取</b>：现有 speech LLM 能完成基础语音识别，但对微声学线索、声学场景、副语言信号等细粒度属性的感知能力严重不足。这项工作从数据、基准、模型三个层面系统性地填补这一空缺，类似于给语音 AI 装上"精细听觉神经"，使其能区分情绪细节、环境噪声和说话风格等复杂维度。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>本文提出细粒度多维语音理解体系，包含鲁棒数据处理 pipeline（从视听源提取高质量自发语音语料）、覆盖 14 个语音属性维度的 FMSU-Bench 评测基准，以及基于解耦属性建模与渐进课程微调的 FM-Speech 模型。评测揭示现有 speech LLM 在多维细粒度理解方面仍有显著差距，FM-Speech 在该基准上显著优于现有开源方案。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：整体框架分三层：(1) 数据层——设计 pipeline 从视听源提取自发语音，处理复杂声学环境与长音频对齐；(2) 评测层——构建 FMSU-Bench，覆盖 14 个语音属性维度（含微声学线索、声学场景、副语言信号等）；(3) 模型层——FM-Speech 以解耦属性建模分别处理不同维度特征，结合渐进课程微调逐步强化细粒度感知能力。</li>
+<li><b>技术细节</b>：FM-Speech 的解耦属性建模将不同语音维度（如情感、说话人特征、环境噪声等）分开建模而非混合处理，类似于多声道调音台各轨道独立调节；渐进课程微调则按由易到难的顺序逐步引入复杂属性，防止模型在早期训练阶段因信息过载而崩溃。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>构建含 14 个语音属性维度的 FMSU-Bench 基准，揭示现有 speech LLM 在细粒度多维理解上仍有显著差距</li>
+<li>设计鲁棒数据处理 pipeline，从视听源提取高质量自发语音语料，解决复杂声学环境与长音频时间戳对齐难题</li>
+<li>FM-Speech 采用解耦属性建模 + 渐进课程微调框架，在 FMSU-Bench 上显著优于现有开源 speech LLM</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：FM-Speech 在 FMSU-Bench 上显著超越现有开源 speech LLM，同时基准评测也表明当前主流模型在多维细粒度语音理解方面仍需大幅改进。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12036v1]]</p>
+
+<hr/>
+
+<h4>Audio-Visual LLM 内部机制解析：跨模态信息集中于特定 Sink Tokens</h4>
+<ul>
+<li><b>信号源</b>：Hyung Won Chung @ KAIST</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.10815v2">Cross-Modal Sink Tokens in Audio-Visual Large Language Models</a></li>
+</ul>
+<callout emoji="🔍">
+<p><b>认知提取</b>：研究者通过 probing 分析揭示 AVLLMs 中音频与视觉信息的融合发生在特定 sink tokens（称为 cross-modal sink tokens），而非均匀分布于所有 tokens——这在某种程度上类似于大脑中存在专门的跨感官整合区域。基于此发现，研究者设计了一种无需重新训练即可降低模型幻觉的干预方法。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>KAIST 团队对多个主流 Audio-Visual LLM 的内部表示进行系统性 probing 分析，发现跨模态（音频-视觉）融合信息主要编码在特定 sink tokens 中，而非均匀分布于所有 token 位置。基于这一机制性发现，研究者提出 training-free 幻觉缓解方法，通过在推理阶段强化对 cross-modal sink tokens 的注意力依赖来改善生成质量。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：采用 probing 分析范式，对多个主流 AVLLMs 的 token 内部表示进行检测，定位音频信息在视觉 token 中的编码位置（反之亦然），以识别 cross-modal sink tokens 的分布规律，并在此基础上设计推理阶段的无训练干预策略。</li>
+<li><b>技术细节</b>：研究者训练线性探针（linear probe）检测各 token 在不同层中携带的跨模态信息量，从而识别哪些 sink tokens 是真正的 cross-modal hub。幻觉缓解方法通过在注意力机制中增强模型对这些特定 sink tokens 的关注，无需调整模型权重，类似于在推理时给关键信息节点"加权标注"。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>AVLLMs 中跨模态（音频-视觉）融合信息主要编码在 sink tokens 中，而非分布于全部 token 表示</li>
+<li>并非所有 sink tokens 均等存储跨模态信息，仅有特定子集（cross-modal sink tokens）专门承担该功能</li>
+<li>基于上述发现提出 training-free 幻觉缓解方法，通过强化对 cross-modal sink tokens 的依赖来改善生成质量</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在多个 AVLLMs 上验证了 cross-modal sink tokens 的普遍性，并展示基于该机制的 training-free 幻觉缓解策略在音视频问答任务上的有效性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.10815v2]]</p>
+
+<hr/>
+
+<h4>Uni-AdGen：统一自回归框架联合生成个性化广告图像与文本</h4>
+<ul>
+<li><b>信号源</b>：Haoxiang Wang</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12138v1">Uni-AdGen: Unified Autoregressive Framework for Personalized Ad Image and Text Generation</a></li>
+</ul>
+<callout emoji="📊">
+<p><b>认知提取</b>：Uni-AdGen 将广告图像和文本的生成统一到单一自回归模型中，通过多模态历史行为建模用户偏好，改变了传统多模型串联且依赖 CTR 均值信号的流程——这类似于从"按平均口味做菜"升级为"根据每位食客历史点餐记录定制菜品"。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>本文提出 Uni-AdGen 统一自回归框架，以单一模型联合生成个性化广告图像与文本。系统通过 coarse-to-fine 偏好理解模块从用户嘈杂多模态历史点击行为中有效捕捉兴趣信号，引入 foreground perception 模块提升广告内容真实感，并发布首个大规模个性化广告图文数据集 PAd1M 及 Product Background Similarity (PBS) 评估指标。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：Uni-AdGen 以统一自回归模型为骨干，通过 instruction tuning 使其同时支持广告图像和文本生成；引入 foreground perception 模块增强生成内容的真实感；在个性化方面，coarse-to-fine 偏好理解模块先从用户噪声多模态历史行为中粗粒度建模兴趣分布，再细粒度对齐生成内容。</li>
+<li><b>技术细节</b>：系统先通过粗粒度兴趣聚类从历史点击记录中过滤噪声，再利用细粒度偏好对齐将用户兴趣向量注入自回归解码过程，指导广告内容的个性化生成——这有点类似于推荐系统中的两阶段召回与精排思路被嵌入生成模型内部。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 Uni-AdGen 单一自回归框架，同时生成广告图像与文本，引入 foreground perception 模块提升内容真实感</li>
+<li>设计 coarse-to-fine 偏好理解模块，从嘈杂多模态历史行为中有效捕捉用户兴趣以驱动个性化生成</li>
+<li>构建首个大规模个性化广告图文数据集 PAd1M，并提出 Product Background Similarity (PBS) 评估指标</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在通用和个性化广告生成任务上，Uni-AdGen 均优于基线方法，PAd1M 数据集和 PBS 指标为后续研究提供了基准。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12138v1]]</p>
+
+<hr/>
+
+<h4>MindMirror：本地优先多模态情绪感知系统助力数字工作者状态反思</h4>
+<ul>
+<li><b>信号源</b>：arxiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11700v1">MindMirror: A Local-First Multimodal State-Aware Support System for Digital Workers</a></li>
+</ul>
+<callout emoji="🧬">
+<p><b>认知提取</b>：该系统将摄像头表情识别、结构化阻塞反思与本地 LLM 建议生成串联成闭环工作流，相当于为数字工作者构建了一面"情绪镜子"——持续感知状态、引导用户表达困境并给出支持性回应，同时强调数据本地存储以保护隐私。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>MindMirror 是一个面向数字工作者的本地优先多模态状态感知支持系统，整合人脸表情识别（fine-tuned Hugging Face 模型，七分类准确率从 59.66% 提升至 94.49%）、文本/语音输入与本地 LLM（Qwen via Ollama），构建"状态检测 → 手动纠正 → 结构化表达 → 建议生成 → 状态复盘"的完整闭环。系统所有数据以本地 JSON/LocalStorage 存储，仅可选语音服务依赖第三方 API。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：MindMirror 构建了"状态检测 → 手动纠正 → 结构化表达 → 建议生成 → 状态复盘"的闭环工作流。前端采用 Web + Chart.js，后端为 Flask，情绪识别模型基于 Hugging Face fine-tuned checkpoint，LLM 推理由 Ollama 托管 Qwen 模型完成，所有数据以本地 JSON/LocalStorage 存储。</li>
+<li><b>技术细节</b>：情绪识别模块在预训练 checkpoint 基础上针对七类表情分类任务进行 fine-tuning，输入为摄像头捕获的人脸图像帧；LLM 部分则以检测到的情绪状态、用户文本描述及结构化阻塞信息为上下文，调用本地 Qwen 模型生成支持性建议——这类似于将心理咨询师的"提问-倾听-建议"流程自动化并嵌入桌面工作环境。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>在含 6,767 张图像的七分类面部表情 benchmark 上，fine-tuned Hugging Face 模型准确率从 59.66% 提升至 94.49%，绝对提升 34.83 个百分点</li>
+<li>系统采用本地优先设计（Ollama 托管 Qwen 模型 + LocalStorage），可选语音服务才依赖第三方 API</li>
+<li>小规模用户研究（6 名数字工作者）显示用户重视本地优先设计、手动纠正机制与结构化反思工作流</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：情绪识别准确率大幅提升至 94.49%；端到端可靠性与语音延迟测试通过；小规模用户反馈积极，但作者明确指出系统不用于心理诊断，定位为轻量级状态反思工具。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11700v1]]</p>
+<h3>世界模型 (World Model)</h3>
+
+<h4>CoDi：组合独立 Diffusion Policy 实现多智能体协调，无需联合演示数据</h4>
+<ul>
+<li><b>信号源</b>：CMU</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11485v1">CoDi: Coordinated Diffusion for Multi-Agent Collaboration without Joint Demonstrations</a></li>
+</ul>
+<callout emoji="🔬">
+<p><b>认知提取</b>：CoDi 的核心思想是：将多智能体协调问题拆解为"单智能体 diffusion policy 的乘积 + 代价函数引导"，避免了联合状态空间指数级增长带来的数据瓶颈。这在某种程度上类似于让两位从未合作过的演奏者，各自凭借独奏能力、再通过一份共同乐谱来即兴合奏，而非专门排练二重奏。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>多智能体协调的核心瓶颈在于联合演示数据的获取成本随智能体数量指数增长。CMU 提出 CoDi（Coordinated Diffusion）框架，对每个智能体独立训练 diffusion policy，在推理阶段通过用户自定义的多智能体代价函数将各策略耦合——无需任何多智能体联合演示数据即可生成协调行为。理论推导表明联合 diffusion score 可分解为各单智能体 score 之和加上一个代价函数引导梯度项，且引导项支持 gradient-free 估计，可适配黑盒、不可微代价函数。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：CoDi 对每个智能体独立训练 diffusion policy，在推理阶段通过用户自定义的多智能体代价函数将各策略耦合。其理论推导表明，联合 diffusion score 可分解为各单智能体 score 之和加上一个来自代价函数的引导梯度项，从而在采样过程中协调多个智能体的行为。</li>
+<li><b>技术细节</b>：引导项的估计采用 gradient-free 方式（如基于采样的近似），不依赖代价函数的可微性，使得 CoDi 可以接入任意黑盒约束（如碰撞检测、任务完成条件）。这在某种程度上类似于粒子滤波器通过大量采样来估计梯度方向，而非直接求导。框架还分析了单智能体演示数据的"support 覆盖"条件与代价函数设计对协调质量的互补作用。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 CoDi 框架，将 diffusion score function 分解为独立单智能体基础策略 + 代价驱动的协调引导项，无需任何多智能体联合演示数据</li>
+<li>引导项支持 gradient-free 估计，可适配黑盒、不可微代价函数，无需额外训练</li>
+<li>双臂操控仿真与真机实验中，CoDi 相比多智能体基线更数据高效，并展现出鲁棒的协调行为</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在双臂操控的仿真与硬件实验中，CoDi 从单智能体数据出发即可发现鲁棒的协调策略，数据效率优于多智能体 baseline，验证了 joint guidance、base policy support 及代价设计三者的关键性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11485v1]]</p>
+
+<hr/>
+
+<h4>HarmoWAM：融合预测与反应双专家的 World Action Model，零样本泛化超越 SOTA VLA 33%</h4>
+<ul>
+<li><b>信号源</b>：北京大学</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.10942v1">HarmoWAM: Harmonizing Predictive and Reactive Experts in World Action Models</a></li>
+</ul>
+<callout emoji="🧠">
+<p><b>认知提取</b>：HarmoWAM 的核心洞察是：现有 World Action Model 的两类范式各有盲点——"先想象再执行"泛化强但精度差，"联合建模"精度高但受训练分布约束。HarmoWAM 通过让 world model 同时驱动两个专家并用自适应门控动态切换，类似于驾驶员在高速路上依赖导航预判（预测专家），在停车入库时切换为实时视觉反馈精细操控（反应专家）。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>北京大学提出 HarmoWAM，一种端到端的 World Action Model，以 world model 提供的时空物理先验同时条件化两个互补 action expert。该方法发现 Imagine-then-Execute 与 Joint Modeling 两类 WAM 范式存在泛化性与精确性的根本 trade-off，并通过 Process-Adaptive Gating Mechanism 自适应协调两类专家，在 6 项真实机器人任务的零样本泛化测试中分别超越 SOTA VLA 模型和 WAM 33% 和 29%。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：HarmoWAM 是端到端的 World Action Model，以 world model 提供的时空物理先验同时条件化两个互补 action expert：预测专家（predictive expert）利用 latent dynamics 进行迭代动作生成，反应专家（reactive expert）从预测的视觉演化中直接推断动作。两者通过 Process-Adaptive Gating Mechanism 自适应协调，world model 驱动反应专家扩展探索空间，预测专家负责精细交互。</li>
+<li><b>技术细节</b>：Process-Adaptive Gating Mechanism 在任务执行过程中动态判断当前处于"迁移阶段"（适合泛化性强的反应专家）还是"精细操控阶段"（适合精确性高的预测专家），无需手动标注切换节点。这类似于大脑在执行复杂动作时自动在"宏观规划模式"和"精细运动控制模式"之间切换。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>发现 Imagine-then-Execute 与 Joint Modeling 两类 WAM 范式存在泛化性与精确性的根本 trade-off</li>
+<li>提出 Process-Adaptive Gating Mechanism，自动决定任务不同阶段中两类控制专家的切换时机与位置</li>
+<li>在 6 项真实机器人任务的零样本泛化测试中，分别超越 SOTA VLA 模型和 WAM 33% 和 29%</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：在三个训练未见测试环境（覆盖背景、位置、物体语义变化）的六项真实机器人任务上，HarmoWAM 实现强零样本泛化，超越 prior SOTA VLA 模型 33%、超越 prior SOTA WAM 29%。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.10942v1]]</p>
+
+<hr/>
+
+<h4>PriorVLA：冻结预训练先验 + 轻量适配专家，25% 参数更新量超越 pi0.5</h4>
+<ul>
+<li><b>信号源</b>：未标注具体机构</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.10925v1">PriorVLA: Prior-Preserved Vision-Language-Action Model via Dual Expert Architecture</a></li>
+</ul>
+<callout emoji="📊">
+<p><b>认知提取</b>：全量 fine-tuning VLA 模型会让宝贵的预训练先验被下游窄分布覆盖——PriorVLA 的做法是把预训练权重"封印"为只读的先验顾问，同时让一个轻量专家去学习如何查询并利用这些先验，类似于"请教经验丰富的老师指导新学生"，而非直接修改老师的记忆。这种设计在 OOD 和少样本场景中优势尤为明显。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>PriorVLA 提出双专家框架解决 VLA 模型适配中的先验遗忘问题。冻结的 Prior Expert 保留预训练 VLM 的场景先验和运动先验，仅训练 Adaptation Expert 进行下游任务专化，通过 Expert Queries 机制以 cross-attention 从 Prior Expert 的中间表示中提取关键信息。框架仅需更新全量 fine-tuning 25% 的参数，在 RoboTwin 2.0-Hard 上超越 pi0.5 达 11 个百分点，LIBERO 平均成功率达 99.1%，少样本场景（每任务仅 10 条示范）下 ID/OOD 成功率分别超越 pi0.5 达 24 和 22 个百分点。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：PriorVLA 由三部分组成：冻结的 Prior Expert（保留预训练 VLM 场景先验和运动先验的只读来源）、可训练的 Adaptation Expert（负责下游任务专化），以及 Expert Queries 机制（从 Prior Expert 中抽取场景与运动先验注入 Adaptation Expert）。整体仅更新 Adaptation Expert，Prior Expert 参数全程冻结。</li>
+<li><b>技术细节</b>：Expert Queries 是一组可学习的查询向量，通过 cross-attention 从 Prior Expert 的中间表示中提取场景语义先验和运动轨迹先验，再拼接到 Adaptation Expert 的输入流中——类似于"把老专家的经验蒸馏成关键词卡片，交给新人参考执行"，而非让新人直接接管老专家的大脑。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>双专家架构（冻结 Prior Expert + 可训练 Adaptation Expert）仅更新全量 fine-tuning 25% 的参数，即可超越 pi0.5 等 SOTA</li>
+<li>在 RoboTwin 2.0-Hard 上超越 pi0.5 达 11 个百分点，LIBERO 平均成功率达 99.1%</li>
+<li>少样本场景（每任务仅 10 条示范）下 ID 成功率 48%、OOD 成功率 32%，分别超越 pi0.5 达 24 和 22 个百分点</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：PriorVLA 在 RoboTwin 2.0、LIBERO 及真实世界八项任务（两种机器人本体）上全面超越全量 fine-tuning 和 pi0.5，OOD 与少样本场景下增益最显著，验证了先验保留策略在 VLA adaptation 中的有效性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.10925v1]]</p>
+
+<hr/>
+
+<h4>UniSteer：统一 Noise Steering 框架，将人类纠正干预与 Noise-Space RL 桥接</h4>
+<ul>
+<li><b>信号源</b>：未标注具体机构</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.10821v1">UniSteer: Unified Noise Steering for Human-in-the-Loop Reinforcement Learning of VLA Policies</a></li>
+</ul>
+<callout emoji="🧬">
+<p><b>认知提取</b>：VLA 模型适配面临 noise-space 与 action-space 的"信号鸿沟"——人类能提供动作纠正，但 noise-space RL 需要 noise 空间的监督。UniSteer 用 flow-matching decoder 的逆运算架起两者的桥梁，这有点类似于把"人类教的动作示范"翻译成模型"内部噪声语言"，让人工指导和强化学习可以在同一个轻量 actor 上协同训练。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>UniSteer 提出统一 noise steering 框架，保持预训练 VLA 的 flow-matching decoder 冻结，仅训练一个轻量 noise actor。当人类提供纠正动作时，系统通过对冻结 decoder 进行近似逆运算将动作映射回对应的 noise 目标，为 noise actor 提供监督信号；noise actor 同时持续通过 RL 从环境奖励中学习。两路信号统一作用在同一 actor 上，在真实机器人操控任务中平均 66 分钟内将成功率从 20% 提升至 90%。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：UniSteer 保持预训练 VLA 的 flow-matching decoder 冻结，仅训练一个轻量 noise actor。当人类提供纠正动作时，系统通过对冻结 decoder 进行近似逆运算，将该动作映射回对应的 noise 目标，从而为 noise actor 提供监督信号；与此同时，noise actor 也持续通过 RL 从环境奖励中学习。两路信号统一作用在同一个 actor 上，形成互补的高效适配机制。</li>
+<li><b>技术细节</b>：action-to-noise 反演的核心是对 flow-matching ODE 进行近似逆积分：给定人类提供的目标动作，沿时间轴反向追踪 flow trajectory，推算出产生该动作所需的初始 noise。这在某种程度上类似于"从终点反推起点的路径规划"，使得 action-space 的监督信号可以无缝注入 noise-space 的训练目标中，无需修改预训练模型结构。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.10821v1]]</p>
+
+<hr/>
+
+<h4>ALAM：代数结构化 Latent Action 表示，从无标注视频学习可组合 Transition 大幅提升 VLA 性能</h4>
+<ul>
+<li><b>信号源</b>：未标注具体机构</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.10819v1">ALAM: Algebraic Latent Action Models for Structured Pre-Training of Vision-Language-Action Models</a></li>
+</ul>
+<callout emoji="🔍">
+<p><b>认知提取</b>：ALAM 的核心思路是给隐空间的动作表示引入"代数结构"——即组合性和可逆性约束，使 latent transition 像向量加法一样可组合、可还原，这类似于让 AI 学习一套"动作方言语法"而不只是零散词汇。通过将这种结构化表示与 flow-based 策略生成联合训练，模型能在几乎无机器人标注数据的情况下大幅提升操控成功率。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>ALAM（Algebraic Latent Action Model）通过代数一致性约束从无动作标注视频中学习结构化隐变量 transition，结合 flow matching 策略生成显著提升 VLA 性能。对帧三元组施加组合一致性损失和逆向一致性损失，将 additivity 和 reversibility 误差降低 25-85 倍，迁移至 VLA 策略后 MetaWorld MT50 平均成功率从 47.9% 提升至 85.0%，LIBERO 从 94.1% 提升至 98.1%。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：ALAM 以帧三元组为输入，训练 encoder 学习 latent transition，同时施加重建损失、组合一致性损失和逆向一致性损失，鼓励形成局部可加的 transition 空间。下游 VLA 训练中，冻结预训练 encoder，将其 latent transition 序列作为辅助生成目标，与机器人动作在统一的 flow matching 目标下联合生成。</li>
+<li><b>技术细节</b>：对于三帧序列 (f1, f2, f3)，ALAM 要求 latent(f1&rarr;f2) + latent(f2&rarr;f3) &asymp; latent(f1&rarr;f3)（组合一致性），且 latent(f1&rarr;f2) + latent(f2&rarr;f1) &asymp; 0（逆向一致性）——这在某种程度上类似于要求向量加法满足平行四边形法则，让 latent 空间具备可预测的几何结构。VLA 策略解码时无需 latent-to-action 显式映射，而是通过共享 flow matching 隐式耦合两者。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>ALAM 利用帧三元组的组合与逆向一致性正则化，将 additivity 和 reversibility 误差降低 25-85 倍（相比无结构 latent action baseline）</li>
+<li>迁移至 VLA 策略后，MetaWorld MT50 平均成功率从 47.9% 提升至 85.0%，LIBERO 从 94.1% 提升至 98.1%</li>
+<li>消融实验确认代数结构化 latent transition 与 joint flow matching 的协同是最大增益来源</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：ALAM 在 MetaWorld MT50 和 LIBERO 仿真基准及真实世界操控任务上均取得显著性能提升，验证了代数结构化 latent action 表示对 VLA 学习的有效性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.10819v1]]</p>
+
+<hr/>
+
+<h4>TMRL：Diffusion Timestep 作为探索旋钮，BC 预训练策略 1 小时内实机 RL 微调</h4>
+<ul>
+<li><b>信号源</b>：University of Washington</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12236v1">TMRL: Timestep-Modulated Reinforcement Learning for Efficient Robot Policy Fine-Tuning</a></li>
+</ul>
+<callout emoji="⚙️">
+<p><b>认知提取</b>：传统 BC 预训练产生的策略动作分布过窄，导致 RL 微调时缺乏探索能力。TMRL 通过把 diffusion 的加噪程度当作"探索旋钮"——噪声越大代表越随机探索，噪声越小代表越精确执行——让模型在微调阶段自主学会何时大胆探索、何时精准执行，这类似于给一个过于谨慎的学员拨动"胆量刻度盘"。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>UWashington 提出 TMRL 框架，解决 BC 预训练策略在 RL 微调阶段探索不足的问题。框架分两阶段：Context-Smoothed Pre-training（CSP）在策略输入中注入 forward-diffusion 噪声构建连续分布；Timestep-Modulated RL 在微调阶段让智能体动态调节 diffusion timestep 以显式控制探索程度。TMRL 适配 state、3D point cloud、image-based VLA 等任意输入形式，复杂操控任务真实机器人微调可在 1 小时内完成。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：框架分两阶段：预训练阶段使用 CSP，在策略输入（状态、点云、图像等）上施加不同强度的前向扩散噪声，让策略学会在不同噪声条件下行动；微调阶段使用 TMRL，将 diffusion timestep 作为可调条件变量，通过 RL 信号优化智能体选择合适的 timestep（即探索程度），与下游任务奖励直接对齐。</li>
+<li><b>技术细节</b>：CSP 的核心操作是对策略输入 x 施加 q(x_t|x_0) 的前向扩散，使输入在 t=0（无噪、精确）到 t=T（全噪、随机）之间变化，相当于给策略一个"模糊程度可调的感知通道"。TMRL 则在 RL 微调时把 timestep t 变成一个额外的动作维度或条件，让策略自己学会"我现在需要多大的随机性"——噪声大时探索新轨迹，噪声小时精细执行。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 Context-Smoothed Pre-training (CSP)，在策略输入中注入 forward-diffusion 噪声，构建从精确模仿到宽泛探索的连续分布</li>
+<li>提出 Timestep-Modulated RL (TMRL)，在微调阶段让智能体动态调节 diffusion timestep，实现对探索程度的显式控制</li>
+<li>TMRL 适配 state / 3D point cloud / image-based VLA 等任意输入形式，复杂操控任务真实机器人微调可在 1 小时内完成</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12236v1]]</p>
+<h3>AI infra</h3>
+
+<h4>基于 Krylov 子空间的自适应 Diagonal Loading：Lanczos 迭代加速大型阵列鲁棒 Beamforming</h4>
+<ul>
+  <li><b>信号源</b>：UIUC</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11286v1">Adaptive Diagonal Loading for Robust Beamforming via Krylov Subspace Methods</a></li>
+</ul>
+<callout emoji="⚙️">
+  <p><b>认知提取</b>：该研究针对大规模麦克风阵列在 snapshot-deficient 场景下 White Noise Gain 下降的问题，用 Lanczos 迭代构造低维 Krylov 子空间来近似极值特征值，替代昂贵的完整 EVD 计算——这在某种程度上类似于只采样少量"探针点"就能估计整个函数的极值，而无需扫描全部点。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>大型麦克风阵列在有限 snapshot 条件下，空间相关矩阵估计退化导致 White Noise Gain（WNG）急剧下降，传统 diagonal loading 方法依赖完整特征值分解（EVD），复杂度高达 O(M³)，难以满足实时处理需求。本文提出基于 Lanczos 迭代的自适应 diagonal loading 方法，利用 Krylov 子空间投影将极值特征值估计复杂度降至 O(kM²)（k≪M），在严格保证 WNG 约束的同时实现最优干扰抑制。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：基于 Lanczos 迭代构建低维 Krylov 子空间：将空间相关矩阵投影到 k×k 三对角矩阵（k≪M），从中提取 Ritz 值作为极值特征值的近似，再利用 Kantorovich 不等式约束的自适应 diagonal loading 机制保证 WNG 严格满足指定边界。</li>
+  <li><b>技术细节</b>：Lanczos 迭代每步仅需一次矩阵-向量乘积（O(M²)），经 k 步后得到 k 维三对角矩阵，其特征值（Ritz 值）从两端快速逼近原矩阵最大与最小特征值。这类似于用少量"功率迭代探针"就精准锁定矩阵谱的两端，而非对整个 M×M 矩阵做完整分解。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>提出 Lanczos 加速的 diagonal loading 方法，将极值特征值估计复杂度从 O(M³) 降至 O(kM²)，k≪M</li>
+  <li>通过将空间相关矩阵投影至 k 维三对角矩阵，Ritz 值快速收敛至精确极值特征值</li>
+  <li>实验结果表明该方法性能与完整 EVD 相同，同时严格保证 WNG 约束并实现最优干扰抑制</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：Lanczos 加速方法在快速移动说话者与干扰源场景下的仿真评估中，性能与精确 EVD 完全一致，同时计算量大幅降低，适用于实时大阵列 beamforming。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11286v1]]</p>
+
+<hr/>
+
+<h4>光子量子处理器上的变分量子分类器：2 参数 QNN 超越等参数经典 ANN</h4>
+<ul>
+  <li><b>信号源</b>：University of Cambridge</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.10801v1">Gate-Based Variational Quantum Classifier on a Six-Qubit Photonic Quantum Processor</a></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>认知提取</b>：该研究在真实光子量子硬件上验证了量子神经网络（QNN）的"参数效率"优势：用极少的可训练参数完成经典 ANN 无法收敛的非线性分类——这在某种程度上类似于一位棋手仅凭两步棋就能赢得经典选手需要八步才能赢的残局。核心贡献是将 effective dimension 作为容量度量，严格比较了 QNN 与同参数量 ANN 的泛化能力。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Cambridge 团队在六量子比特光子量子处理器上实现 gate-based 变分量子分类器（QNN），仅用 2 个可训练参数即可解决 XOR 非线性分类任务（loss 0.04，accuracy 100%），而等参数量经典 ANN 收敛失败停留于随机猜测水平。研究以 effective dimension 为容量度量，在真实硬件噪声（光子损耗、相移器误差）下验证了 QNN 的鲁棒性和参数效率优势。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：采用 gate-based 变分量子线路框架，以单光子和概率门模拟标准量子电路模型。用 effective dimension（一种基于可证明泛化误差上界的容量度量）评估 QNN 的表达能力，并与等可训练参数量的经典 ANN 进行对照。训练使用无梯度优化（gradient-free optimization），在 XOR 问题和 Iris 二分类子集上进行基准测试。</li>
+  <li><b>技术细节</b>：光子量子线路通过相移器（phase-shifter）调节可训练参数，概率门引入非线性。模拟阶段对光子损耗和相移器不完美性建模以评估噪声鲁棒性；实验阶段通过远程 API 调用六量子比特光子处理器，验证 online/offline 两种学习范式——这在某种程度上类似于在有噪声的真实电话线上跑通了一个神经网络训练流程。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>光子 QNN 仅用 2 个可训练参数成功解决 XOR 非线性分类（loss 0.04，accuracy 100%），而等参数 ANN 收敛失败，停留于随机猜测水平</li>
+  <li>以 effective dimension 为容量度量，光子与超导 QNN 均表现出比同参数量 ANN 更低的交叉熵损失和更高的分类准确率</li>
+  <li>电路在真实六量子比特光子处理器上远程部署，online 与 offline 学习设置下均达到最高 100% 准确率，并测试了光子损耗和相移器误差等真实噪声的鲁棒性</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.10801v1]]</p>
+
+<hr/>
+
+<h4>KAK 分解的严格 Lie 理论基础：纠正 SU(4) 局部等价类的几何描述</h4>
+<ul>
+  <li><b>信号源</b>：全球学术界</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.10783v1">A Rigorous Treatment of the KAK Decomposition for Compact Semisimple Lie Groups</a></li>
+</ul>
+<callout emoji="📚">
+  <p><b>认知提取</b>：KAK 分解是量子门/量子电路分析的核心数学工具，但其理论基础长期存在定义模糊和证明不完整的问题。本文相当于为该领域补上了一块严格的数学地基——类似于把"约定俗成的工程惯例"替换为经过严格推导的定理体系。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>本文对 KAK 分解的数学理论进行系统整理，针对连通紧致半单 Lie 群给出完整证明，并厘清 SU(4) 下 KAK 等价类的两种定义（双陪集等价与射影等价）之间的区别，纠正现有量子计算文献中关于"Weyl chamber"几何表示的错误。研究表明 SU(2)⊗SU(2) 乘法下的局部等价类几何上并非通常所声称的 Weyl chamber，后者仅对应射影局部等价。</p>
+<p><b>核心方法</b></p>
+<ul>
+  <li><b>方法框架</b>：以 Lie 群/Lie 代数的 Cartan 分解理论为框架，系统梳理 KAK 分解条件，区分两种等价类定义，并在 SU(4) 这一与两量子比特门直接相关的群上显式推导分解结果及等价唯一性判定方法。</li>
+  <li><b>技术细节</b>：文章先统一文献中对 Cartan 对合（Cartan involution）及对称空间的多种定义，再利用 Weyl 群作用刻画双陪集轨道，通过比较轨道结构说明：不考虑全局相位的射影等价才能恢复 Weyl chamber 的直观几何图像，而严格的双陪集等价对应更精细的分层结构。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+  <li>为连通紧致半单 Lie 群给出 KAK 分解定理的完整证明，厘清文献中 Cartan 分解的多种定义关系</li>
+  <li>区分双陪集等价（double coset equivalence）与射影等价（projective equivalence）两种 KAK 等价类概念，指出二者不等价</li>
+  <li>对 SU(4) 证明：SU(2)⊗SU(2) 乘法下的局部等价类几何上并非通常所声称的 Weyl chamber，Weyl chamber 仅对应射影局部等价</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+  <li><b>结果总结</b>：本文建立了 KAK 分解的严格 Lie 理论基础，纠正了量子计算文献中关于 SU(4) 局部等价类几何描述的错误，并给出两类等价关系的完整判定理论。</li>
+</ul>
+<h3>ai4s (AI for Science)</h3>
+
+<h4>BioCreative IX MedHopQA：生物医学多跳问答共享任务，RAG 策略驱动最优 F1 达 89.30%</h4>
+<ul>
+<li><b>信号源</b>：BioCreative IX 共享任务组织方 @ arXiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12313v1">BioCreative IX MedHopQA Shared Task</a></li>
+</ul>
+<callout emoji="🔬">
+<p><b>认知提取</b>：MedHopQA 旨在测试 LLM 在生物医学领域的多跳推理能力，要求系统整合来自两个独立 Wikipedia 页面的信息才能回答问题——这在某种程度上类似于解侦探案，需将分散线索串联成完整答案。挑战结果表明 RAG 等检索增强策略对于提升多跳医学问答性能至关重要。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>BioCreative IX 发布 MedHopQA 任务，构建了包含 1000 道跨疾病、基因、化学物质的两跳医学问答题。13 支队伍共提交 48 个系统，最优系统 MedCPT 在概念级 F1 达 89.30%、EM 达 87.30%，而 zero-shot baseline 分别仅为 67.40% 和 60.20%。评估采用表面字符串精确匹配与概念准确性双重指标，揭示 RAG 策略是强性能系统的核心共同特征。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：MedHopQA 数据集通过整合两个独立 Wikipedia 页面构建两跳推理问答题，评估采用表面字符串精确匹配（EM）和概念准确性（MedCPT）双重指标，BioCreative IX 共享任务框架支持 48 次系统提交。</li>
+<li><b>技术细节</b>：每道题目需要系统先从第一跳页面找到中间实体，再从第二跳页面获取最终答案，MedCPT 评分通过语义概念映射解决同义词/不同表述导致的字符串不匹配问题，类似于用"概念图谱"而非"文字对比"来判卷。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>构建包含 1000 道两跳推理问答题的 MedHopQA 数据集，覆盖疾病、基因、化学物质及罕见病领域</li>
+<li>最优系统 MedCPT F1 达 89.30%、EM 达 87.30%，而 zero-shot baseline 分别为 67.40% 和 60.20%，差距显著</li>
+<li>RAG 及相关检索策略是强性能系统的核心共同特征，概念级评估（MedCPT）优于纯字符串匹配</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：顶级系统相比 zero-shot baseline 在 F1 和 EM 上均提升约 20-27 个百分点，证明检索增强策略在生物医学多跳问答中的有效性；数据集已公开发布。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12313v1]]</p>
+
+<hr/>
+
+<h4>纵向疾病轨迹蒸馏至多器官影像编码器：trajectory-aware distillation 框架在 UK Biobank 159 种疾病上提升预测性能</h4>
+<ul>
+<li><b>信号源</b>：arXiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11958v1">Trajectory-Aware Distillation for Multi-Organ Imaging Representations</a></li>
+</ul>
+<callout emoji="🧬">
+<p><b>认知提取</b>：该研究将"疾病如何随时间演变"的动态知识（来自电子病历轨迹模型）注入"静态影像表征"的学习过程，让影像编码器隐式获得疾病进展的结构先验。这在某种程度上类似于让一位只看单张照片的医生，提前读完患者多年的病历后再做诊断。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>研究提出 trajectory-aware distillation 框架，将纵向 EHR 疾病轨迹 Transformer 中捕获的疾病进展结构知识，通过 geometry-preserving alignment 蒸馏至多器官影像表征编码器。在 UK Biobank 159 种疾病上的实验显示，该预训练策略始终提升 AUC（判别性能）与发病时间 MAE（时序预测精度），且低患病率疾病获益最大，表明轨迹先验对数据稀缺场景最有价值。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：框架分三部分：①在纵向诊断序列上训练人群规模的生成式疾病轨迹 Transformer，生成受试者级别嵌入；②通过 geometry-preserving alignment 将轨迹嵌入作为监督信号，蒸馏至 organ-wise IDP 编码器；③下游预测时可通过 cross-attention 融合轨迹与影像表征。</li>
+<li><b>技术细节</b>：轨迹 Transformer 以患者历史诊断事件序列及共病结构为输入，输出捕获疾病进展模式的连续嵌入；几何对齐损失约束 IDP 编码器在嵌入空间中保持与轨迹嵌入相近的相对距离结构，相当于把"疾病演化地图"的拓扑形状印刻到影像特征空间。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>在 UK Biobank 159 种疾病上，trajectory-aware pretraining 始终提升 AUC（判别）和发病时间 MAE（时序预测）</li>
+<li>低患病率（rare）疾病获益最大，表明轨迹先验对数据稀缺场景最有价值</li>
+<li>IDP 嵌入空间的相似关系与轨迹空间高度对齐，支持两类表征几何结构部分共享的假设</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：trajectory-aware 预训练在 159 种疾病上稳定提升疾病判别与时序预测性能，尤其对低患病率疾病效果显著；IDP 与轨迹嵌入空间的几何一致性实验进一步验证了框架假设的合理性。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11958v1]]</p>
+
+<hr/>
+
+<h4>LLM 因果关系提取可靠性验证：灾害社交媒体帖子中的证据驱动 vs 先验驱动</h4>
+<ul>
+<li><b>信号源</b>：Albert Qiaochu Jiang @ arXiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11348v1">Evaluating LLM Causal Relation Extraction from Disaster Social Media Posts</a></li>
+</ul>
+<callout emoji="🔍">
+<p><b>认知提取</b>：该工作聚焦于灾害情报场景中 LLM 因果关系提取的可靠性验证——关键问题是：LLM "理解"的因果链是真实来源于帖子中的证据，还是模型自身的知识先验？这类似于检验一位侦探的推理究竟基于现场线索还是个人经验直觉。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>研究提出一个评估框架，检验 LLM 能否从灾害相关社交媒体帖子中有效提取因果关系，并对比 LLM 生成的 causal graph 与专家参考图。核心关注点在于区分提取结果究竟由帖子内容驱动还是来自模型先验知识，揭示了 LLM 在灾害决策支持系统中的潜力与风险并存。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：研究构建了一个两阶段验证框架：首先让 LLM 从灾害相关社交媒体帖子中提取因果关系并生成 causal graph；然后将其与由灾害专项报告衍生的专家参考图进行对比评估，同时通过分析判断提取结果究竟由帖子内容驱动还是来自模型先验。</li>
+<li><b>技术细节</b>：评估时将 LLM 生成的因果图与专家基准图做结构性对比，并设计了一种区分"证据驱动"与"先验驱动"提取的判断机制——这在某种程度上类似于给 LLM 做一次"开卷考试"与"闭卷考试"的对比，看它的答案到底依赖题目还是背诵。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出专家驱动的评估框架，将 LLM 生成的 causal graph 与灾害专项报告参考图进行对比</li>
+<li>评估 LLM 提取结果是否由帖子证据支撑，还是反映了模型先验知识</li>
+<li>揭示了 LLM 用于灾害决策支持系统的潜力与风险并存</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：LLM 在从非正式、碎片化的灾害社交媒体帖子中提取因果关系时展现出一定潜力，但也存在将模型先验误判为证据的风险，需谨慎应用于灾害决策支持场景。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.11348v1]]</p>
+
+<hr/>
+
+<h4>校园心理健康 AI 闭环：TigerGPT + AURA 强化学习问卷 + SMMR 多模型分诊</h4>
+<ul>
+<li><b>信号源</b>：arXiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.10804v1">AI Tools for Campus Mental Health: TigerGPT, AURA, PsychoGPT and SMMR</a></li>
+</ul>
+<callout emoji="🧠">
+<p><b>认知提取</b>：该研究将 LLM 与强化学习结合，分别用于改善大学生问卷反馈质量（预防侧）和心理健康风险筛查（干预侧）。这在某种程度上类似于为校园心理服务构建了一套"主动收集信号 + 自动分诊"的 AI 闭环系统。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>研究面向校园心理健康场景，整合预防与干预两条路径：预防侧构建 TigerGPT（LLM 驱动的情境感知调查聊天机器人，75% 可用性、81% 满意度）和 AURA（强化学习驱动的追问策略框架，平均质量提升 +0.12，规范性提示减少 63%）；干预侧构建 PsychoGPT 心理评估模型和 SMMR 分层多模型推理系统，后者在 DAIC-WOZ 数据集上超越单模型方案并有效缓解幻觉问题。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：预防侧构建 TigerGPT 和 AURA（强化学习驱动，使用 LSDE 质量信号——Length、Self-disclosure、Emotion、Specificity）；干预侧构建 PsychoGPT（基于 DSM-5/PHQ-8）和 SMMR（Stacked Multi-Model Reasoning，分层专家模型）；两侧通过统一框架整合，使问卷信号直接流入心理检测模型。</li>
+<li><b>技术细节</b>：AURA 以 96 条历史对话初始化策略，在每轮对话中动态选择 validate / specify / reflect / probe 四类追问类型，类似于强化学习 agent 在对话环境中学习"何时该追问、何时该确认"。SMMR 则将多个专家模型分层叠加——早期层处理局部子任务（如症状识别），后期层综合协调，类似于多级评审委员会逐层过滤噪声。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>TigerGPT 个性化问卷聊天机器人实现 75% 可用性、81% 满意度，验证 LLM 驱动调查的可行性</li>
+<li>AURA 强化学习框架以 LSDE 质量信号自适应调整追问策略，平均质量提升 +0.12（p=0.044），规范性提示减少 63%</li>
+<li>SMMR 分层多模型推理在 DAIC-WOZ 数据集上以 accuracy、F1 及 PHQ-8 评分指标超越单模型方案，有效缓解幻觉问题</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.10804v1]]</p>
+
+<hr/>
+
+<h4>量子光子器件低温系统工程综述：从 flow cryostats 到稀释制冷机的选型指南</h4>
+<ul>
+<li><b>信号源</b>：Cambridge @ arXiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12285v1">Cryogenic Systems Engineering for Quantum Photonic Technologies</a></li>
+</ul>
+<callout emoji="📚">
+<p><b>认知提取</b>：本文是一篇面向实验物理学家的实用综述，核心在于梳理量子光子器件（色心、量子点等固态平台）从手动液氦操作到全自动闭循环低温恒温器的工程演进路径——这在某种程度上类似于为量子实验室的"冰箱选购指南"提供了系统性技术手册，而非新方法提出。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>Cambridge 发布综述，系统梳理量子光子技术所需的低温系统工程，涵盖 flow cryostats、Gifford-McMahon/pulse tube 机械式 cryocooler 到稀释制冷机等主流硬件的工作原理与适用场景，聚焦固态量子光源（色心、量子点）在实用化部署中对低温系统的具体性能要求，明确了振动隔离、光学接入、热负载等关键工程约束。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：本文为综述性文章，系统分类当前主流低温冷却方案，从冷却原理（焦耳-汤姆逊效应、脉冲管制冷、稀释制冷）到工程实现，结合量子光子应用场景的光学访问、振动噪声、热负载等约束条件进行对比分析。</li>
+<li><b>技术细节</b>：稀释制冷机利用 He-3/He-4 混合液在混合腔中相变产生的吸热效应实现毫开尔文级温区，而闭循环 cryocooler（如 pulse tube）则通过气体压缩/膨胀循环无需消耗液氦，二者在振动隔离与光学接入窗口设计上对量子光子实验有截然不同的工程挑战——类似于选择"安静的精密仪器间"还是"高效但有机械噪声的冷冻库"。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>综述了 flow cryostats、Gifford-McMahon/pulse tube cryocooler 及稀释制冷机等主流低温硬件的工作原理与适用场景</li>
+<li>梳理了过去十年低温工程从液氦手动操作向自动化闭循环系统的技术演进历史</li>
+<li>明确了量子光子器件（色心、量子点）在实用化部署中对低温系统的具体性能要求</li>
+</ul>
+<p><b>总结与反思</b></p>
+<ul>
+<li><b>结果总结</b>：本综述为量子光子实验室提供了系统性的低温工程选型指导，总结了不同冷却技术在量子光学设备部署中的优劣权衡，有助于加速固态量子器件向实用化迈进。</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12285v1]]</p>
+
+<hr/>
+
+<h4>QED+PEC 混合量子纠错方案：200 量子比特 Iceberg 码下 sampling overhead 降低 3-4 个数量级</h4>
+<ul>
+<li><b>信号源</b>：arXiv</li>
+<li><b>链接</b>：<a href="http://arxiv.org/abs/2605.12149v1">Combining Quantum Error Detection with Probabilistic Error Cancellation</a></li>
+</ul>
+<callout emoji="⚙️">
+<p><b>认知提取</b>：这项研究将量子纠错检测（QEDC）的 post-selection 与 PEC 串联：先用稳定子测量滤掉大部分物理噪声，再用 PEC 仅处理剩余逻辑通道残差——类似于先用粗网筛去大颗粒杂质，再用精滤膜处理细颗粒，从而大幅降低 PEC 的指数级 sampling 开销。核心技术贡献在于将原本 2^m 级别的逆信道预处理降至 O(m^K) 的扰动展开。</p>
+</callout>
+<p><b>论文摘要</b></p>
+<p>研究提出 QED+PEC 混合方案，将量子纠错检测（QEDC）的 post-selection 与概率误差对消（PEC）结合。通过逐阶扰动构造逆信道，预处理复杂度从 2^m 降至 O(m^K)。在 [[n,n-2,2]] Iceberg 码加电路级去极化噪声的设定下，首阶 QED+PEC 在 n=200 量子比特时将 sampling overhead 降低 3-4 个数量级，同时保持保真度 F 约 0.956。方案无需实时解码或主动恢复（feedback-free）。</p>
+<p><b>核心方法</b></p>
+<ul>
+<li><b>方法框架</b>：方案由四部分交织组成：Clifford 逻辑块 + 稳定子测量 + post-selection + 在接受轨迹上施加概率性对消算子。无需实时解码或主动恢复。逆信道通过固定阶 K 的扰动展开构造：仅保留至 K 阶的接受故障分支，绕开了 post-selection 引入的稳定子-对易关联导致 sparse Pauli-Lindblad 分解失效的问题。</li>
+</ul>
+<p><b>实验成果</b></p>
+<ul>
+<li>提出 QED+PEC 方案，逐阶扰动构造逆信道，预处理复杂度从 2^m 降至 O(m^K)，每块误差累积为 O(W^{K+1})</li>
+<li>在 [[n,n-2,2]] Iceberg 码 + 电路级去极化噪声下，首阶 QED+PEC 在 n=200 量子比特时 sampling overhead 降低 3-4 个数量级，F约0.956</li>
+<li>识别 discrete-Zeno 权衡：廉价的错误检测重塑 PEC 需要反演的等效信道，而非单纯增加开销；读出噪声主要增加 post-selection 代价，含噪 GHZ 辅助的全局稳定子提取可能消除优势</li>
+</ul>
+<p>[[FIGURE:arxiv:2605.12149v1]]</p>
+
+<hr/>
+<h2>二、行业应用 (Industry Application)</h2>
+<h3>认知模型 (产品/集成/Agentic 商业化)</h3>
+
+<h4>Codex 新增 OpenAI Developers 插件，API 调用路径大幅缩短</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI Developers 官方 @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2053925962287583379">OpenAI Codex now has an OpenAI Developers plugin</a></li>
+</ul>
+<callout emoji="🛠️">
+  <p><b>认知提取</b>：Codex 新增 OpenAI Developers 插件，让开发者在 coding agent 工作流中直接调用 OpenAI API，相当于在代码生成工具内嵌入了 OpenAI 官方 SDK 的上下文感知助手，缩短从构想到 API 调用的路径。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI 为旗下 Codex coding agent 推出 OpenAI Developers 插件，开发者在使用 Codex 构建 AI 应用与 agent 时，可在工作流内直接调用 OpenAI API，无需在文档与代码编辑器之间来回切换，显著降低接入摩擦。</p>
+<p><b>产品定位</b></p>
+<p>面向开发者的 coding agent 能力扩展，将 OpenAI API 文档上下文与代码生成深度融合，定位于缩短「构想 → 原型」的完整链路。</p>
+<p>[[FIGURE:x:2053925962287583379]]</p>
+
+<hr/>
+
+<h4>Sam Altman：ChatGPT 个性化与 personality 协同后体验跨越质变门槛</h4>
+<ul>
+  <li><b>信号源</b>：Sam Altman @ OpenAI</li>
+  <li><b>链接</b>：<a href="https://x.com/sama/status/2053971387308745046">Sam Altman on ChatGPT feeling like something new</a></li>
+</ul>
+<callout emoji="🎯">
+  <p><b>认知提取</b>：Altman 的表述暗示 ChatGPT 在模型能力、对话个性（personality）与用户个性化（personalization）三者的组合上实现了协同效应，产品体验发生感知层面的质变——类似于硬件性能、操作系统与应用生态同时成熟后，智能手机从"工具"变成"伴侣"的那个时刻。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Sam Altman 公开表示，ChatGPT 近期更新将新模型能力、对话 personality 调整与用户 personalization 三者叠加后，整体产品体验已跨越质变门槛，感觉像一个全新的东西。这是 OpenAI CEO 对产品代际跃迁的少见主动定性。</p>
+<p><b>产品定位</b></p>
+<p>ChatGPT 作为通用对话产品，正从单一问答工具向具备持续记忆与个人风格适配的长期伴侣型 AI 演进。</p>
+<p>[[FIGURE:x:2053971387308745046]]</p>
+
+<hr/>
+
+<h4>ml-intern 新增私有数据支持，agent 自动从 250 万开源模型中选优并 fine-tune</h4>
+<ul>
+  <li><b>信号源</b>：Lewis Tunstall @ Hugging Face</li>
+  <li><b>链接</b>：<a href="https://x.com/_lewtun/status/2053870101011501114">ml-intern now supports private datasets for automatic model selection and fine-tuning</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>认知提取</b>：ml-intern 将 fine-tune 流程进一步自动化——用户只需上传私有数据，agent 自动从 250 万开源模型库中挑选最适合任务的模型并完成训练，类似一个"自动调度的机器学习助理"，把原本需要 ML 工程师手动完成的模型选型与训练流程压缩为单次上传操作。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Hugging Face 的 ml-intern 工具新增私有数据集上传能力，agent 可自动从平台上逾 250 万个开源模型中筛选最优候选并执行 fine-tuning，整个流程完全开源，面向希望快速将私有数据转化为专用模型的开发者与企业用户。</p>
+<p><b>产品定位</b></p>
+<p>面向中小团队的低代码 AutoML 类工具，核心价值是把模型选型与 fine-tuning 这两个高技术门槛环节自动化，降低私有模型定制的人力与时间成本。</p>
+<p>[[FIGURE:x:2053870101011501114]]</p>
+
+<hr/>
+
+<h4>GPT-Realtime-2 集成工单系统演示：口头 standup 直接驱动工作流自动化</h4>
+<ul>
+  <li><b>信号源</b>：OpenAI Developers 官方 X 账号</li>
+  <li><b>链接</b>：<a href="https://x.com/OpenAIDevs/status/2053964133570412826">GPT-Realtime-2 demo: verbal standup updates drive ticket system automation</a></li>
+</ul>
+<callout emoji="⚡">
+  <p><b>认知提取</b>：该演示将实时语音模型 GPT-Realtime-2 与项目管理工单系统集成，口头陈述即可驱动工作流自动化——类似于把语音助手升级为能直接操控软件工具的 agent，将"说"与"做"之间的人工转译环节彻底消除。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>OpenAI Developers 发布 GPT-Realtime-2 集成演示：团队成员口头进行每日 standup 更新后，模型实时解析语音内容并自动完成对应工单系统中的票务移动操作，全程无需手动录入。该演示展示了实时语音模型在企业工作流 tool-use 场景中的落地路径。</p>
+<p><b>产品定位</b></p>
+<p>企业级语音驱动工作流自动化，核心是将 GPT-Realtime-2 的低延迟语音理解能力与外部工具调用（tool-use）结合，面向研发与项目管理团队的日常协作场景。</p>
+<p>[[FIGURE:x:2053964133570412826]]</p>
+
+<hr/>
+
+<h4>级联生成式电商推荐框架：shop 首页个性化 cart adds 提升 +2.7%</h4>
+<ul>
+  <li><b>信号源</b>：Zexuan Zhong 等（arXiv）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11118v1">Cascaded Generative Storefront Personalization</a></li>
+</ul>
+<callout emoji="🎨">
+  <p><b>认知提取</b>：该框架将传统电商首页静态模块化拼装（主题选择 → 检索 → 排序）重构为两阶段生成式流程：先用 LLM 生成页面区块主题，再生成关键词驱动商品检索，最后与传统排序模型融合。这类似于把固定菜单餐厅改造为先问客人口味再动态组菜的形式，从而实现更灵活的个性化。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>研究团队提出级联生成式店面个性化框架，将首页构建分解为 placement 主题生成与约束关键词生成两个 LLM 任务，并采用 teacher-student fine-tuning 压缩模型以满足生产延迟要求。在线 A/B 实验中，cart adds per page view 相较强 baseline 提升 +2.7%，同时保留与传统 pointwise 排序模型的混合基础设施兼容性。</p>
+<p><b>产品定位</b></p>
+<p>大规模电商平台首页个性化系统，核心是用生成式 LLM 替代静态检索-排序流水线中的人工策略模块，兼顾个性化效果与工业部署的延迟、成本约束。</p>
+<p>[[FIGURE:arxiv:2605.11118v1]]</p>
+
+<hr/>
+
+<h4>UNIPO：统一可视化 GRPO / DAPO / Dr. GRPO 等 RL fine-tuning 算法的开源工具</h4>
+<ul>
+  <li><b>信号源</b>：Songyou Peng @ Polo Club（arXiv）</li>
+  <li><b>链接</b>：<a href="http://arxiv.org/abs/2605.11549v1">UNIPO: Unified Interactive Visualization for Policy Optimization in RL Fine-Tuning</a></li>
+</ul>
+<callout emoji="📱">
+  <p><b>认知提取</b>：当前 RL fine-tuning 领域涌现出大量 policy optimization 算法，但各论文符号体系不一致，难以横向比较。UNIPO 相当于一个"可交互的算法解剖台"，让用户直观看到 clipping、advantage estimation、reward aggregation 等模块差异如何在训练过程中逐步传播，降低理解与复现门槛。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>UNIPO 是一款开源交互式可视化工具，统一呈现 GRPO、DAPO、Dr. GRPO 等主流 RL fine-tuning policy optimization 算法的 token 级训练动态，支持算法横向对比与教学演示。该工具面向研究者与工程师，旨在解决当前 RL fine-tuning 文献符号碎片化、难以直观理解算法差异的痛点。</p>
+<p><b>产品定位</b></p>
+<p>面向 LLM RL fine-tuning 研究社区的开源教学与调试工具，核心价值是将抽象的算法公式转化为可交互的动态可视化，降低新算法的学习与复现成本。</p>
+<p>[[FIGURE:arxiv:2605.11549v1]]</p>
+```xml
+<h3>多模态 (生成/理解类产品)</h3>
+<h4>Thinky 发布 Full-Duplex 多模态模型，实现实时自然人机交互</h4>
+<ul>
+  <li><b>信号源</b>：John Schulman @ Thinky</li>
+  <li><b>链接</b>：<a href="https://x.com/johnschulman2/status/2053940452789981426">Thinky full-duplex multimodal model announcement</a></li>
+</ul>
+<callout emoji="🎨">
+  <p><b>认知提取</b>：Thinky 的研究方向是将"交互模型"作为 AI 系统面向用户的外层，使其具备实时双工通信能力并能持续学习用户真实意图。这在某种程度上类似于为 AI 大脑加装一个社交神经系统——不仅要思考，还要随时保持与人的自然同步对话。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>John Schulman 创立的 Thinky 发布了 full-duplex 多模态模型，支持自然实时的人机双向交互。该模型强调在不牺牲智能水平的前提下推进 human-AI collaboration 能力，使 AI 系统能够同时听、说并持续感知用户意图，而非交替轮流发言的传统对话模式。</p>
+<p><b>产品定位</b></p>
+<p>面向 human-AI collaboration 场景的 interaction model，定位为 AI 系统与用户之间的实时感知与通信层，核心解决传统语音/多模态模型在实时性与自然性上的瓶颈。</p>
+<p>[[FIGURE:x:2053940452789981426]]</p>
+<hr/>
+<h4>Perceptron Mk1 发布：历时 16 个月、专为物理世界感知优化的多模态基座</h4>
+<ul>
+  <li><b>信号源</b>：Armen Aghajanyan @ Perceptron</li>
+  <li><b>链接</b>：<a href="https://x.com/ArmenAgha/status/2054223706155839644">Perceptron Mk1 multimodal model release</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>认知提取</b>：Perceptron Mk1 是 Perceptron 团队从零构建的多模态训练 recipe 的 scaled-up 版本，核心目标是让模型在物理世界中表现最优——覆盖从视频理解到机器人控制的全链路感知与推理能力，类似于专为"现实世界感知"优化的多模态基座。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Armen Aghajanyan 领导的 Perceptron 团队发布 Perceptron Mk1，历时 16 个月从零研发，是团队自研多模态训练 recipe 的规模化落地版本。模型专注于视频理解、embodied reasoning 与 robotics 等物理世界任务，旨在覆盖从感知到行动的完整推理链路。</p>
+<p><b>产品定位</b></p>
+<p>面向物理世界任务的多模态基座模型，优先解决视频理解与机器人控制场景下的感知与推理瓶颈，区别于以文本或图像生成为主的通用多模态模型。</p>
+<p>[[FIGURE:x:2054223706155839644]]</p>
+```
+```xml
+<h3>世界模型 (Robotics / Embodied AI / 自动驾驶等)</h3>
+<h4>宇树科技发布 GD01 载人变形机甲，起售价 65 万美元</h4>
+<ul>
+  <li><b>信号源</b>：Unitree Robotics 官方 @ 宇树科技</li>
+  <li><b>链接</b>：<a href="https://x.com/UnitreeRobotics/status/2054067819634159622">Unitree GD01 Manned Transformable Mecha</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>认知提取</b>：宇树将机器人产品线延伸至载人机甲领域，GD01 更接近科幻概念的实体化产品——具备变形能力的载人机械装置，这在某种程度上类似于把工业重型外骨骼和民用代步工具合二为一。其核心意义在于宇树正试图开辟一个全新的硬件品类，而非对现有机器人形态的渐进改进。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>宇树科技发布 GD01 载人变形机甲，起售价 65 万美元，整备质量约 500kg，支持变形模式切换，定位为民用交通工具，官方称其为全球首款量产载人机甲。</p>
+<p><b>产品定位</b></p>
+<p>GD01 定位高端民用载人机械装置，兼具变形能力与载人出行功能，填补工业重型外骨骼与民用代步产品之间的空白品类，面向对科幻硬件有强烈偏好的消费者及特种应用场景。</p>
+<p>[[FIGURE:x:2054067819634159622]]</p>
+```
+```xml
+<h3>AI infra (推理框架/部署/硬件商业化)</h3>
+
+<h4>Perplexity 在 GB200 NVL72 Blackwell 机架上高效部署 Qwen3 235B MoE 模型</h4>
+<ul>
+  <li><b>信号源</b>：Perplexity 官方 @ Perplexity</li>
+  <li><b>链接</b>：<a href="https://x.com/perplexity_ai/status/2054204402144350450">Serving Qwen3 235B MoE on NVIDIA GB200 NVL72 Blackwell</a></li>
+</ul>
+<callout emoji="⚡">
+  <p><b>认知提取</b>：Perplexity 将 Qwen3 235B MoE 模型部署于 GB200 NVL72 Blackwell 平台，验证了 Blackwell 在推理侧（而非仅训练侧）的实际价值——这在某种程度上类似于一台赛车不仅在直道上快，在弯道高负载时也能保持优势。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Perplexity 发布研究报告，介绍如何在 NVIDIA GB200 NVL72 Blackwell 机架上高效 serve post-trained Qwen3 235B MoE 模型。报告指出，GB200 在大规模 MoE 高吞吐推理场景下显著优于 Hopper 架构，为生产环境中的超大规模 MoE serving 提供了可行的硬件路径。</p>
+<p><b>产品定位</b></p>
+<p>面向生产级 LLM serving 的硬件选型与部署实践报告，核心解决大规模 MoE 模型在高吞吐推理场景下的硬件效率问题，目标用户为需要在 Blackwell 集群上部署前沿开源模型的 AI infra 工程师。</p>
+<p>[[FIGURE:x:2054204402144350450]]</p>
+
+<hr/>
+
+<h4>GB200 vs H200 推理基准对比：all-reduce 与 MoE combine 延迟均下降约 40%</h4>
+<ul>
+  <li><b>信号源</b>：Perplexity 官方 @ Perplexity AI</li>
+  <li><b>链接</b>：<a href="https://x.com/perplexity_ai/status/2054204425833726353">GB200 vs H200 Inference Benchmark: NVLS All-Reduce and MoE Combine Latency</a></li>
+</ul>
+<callout emoji="🛠️">
+  <p><b>认知提取</b>：这组数据展示了 GB200 相比 H200 在 LLM 推理关键路径上的硬件级加速效果——all-reduce 通信和 MoE combine 延迟均下降约 40%，相当于集合通信的"堵车路段"被拓宽了。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Perplexity 发布 H200 与 GB200 推理基准对比数据：NVLS all-reduce 延迟从 586.1µs 降至 313.3µs（降幅约 46%），MoE prefill 在 EP=4 下 combine 延迟从 730.1µs 降至 438.5µs（降幅约 40%），GB200 在高 token 速度下 decode 吞吐量亦显著更高。</p>
+<p><b>产品定位</b></p>
+<p>面向 AI infra 团队的硬件性能量化参考，直接比较两代 NVIDIA GPU 在 MoE 推理核心瓶颈（集合通信、prefill/decode 吞吐）上的实测差异，为采购与架构决策提供数据依据。</p>
+<p>[[FIGURE:x:2054204425833726353]]</p>
+
+<hr/>
+
+<h4>Perplexity 分享 GB200 集群 LLM Serving 工程优化实践：prefill/decode 分离 + Blackwell 原生量化</h4>
+<ul>
+  <li><b>信号源</b>：Perplexity 官方 @ Perplexity AI</li>
+  <li><b>链接</b>：<a href="https://x.com/perplexity_ai/status/2054204437535834369">LLM Inference Optimization on NVIDIA GB200: Disaggregation, Quantization, and NVLink</a></li>
+</ul>
+<callout emoji="🤖">
+  <p><b>认知提取</b>：Perplexity 展示了将 GB200 集群推理性能最大化的工程路径，核心思路是通过 prefill/decode 分离将计算与内存访问瓶颈解耦，再配合 Blackwell 架构专属量化与 NVLink 高带宽互联降低 serving 成本——这在某种程度上类似于将流水线拆成专职的"预处理线"与"输出线"，各自针对性优化。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Perplexity 分享在 NVIDIA GB200 上的大模型 inference 工程优化实践，涵盖 prefill/decode 分离（disaggregation）、Blackwell 原生量化方案、custom kernels 开发以及 NVLink 机架级互联的协同调优，系统性地梳理了在 Blackwell 集群上压榨推理性能的关键工程手段。</p>
+<p><b>产品定位</b></p>
+<p>面向 LLM serving 基础设施工程师的技术实践分享，解决在 Blackwell 架构下如何通过架构拆分与硬件特性协同将 serving 吞吐最大化、成本最小化的问题。</p>
+<p>[[FIGURE:x:2054204437535834369]]</p>
+```
+```xml
+<h3>ai4s (科研/医疗/材料类商业落地)</h3>
+<h4>MatterSim 升级：微软发布多任务材料仿真模型 MatterSim-MT</h4>
+<ul>
+  <li><b>信号源</b>：MSFTResearch @ Microsoft Research</li>
+  <li><b>链接</b>：<a href="https://x.com/MSFTResearch/status/2054191008091418998">MatterSim-MT: Multi-task materials simulation model by Microsoft Research</a></li>
+</ul>
+<callout emoji="🧬">
+  <p><b>认知提取</b>：MatterSim-MT 将原本只能预测势能面（potential energy surface）的材料模拟 AI 扩展为多任务模型，能同时预测多种物理属性——这类似于把一个只会测量温度的传感器升级成可以同时测量温度、压力、导电性的综合仪表。</p>
+</callout>
+<p><b>信号内容</b></p>
+<p>Microsoft Research 发布 MatterSim 升级版本 MatterSim-MT，在原有势能面（potential energy surface）预测能力的基础上，扩展为支持多种材料物理属性同步预测的多任务模型（multi-task model），旨在加速大规模材料科学仿真流程，降低高通量材料筛选的计算成本。</p>
+<p><b>产品定位</b></p>
+<p>MatterSim-MT 定位为材料科学领域的通用 AI 仿真基础模型，面向材料研发机构与工业界，解决传统原子模拟方法计算开销高、单一属性预测局限性强的问题，支持在同一框架下进行多属性联合推断。</p>
+<p>[[FIGURE:x:2054191008091418998]]</p>
+```
+
+<hr/>
+<h2>三、产业全景 (Industry Macro)</h2>
+<h3>产业趋势 (Trend)</h3>
+<p><b>FrontierMath benchmark 约 1/3 题目存在致命错误，历史评分可信度存疑</b> · <a href="https://x.com/EpochAIResearch/status/2053995435870892048">Epoch AI announcement on FrontierMath benchmark quality issues</a></p>
+<p>Epoch AI 官方公告称，经 AI 辅助审查发现 FrontierMath benchmark 中约三分之一题目含有致命错误，将在人工核查完成后重新发布修正版数据集及评分，过渡期内基于该 benchmark 的模型排名暂不具参考价值。</p>
+<callout emoji="⚖️">
+  <p>FrontierMath 是当前最主流的前沿数学推理评测集，此次爆出约 1/3 题目存在致命错误，相当于发现考卷本身出题有误——所有基于旧版数据集的模型得分需在修正版发布后重新评估，短期内该赛道的能力对比结论应保持审慎。</p>
+</callout>
+
+<hr/>
+<h2>折叠区</h2>
+<ul>
+  <li>Songyou Peng：COSMIC 1001 是一个互动装置，结合历史太空事件档案与生成式 AI，允许用户指定条件后生成未来太空探索新闻（含标（<a href="[http://arxiv.org/abs/2605.11827v1](http://arxiv.org/abs/2605.11827v1)">链接</a>）</li>
+  <li>Cohere AI @ A2SE Seminar（里约热内卢研讨会）：18 位学界与业界专家在里约研讨会上联合制定 AI agents 与软件工程交叉领域研究议程，覆盖治理、质量评估、可持续（<a href="[http://arxiv.org/abs/2605.11720v1](http://arxiv.org/abs/2605.11720v1)">链接</a>）</li>
+  <li>cat：用户分享 Claude Code 的 `claude agents` 命令用法，可在终端启动 control plane（<a href="[https://x.com/_catwu/status/2053999857799672111](https://x.com/_catwu/status/2053999857799672111)">链接</a>）</li>
+  <li>OpenAI Developers 官方 X 账号：OpenAI Developers 分享 voice-to-action workflow 示例仓库，邀请开发者 for（<a href="[https://x.com/OpenAIDevs/status/2053964145155068025](https://x.com/OpenAIDevs/status/2053964145155068025)">链接</a>）</li>
+  <li>Soumith Chintala：PyTorch 创始人 Soumith Chintala 分享 Thinky 产品路线图，聚焦提升人机带宽与协作智能，并（<a href="[https://x.com/soumithchintala/status/2053940215505645938](https://x.com/soumithchintala/status/2053940215505645938)">链接</a>）</li>
+  <li>OpenAI 官方 @ X：OpenAI 推文介绍 Daybreak，一款用于自动化安全检测、验证与响应的工具或集成产品（<a href="[https://x.com/OpenAI/status/2053939706468139481](https://x.com/OpenAI/status/2053939706468139481)">链接</a>）</li>
+  <li>Sierra AI 官方 @ Sierra Platform：Sierra AI 分享客户案例：ecoATM 部署 AI voice agent 处理重复性问题，让人工客服专注于高价（<a href="[https://x.com/SierraPlatform/status/2053911809573507258](https://x.com/SierraPlatform/status/2053911809573507258)">链接</a>）</li>
+  <li>Hao Liu：HCI 研究通过访谈（n=8）、问卷（n=159）与用户研究（n=17）探讨创作者如何学习 GenAI 图像生成工具，发（<a href="[http://arxiv.org/abs/2605.10898v1](http://arxiv.org/abs/2605.10898v1)">链接</a>）</li>
+  <li>NVIDIA AI 官方 @ NVIDIA：NVIDIA AI 发布 OpenShell v0.0.37，新增可插拔计算驱动（Docker/Podman/Kuber（<a href="[https://x.com/NVIDIAAI/status/2053883076691030447](https://x.com/NVIDIAAI/status/2053883076691030447)">链接</a>）</li>
+  <li>Amanda Askell：Anthropic 将 Claude 的 Constitutional AI 文件&quot;Claude&#x27;s Constitut（<a href="[https://x.com/AnthropicAI/status/2053881827396653207](https://x.com/AnthropicAI/status/2053881827396653207)">链接</a>）</li>
+  <li>Google AI Developers 官方 @ Google DeepMind：Google DeepMind 与 Coursera 合作推出 Gemini for Developers 专项课程，内（<a href="[https://x.com/googleaidevs/status/2053868609747746897](https://x.com/googleaidevs/status/2053868609747746897)">链接</a>）</li>
+</ul>
+
+<hr/>
+<p><i>本日报由 HH Research Pipeline 自动生成，由 Claude 抽取和撰写，以原文为准。<br/>处理信号 152 条 · 头条 22 条 · 高价值 123 条</i></p>

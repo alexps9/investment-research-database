@@ -1,0 +1,18 @@
+flowchart LR
+    A["信号源<br/>X / arXiv / RSS / OpenAlex"] --> B["提取 + 8 类分类"]
+    B --> C{"强约束判定"}
+    C -->|"通过"| D["自动头条"]
+    C -->|"不通过"| E["边缘 case 清单"]
+    E --> F{"人工复核"}
+    F -->|"纳入"| G["补充头条"]
+    F -->|"放弃"| H["日报正文"]
+    D --> I["最终头条"]
+    G --> I
+    I --> J["日报发布"]
+
+    classDef auto fill:#FFE4B5,stroke:#FF8C00,stroke-width:2px;
+    classDef human fill:#E0FFE0,stroke:#228B22,stroke-width:2px;
+    classDef final fill:#E0E8FF,stroke:#1E40AF,stroke-width:2px;
+    class D auto;
+    class E,F,G human;
+    class I,J final;
