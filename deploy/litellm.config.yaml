@@ -4,19 +4,27 @@
 # Exposes an OpenAI-compatible API so the backend (DEEPSEEK_BASE_URL) and
 # agent (LLM_BASE_URL) use the same surface unchanged.
 model_list:
+  # NOTE: a short per-model `timeout` makes Bedrock FAIL FAST when the overseas
+  # SS proxy is down/flaky, so LiteLLM falls back to DeepSeek-V4 (direct) well
+  # within the agent's own 120s client timeout — instead of the agent giving up
+  # with "Request timed out" before the fallback can run. Raise once the proxy
+  # node is reliably up again.
   - model_name: claude-sonnet-4-6
     litellm_params:
       model: bedrock/us.anthropic.claude-sonnet-4-6
       aws_region_name: us-east-1
+      timeout: 30
   - model_name: claude-opus-4-6
     litellm_params:
       model: bedrock/us.anthropic.claude-opus-4-6-v1
       aws_region_name: us-east-1
+      timeout: 30
   # Back-compat alias: existing configs default LLM_MODEL=deepseek-chat.
   - model_name: deepseek-chat
     litellm_params:
       model: bedrock/us.anthropic.claude-sonnet-4-6
       aws_region_name: us-east-1
+      timeout: 30
   # Fallback target: DeepSeek-V4 official API (direct, bypasses the proxy via NO_PROXY).
   # DeepSeek exposes deepseek-v4-pro / deepseek-v4-flash; use -pro for quality.
   - model_name: deepseek-v4
@@ -28,9 +36,9 @@ model_list:
 litellm_settings:
   drop_params: true          # silently drop params Bedrock doesn't accept
   request_timeout: 120
-  # Under multi-user bursts, transient Bedrock 429/5xx retry then fall back to
-  # DeepSeek-V4 — spreads load across two providers instead of failing the run.
-  num_retries: 2
+  # Only retry once before failing over: with a dead proxy, extra Bedrock retries
+  # just burn the agent's client-timeout budget. Fail over to DeepSeek instead.
+  num_retries: 1
   # If the primary Claude model errors (proxy down / Bedrock geo-block / 5xx),
   # automatically retry the request against DeepSeek-V4.
   fallbacks:
