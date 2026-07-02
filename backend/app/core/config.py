@@ -57,7 +57,7 @@ class Settings(BaseSettings):
     # Defaults mirror the project's bootstrap accounts; change passwords in prod.
     seed_users: str = (
         "alex:alex0409,qiutian:qiutian123,haolin:haolin123,"
-        "angela:angela123,aseed:aseed123"
+        "angela:angela123,aseed:aseed123,yuehan:yuehan666"
     )
 
     # --- Redis (local: docker compose; prod: Amazon ElastiCache) ------------
